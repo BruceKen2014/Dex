@@ -6,6 +6,7 @@ bin/
 ipch/
 _UpgradeReport_Files/
 UpgradeLog.XML
+*.unsuccessfulbuild
 *.obj
 *.pcb
 *.pch
