@@ -1,0 +1,394 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="111|Win32">
+      <Configuration>111</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="DebugLib|Win32">
+      <Configuration>DebugLib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseLib|Win32">
+      <Configuration>ReleaseLib</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>Dex</ProjectName>
+    <ProjectGuid>{C3A28F43-DC23-49A3-975D-533F904F3E3C}</ProjectGuid>
+    <RootNamespace>OrthoMatrix</RootNamespace>
+    <Keyword>ManagedCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <CLRSupport>true</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <CLRSupport>false</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='111|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CLRSupport>true</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <CLRSupport>true</CLRSupport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <CLRSupport>true</CLRSupport>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='111|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='111|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='111|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">bin\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='111|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='111|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='111|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../Dex;sdk/lua/include;sdk/directx9/include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">sdk/lua/lib;sdk/directx9/lib/x86;$(LibraryPath)</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">$(WindowsSdkDir)include;$(IncludePath);../Dex;sdk/lua/include;sdk/directx9/include</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">$(LibraryPath);sdk/lua/lib/vs2010/debug;sdk/directx9/lib/x86</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MinSpace</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
+    <ClCompile>
+      <Optimization>MinSpace</Optimization>
+      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="DexBase\DexType.h" />
+    <ClInclude Include="DexCommonFunction.h" />
+    <ClInclude Include="DexMath\DexMath.h" />
+    <ClInclude Include="DexMath\DexVector3.h" />
+    <ClInclude Include="DexModel\DexModelBase.h" />
+    <ClInclude Include="DexModel\DexModelMs3d.h" />
+    <ClInclude Include="Pal3Wai\CBloodFlag.h" />
+    <ClInclude Include="Pal3Wai\CDexQuad.h" />
+    <ClInclude Include="Pal3Wai\CEnemy.h" />
+    <ClInclude Include="Pal3Wai\CFightLabel.h" />
+    <ClInclude Include="Pal3Wai\CFun.h" />
+    <ClInclude Include="Pal3Wai\CFunction.h" />
+    <ClInclude Include="Pal3Wai\CLadder.h" />
+    <ClInclude Include="Pal3Wai\CNFrame.h" />
+    <ClInclude Include="Pal3Wai\CNpc.h" />
+    <ClInclude Include="Pal3Wai\CNumber.h" />
+    <ClInclude Include="Pal3Wai\CRoad.h" />
+    <ClInclude Include="Pal3Wai\CSkill.h" />
+    <ClInclude Include="Pal3Wai\CSoundObject.h" />
+    <ClInclude Include="Pal3Wai\CSpeak.h" />
+    <ClInclude Include="Pal3Wai\CSpell.h" />
+    <ClInclude Include="Pal3Wai\CTestPanel.h" />
+    <ClInclude Include="Pal3Wai\CTestSprite.h" />
+    <CustomBuildStep Include="Pal3Wai\DemoEx.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <ClInclude Include="Pal3Wai\PalDefine.h" />
+    <ClInclude Include="Pal3Wai\PalScriptFun.h" />
+    <ClInclude Include="DexBase\CDelegate.h" />
+    <ClInclude Include="DexBase\CDexDraw2D.h" />
+    <ClInclude Include="DexBase\CDexObject.h" />
+    <ClInclude Include="DexBase\CDexPartical.h" />
+    <ClInclude Include="DexBase\CDexTime.h" />
+    <ClInclude Include="DexBase\CEventHandler.h" />
+    <ClInclude Include="DexBase\CEventSender.h" />
+    <ClInclude Include="DexBase\CFile.h" />
+    <ClInclude Include="DexBase\CGameEngine.h" />
+    <ClInclude Include="DexBase\CIni.h" />
+    <ClInclude Include="DexBase\CInput.h" />
+    <ClInclude Include="DexBase\CListener.h" />
+    <ClInclude Include="DexBase\CReference.h" />
+    <ClInclude Include="DexBase\CSkyBox.h" />
+    <ClInclude Include="DexBase\Dex3DScene.h" />
+    <ClInclude Include="DexBase\DexCollideObject.h" />
+    <ClInclude Include="DexBase\DexColor.h" />
+    <ClInclude Include="DexBase\DexLog.h" />
+    <ClInclude Include="DexBase\DexMem.h" />
+    <ClInclude Include="DexBase\DexObjectFactory.h" />
+    <ClInclude Include="DexBase\DexSceneObject.h" />
+    <ClInclude Include="DexBase\DexSceneObjectAction.h" />
+    <ClInclude Include="DexBase\DexSceneObjectFlower.h" />
+    <ClInclude Include="DexBase\DexSceneObjectModel.h" />
+    <ClInclude Include="DexBase\DexTerrain.h" />
+    <ClInclude Include="DexBase\DexTexture.h" />
+    <CustomBuildStep Include="DexBase\stdafx.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <ClInclude Include="DexBase\targetver.h" />
+    <ClInclude Include="DexBase\typedefine.h" />
+    <ClInclude Include="Geometry\CBall.h" />
+    <ClInclude Include="Geometry\CBox.h" />
+    <ClInclude Include="Geometry\CCollideBox.h" />
+    <ClInclude Include="Geometry\CCollideShpere.h" />
+    <ClInclude Include="Geometry\CFrustum.h" />
+    <ClInclude Include="Geometry\CLine.h" />
+    <ClInclude Include="Geometry\CPlane.h" />
+    <ClInclude Include="Geometry\CRay.h" />
+    <ClInclude Include="Source\CBillboard.h" />
+    <ClInclude Include="Source\CCamera.h" />
+    <ClInclude Include="Source\CCommandScript.h" />
+    <ClInclude Include="Source\CDefineXAni.h" />
+    <ClInclude Include="Source\CEngine_h.h" />
+    <ClInclude Include="Source\CFade.h" />
+    <ClInclude Include="Source\CFighter.h" />
+    <ClInclude Include="Source\CGUI.h" />
+    <ClInclude Include="Source\CLight.h" />
+    <ClInclude Include="Source\CLua.h" />
+    <ClInclude Include="Source\CModel.h" />
+    <ClInclude Include="Source\CModelAlpha.h" />
+    <ClInclude Include="Source\CModelX.h" />
+    <ClInclude Include="Source\CModelXAni.h" />
+    <ClInclude Include="Source\CMyFont.h" />
+    <ClInclude Include="Source\CParticalSystem.h" />
+    <ClInclude Include="Source\CPick.h" />
+    <ClInclude Include="Source\CSprite.h" />
+    <ClInclude Include="Source\CTerrain.h" />
+    <ClInclude Include="Source\CTexture.h" />
+    <ClInclude Include="Source\CTextureMove.h" />
+    <ClInclude Include="Source\CWate.h" />
+    <ClInclude Include="sound\CSoundSystem.h" />
+    <ClInclude Include="Expression\DexExpression.h" />
+    <ClInclude Include="Expression\DexScriptMgr.h" />
+    <ClInclude Include="widget\CDexUiSrcMgr.h" />
+    <ClInclude Include="widget\DexDesktop.h" />
+    <ClInclude Include="widget\DexGuiAction.h" />
+    <ClInclude Include="widget\DexGuiStruct.h" />
+    <ClInclude Include="widget\DexUiActionFactory.h" />
+    <ClInclude Include="widget\DexUiInclude.h" />
+    <ClInclude Include="widget\DexUiTexFactory.h" />
+    <ClInclude Include="widget\DexWidget.h" />
+    <ClInclude Include="widget\DexWidgetButton.h" />
+    <ClInclude Include="widget\DexWidgetCheckBtn.h" />
+    <ClInclude Include="widget\DexWidgetContainer.h" />
+    <ClInclude Include="widget\DexWidgetEditBox.h" />
+    <ClInclude Include="widget\DexWidgetFactory.h" />
+    <ClInclude Include="widget\DexWidgetImage.h" />
+    <ClInclude Include="widget\DexWidgetImageSequence.h" />
+    <ClInclude Include="widget\DexWidgetLabel.h" />
+    <CustomBuildStep Include="widget\DexWidgetScrollBar.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </CustomBuildStep>
+    <ClInclude Include="xml\tinystr.h" />
+    <ClInclude Include="xml\tinyxml.h" />
+    <ClInclude Include="state\DexGameEngine.h" />
+    <ClInclude Include="state\DexGameState.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DexCommonFunction.cpp" />
+    <ClCompile Include="DexMath\DexMath.cpp" />
+    <ClCompile Include="DexMath\DexVector3.cpp" />
+    <ClCompile Include="DexModel\DexModelBase.cpp" />
+    <ClCompile Include="DexModel\DexModelMs3d.cpp" />
+    <ClCompile Include="Pal3Wai\CBloodLabel.cpp" />
+    <ClCompile Include="Pal3Wai\CDexQuad.cpp" />
+    <ClCompile Include="Pal3Wai\CEnemy.cpp" />
+    <ClCompile Include="Pal3Wai\CFightLabel.cpp" />
+    <ClCompile Include="Pal3Wai\CFun.cpp" />
+    <ClCompile Include="Pal3Wai\CFunction.cpp" />
+    <ClCompile Include="Pal3Wai\CGameHandle.cpp" />
+    <ClCompile Include="Pal3Wai\CLadder.cpp" />
+    <ClCompile Include="Pal3Wai\CNFrame.cpp" />
+    <ClCompile Include="Pal3Wai\CNpc.cpp" />
+    <ClCompile Include="Pal3Wai\CNumber.cpp" />
+    <ClCompile Include="Pal3Wai\CRoad.cpp" />
+    <ClCompile Include="Pal3Wai\CSkill.cpp" />
+    <ClCompile Include="Pal3Wai\CSoundObject.cpp" />
+    <ClCompile Include="Pal3Wai\CSpeak.cpp" />
+    <ClCompile Include="Pal3Wai\CSpell.cpp" />
+    <ClCompile Include="Pal3Wai\CTestPanel.cpp" />
+    <ClCompile Include="Pal3Wai\CTestSprite.cpp" />
+    <ClCompile Include="Pal3Wai\DemoEx.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\PalScriptFun.cpp" />
+    <ClCompile Include="DexBase\CDelegate.cpp" />
+    <ClCompile Include="DexBase\CDexDraw2D.cpp" />
+    <ClCompile Include="DexBase\CDexObject.cpp" />
+    <ClCompile Include="DexBase\CDexPartical.cpp" />
+    <ClCompile Include="DexBase\CDexTime.cpp" />
+    <ClCompile Include="DexBase\CEventHandler.cpp" />
+    <ClCompile Include="DexBase\CEventSender.cpp" />
+    <ClCompile Include="DexBase\CFile.cpp" />
+    <ClCompile Include="DexBase\CGameEngine.cpp" />
+    <ClCompile Include="DexBase\CIni.cpp" />
+    <ClCompile Include="DexBase\CInput.cpp" />
+    <ClCompile Include="DexBase\CListener.cpp" />
+    <ClCompile Include="DexBase\CReference.cpp" />
+    <ClCompile Include="DexBase\CSkyBox.cpp" />
+    <ClCompile Include="DexBase\Dex3DScene.cpp" />
+    <ClCompile Include="DexBase\DexCollideObject.cpp" />
+    <ClCompile Include="DexBase\DexLog.cpp" />
+    <ClCompile Include="DexBase\DexMem.cpp" />
+    <ClCompile Include="DexBase\DexObjectFactory.cpp" />
+    <ClCompile Include="DexBase\DexSceneObject.cpp" />
+    <ClCompile Include="DexBase\DexSceneObjectAction.cpp" />
+    <ClCompile Include="DexBase\DexSceneObjectFlower.cpp" />
+    <ClCompile Include="DexBase\DexSceneObjectModel.cpp" />
+    <ClCompile Include="DexBase\DexTerrain.cpp" />
+    <ClCompile Include="DexBase\DexTexture.cpp" />
+    <ClCompile Include="DexBase\typedefine.cpp" />
+    <ClCompile Include="Geometry\CBox.cpp" />
+    <ClCompile Include="Geometry\CCollideBox.cpp" />
+    <ClCompile Include="Geometry\CCollideSphere.cpp" />
+    <ClCompile Include="Geometry\CFrustum.cpp" />
+    <ClCompile Include="Geometry\CLine.cpp" />
+    <ClCompile Include="Geometry\CPlane.cpp" />
+    <ClCompile Include="Source\CBillBoard.cpp" />
+    <ClCompile Include="Source\CCamera.cpp" />
+    <ClCompile Include="Source\CCommandScript.cpp" />
+    <ClCompile Include="Source\CFade.cpp" />
+    <ClCompile Include="Source\CGUI.cpp" />
+    <ClCompile Include="Source\CLight.cpp" />
+    <ClCompile Include="Source\Clua.cpp" />
+    <ClCompile Include="Source\CModel.cpp" />
+    <ClCompile Include="Source\CModelAlpha.cpp" />
+    <ClCompile Include="Source\CModelX.cpp" />
+    <ClCompile Include="Source\CModelXAni.cpp" />
+    <ClCompile Include="Source\CMyFont.cpp" />
+    <ClCompile Include="Source\CParticalSystem.cpp" />
+    <ClCompile Include="Source\CPick.cpp" />
+    <ClCompile Include="Source\CSprite.cpp" />
+    <ClCompile Include="Source\CTerrain.cpp" />
+    <ClCompile Include="Source\CTexture.cpp" />
+    <ClCompile Include="Source\CTextureMove.cpp" />
+    <ClCompile Include="Source\CWater.cpp" />
+    <ClCompile Include="sound\CSoundSystem.cpp" />
+    <ClCompile Include="Expression\DexExpression.cpp" />
+    <ClCompile Include="Expression\DexScriptMgr.cpp" />
+    <ClCompile Include="widget\CDexUiSrcMgr.cpp" />
+    <ClCompile Include="widget\DexDesktop.cpp" />
+    <ClCompile Include="widget\DexGuiAction.cpp" />
+    <ClCompile Include="widget\DexGuiStruct.cpp" />
+    <ClCompile Include="widget\DexUiActionFactory.cpp" />
+    <ClCompile Include="widget\DexUiTexFactory.cpp" />
+    <ClCompile Include="widget\DexWidget.cpp" />
+    <ClCompile Include="widget\DexWidgetButton.cpp" />
+    <ClCompile Include="widget\DexWidgetCheckBtn.cpp" />
+    <ClCompile Include="widget\DexWidgetContainer.cpp" />
+    <ClCompile Include="widget\DexWidgetEditBox.cpp" />
+    <ClCompile Include="widget\DexWidgetFactory.cpp" />
+    <ClCompile Include="widget\DexWidgetImage.cpp" />
+    <ClCompile Include="widget\DexWidgetImageSequence.cpp" />
+    <ClCompile Include="widget\DexWidgetLabel.cpp" />
+    <ClCompile Include="widget\DexWidgetScrollBar.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="xml\tinystr.cpp" />
+    <ClCompile Include="xml\tinyxml.cpp" />
+    <ClCompile Include="xml\tinyxmlerror.cpp" />
+    <ClCompile Include="xml\tinyxmlparser.cpp" />
+    <ClCompile Include="state\DexGameEngine.cpp" />
+    <ClCompile Include="state\DexGameState.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

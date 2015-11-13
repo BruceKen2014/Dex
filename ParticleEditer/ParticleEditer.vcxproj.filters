@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="BattleStates">
+      <UniqueIdentifier>{a6fb8253-96ec-4348-8719-3041fcbf1334}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Livings">
+      <UniqueIdentifier>{ca958b0f-0c35-46f6-876e-856cdf9b56b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{3b59b007-3acd-4584-a404-15711c0fb015}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BattlePlayerAI">
+      <UniqueIdentifier>{9474cc31-04b0-484d-9f05-e27ecf536c0b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PalTalkSystem.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEdit.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEditState.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PalStateBattleMain.cpp">
+      <Filter>BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PalBattleStateBase.cpp">
+      <Filter>BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PalPeople.cpp">
+      <Filter>Livings</Filter>
+    </ClCompile>
+    <ClCompile Include="PalNpc.cpp">
+      <Filter>Livings</Filter>
+    </ClCompile>
+    <ClCompile Include="PalFightHead.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PalFightHeadManager.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PalPlayerAttackState.cpp">
+      <Filter>BattlePlayerAI</Filter>
+    </ClCompile>
+    <ClCompile Include="PalSkill.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PalPlayerAttackStateTransition.cpp">
+      <Filter>BattlePlayerAI</Filter>
+    </ClCompile>
+    <ClCompile Include="PalNumber.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PalPanel_Order.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PalBattleStateTransition.cpp">
+      <Filter>BattleStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PalPlayer.cpp">
+      <Filter>Livings</Filter>
+    </ClCompile>
+    <ClCompile Include="IDexState.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PalPanelInterface.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="DexStateCommonEvent.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PalPanel_SelectSkill.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="PalTalkSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEditState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalModelIndexManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalSkill.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CDefineXAni.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalStateBattleMain.h">
+      <Filter>BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PalBattleStateBase.h">
+      <Filter>BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PalPeople.h">
+      <Filter>Livings</Filter>
+    </ClInclude>
+    <ClInclude Include="PalNpc.h">
+      <Filter>Livings</Filter>
+    </ClInclude>
+    <ClInclude Include="PalTaskManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalFightHead.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalFightHeadManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalTypeDefine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalPlayerAttackState.h">
+      <Filter>BattlePlayerAI</Filter>
+    </ClInclude>
+    <ClInclude Include="PalPlayerAttackStateTransition.h">
+      <Filter>BattlePlayerAI</Filter>
+    </ClInclude>
+    <ClInclude Include="PalNumber.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalPanel_Order.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PalBattleStateTransition.h">
+      <Filter>BattleStates</Filter>
+    </ClInclude>
+    <ClInclude Include="PalPlayer.h">
+      <Filter>Livings</Filter>
+    </ClInclude>
+    <ClInclude Include="IDexState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalPanelInterface.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="DexStateCommonEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalPanel_SelectSkill.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="icon1.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ParticleEditer.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

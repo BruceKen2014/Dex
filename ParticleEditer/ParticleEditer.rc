@@ -1,0 +1,154 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON1               ICON                    "icon1.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 375, 248
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Save",IDOK,6,224,50,14
+    PUSHBUTTON      "Load",IDCANCEL,65,224,50,14
+    LTEXT           "Render:",IDC_STATIC,18,38,27,8
+    EDITTEXT        IDC_EDIT_EMITPOS,56,62,78,12,ES_AUTOHSCROLL
+    LTEXT           "MaxSize:",IDC_STATIC,16,86,32,8
+    EDITTEXT        IDC_EDIT_MAXSIZE,55,84,78,12,ES_AUTOHSCROLL
+    LTEXT           "MinSize:",IDC_STATIC,137,86,27,8
+    EDITTEXT        IDC_EDIT_MINSIZE,169,85,76,12,ES_AUTOHSCROLL
+    LTEXT           "MaxPos:",IDC_STATIC,137,63,28,8
+    EDITTEXT        IDC_EDIT_MAXPOS,169,61,74,12,ES_AUTOHSCROLL
+    LTEXT           "MinPos:",IDC_STATIC,249,63,32,8
+    EDITTEXT        IDC_EDIT_MINPOS,279,61,78,12,ES_AUTOHSCROLL
+    LTEXT           "TexX:",IDC_STATIC,13,196,20,8
+    EDITTEXT        IDC_EDIT_TEXX,37,195,26,12,ES_AUTOHSCROLL
+    LTEXT           "Pos",IDC_STATIC,15,53,12,8
+    LTEXT           "Size",IDC_STATIC,16,76,14,8
+    LTEXT           "Velocity",IDC_STATIC,16,98,26,8
+    LTEXT           "MaxVel:",IDC_STATIC,16,109,32,8
+    EDITTEXT        IDC_EDIT_MAXVEL,55,107,78,12,ES_AUTOHSCROLL
+    LTEXT           "MinVel:",IDC_STATIC,137,109,24,8
+    EDITTEXT        IDC_EDIT_MINVEL,169,108,74,12,ES_AUTOHSCROLL
+    LTEXT           "StartColor:",IDC_STATIC,8,132,36,8
+    EDITTEXT        IDC_EDIT_STARTCOLOR,55,131,57,12,ES_AUTOHSCROLL
+    LTEXT           "MidColor:",IDC_STATIC,121,132,31,8
+    EDITTEXT        IDC_EDIT_MIDCOLOR,156,131,57,12,ES_AUTOHSCROLL
+    LTEXT           "EndColor:",IDC_STATIC,223,132,32,8
+    EDITTEXT        IDC_EDIT_ENDCOLOR,258,130,55,12,ES_AUTOHSCROLL
+    LTEXT           "Color",IDC_STATIC,16,121,18,8
+    LTEXT           "TexTotal:",IDC_STATIC,67,196,32,8
+    EDITTEXT        IDC_EDIT_TEXTOTAL,100,195,26,12,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBO_FACESTATE,300,16,63,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "朝向:",IDC_STATIC,273,17,20,8
+    LTEXT           "发射类型:",IDC_STATIC,140,18,36,8
+    COMBOBOX        IDC_COMBO_EMITTYPE,188,16,63,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "acce:",IDC_STATIC,250,110,32,8
+    EDITTEXT        IDC_EDIT_ACCE,281,109,78,12,ES_AUTOHSCROLL
+    LTEXT           "TextureFile:",IDC_STATIC,139,197,44,8
+    EDITTEXT        IDC_EDIT_TEXFILE,183,195,78,12,ES_AUTOHSCROLL
+    LTEXT           "InitRotate:",IDC_STATIC,10,156,36,8
+    EDITTEXT        IDC_EDIT_STARTCOLOR2,54,155,79,12,ES_AUTOHSCROLL
+    LTEXT           "RotateVelMax:",IDC_STATIC,138,156,48,8
+    EDITTEXT        IDC_EDIT_MIDCOLOR2,194,155,74,12,ES_AUTOHSCROLL
+    LTEXT           "RotateVelMin:",IDC_STATIC,9,175,42,8
+    EDITTEXT        IDC_EDIT_ENDCOLOR2,54,173,78,12,ES_AUTOHSCROLL
+    LTEXT           "Rotate",IDC_STATIC,17,145,23,8
+    COMBOBOX        IDC_COMBO2,51,16,62,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Pos:",IDC_STATIC,18,62,15,8
+    COMBOBOX        IDC_COMBO_EMITTYPE2,52,35,36,30,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Emitter:",IDC_STATIC,16,19,26,8
+    LTEXT           "KeyFrame:",IDC_STATIC,101,37,36,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 368
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 241
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

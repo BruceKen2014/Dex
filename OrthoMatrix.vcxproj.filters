@@ -1,0 +1,674 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Pal3Wai">
+      <UniqueIdentifier>{35110ae9-8517-41c1-8795-0e6533a7a8d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DexBase">
+      <UniqueIdentifier>{c26ac8a7-499e-4f8f-ac89-e7732ab76c2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{48027608-358e-49ce-9043-f2c2f2bb47e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{99584576-013a-44e7-80f6-8697fa1ee47f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sound">
+      <UniqueIdentifier>{12ef331f-47a3-42cc-b5ff-023719c5349b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Expression">
+      <UniqueIdentifier>{11923155-9450-42dc-9d4b-52a717d177aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="widget">
+      <UniqueIdentifier>{41c8a2d2-d61a-4cad-a612-9fcfbdfb3708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="xml">
+      <UniqueIdentifier>{de0ad021-07d1-4ff7-a4e3-eca8f5c89b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine">
+      <UniqueIdentifier>{edf8272d-3360-4805-8519-5923c9f79b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DexMath">
+      <UniqueIdentifier>{b61c7fe2-4d84-4ebe-a163-c88b7ad8c7ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DexModel">
+      <UniqueIdentifier>{c5a575df-29cf-4c44-9901-f628c78d8a71}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Pal3Wai\CBloodFlag.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CDexQuad.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CEnemy.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CFightLabel.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CFun.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CFunction.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CLadder.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CNFrame.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CNpc.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CNumber.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CRoad.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CSkill.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CSoundObject.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CSpeak.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CSpell.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CTestPanel.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\CTestSprite.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\PalDefine.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="Pal3Wai\PalScriptFun.h">
+      <Filter>Pal3Wai</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CDelegate.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CDexDraw2D.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CDexObject.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CDexPartical.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CDexTime.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CEventHandler.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CEventSender.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CFile.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CGameEngine.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CIni.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CInput.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CListener.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CReference.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\CSkyBox.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\Dex3DScene.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexCollideObject.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexColor.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexLog.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexMem.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexObjectFactory.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexSceneObject.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexSceneObjectAction.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexSceneObjectFlower.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexSceneObjectModel.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexTerrain.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexTexture.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\targetver.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\typedefine.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\CBall.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\CBox.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\CCollideBox.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\CCollideShpere.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\CFrustum.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\CLine.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\CPlane.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\CRay.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CBillboard.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CCamera.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CCommandScript.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CDefineXAni.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CEngine_h.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CFade.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CFighter.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CGUI.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CLight.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CLua.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CModel.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CModelAlpha.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CModelX.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CModelXAni.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CMyFont.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CParticalSystem.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CPick.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CSprite.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CTerrain.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CTexture.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CTextureMove.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\CWate.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="sound\CSoundSystem.h">
+      <Filter>sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression\DexExpression.h">
+      <Filter>Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="Expression\DexScriptMgr.h">
+      <Filter>Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\CDexUiSrcMgr.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexDesktop.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexGuiAction.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexGuiStruct.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexUiActionFactory.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexUiInclude.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexUiTexFactory.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidget.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidgetButton.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidgetCheckBtn.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidgetContainer.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidgetEditBox.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidgetFactory.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidgetImage.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidgetImageSequence.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidgetLabel.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="xml\tinystr.h">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="xml\tinyxml.h">
+      <Filter>xml</Filter>
+    </ClInclude>
+    <ClInclude Include="state\DexGameEngine.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="state\DexGameState.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="DexCommonFunction.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexMath\DexMath.h">
+      <Filter>DexMath</Filter>
+    </ClInclude>
+    <ClInclude Include="DexMath\DexVector3.h">
+      <Filter>DexMath</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexType.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexModelBase.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexModelMs3d.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CDexQuad.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CEnemy.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CFightLabel.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CFun.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CFunction.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CGameHandle.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CLadder.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CNFrame.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CNpc.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CNumber.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CRoad.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CSkill.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CSoundObject.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CSpeak.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CSpell.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CTestPanel.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\CTestSprite.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\DemoEx.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="Pal3Wai\PalScriptFun.cpp">
+      <Filter>Pal3Wai</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CDelegate.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CDexDraw2D.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CDexObject.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CDexPartical.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CDexTime.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CEventHandler.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CEventSender.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CFile.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CGameEngine.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CIni.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CInput.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CListener.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CReference.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\CSkyBox.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\Dex3DScene.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexCollideObject.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexLog.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexMem.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexObjectFactory.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexSceneObject.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexSceneObjectAction.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexSceneObjectFlower.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexSceneObjectModel.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexTerrain.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexTexture.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\typedefine.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\CBox.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\CCollideBox.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\CCollideSphere.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\CFrustum.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\CLine.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry\CPlane.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CBillBoard.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CCamera.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CCommandScript.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CFade.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CGUI.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CLight.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Clua.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CModel.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CModelAlpha.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CModelX.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CModelXAni.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CMyFont.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CParticalSystem.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CPick.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CSprite.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CTerrain.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CTexture.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CTextureMove.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\CWater.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="sound\CSoundSystem.cpp">
+      <Filter>sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression\DexExpression.cpp">
+      <Filter>Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression\DexScriptMgr.cpp">
+      <Filter>Expression</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\CDexUiSrcMgr.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexDesktop.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexGuiAction.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexGuiStruct.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexUiActionFactory.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexUiTexFactory.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidget.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetButton.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetCheckBtn.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetContainer.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetEditBox.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetFactory.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetImage.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetImageSequence.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetLabel.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetScrollBar.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinystr.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinyxml.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinyxmlerror.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="xml\tinyxmlparser.cpp">
+      <Filter>xml</Filter>
+    </ClCompile>
+    <ClCompile Include="state\DexGameEngine.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="state\DexGameState.cpp">
+      <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="DexCommonFunction.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexMath\DexVector3.cpp">
+      <Filter>DexMath</Filter>
+    </ClCompile>
+    <ClCompile Include="DexMath\DexMath.cpp">
+      <Filter>DexMath</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexModelBase.cpp">
+      <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexModelMs3d.cpp">
+      <Filter>DexModel</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuildStep Include="Pal3Wai\DemoEx.h">
+      <Filter>Pal3Wai</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="DexBase\stdafx.h">
+      <Filter>DexBase</Filter>
+    </CustomBuildStep>
+    <CustomBuildStep Include="widget\DexWidgetScrollBar.h">
+      <Filter>widget</Filter>
+    </CustomBuildStep>
+  </ItemGroup>
+</Project>

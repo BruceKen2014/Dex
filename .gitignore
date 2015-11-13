@@ -1,0 +1,24 @@
+#################
+## ignore some files or path that you dont want to submit to github
+#################
+
+bin/
+ipch/
+_UpgradeReport_Files/
+UpgradeLog.XML
+*.obj
+*.pcb
+*.pch
+*.pdb
+*.ilk
+*.tlog
+*.sdf
+*.suo
+*.idb
+*.lastbuildstate
+*.opensdf
+*.Build.CppClear.log
+*.log
+*.opensdf
+*.cache
+*.aps
