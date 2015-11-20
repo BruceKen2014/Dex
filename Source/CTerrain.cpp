@@ -143,7 +143,7 @@ bool CTerrain::CreateTerrain(char* filename, int cellWidth, int cellHeight,float
 	for(int i =0 ; i <m_row; i++ )
 		m_height[i] = new float[m_col];
 	std::ifstream inFile(filename, std::ios_base::binary);
-	if(inFile == NULL)
+	if(inFile)
 	{
 		_Message("打开高度图失败！");
 		return false;
