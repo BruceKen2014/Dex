@@ -29,7 +29,9 @@ public:
 	DexVector3T(T* value); //一个3元素数组
 	~DexVector3T<T>();
 public:
-	float Length();
+	T Length();
+	DexVector3T<T>  Cross(const DexVector3T<T>& vector3) const;
+	T				Dot(const DexVector3T<T>& vector3) const;
 	DexVector3T<T>& Normalize();
 	DexVector3T<T>& Set(T* value);//一个3元素数组
 	DexVector3T<T>& Set(const DexVector3T<T>& vector3);
@@ -222,10 +224,36 @@ inline DexVector3T<T>& DexVector3T<T>::operator /= (float _value)
 }
 
 template<typename T>
-inline float DexVector3T<T>::Length()
+inline T DexVector3T<T>::Length()
 {
 	return DexMath::Sqrt(x*x + y*y + z*z);
 }
+
+template<typename T>
+inline DexVector3T<T> DexVector3T<T>::Cross(const DexVector3T<T>& vector3) const
+{
+	/*
+		0	1	2
+	O	i	j	k	
+	1	x1	y1	z1
+	2	x2	y2	z2
+	算x时去掉i列， x3 = (-1)^(0+0) * (y1*z2 - y2*z1) = y1z2 - y2z1; //i处在第0行第0列，故符号位(-1)^(0+0)=0为正
+	算y时去掉j列， y3 = (-1)^(0+1) * (x1*z2 - x2*z1) = -(x1z2 - x2z1); //j处在第0行第1列，故符号位(-1)^(0+1)=1为负
+	算z时去掉k列， z3 = (-1)^(0+2) * (x1*y2 - x2*y1) = x1y2 - x2y1; //k处在第0行第2列，故符号位(-1)^(0+2)=0为正
+	*/
+	T new_x = y*vector3.z - vector3.y *z;
+	T new_y = -(x*vector3.z - vector3.x * z);
+	T new_z = x*vector3.y - vector3.x*y;
+	return DexVector3T<T>(new_x, new_y, new_z);
+}
+
+template<typename T>
+inline T DexVector3T<T>::Dot(const DexVector3T<T>& vector3) const
+{
+	T ret =x * vector3.x + y * vector3.y + z * vector3.z;
+	return ret;
+}
+
 
 template<typename T>
 inline bool DexVector3T<T>::operator>(const DexVector3T<T>& vector3) const
