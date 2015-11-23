@@ -126,17 +126,6 @@ inline DexVector3T<T>& DexVector3T<T>::Set(const T& _x, const T& _y, const T& _z
 }
 
 template<typename T>
-inline DexVector3T<T> operator* (float _value, const DexVector3T<T>& vector3)
-{
-	DexVector3T<T> ret;
-	ret.x = vector3.x *  _value;
-	ret.y = vector3.y *  _value;
-	ret.z = vector3.z *  _value;
-	return ret;
-}
-template<typename T>
-DexVector3T<T> operator* (float _value, const DexVector3T<T>& vector3);
-template<typename T>
 inline DexVector3T<T>& DexVector3T<T>::operator = (const DexVector3T<T>& vector3)
 {
 	x = vector3.x;
@@ -286,6 +275,15 @@ inline bool DexVector3T<T>::operator<=(const DexVector3T<T>& vector3) const
 		z <= vector3.z;
 }
 
+template<typename T1, typename T>
+inline DexVector3T<T> operator* (T1 _value, const DexVector3T<T>& vector3)
+{
+	DexVector3T<T> ret;
+	ret.x = vector3.x *  T1;
+	ret.y = vector3.y *  T1;
+	ret.z = vector3.z *  T1;
+	return ret;
+}
 typedef DexVector3T<float>  DexVector3;
 typedef DexVector3T<int32>  DexVector3_int32;
 #endif
