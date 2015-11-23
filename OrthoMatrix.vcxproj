@@ -281,7 +281,6 @@
   <ItemGroup>
     <ClCompile Include="DexCommonFunction.cpp" />
     <ClCompile Include="DexMath\DexMath.cpp" />
-    <ClCompile Include="DexMath\DexVector3.cpp" />
     <ClCompile Include="DexModel\DexModelBase.cpp" />
     <ClCompile Include="DexModel\DexModelMs3d.cpp" />
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp" />

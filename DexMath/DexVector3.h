@@ -12,14 +12,28 @@ template<typename T>
 class DexVector3T
 {
 public:
-	T x, y, z;
+	union
+	{
+		struct  
+		{
+			T x, y, z;
+		};
+		T m[3];
+	};
+	
 
 public:
-	DexVector3T<T>();
-	DexVector3T<T>(T _x, T _y, T _z);
+	DexVector3T();
+	DexVector3T(const DexVector3T<T>& vector3);
+	DexVector3T(T _x, T _y, T _z);
+	DexVector3T(T* value); //一个3元素数组
 	~DexVector3T<T>();
 public:
 	float Length();
+	DexVector3T<T>& Normalize();
+	DexVector3T<T>& Set(T* value);//一个3元素数组
+	DexVector3T<T>& Set(const DexVector3T<T>& vector3);
+	DexVector3T<T>& Set(const T& _x, const T& _y, const T& _z);
 public:
 	DexVector3T<T>& operator = (const DexVector3T<T>& vector3);
 	bool operator == (const DexVector3T<T>& vector3)const;
@@ -33,18 +47,28 @@ public:
 	DexVector3T<T>& operator -= (const DexVector3T<T>& vector3);
 	DexVector3T<T>& operator *= (float _value);
 	DexVector3T<T>& operator /= (float _value);
-public:
-	static void Normalize(DexVector3T<T>& vector3);
+
+	bool operator > (const DexVector3T<T>& vector3) const;
+	bool operator >=(const DexVector3T<T>& vector3) const;
+	bool operator < (const DexVector3T<T>& vector3) const;
+	bool operator <=(const DexVector3T<T>& vector3) const;
+	
 
 };
 template<typename T>
-DexVector3T<T>::DexVector3T()
+inline DexVector3T<T>::DexVector3T()
 {
-	x = y = z = 0;
+	memset(m, 0, sizeof(T)*3);
 }
 
 template<typename T>
-DexVector3T<T>::DexVector3T(T _x, T _y, T _z)
+inline DexVector3T<T>::DexVector3T(const DexVector3T<T>& vector3)
+{
+	memcpy(m, vector3.m, sizeof(vector3));
+}
+
+template<typename T>
+inline DexVector3T<T>::DexVector3T(T _x, T _y, T _z)
 {
 	x = _x;
 	y = _y;
@@ -52,26 +76,55 @@ DexVector3T<T>::DexVector3T(T _x, T _y, T _z)
 }
 
 template<typename T>
-DexVector3T<T>::~DexVector3T()
+inline DexVector3T<T>::DexVector3T(T* value)
+{
+	memcpy(m, value, sizeof(T) * 3);
+}
+
+template<typename T>
+inline DexVector3T<T>::~DexVector3T()
 {
 
 }
-//static
+
 template<typename T>
-void DexVector3T<T>::Normalize(DexVector3T<T>& vector3)
+inline DexVector3T<T>& DexVector3T<T>::Normalize()
 {
-	float length = vector3.Length();
+	float length = Length();
 	if (length < 0.00001f)
 	{
-		return;
+		return *this;
 	}
-	vector3.x = vector3.x / length;
-	vector3.y = vector3.y / length;
-	vector3.z = vector3.z / length;
+	x = x / length;
+	y = y / length;
+	z = z / length;
+	return *this;
+}
+template<typename T>
+inline DexVector3T<T>& DexVector3T<T>::Set(T* value)
+{
+	memcpy(m, value, sizeof(T) * 3);
+	return *this;
 }
 
 template<typename T>
-DexVector3T<T> operator* (float _value, const DexVector3T<T>& vector3)
+inline DexVector3T<T>& DexVector3T<T>::Set(const DexVector3T<T>& vector3)
+{
+	memcpy(m, vector3.m, sizeof(vector3));
+	return *this;
+}
+
+template<typename T>
+inline DexVector3T<T>& DexVector3T<T>::Set(const T& _x, const T& _y, const T& _z)
+{
+	x = _x;
+	y = _y;
+	z = _z;
+	return *this;
+}
+
+template<typename T>
+inline DexVector3T<T> operator* (float _value, const DexVector3T<T>& vector3)
 {
 	DexVector3T<T> ret;
 	ret.x = vector3.x *  _value;
@@ -172,6 +225,37 @@ template<typename T>
 inline float DexVector3T<T>::Length()
 {
 	return DexMath::Sqrt(x*x + y*y + z*z);
+}
+
+template<typename T>
+inline bool DexVector3T<T>::operator>(const DexVector3T<T>& vector3) const
+{
+	return x > vector3.x &&
+		   y > vector3.y &&
+		   z > vector3.z;
+}
+template<typename T>
+inline bool DexVector3T<T>::operator>=(const DexVector3T<T>& vector3) const
+{
+	return x >= vector3.x &&
+		y >= vector3.y &&
+		z >= vector3.z;
+}
+
+template<typename T>
+inline bool DexVector3T<T>::operator<(const DexVector3T<T>& vector3) const
+{
+	return x < vector3.x &&
+		y < vector3.y &&
+		z < vector3.z;
+}
+
+template<typename T>
+inline bool DexVector3T<T>::operator<=(const DexVector3T<T>& vector3) const
+{
+	return x <= vector3.x &&
+		y <= vector3.y &&
+		z <= vector3.z;
 }
 
 typedef DexVector3T<float>  DexVector3;

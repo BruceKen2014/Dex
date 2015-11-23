@@ -647,9 +647,6 @@
     <ClCompile Include="DexCommonFunction.cpp">
       <Filter>DexBase</Filter>
     </ClCompile>
-    <ClCompile Include="DexMath\DexVector3.cpp">
-      <Filter>DexMath</Filter>
-    </ClCompile>
     <ClCompile Include="DexMath\DexMath.cpp">
       <Filter>DexMath</Filter>
     </ClCompile>
