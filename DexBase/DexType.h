@@ -29,6 +29,12 @@ typedef signed __int64 int64;
 #ifndef uint64
 typedef unsigned __int64 uint64;
 #endif
+#ifndef float32
+typedef float  float32;
+#endif
+#ifndef float64
+typedef double float64;
+#endif
 
 #ifndef DWORD
 typedef unsigned long     DWORD;

@@ -354,6 +354,12 @@
     <ClInclude Include="DexModel\DexModelMs3d.h">
       <Filter>DexModel</Filter>
     </ClInclude>
+    <ClInclude Include="DexModel\TestSkinMesh.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexMath\DexMatrix.h">
+      <Filter>DexMath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
