@@ -18,6 +18,7 @@ class PalPanelInterface;
 class PalBattleStateMachine;
 class CDexWidgetImage;
 class DexModelBase;
+class TestSkinMesh;
 class PalGameStateBattleMain: public DexGameState
 {
 	Dex_DeclareClass(PalGameStateBattleMain,1)
@@ -48,6 +49,7 @@ protected:
 	TlistPlayer   m_listEnemies;
 	TlistPlayer   m_listPlayers;
 	DexModelBase* ms3d;
+	TestSkinMesh* testMesh;
 	PalBattleStateMachine* m_pBattleMainMachine;
 	PalPlayer* panda;
 	PalPlayer* g_pJingtian;

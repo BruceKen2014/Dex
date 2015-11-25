@@ -7,6 +7,8 @@
 #include "../Source/CCamera.h"
 #include "../widget/DexGuiStruct.h"
 #include "../Geometry/CRay.h"
+#include "../DexMath/DexVector3.h"
+#include "../DexMath/DexMatrix.h"
 #include <string>
 #include <map>
 class DexGameState;
@@ -206,9 +208,12 @@ public:
 	void RenderCoorLines();
 	void SetMeshColor(const DexColor& color);
 	void RenderCube(const D3DXVECTOR3& pos, const D3DXVECTOR3& scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+	void RenderCube(const DexVector3& pos, const D3DXVECTOR3& scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f));
 	void RenderCube(const D3DXMATRIX& matrix);
+	void RenderCube(const DexMatrix4x4& matrix);
 	void RenderSphere(const D3DXVECTOR3& pos, float scale = 1.0f);
 	void Render3DLine(const D3DXVECTOR3& p0, const D3DXVECTOR3& p1, const DexColor& color1 = 0xffffffff, const DexColor& color2 = 0xffffffff); 
+	void Render3DLine(const DexVector3& p0, const DexVector3& p1, const DexColor& color1 = 0xffffffff, const DexColor& color2 = 0xffffffff);
 	//从点p出发，朝vec方向绘制直线 color1:颜色 length:线段长度 color2末断点颜色
 	void Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, const DexColor& color1 = 0xffffffff, float length = 100, const DexColor& color2 = 0xffffffff);
 	void LookAtLH(const D3DXVECTOR3 *pEye, const D3DXVECTOR3 *pAt, const D3DXVECTOR3 *pUp);

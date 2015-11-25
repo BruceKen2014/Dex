@@ -9,6 +9,7 @@ By Bruce
 
 #include <d3dx9math.h>
 #include "../DexBase/DexType.h"
+#include "DexVector3.h"
 #include "DexMath.h"
 /*
 单位阵
@@ -127,12 +128,15 @@ public:
 	bool  operator== ( const DexMatrix4x4T<T>& matrix ) const;
 	bool  operator!= ( const DexMatrix4x4T<T>& matrix ) const;
 
-	//添加dexvector3的scale等函数
 	DexMatrix4x4T<T>  Scale(float32 x, float32 y, float32 z);
+	DexMatrix4x4T<T>  Scale(const DexVector3& scale);
 	DexMatrix4x4T<T>  Translate(float32 x, float32 y, float32 z);
+	DexMatrix4x4T<T>  Translate(const DexVector3& trans);
 	DexMatrix4x4T<T>  SetPosition(float32 x, float32 y, float32 z);
+	DexMatrix4x4T<T>  SetPosition(const DexVector3& pos);
 
-	void MulVec4(CVector4* vec);
+	DexVector3		  GetPosition() const;
+	//void MulVec4(CVector4* vec);
 
 	DexMatrix4x4T<T> RotateX(float32 radian);
 	DexMatrix4x4T<T> RotateY(float32 radian);
@@ -436,7 +440,18 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::Scale(float32 x, float32 y, float32 z)
 	ma._11 = x;
 	ma._22 = y;
 	ma._33 = z;
-	(*this) = ma * (*this);
+	(*this) = (*this) * ma;
+	return *this;
+}
+template<typename T>
+inline DexMatrix4x4T<T> DexMatrix4x4T<T>::Scale(const DexVector3& scale)
+{
+	DexMatrix4x4T<T> ma;
+	ma.Identity();
+	ma._11 = scale.x;
+	ma._22 = scale.y;
+	ma._33 = scale.z;
+	(*this) = (*this) * ma;
 	return *this;
 }
 template<typename T>
@@ -449,6 +464,15 @@ inline DexMatrix4x4T<T>  DexMatrix4x4T<T>::Translate(float32 x, float32 y, float
 	return *this;
 }
 template<typename T>
+inline DexMatrix4x4T<T>  DexMatrix4x4T<T>::Translate(const DexVector3& trans)
+{
+	DexMatrix4x4T temp;
+	temp.Identity();
+	temp.SetPosition(trans);
+	*this = (*this) * temp;
+	return *this;
+}
+template<typename T>
 inline DexMatrix4x4T<T> DexMatrix4x4T<T>::SetPosition(float32 x, float32 y, float32 z)
 {
 	m_m[3][0] = x;
@@ -456,11 +480,27 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::SetPosition(float32 x, float32 y, floa
 	m_m[3][2] = z;
 	return *this;
 }
-
 template<typename T>
-inline void DexMatrix4x4T<T>::MulVec4(CVector4* vec)
+inline DexMatrix4x4T<T> DexMatrix4x4T<T>::SetPosition(const DexVector3& pos)
 {
+	m_m[3][0] = pos.x;
+	m_m[3][1] = pos.y;
+	m_m[3][2] = pos.z;
+	return *this;
 }
+template<typename T>
+inline DexVector3 DexMatrix4x4T<T>::GetPosition()	const
+{
+	DexVector3 ret;
+	ret.x = m_m[3][0];
+	ret.y = m_m[3][1];
+	ret.z = m_m[3][2];
+	return ret;
+}
+//template<typename T>
+//inline void DexMatrix4x4T<T>::MulVec4(CVector4* vec)
+//{
+//}
 template<typename T>
 inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateX(float radian)
 {

@@ -11,6 +11,7 @@
 #include "../DexBase/CInput.h"
 #include "../DexBase/CDexTime.h"
 #include "../DexBase/DexObjectFactory.h"
+#include "../DexMath/Dex_To_Dx.h"
 
 DexGameEngine* DexGameEngine::g_pGameEngine = NULL;
 CRITICAL_SECTION  g_cs;
@@ -294,6 +295,36 @@ void DexGameEngine::RenderCube(const D3DXVECTOR3& pos, const D3DXVECTOR3& scale)
 	//g_D3DDevice->SetMaterial(NULL);
 }
 
+void DexGameEngine::RenderCube(const DexVector3& pos, const D3DXVECTOR3& scale)
+{
+	DEX_ENSURE(g_cube);
+	D3DXMatrixIdentity(&g_transMatrix);
+	D3DXMatrixIdentity(&g_worldMatrix);
+	D3DXMatrixIdentity(&g_scaleMatrix);
+	D3DXMatrixScaling(&g_scaleMatrix, scale.x, scale.y, scale.z);
+
+	D3DXMatrixTranslation(&g_transMatrix, 0, 0, 0);
+	D3DXMatrixMultiply(&g_worldMatrix, &g_worldMatrix, &g_transMatrix);
+	D3DXMatrixMultiply(&g_worldMatrix, &g_worldMatrix, &g_scaleMatrix);
+	D3DXMatrixTranslation(&g_transMatrix, pos.x, pos.y, pos.z);
+	D3DXMatrixMultiply(&g_worldMatrix, &g_worldMatrix, &g_transMatrix);
+
+	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	g_D3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	g_D3DDevice->SetTexture(0, NULL);
+	//g_D3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	g_D3DDevice->SetTransform(D3DTS_WORLD, &g_worldMatrix);
+	g_D3DDevice->SetMaterial(&g_material);
+	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	g_cube->DrawSubset(0);
+	D3DXMatrixIdentity(&g_worldMatrix);
+	g_D3DDevice->SetTransform(D3DTS_WORLD, &g_worldMatrix);
+	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	//g_D3DDevice->SetMaterial(NULL);
+}
+
 void DexGameEngine::RenderCube(const D3DXMATRIX& matrix)
 {
 	DEX_ENSURE(g_cube);
@@ -311,6 +342,25 @@ void DexGameEngine::RenderCube(const D3DXMATRIX& matrix)
 	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
 	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
+
+void DexGameEngine::RenderCube(const DexMatrix4x4& matrix)
+{
+	DEX_ENSURE(g_cube);
+	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	g_D3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	g_D3DDevice->SetTexture(0, NULL);
+	//g_D3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+	g_D3DDevice->SetTransform(D3DTS_WORLD, (const D3DXMATRIX*)(&matrix));
+	g_D3DDevice->SetMaterial(&g_material);
+	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
+	g_cube->DrawSubset(0);
+	D3DXMatrixIdentity(&g_worldMatrix);
+	g_D3DDevice->SetTransform(D3DTS_WORLD, &g_worldMatrix);
+	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
+}
+
 
 void DexGameEngine::RenderSphere(const D3DXVECTOR3& pos, float scale /* = 1.0f */)
 {
@@ -352,6 +402,19 @@ void DexGameEngine::Render3DLine(const D3DXVECTOR3& p0, const D3DXVECTOR3& p1, c
 	DexGameEngine::getEngine()->GetDevice()->SetTexture(0, NULL);
 	DexGameEngine::getEngine()->GetDevice()->SetTransform( D3DTS_WORLD, &g_worldMatrix);
 	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP( D3DPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
+}
+
+void DexGameEngine::Render3DLine(const DexVector3& p0, const DexVector3& p1, const DexColor& color1 /* = 0xffffffff */, const DexColor& color2 /* = 0xffffffff */)
+{
+	memcpy(&g_pVertexList1[0].m_pos, &p0, sizeof(p0));
+	memcpy(&g_pVertexList1[1].m_pos, &p0, sizeof(p1));
+	g_pVertexList1[0].m_color = getD3DColor(color1);
+	g_pVertexList1[1].m_color = getD3DColor(color2);
+	D3DXMatrixIdentity(&g_worldMatrix);
+	DexGameEngine::getEngine()->GetDevice()->SetFVF(FVF_XYZ_DIFF_TEX1);
+	DexGameEngine::getEngine()->GetDevice()->SetTexture(0, NULL);
+	DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &g_worldMatrix);
+	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
 }
 
 void DexGameEngine::Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, const DexColor& color1, float length, const DexColor& color2)

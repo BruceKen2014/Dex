@@ -7,6 +7,7 @@
 #include "DexBase/CDexDraw2D.h"
 #include "DexModel/DexModelBase.h"
 #include "DexModel/DexModelMs3d.h"
+#include "DexModel/TestSkinMesh.h"
 #include "DexMath/DexVector3.h"
 #include "Source/CModelXAni.h"
 #include "PalStateBattleMain.h"
@@ -126,6 +127,23 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
 	ms3d = new DexModelMs3d();
 	ms3d->LoadModel("ms3d/Model.ms3d");
+	testMesh = new TestSkinMesh(2000);
+	DexMatrix4x4 temp_matrix;	temp_matrix.Identity();
+	temp_matrix.SetPosition(0, 0, 0); testMesh->AddJoint(1, -1, temp_matrix);
+	temp_matrix.Identity(); testMesh->AddJointKeyFrame(1, 0, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.RotateZ(_getRadian(90.0f)); testMesh->AddJointKeyFrame(1, 1000, temp_matrix);
+	temp_matrix.Identity(); testMesh->AddJointKeyFrame(1, 2000, temp_matrix);
+
+	temp_matrix.SetPosition(100, 0, 0); testMesh->AddJoint(2, 1, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(2, 2, 2); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 0, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(2, 2, 2); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 1000, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(2, 2, 2); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 2000, temp_matrix);
+
+	temp_matrix.SetPosition(0, 0, 20); testMesh->AddJoint(3, 2, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(3, 3, 3); temp_matrix.Translate(0, 0, 20);  testMesh->AddJointKeyFrame(3, 0, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.RotateX(_getRadian(90.0f)); temp_matrix.Scale(3, 3, 3); temp_matrix.Translate(0, 0, 20);  testMesh->AddJointKeyFrame(3, 1000, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(3, 3, 3); temp_matrix.Translate(0, 0, 20); testMesh->AddJointKeyFrame(3, 2000, temp_matrix);
+
 	m_bApply = true;
 	return true;
 }
@@ -254,6 +272,7 @@ bool PalGameStateBattleMain::Update(int delta)
 		}
 		
 	}
+	testMesh->Update(delta/4);
 	return true;
 	//getGlobal()->g_pJingtian->Update();
 }
@@ -276,7 +295,8 @@ void PalGameStateBattleMain::Render()
 	m_pScene->Render();
 	m_pBattleMainMachine->Render();
 	DexGameEngine::getEngine()->RenderCoorLines();
-	ms3d->Render();
+	//ms3d->Render();
+	testMesh->Render();
 	//getGlobal()->g_pJingtian->Render();
 	get2DDrawer()->BeginDraw2D();
 	for(std::map<string, PalPanelInterface*>::iterator ite = m_mapBattlePanels.begin();

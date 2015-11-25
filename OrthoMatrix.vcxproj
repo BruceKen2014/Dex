@@ -166,6 +166,7 @@
     <ClInclude Include="DexMath\DexMath.h" />
     <ClInclude Include="DexMath\DexMatrix.h" />
     <ClInclude Include="DexMath\DexVector3.h" />
+    <ClInclude Include="DexMath\Dex_To_Dx.h" />
     <ClInclude Include="DexModel\DexModelBase.h" />
     <ClInclude Include="DexModel\DexModelMs3d.h" />
     <ClInclude Include="DexModel\TestSkinMesh.h" />
@@ -285,6 +286,7 @@
     <ClCompile Include="DexMath\DexMath.cpp" />
     <ClCompile Include="DexModel\DexModelBase.cpp" />
     <ClCompile Include="DexModel\DexModelMs3d.cpp" />
+    <ClCompile Include="DexModel\TestSkinMesh.cpp" />
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp" />
     <ClCompile Include="Pal3Wai\CDexQuad.cpp" />
     <ClCompile Include="Pal3Wai\CEnemy.cpp" />

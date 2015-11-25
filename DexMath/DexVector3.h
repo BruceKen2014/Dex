@@ -276,7 +276,7 @@ inline bool DexVector3T<T>::operator<=(const DexVector3T<T>& vector3) const
 }
 
 template<typename T1, typename T>
-inline DexVector3T<T> operator* (T1 _value, const DexVector3T<T>& vector3)
+DexVector3T<T> operator* (T1 _value, const DexVector3T<T>& vector3)
 {
 	DexVector3T<T> ret;
 	ret.x = vector3.x *  T1;

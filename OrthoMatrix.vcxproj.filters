@@ -360,6 +360,9 @@
     <ClInclude Include="DexMath\DexMatrix.h">
       <Filter>DexMath</Filter>
     </ClInclude>
+    <ClInclude Include="DexMath\Dex_To_Dx.h">
+      <Filter>DexMath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
@@ -660,6 +663,9 @@
       <Filter>DexModel</Filter>
     </ClCompile>
     <ClCompile Include="DexModel\DexModelMs3d.cpp">
+      <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\TestSkinMesh.cpp">
       <Filter>DexModel</Filter>
     </ClCompile>
   </ItemGroup>
