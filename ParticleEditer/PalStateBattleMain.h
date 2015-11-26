@@ -50,6 +50,8 @@ protected:
 	TlistPlayer   m_listPlayers;
 	DexModelBase* ms3d;
 	TestSkinMesh* testMesh;
+	void* test_primitive_vertex;
+	void* test_primitive_indice;
 	PalBattleStateMachine* m_pBattleMainMachine;
 	PalPlayer* panda;
 	PalPlayer* g_pJingtian;

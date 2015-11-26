@@ -4,6 +4,7 @@
 
 #include "../DexBase/typedefine.h"
 #include "../DexBase/DexMem.h"
+#include "../DexBase/DexPrimitive.h"
 #include "../Source/CCamera.h"
 #include "../widget/DexGuiStruct.h"
 #include "../Geometry/CRay.h"
@@ -216,6 +217,11 @@ public:
 	void Render3DLine(const DexVector3& p0, const DexVector3& p1, const DexColor& color1 = 0xffffffff, const DexColor& color2 = 0xffffffff);
 	//从点p出发，朝vec方向绘制直线 color1:颜色 length:线段长度 color2末断点颜色
 	void Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, const DexColor& color1 = 0xffffffff, float length = 100, const DexColor& color2 = 0xffffffff);
+	
+	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize);
+	
+	
+	
 	void LookAtLH(const D3DXVECTOR3 *pEye, const D3DXVECTOR3 *pAt, const D3DXVECTOR3 *pUp);
 	
 	//輔助調試函數

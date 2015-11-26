@@ -1,5 +1,5 @@
 
-
+#include "../state/DexGameEngine.h"
 #include "TestSkinMesh.h"
 
 Joint::Joint()
@@ -65,14 +65,67 @@ void Joint::ComputeWorldMatrix(int32 time)
 		world_matrix = father_matrix;
 }
 
+DexVector3 Joint::GetPosInMeshSpace()const
+{
+	DexVector3 ret = father_matrix.GetPosition();
+	if (father != NULL)
+	{
+		ret += father->GetPosInMeshSpace();
+	}
+	return ret;
+}
 
 
+
+DexMatrix4x4 MeshVertex::ComputeWorldMatrix()
+{
+	world_matrix.Reset();
+	for (size_t i = 0; i < Joints.size(); ++i)
+	{
+		world_matrix += Joints_localMatrix[i] * Joints[i]->world_matrix* JointWeigth[i];
+	}
+	vertexData->m_pos.x = world_matrix.GetPosition().x; 
+	vertexData->m_pos.y = world_matrix.GetPosition().y;
+	vertexData->m_pos.z = world_matrix.GetPosition().z;
+	return world_matrix;
+}
+
+void MeshVertex::BindJoint(Joint* joint, float weight)
+{
+	if (joint == NULL)	return;
+	DexMatrix4x4 matrix = mesh_matrix;
+	DexVector3 joint_mesh_pos = joint->GetPosInMeshSpace();
+	matrix.Translate(joint_mesh_pos.GetInvert());
+	Joints_localMatrix.push_back(matrix);
+	JointWeigth.push_back(weight);
+	Joints.push_back(joint);
+}
 
 TestSkinMesh::TestSkinMesh(int32 maxAniTime)
 {
 	AnimateNowTime = 0;
 	AnimateMaxTime = maxAniTime;
+	vertexs = NULL;
+	indices = NULL;
 }
+
+void TestSkinMesh::CalculateVertex()
+{
+	if (vertexs != NULL)
+	{
+		free(vertexs);
+	}
+	vertexs = new stVertex0[mesh_vertexs.size()];
+	for (size_t i = 0; i < mesh_vertexs.size(); ++i)
+	{
+		vertexs[i].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 1.0f));
+		vertexs[i].m_pos.x = mesh_vertexs[i]->mesh_matrix.GetPosition().x;
+		vertexs[i].m_pos.y = mesh_vertexs[i]->mesh_matrix.GetPosition().y;
+		vertexs[i].m_pos.z = mesh_vertexs[i]->mesh_matrix.GetPosition().z;
+		mesh_vertexs[i]->vertexData = &vertexs[i];
+	}
+}
+
 void TestSkinMesh::Update(int32 delta)
 {
 	AnimateNowTime += delta;
@@ -83,6 +136,13 @@ void TestSkinMesh::Update(int32 delta)
 	if (root_joint != NULL)
 	{
 		root_joint->Update(AnimateNowTime);
+	}
+	for (int i = 0; i < mesh_vertexs.size(); ++i)
+	{
+		if (mesh_vertexs[i] != NULL)
+		{
+			mesh_vertexs[i]->ComputeWorldMatrix();
+		}
 	}
 	if (AnimateNowTime >= AnimateMaxTime)
 	{
@@ -95,6 +155,7 @@ void TestSkinMesh::Render()
 	{
 		root_joint->Render();
 	}
+	DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, vertexs, mesh_vertexs.size(), indices, indices_count/3, sizeof(stVertex0));
 }
 Joint* TestSkinMesh::FindJoint(int32 jointId)
 {
@@ -149,21 +210,48 @@ bool TestSkinMesh::AddJointKeyFrame(int32 jointid, int32 time, const DexMatrix4x
 	joint->AddKeyFrame(time, matrix);
 	return true;
 }
+void TestSkinMesh::AddVertex(const DexVector3& pos, int jointid1 /* = -1 */, float weight1 /* = 1.0f */, int jointid2 /* = -1 */, float weight2 /* = 0.0f */)
+{
+	MeshVertex* vertex = new MeshVertex;
+	DexMatrix4x4 mesh_matrix;
+	mesh_matrix.Identity(); mesh_matrix.Translate(pos);
+	vertex->mesh_matrix = mesh_matrix;
+	Joint* joint1 = FindJoint(jointid1);
+	Joint* joint2 = FindJoint(jointid2);
+	if (joint1 != NULL)
+	{
+		vertex->BindJoint(joint1, weight1);
+	}
+	if (joint2 != NULL)
+	{
+		vertex->BindJoint(joint2, weight2);
+	}
+	mesh_vertexs.push_back(vertex);
+}
 void TestSkinMesh::AddVertex(const DexMatrix4x4& mesh_matrix, int jointid1 , float weight1 , int jointid2 , float weight2 )
 {
 	MeshVertex* vertex = new MeshVertex;
 	vertex->mesh_matrix = mesh_matrix;
 	Joint* joint1 = FindJoint(jointid1);
 	Joint* joint2 = FindJoint(jointid2);
-	if (jointid1 != NULL)
+	if (joint1 != NULL)
 	{
-		vertex->Joints.push_back(joint1);
-		vertex->JointWeigth.push_back(weight1);
+		vertex->BindJoint(joint1, weight1);
 	}
 	if (joint2 != NULL)
 	{
-		vertex->Joints.push_back(joint2);
-		vertex->JointWeigth.push_back(weight2);
+		vertex->BindJoint(joint2, weight2);
 	}
-	vertexs.push_back(vertex);
+	mesh_vertexs.push_back(vertex);
+}
+
+void TestSkinMesh::SetIndices(void* indics, int32 count)
+{
+	if (indices != NULL)
+	{
+		free(indices);
+	}
+	indices_count = count;
+	indices = (int32*)malloc(sizeof(int32)*count);
+	memcpy(indices, indics, sizeof(int32) * count);
 }

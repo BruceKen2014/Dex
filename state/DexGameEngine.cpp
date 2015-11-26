@@ -407,7 +407,7 @@ void DexGameEngine::Render3DLine(const D3DXVECTOR3& p0, const D3DXVECTOR3& p1, c
 void DexGameEngine::Render3DLine(const DexVector3& p0, const DexVector3& p1, const DexColor& color1 /* = 0xffffffff */, const DexColor& color2 /* = 0xffffffff */)
 {
 	memcpy(&g_pVertexList1[0].m_pos, &p0, sizeof(p0));
-	memcpy(&g_pVertexList1[1].m_pos, &p0, sizeof(p1));
+	memcpy(&g_pVertexList1[1].m_pos, &p1, sizeof(p1));
 	g_pVertexList1[0].m_color = getD3DColor(color1);
 	g_pVertexList1[1].m_color = getD3DColor(color2);
 	D3DXMatrixIdentity(&g_worldMatrix);
@@ -430,6 +430,55 @@ void DexGameEngine::Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, c
 	DexGameEngine::getEngine()->GetDevice()->SetTexture(0, NULL);
 	DexGameEngine::getEngine()->GetDevice()->SetTransform( D3DTS_WORLD, &g_worldMatrix);
 	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP( D3DPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
+}
+
+/*
+使用示例：
+void* test_primitive_vertex;
+void* test_primitive_indice;
+stVertex0	vertexs[8];
+vertexs[0].m_pos = D3DXVECTOR3(30.0f, 0, -30.0f); vertexs[0].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f));
+vertexs[1].m_pos = D3DXVECTOR3(30.0f, 0, 30.0f); vertexs[1].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f));
+vertexs[2].m_pos = D3DXVECTOR3(-30.0f, 0, 30.0f); vertexs[2].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f));
+vertexs[3].m_pos = D3DXVECTOR3(-30.0f, 0, -30.0f); vertexs[3].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f));
+vertexs[4].m_pos = D3DXVECTOR3(30.0f, 60, -30.0f); vertexs[4].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f));
+vertexs[5].m_pos = D3DXVECTOR3(30.0f, 60, 30.0f); vertexs[5].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f));
+vertexs[6].m_pos = D3DXVECTOR3(-30.0f, 60, 30.0f); vertexs[6].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f));
+vertexs[7].m_pos = D3DXVECTOR3(-30.0f, 60, -30.0f); vertexs[7].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f));
+test_primitive_vertex = (void*)malloc(sizeof(stVertex0) * 8);
+memcpy(test_primitive_vertex, vertexs, sizeof(stVertex0)*8);
+int32 indices[] = {0,1,4,1,5,4,2,3,6,6,3,7,0,4,3,3,4,7,1,2,5,2,6,5,1,0,3,1,3,2,4,5,7,7,5,6};//逆时针索引
+test_primitive_indice = (void*)malloc(sizeof(indices));
+memcpy(test_primitive_indice, indices, sizeof(indices));
+
+Render:
+DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
+*/
+void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize)
+{
+	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	g_D3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;
+	switch (type)
+	{
+	case DexPT_POINTLIST:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_POINTLIST;break;}
+	case DexPT_LINELIST:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_LINELIST; break; }
+	case DexPT_LINESTRIP:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_LINESTRIP; break; }
+	case DexPT_TRIANGLELIST:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_TRIANGLELIST; break; }
+	case DexPT_TRIANGLESTRIP:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_TRIANGLESTRIP; break; }
+	case DexPT_TRIANGLEFAN:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_TRIANGLEFAN; break; }
+	default:
+		break;
+	}
+	D3DXMatrixIdentity(&g_worldMatrix);
+	DexGameEngine::getEngine()->GetDevice()->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
+	DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &g_worldMatrix);
+	//DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, vertexs, sizeof(stVertex0));
+	//这里的D3DFMT_INDEX32，如果indices是int32整型数组的话，设置D3DFMT_INDEX32,如果是int16类型的整型数组的话，那么设置D3DFMT_INDEX16
+	g_D3DDevice->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
+
+	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
 bool DexGameEngine::AddState(DexGameState* state)

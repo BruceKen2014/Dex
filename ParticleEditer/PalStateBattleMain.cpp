@@ -135,14 +135,46 @@ bool PalGameStateBattleMain::ApplyRes()
 	temp_matrix.Identity(); testMesh->AddJointKeyFrame(1, 2000, temp_matrix);
 
 	temp_matrix.SetPosition(100, 0, 0); testMesh->AddJoint(2, 1, temp_matrix);
-	temp_matrix.Identity(); temp_matrix.Scale(2, 2, 2); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 0, temp_matrix);
-	temp_matrix.Identity(); temp_matrix.Scale(2, 2, 2); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 1000, temp_matrix);
-	temp_matrix.Identity(); temp_matrix.Scale(2, 2, 2); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 2000, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 0, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 1000, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 2000, temp_matrix);
 
 	temp_matrix.SetPosition(0, 0, 20); testMesh->AddJoint(3, 2, temp_matrix);
-	temp_matrix.Identity(); temp_matrix.Scale(3, 3, 3); temp_matrix.Translate(0, 0, 20);  testMesh->AddJointKeyFrame(3, 0, temp_matrix);
-	temp_matrix.Identity(); temp_matrix.RotateX(_getRadian(90.0f)); temp_matrix.Scale(3, 3, 3); temp_matrix.Translate(0, 0, 20);  testMesh->AddJointKeyFrame(3, 1000, temp_matrix);
-	temp_matrix.Identity(); temp_matrix.Scale(3, 3, 3); temp_matrix.Translate(0, 0, 20); testMesh->AddJointKeyFrame(3, 2000, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(0, 0, 20);  testMesh->AddJointKeyFrame(3, 0, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.RotateX(_getRadian(0.0f)); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(0, 0, 40);  testMesh->AddJointKeyFrame(3, 1000, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(0, 0, 20); testMesh->AddJointKeyFrame(3, 2000, temp_matrix);
+
+	temp_matrix.SetPosition(20, 0, 0); testMesh->AddJoint(4, 2, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(20, 0, 0);  testMesh->AddJointKeyFrame(4, 0, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(80, 0, 0);  testMesh->AddJointKeyFrame(4, 1000, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(20, 0, 0); testMesh->AddJointKeyFrame(4, 2000, temp_matrix);
+
+	stVertex0	vertexs[8];
+	vertexs[0].m_pos = D3DXVECTOR3(30.0f, 0, -30.0f); vertexs[0].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
+	vertexs[1].m_pos = D3DXVECTOR3(30.0f, 0, 30.0f); vertexs[1].m_color = getD3DColor(DexColor(1.0f, 0.0f, 1.0f, 0.1f));
+	vertexs[2].m_pos = D3DXVECTOR3(-30.0f, 0, 30.0f); vertexs[2].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
+	vertexs[3].m_pos = D3DXVECTOR3(-30.0f, 0, -30.0f); vertexs[3].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
+	vertexs[4].m_pos = D3DXVECTOR3(30.0f, 60, -30.0f); vertexs[4].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
+	vertexs[5].m_pos = D3DXVECTOR3(30.0f, 60, 30.0f); vertexs[5].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
+	vertexs[6].m_pos = D3DXVECTOR3(-30.0f, 60, 30.0f); vertexs[6].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
+	vertexs[7].m_pos = D3DXVECTOR3(-30.0f, 60, -30.0f); vertexs[7].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
+	test_primitive_vertex = (void*)malloc(sizeof(stVertex0) * 8);
+	memcpy(test_primitive_vertex, vertexs, sizeof(stVertex0)*8);
+	int32 indices[] = {0,1,4,1,5,4,2,3,6,6,3,7,0,4,3,3,4,7,1,2,5,2,6,5,1,0,3,1,3,2,4,5,7,7,5,6};
+	test_primitive_indice = (void*)malloc(sizeof(indices));
+	memcpy(test_primitive_indice, indices, sizeof(indices));
+
+	testMesh->AddVertex(DexVector3(30.0f, 0, -30.0f), 2, 1.0f);
+	testMesh->AddVertex(DexVector3(30.0f, 0, 30.0f), 2, 1.0f);
+	testMesh->AddVertex(DexVector3(-30.0f, 0, 30.0f), 4, 0.5f, 3, 0.5f);
+	testMesh->AddVertex(DexVector3(-30.0f, 0, -30.0f), 4, 0.5f, 3, 0.5f);
+	testMesh->AddVertex(DexVector3(30.0f, 60, -30.0f), 4, 1.0f);
+	testMesh->AddVertex(DexVector3(30.0f, 60, 30.0f), 4, 1.0f);
+	testMesh->AddVertex(DexVector3(-30.0f, 60, 30.0f), 3, 1.0f);
+	testMesh->AddVertex(DexVector3(-30.0f, 60, -30.0f), 3, 1.0f);
+
+	testMesh->CalculateVertex();
+	testMesh->SetIndices(indices, 12 * 3);
 
 	m_bApply = true;
 	return true;
@@ -297,6 +329,7 @@ void PalGameStateBattleMain::Render()
 	DexGameEngine::getEngine()->RenderCoorLines();
 	//ms3d->Render();
 	testMesh->Render();
+	//DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 	//getGlobal()->g_pJingtian->Render();
 	get2DDrawer()->BeginDraw2D();
 	for(std::map<string, PalPanelInterface*>::iterator ite = m_mapBattlePanels.begin();

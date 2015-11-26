@@ -32,6 +32,8 @@ public:
 	T Length();
 	DexVector3T<T>  Cross(const DexVector3T<T>& vector3) const;
 	T				Dot(const DexVector3T<T>& vector3) const;
+	void			Invert();
+	DexVector3T<T>  GetInvert()const;
 	DexVector3T<T>& Normalize();
 	DexVector3T<T>& Set(T* value);//一个3元素数组
 	DexVector3T<T>& Set(const DexVector3T<T>& vector3);
@@ -240,6 +242,26 @@ template<typename T>
 inline T DexVector3T<T>::Dot(const DexVector3T<T>& vector3) const
 {
 	T ret =x * vector3.x + y * vector3.y + z * vector3.z;
+	return ret;
+}
+
+
+template<typename T>
+inline void DexVector3T<T>::Invert()
+{
+	x *= (T)(-1);
+	y *= (T)(-1);
+	z *= (T)(-1);
+}
+
+
+template<typename T>
+inline DexVector3T<T> DexVector3T<T>::GetInvert()	const
+{
+	DexVector3T<T> ret;
+	ret.x = x* (T)(-1);
+	ret.y = y* (T)(-1);
+	ret.z = z* (T)(-1);
 	return ret;
 }
 

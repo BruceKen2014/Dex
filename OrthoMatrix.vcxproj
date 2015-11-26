@@ -161,10 +161,13 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DexBase\DexPrimitive.h" />
     <ClInclude Include="DexBase\DexType.h" />
+    <ClInclude Include="DexBase\DexVertex.h" />
     <ClInclude Include="DexCommonFunction.h" />
     <ClInclude Include="DexMath\DexMath.h" />
     <ClInclude Include="DexMath\DexMatrix.h" />
+    <ClInclude Include="DexMath\DexVector2.h" />
     <ClInclude Include="DexMath\DexVector3.h" />
     <ClInclude Include="DexMath\Dex_To_Dx.h" />
     <ClInclude Include="DexModel\DexModelBase.h" />

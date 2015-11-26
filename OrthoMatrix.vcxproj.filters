@@ -363,6 +363,15 @@
     <ClInclude Include="DexMath\Dex_To_Dx.h">
       <Filter>DexMath</Filter>
     </ClInclude>
+    <ClInclude Include="DexMath\DexVector2.h">
+      <Filter>DexMath</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexPrimitive.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexVertex.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
