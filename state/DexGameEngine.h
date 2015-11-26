@@ -14,6 +14,7 @@
 #include <map>
 class DexGameState;
 class DexGlobal;
+class CDexTex;
 // typedef enum
 // {
 // 	DEXRS_ZENABLE					,   //是否开启Z buff
@@ -218,7 +219,8 @@ public:
 	//从点p出发，朝vec方向绘制直线 color1:颜色 length:线段长度 color2末断点颜色
 	void Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, const DexColor& color1 = 0xffffffff, float length = 100, const DexColor& color2 = 0xffffffff);
 	
-	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize);
+	void SetTexture(int32 stage, CDexTex* texture);
+	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize);
 	
 	
 	

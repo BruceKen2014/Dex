@@ -3,6 +3,7 @@
 #include "DexBase/CInput.h"
 #include "widget/DexWidgetFactory.h"
 #include "widget/DexWidgetImage.h"
+#include "widget/CDexUiSrcMgr.h"
 #include "state/DexGameEngine.h"
 #include "DexBase/CDexDraw2D.h"
 #include "DexModel/DexModelBase.h"
@@ -136,7 +137,7 @@ bool PalGameStateBattleMain::ApplyRes()
 
 	temp_matrix.SetPosition(100, 0, 0); testMesh->AddJoint(2, 1, temp_matrix);
 	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 0, temp_matrix);
-	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 1000, temp_matrix);
+	temp_matrix.Identity(); temp_matrix.RotateX(_getRadian(90.0f)); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 1000, temp_matrix);
 	temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 2000, temp_matrix);
 
 	temp_matrix.SetPosition(0, 0, 20); testMesh->AddJoint(3, 2, temp_matrix);
@@ -160,19 +161,19 @@ bool PalGameStateBattleMain::ApplyRes()
 	vertexs[7].m_pos = D3DXVECTOR3(-30.0f, 60, -30.0f); vertexs[7].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
 	test_primitive_vertex = (void*)malloc(sizeof(stVertex0) * 8);
 	memcpy(test_primitive_vertex, vertexs, sizeof(stVertex0)*8);
-	int32 indices[] = {0,1,4,1,5,4,2,3,6,6,3,7,0,4,3,3,4,7,1,2,5,2,6,5,1,0,3,1,3,2,4,5,7,7,5,6};
+	int32 indices[] = {0,4,1,1,4,5,2,6,3,6,7,3,0,3,4,3,7,4,1,5,2,2,5,6,1,3,0,1,2,3,4,7,5,7,6,5};
 	test_primitive_indice = (void*)malloc(sizeof(indices));
 	memcpy(test_primitive_indice, indices, sizeof(indices));
 
-	testMesh->AddVertex(DexVector3(30.0f, 0, -30.0f), 2, 1.0f);
-	testMesh->AddVertex(DexVector3(30.0f, 0, 30.0f), 2, 1.0f);
-	testMesh->AddVertex(DexVector3(-30.0f, 0, 30.0f), 4, 0.5f, 3, 0.5f);
-	testMesh->AddVertex(DexVector3(-30.0f, 0, -30.0f), 4, 0.5f, 3, 0.5f);
-	testMesh->AddVertex(DexVector3(30.0f, 60, -30.0f), 4, 1.0f);
-	testMesh->AddVertex(DexVector3(30.0f, 60, 30.0f), 4, 1.0f);
-	testMesh->AddVertex(DexVector3(-30.0f, 60, 30.0f), 3, 1.0f);
-	testMesh->AddVertex(DexVector3(-30.0f, 60, -30.0f), 3, 1.0f);
-
+	testMesh->AddVertex(DexVector3(30.0f, 0, -30.0f), DexVector2(0.33f, 1.0f), 2, 1.0f);
+	testMesh->AddVertex(DexVector3(30.0f, 0, 30.0f), DexVector2(0.66f, 1.0f), 2, 1.0f);
+	testMesh->AddVertex(DexVector3(-30.0f, 0, 30.0f), DexVector2(0.99f, 1.0f), 4, 0.5f, 3, 0.5f);
+	testMesh->AddVertex(DexVector3(-30.0f, 0, -30.0f), DexVector2(0.0f, 1.0f), 4, 0.5f, 3, 0.5f);
+	testMesh->AddVertex(DexVector3(30.0f, 60, -30.0f), DexVector2(0.33f, 0.0f), 4, 1.0f);
+	testMesh->AddVertex(DexVector3(30.0f, 60, 30.0f), DexVector2(0.66f, 0.0f), 4, 1.0f);
+	testMesh->AddVertex(DexVector3(-30.0f, 60, 30.0f), DexVector2(0.99f, 0.0f), 3, 1.0f);
+	testMesh->AddVertex(DexVector3(-30.0f, 60, -30.0f), DexVector2(0.0f, 0.0f), 3, 1.0f);
+	testMesh->SetTexture(getUiSrcMgrSingleton()->getUiTexFactory()->FindTex("b23.png"));
 	testMesh->CalculateVertex();
 	testMesh->SetIndices(indices, 12 * 3);
 

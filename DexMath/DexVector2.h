@@ -126,6 +126,7 @@ inline DexVector2T<T>& DexVector2T<T>::operator = (const DexVector2T<T>& vector2
 {
 	x = vector2.x;
 	y = vector2.y;
+	return *this;
 }
 template<typename T>
 inline bool DexVector2T<T>::operator == (const DexVector2T<T>& vector2)const
@@ -145,6 +146,7 @@ inline DexVector2T<T> DexVector2T<T>::operator + (const DexVector2T<T>& vector2)
 	DexVector2T<T> ret;
 	ret.x = x + vector2.x;
 	ret.y = y + vector2.y;
+	return ret;
 }
 template<typename T>
 inline DexVector2T<T> DexVector2T<T>::operator - (const DexVector2T<T>& vector2)const
@@ -152,6 +154,7 @@ inline DexVector2T<T> DexVector2T<T>::operator - (const DexVector2T<T>& vector2)
 	DexVector2T<T> ret;
 	ret.x = x - vector2.x;
 	ret.y = y - vector2.y;
+	return ret;
 }
 template<typename T>
 inline DexVector2T<T> DexVector2T<T>::operator * (float _value)const
@@ -159,6 +162,7 @@ inline DexVector2T<T> DexVector2T<T>::operator * (float _value)const
 	DexVector2T<T> ret;
 	ret.x = x * _value;
 	ret.y = y * _value;
+	return ret;
 }
 template<typename T>
 inline DexVector2T<T> DexVector2T<T>::operator / (float _value)const
@@ -166,6 +170,7 @@ inline DexVector2T<T> DexVector2T<T>::operator / (float _value)const
 	DexVector2T<T> ret;
 	ret.x = x / _value;
 	ret.y = y / _value;
+	return ret;
 }
 
 template<typename T>

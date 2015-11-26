@@ -12,6 +12,7 @@
 #include "../DexBase/CDexTime.h"
 #include "../DexBase/DexObjectFactory.h"
 #include "../DexMath/Dex_To_Dx.h"
+#include "../Source/CTexture.h"
 
 DexGameEngine* DexGameEngine::g_pGameEngine = NULL;
 CRITICAL_SECTION  g_cs;
@@ -432,6 +433,15 @@ void DexGameEngine::Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, c
 	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP( D3DPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
 }
 
+void DexGameEngine::SetTexture(int32 stage, CDexTex* texture)
+{
+	LPDIRECT3DTEXTURE9 dx_tex = NULL;
+	if (texture != NULL)
+	{
+		dx_tex = texture->GetTexPt();
+	}
+	g_D3DDevice->SetTexture(stage, dx_tex);
+}
 /*
 使用示例：
 void* test_primitive_vertex;
@@ -454,7 +464,7 @@ memcpy(test_primitive_indice, indices, sizeof(indices));
 Render:
 DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 */
-void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize)
+void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize)
 {
 	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -472,7 +482,7 @@ void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, i
 		break;
 	}
 	D3DXMatrixIdentity(&g_worldMatrix);
-	DexGameEngine::getEngine()->GetDevice()->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
+	DexGameEngine::getEngine()->GetDevice()->SetFVF((DWORD)fvf);
 	DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &g_worldMatrix);
 	//DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, vertexs, sizeof(stVertex0));
 	//这里的D3DFMT_INDEX32，如果indices是int32整型数组的话，设置D3DFMT_INDEX32,如果是int16类型的整型数组的话，那么设置D3DFMT_INDEX16

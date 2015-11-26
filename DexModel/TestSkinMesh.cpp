@@ -1,4 +1,5 @@
 
+#include "../Source/CTexture.h"
 #include "../state/DexGameEngine.h"
 #include "TestSkinMesh.h"
 
@@ -107,6 +108,7 @@ TestSkinMesh::TestSkinMesh(int32 maxAniTime)
 	AnimateMaxTime = maxAniTime;
 	vertexs = NULL;
 	indices = NULL;
+	texture = NULL;
 }
 
 void TestSkinMesh::CalculateVertex()
@@ -115,9 +117,11 @@ void TestSkinMesh::CalculateVertex()
 	{
 		free(vertexs);
 	}
-	vertexs = new stVertex0[mesh_vertexs.size()];
+	vertexs = new stVertex1[mesh_vertexs.size()];
 	for (size_t i = 0; i < mesh_vertexs.size(); ++i)
 	{
+		vertexs[i].m_u = mesh_vertexs[i]->uv.x;
+		vertexs[i].m_v = mesh_vertexs[i]->uv.y;
 		vertexs[i].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 1.0f));
 		vertexs[i].m_pos.x = mesh_vertexs[i]->mesh_matrix.GetPosition().x;
 		vertexs[i].m_pos.y = mesh_vertexs[i]->mesh_matrix.GetPosition().y;
@@ -155,7 +159,9 @@ void TestSkinMesh::Render()
 	{
 		root_joint->Render();
 	}
-	DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, vertexs, mesh_vertexs.size(), indices, indices_count/3, sizeof(stVertex0));
+	DexGameEngine::getEngine()->SetTexture(0, texture);
+	DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, vertexs, mesh_vertexs.size(), indices, indices_count / 3, FVF_XYZ_DIFF_TEX1, sizeof(stVertex1));
+	DexGameEngine::getEngine()->SetTexture(0, NULL);
 }
 Joint* TestSkinMesh::FindJoint(int32 jointId)
 {
@@ -210,12 +216,39 @@ bool TestSkinMesh::AddJointKeyFrame(int32 jointid, int32 time, const DexMatrix4x
 	joint->AddKeyFrame(time, matrix);
 	return true;
 }
-void TestSkinMesh::AddVertex(const DexVector3& pos, int jointid1 /* = -1 */, float weight1 /* = 1.0f */, int jointid2 /* = -1 */, float weight2 /* = 0.0f */)
+
+bool TestSkinMesh::SetTexture(CDexTex* tex)
+{
+	if (tex == NULL)
+		return false;
+	if (texture != NULL)
+	{
+		texture->ReduceRef();
+	}
+	texture = tex; 
+	tex->AddRef();
+	return true;
+}
+
+bool TestSkinMesh::SetTexture(const char* filename)
+{
+	bool ret = false;
+	if (texture != NULL)
+	{
+		texture->ReduceRef();
+		texture = NULL;
+	}
+	texture = new CDexTex;
+	ret = texture->LoadTex(filename);
+	return ret;
+}
+void TestSkinMesh::AddVertex(const DexVector3& pos, const DexVector2& uv, int jointid1 /* = -1 */, float weight1 /* = 1.0f */, int jointid2 /* = -1 */, float weight2 /* = 0.0f */)
 {
 	MeshVertex* vertex = new MeshVertex;
 	DexMatrix4x4 mesh_matrix;
 	mesh_matrix.Identity(); mesh_matrix.Translate(pos);
 	vertex->mesh_matrix = mesh_matrix;
+	vertex->uv = uv;
 	Joint* joint1 = FindJoint(jointid1);
 	Joint* joint2 = FindJoint(jointid2);
 	if (joint1 != NULL)

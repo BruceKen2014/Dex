@@ -44,7 +44,8 @@ public:
 	std::vector<Joint*>  Joints;
 	std::vector<DexMatrix4x4>  Joints_localMatrix; //mesh 空间中相对于各个骨骼的坐标
 	std::vector<float>  JointWeigth;
-	stVertex0* vertexData;
+	stVertex1* vertexData;
+	DexVector2 uv;
 public:
 	MeshVertex()
 	{
@@ -56,6 +57,7 @@ public:
 	DexMatrix4x4 ComputeWorldMatrix();
 	void BindJoint(Joint* joint, float weight);
 };
+class CDexTex;
 class TestSkinMesh
 {
 public:
@@ -66,9 +68,9 @@ public:
 	std::vector<int32>	 Indices;
 	int32 AnimateNowTime;
 	int32 AnimateMaxTime;
-	LPDIRECT3DTEXTURE9 texture;
+	CDexTex* texture;
 	D3DMATERIAL9 material;
-	stVertex0*	vertexs;
+	stVertex1*	vertexs;
 	int32		indices_count;
 	int32*		indices;
 	
@@ -81,7 +83,9 @@ public:
 	Joint* FindJoint(int32 jointId);
 	bool AddJoint(int id, int father_id, const DexMatrix4x4& father_matrix);
 	bool AddJointKeyFrame(int32 jointid, int32 time, const DexMatrix4x4& matrix);
-	void AddVertex(const DexVector3& pos, int jointid1 = -1, float weight1 = 1.0f, int jointid2 = -1, float weight2 = 0.0f);
+	bool SetTexture(CDexTex* tex);
+	bool SetTexture(const char* filename);
+	void AddVertex(const DexVector3& pos, const DexVector2& uv, int jointid1 = -1, float weight1 = 1.0f, int jointid2 = -1, float weight2 = 0.0f);
 	void AddVertex(const DexMatrix4x4& mesh_matrix, int jointid1 = -1, float weight1 = 1.0f, int jointid2 = -1, float weight2 = 0.0f);
 	void SetIndices(void* indics, int32 count);
 };
