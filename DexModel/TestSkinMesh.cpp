@@ -8,6 +8,9 @@ Joint::Joint()
 	frames.clear();
 	children.clear();
 }
+Joint::~Joint()
+{
+}
 void Joint::AddChild(Joint* child)
 {
 	children.push_back(child);
@@ -102,21 +105,40 @@ void MeshVertex::BindJoint(Joint* joint, float weight)
 	Joints.push_back(joint);
 }
 
-TestSkinMesh::TestSkinMesh(int32 maxAniTime)
+TestSkinMesh::TestSkinMesh(int16 maxAniTime)
 {
+	AnimateStartTime = 0;
 	AnimateNowTime = 0;
+	AnimateEndTime = maxAniTime;
 	AnimateMaxTime = maxAniTime;
 	vertexs = NULL;
 	indices = NULL;
 	texture = NULL;
 }
+TestSkinMesh::~TestSkinMesh()
+{
+	_SafeFree(indices);
+	_SafeReduceRef(texture);
+	_SafeFree(vertexs);
+	_SafeClearVector(joints);
+	_SafeClearVector(mesh_vertexs);
+}
+
+bool TestSkinMesh::SetAnimateTime(int16 start, int16 end)
+{
+	bool ret = false;
+	if (start >= 0 && start <= end && end <= AnimateMaxTime)
+	{
+		AnimateStartTime = start;
+		AnimateEndTime = end;
+		ret = true;
+	}
+	return ret;
+}
 
 void TestSkinMesh::CalculateVertex()
 {
-	if (vertexs != NULL)
-	{
-		free(vertexs);
-	}
+	_SafeFree(vertexs);
 	vertexs = new stVertex1[mesh_vertexs.size()];
 	for (size_t i = 0; i < mesh_vertexs.size(); ++i)
 	{
@@ -133,9 +155,9 @@ void TestSkinMesh::CalculateVertex()
 void TestSkinMesh::Update(int32 delta)
 {
 	AnimateNowTime += delta;
-	if (AnimateNowTime > AnimateMaxTime)
+	if (AnimateNowTime > AnimateEndTime)
 	{
-		AnimateNowTime = AnimateMaxTime;
+		AnimateNowTime = AnimateEndTime;
 	}
 	if (root_joint != NULL)
 	{
@@ -148,9 +170,9 @@ void TestSkinMesh::Update(int32 delta)
 			mesh_vertexs[i]->ComputeWorldMatrix();
 		}
 	}
-	if (AnimateNowTime >= AnimateMaxTime)
+	if (AnimateNowTime >= AnimateEndTime)
 	{
-		AnimateNowTime = 0;
+		AnimateNowTime = AnimateStartTime;
 	}
 }
 void TestSkinMesh::Render()

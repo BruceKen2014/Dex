@@ -161,6 +161,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DexBase\DexDefine.h" />
     <ClInclude Include="DexBase\DexPrimitive.h" />
     <ClInclude Include="DexBase\DexType.h" />
     <ClInclude Include="DexBase\DexVertex.h" />

@@ -372,6 +372,9 @@
     <ClInclude Include="DexBase\DexVertex.h">
       <Filter>DexBase</Filter>
     </ClInclude>
+    <ClInclude Include="DexBase\DexDefine.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">

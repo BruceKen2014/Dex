@@ -28,6 +28,7 @@ public:
 
 public:
 	Joint();
+	~Joint();
 	void AddChild(Joint* child);
 	//先按照时间从小到大插入
 	void AddKeyFrame(int32 time, const DexMatrix4x4& matrix);
@@ -51,8 +52,10 @@ public:
 	{
 		Joints.clear();
 		JointWeigth.clear();
+		Joints_localMatrix.clear();
 		vertexData = NULL;
 	}
+	~MeshVertex(){}
 public:
 	DexMatrix4x4 ComputeWorldMatrix();
 	void BindJoint(Joint* joint, float weight);
@@ -61,22 +64,26 @@ class CDexTex;
 class TestSkinMesh
 {
 public:
-	Joint*	root_joint;
-
-	std::vector<Joint*>	joints;
-	std::vector<MeshVertex*> mesh_vertexs;
-	std::vector<int32>	 Indices;
-	int32 AnimateNowTime;
-	int32 AnimateMaxTime;
-	CDexTex* texture;
-	D3DMATERIAL9 material;
-	stVertex1*	vertexs;
+	Joint*		root_joint;
+	int16		AnimateStartTime;
+	int16		AnimateNowTime;
+	int16		AnimateEndTime;
+	int16		AnimateMaxTime;
 	int32		indices_count;
 	int32*		indices;
+	CDexTex*	texture;
+	stVertex1*	vertexs;
+	std::vector<Joint*>		 joints;
+	std::vector<MeshVertex*> mesh_vertexs;
+	D3DMATERIAL9 material;
+	
+
 	
 public:
-	
-	TestSkinMesh(int32 maxAniTime);
+	TestSkinMesh(int16 maxAniTime);
+	~TestSkinMesh();
+public:
+	bool SetAnimateTime(int16 start, int16 end);
 	void CalculateVertex();
 	void Update(int32 delta);
 	void Render();

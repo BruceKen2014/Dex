@@ -128,7 +128,8 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
 	ms3d = new DexModelMs3d();
 	ms3d->LoadModel("ms3d/Model.ms3d");
-	testMesh = new TestSkinMesh(2000);
+	testMesh = new TestSkinMesh(2000); 
+	testMesh->SetAnimateTime(1000, 2000);
 	DexMatrix4x4 temp_matrix;	temp_matrix.Identity();
 	temp_matrix.SetPosition(0, 0, 0); testMesh->AddJoint(1, -1, temp_matrix);
 	temp_matrix.Identity(); testMesh->AddJointKeyFrame(1, 0, temp_matrix);

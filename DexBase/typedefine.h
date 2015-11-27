@@ -37,20 +37,10 @@ extern "C"
 #pragma warning(disable:4996)  //strcpy': This function or variable may be unsafe. Consider using strcpy_s instead
 #pragma warning(disable:4800)   //“int”: 将值强制为布尔值“true”或“false”(性能警告)
 
-
-
-#define  DEX_DEBGU   //开发模式  
-#define  DEX_LOG     //开启log
-
-#define  DEMO_ERROR   0xFFFF   //异常错误
-#define  PI           3.14159265358979323846
-#define  FVF_XYZ_TEX1		  (D3DFVF_XYZ | D3DFVF_TEX1 )
-#define  FVF_XYZ_T1_N		  (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_NORMAL)
-#define  FVF_XYZ_DIFF_TEX1	  (D3DFVF_XYZ| D3DFVF_DIFFUSE |D3DFVF_TEX1 )
-
 #include "DexType.h"
 #include "DexColor.h"
 #include "DexVertex.h"
+#include "DexDefine.h"
 
 
 using namespace std;
@@ -132,9 +122,7 @@ inline unsigned long  FtoDW(float val)
 template<typename T>
 bool   _equal(T f1,T f2,T pre = 1e-04f) { if(fabs((f1 - f2)) < pre) return true ; else return false;};
 
-//角度弧度转换
-#define  _getDegree(radian)		 180.0f * (radian)/PI
-#define  _getRadian(degree)		 PI * (degree)/180.0f
+
 
 
 //引擎函数接口 具体数据由主程序传入
@@ -162,60 +150,6 @@ extern D3DXMATRIX g_rotateMatrix;
 extern D3DXMATRIX g_matrixTemp;
 extern D3DXMATRIX g_matrix;
 
-//取0~1之间的浮点数随机数
-#define RandFloat()	  (((float)rand()) / RAND_MAX)
-
-#define _SafeRelease(t)	  \
-{						 \
-	if((t) != NULL)			 \
-	{						  \
-		(t)->Release();			\
-		(t) = NULL;			 \
-	}						 \
-}
-#define _SafeDelete(t)	  \
-{						 \
-	if((t) != NULL)			 \
-	{						  \
-		delete (t);			\
-		(t) = NULL;			 \
-	}						 \
-}
-#define SAFE_DELETE(T)  _SafeDelete(T)
-
-#define  _SafeDeleteArr(t) \
-{							  \
-	if((t) != NULL)			   \
-	{							\
-		delete[] (t);				\
-		(t) = NULL;				 \
-	}							\
-}
-#define _SafeFree(t)	   \
-{						   \
-	if((t) != NULL)		  \
-	{					  \
-		free((t));		 \
-		(t) = NULL;	   \
-	}					\
-}
-#define _SafeUpdate(t)   \
-{						\
-	if((t) != NULL)		\
-		(t)->Update();   \
-}
-
-#define  _SafeRender(t)	\
-{					   \
-	if((t) != NULL)		\
-		(t)->Render();   \
-}
-#define  CheckPoint(t)  ((t)!=NULL)
-#define  DEX_ENSURE(p)     if(!(p))   return; 
-#define  DEX_ENSURE_B(p)   if(!(p))   return false;
-#define  DEX_ENSURE_P(p)   if(!(p))   return NULL;
-#define foreach(type, it, value)  type::iterator it;for( it= (value).begin(); it != (value).end(); ++it)
-#define foreach_const(type, it, value)  type::const_iterator it;for( it= (value).begin(); it != (value).end(); ++it)
 struct stTexture
 {
 	LPDIRECT3DTEXTURE9 m_pTexture;
@@ -226,23 +160,7 @@ struct stTexture
 	stTexture(LPDIRECT3DDEVICE9 pD3DDevice, const char* filename);
 	~stTexture();
 };
-template<typename T>
-//安全清空对象向量
-void _SafeClearVector(std::vector<T>& vec)
-{
-	for(std::vector<T>::iterator it = vec.begin(); it != vec.end();)
-	{
-		if(*it != NULL)
-		{
-			_SafeDelete((*it));
-			vec.erase(it);
-			it = vec.begin();
-			if(it == vec.end())
-				break;
-		}
-	}
-	vec.clear();
-}
+
 char *del(char *p,char *q);
 
 HRESULT FindMediaFile( TCHAR* strPath, TCHAR* strFilename ); 
