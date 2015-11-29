@@ -12,6 +12,9 @@
 #include "../DexBase/CDexTime.h"
 #include "../DexBase/DexObjectFactory.h"
 #include "../DexMath/Dex_To_Dx.h"
+
+#include "../DexModel/DexModelMs3dLoader.h"
+#include "../DexModel/DexSkinMesh.h"
 #include "../Source/CTexture.h"
 
 DexGameEngine* DexGameEngine::g_pGameEngine = NULL;
@@ -52,6 +55,7 @@ DexGameEngine::DexGameEngine()
 	g_material.Specular = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 	g_material.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 	g_material.Power = 0;
+	ms3dLoader = new DexModelMs3dLoader;
 }
 DexGameEngine::~DexGameEngine()
 {
@@ -201,7 +205,7 @@ bool DexGameEngine::Initialize()
 	luaL_openlibs(L);  //¼ÓÔØÀ©Õ¹¿â
 
 	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	g_D3DDevice->SetRenderState(D3DRS_AMBIENT, getD3DColor(DexColor(1.0f, 1.0f, 1.0f))); 
+	SetWorldAmbient(getD3DColor(DexColor(0.0f, 0.0f, 0.0f))); 
 	g_camera = new CCamera;
 	SetProjectArgus(45.0f, ((float)g_iWindowWidth)/((float)g_iWinddowHeight), 1.0f, 10000.0f);
 	CInputSystem::GetInputSingleton();
@@ -417,6 +421,20 @@ void DexGameEngine::Render3DLine(const DexVector3& p0, const DexVector3& p1, con
 	DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &g_worldMatrix);
 	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
 }
+void DexGameEngine::Render3DLine(const DexVector3& p, const DexVector3& vec, const DexColor& color1, float length, const DexColor& color2)
+{
+	g_pVertexList1[0].SetPos(p);
+	g_pVertexList1[0].m_color = getD3DColor(color1);
+	DexVector3 vector = vec;
+	vector.Normalize();
+	g_pVertexList1[1].SetPos(p + length * vector);
+	g_pVertexList1[1].m_color = getD3DColor(color2);
+	D3DXMatrixIdentity(&g_worldMatrix);
+	DexGameEngine::getEngine()->GetDevice()->SetFVF(FVF_XYZ_DIFF_TEX1);
+	DexGameEngine::getEngine()->GetDevice()->SetTexture(0, NULL);
+	DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &g_worldMatrix);
+	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
+}
 
 void DexGameEngine::Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, const DexColor& color1, float length, const DexColor& color2)
 {
@@ -433,6 +451,11 @@ void DexGameEngine::Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, c
 	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP( D3DPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
 }
 
+void DexGameEngine::SetMaterial(const DexMaterial& material)
+{
+	material.GetDXMaterial(g_material);
+	g_D3DDevice->SetMaterial(&g_material);
+}
 void DexGameEngine::SetTexture(int32 stage, CDexTex* texture)
 {
 	LPDIRECT3DTEXTURE9 dx_tex = NULL;
@@ -489,6 +512,22 @@ void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, i
 	g_D3DDevice->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
 
 	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+}
+
+DexModelBase* DexGameEngine::CreateModel(const char* filename)
+{
+	DexModelBase* ret = NULL;
+	int32 length = strlen(filename);
+	if (length > 4  
+		&& filename[length - 4] == 'm'
+		&& filename[length - 3] == 's'
+		&& filename[length - 2] == '3'
+		&& filename[length - 1] == 'd')
+	{//ms3d file
+		//load as DexSkinMesh
+		ret = ms3dLoader->LoadModel(filename);
+	}
+	return ret;
 }
 
 bool DexGameEngine::AddState(DexGameState* state)
@@ -763,6 +802,33 @@ void DexGameEngine::EnableRangeFog()
 		g_D3DDevice->SetRenderState(D3DRS_RANGEFOGENABLE, TRUE);
 }
 
+void DexGameEngine::SetWorldAmbient(const DexColor& color)
+{
+	g_D3DDevice->SetRenderState(D3DRS_AMBIENT, getD3DColor(color));
+}
+
+void DexGameEngine::SetLightEnable(bool enable)
+{
+	m_bLightEnable = enable;
+	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, enable);
+}
+
+void DexGameEngine::SetLightIdEnable(int32 index, bool enable)
+{
+	g_D3DDevice->LightEnable(index, enable);
+}
+
+void DexGameEngine::SetLight(int32 index, const DexLight& light)
+{
+	D3DLIGHT9 dxLight;
+	light.GetDXLight(&dxLight);
+	g_D3DDevice->SetLight(index, &dxLight);
+}
+
+bool DexGameEngine::GetLightEnable()
+{
+	return m_bLightEnable;
+}
 
 CCamera* DexGameEngine::getCamera()
 {

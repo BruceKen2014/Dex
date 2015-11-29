@@ -10,6 +10,7 @@
 #define  FVF_XYZ_TEX1		  (D3DFVF_XYZ | D3DFVF_TEX1 )
 #define  FVF_XYZ_T1_N		  (D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_NORMAL)
 #define  FVF_XYZ_DIFF_TEX1	  (D3DFVF_XYZ| D3DFVF_DIFFUSE |D3DFVF_TEX1 )
+#define  FVF_XYZ_COLOR_T1_N	  (D3DFVF_XYZ| D3DFVF_DIFFUSE  | D3DFVF_TEX1 | D3DFVF_NORMAL)
 
 //取0~1之间的浮点数随机数
 #define RandFloat()	  (((float)rand()) / RAND_MAX)
@@ -67,8 +68,8 @@
 		(t)->AddRef();\
 }
 #define  _SafeReduceRef(t)\
-{	if((t) != NULL)\
-		(t)->ReduceRef();\
+{	if ((t) != NULL)\
+	(t)->ReduceRef(); \
 }
 #define  CheckPoint(t)  ((t)!=NULL)
 #define  DEX_ENSURE(p)     if(!(p))   return; 
@@ -76,21 +77,23 @@
 #define  DEX_ENSURE_P(p)   if(!(p))   return NULL;
 #define foreach(type, it, value)  type::iterator it;for( it= (value).begin(); it != (value).end(); ++it)
 #define foreach_const(type, it, value)  type::const_iterator it;for( it= (value).begin(); it != (value).end(); ++it)
+
+#include <vector>
+//安全清空std::vector对象向量
 template<typename T>
-//安全清空对象向量
 void _SafeClearVector(std::vector<T>& vec)
 {
-	for (std::vector<T>::iterator it = vec.begin(); it != vec.end();)
+	for (std::vector<T>::iterator it = (vec).begin(); it != (vec).end();)
 	{
 		if (*it != NULL)
 		{
 			_SafeDelete((*it));
-			vec.erase(it);
-			it = vec.begin();
-			if (it == vec.end())
+			(vec).erase(it);
+			it = (vec).begin();
+			if (it == (vec).end())
 				break;
 		}
 	}
-	vec.clear();
+	(vec).clear(); 
 }
 #endif

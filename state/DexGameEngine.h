@@ -5,6 +5,8 @@
 #include "../DexBase/typedefine.h"
 #include "../DexBase/DexMem.h"
 #include "../DexBase/DexPrimitive.h"
+#include "../DexBase/DexMaterial.h"
+#include "../DexBase/DexLight.h"
 #include "../Source/CCamera.h"
 #include "../widget/DexGuiStruct.h"
 #include "../Geometry/CRay.h"
@@ -15,6 +17,8 @@
 class DexGameState;
 class DexGlobal;
 class CDexTex;
+class DexModelBase;
+class IDexModelLoader;
 // typedef enum
 // {
 // 	DEXRS_ZENABLE					,   //是否开启Z buff
@@ -106,6 +110,7 @@ private:
 	bool              m_bRenderActionRouteLine;    //object action 軌跡
 	bool              m_bRenderPieceEffectRoute;   //麵片軌跡 
 	bool              m_bLoading;
+	bool              m_bLightEnable;
 
 	std::map<string, DexGameState*> g_States;  //引擎管理多个游戏状态
 
@@ -119,7 +124,7 @@ private:
 	LPD3DXMESH  g_cube;   //辅助立方体 将这个立方体渲染出来 方便查看Node位置
 	LPD3DXMESH  g_sphere;
 	string         g_nextStateName;
-
+	IDexModelLoader* ms3dLoader;
 private:
 	DexGameEngine();
 	~DexGameEngine();
@@ -138,6 +143,8 @@ public:
 											 //只渲染文字，所以不需要切换视图矩阵等参数
 	LPDIRECT3DSURFACE9 m_pBufferFontTextureSurface;
 	LPDIRECT3DSURFACE9 m_pBackSurface;  //最终渲染的Surface
+
+public:
 
 public:
 	static DexGameEngine* getEngine()
@@ -205,6 +212,13 @@ public:
 	void DisableRangeFog();
 	void EnableRangeFog();
 
+	//灯光：这里负责赋参数，具体灯光管理应由各个场景管理
+	void SetWorldAmbient(const DexColor& color); //世界环境光，默认是黑色
+	void SetLightEnable(bool enable);
+	void SetLightIdEnable(int32 index, bool enable);
+	void SetLight(int32 index, const DexLight& light);
+	bool GetLightEnable();
+
 
 	//render line cube sphere
 	void RenderCoorLines();
@@ -218,11 +232,13 @@ public:
 	void Render3DLine(const DexVector3& p0, const DexVector3& p1, const DexColor& color1 = 0xffffffff, const DexColor& color2 = 0xffffffff);
 	//从点p出发，朝vec方向绘制直线 color1:颜色 length:线段长度 color2末断点颜色
 	void Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, const DexColor& color1 = 0xffffffff, float length = 100, const DexColor& color2 = 0xffffffff);
-	
+	void Render3DLine(const DexVector3& p, const DexVector3& vec, const DexColor& color1 = 0xffffffff, float length = 100, const DexColor& color2 = 0xffffffff);
+
+	void SetMaterial(const DexMaterial& material);
 	void SetTexture(int32 stage, CDexTex* texture);
 	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize);
 	
-	
+	DexModelBase* CreateModel(const char* filename);
 	
 	void LookAtLH(const D3DXVECTOR3 *pEye, const D3DXVECTOR3 *pAt, const D3DXVECTOR3 *pUp);
 	

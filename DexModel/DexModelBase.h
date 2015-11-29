@@ -8,61 +8,31 @@
 #define _DEX_MODEL_BASE_H_
 
 #include "../DexBase/CDexObject.h"
-#include "../DexMath/DexVector3.h"
 class CDexTex;
 class DexModelBase:public CDexObject
 {
 	Dex_DeclareClass(DexModelBase, 0)
 public:
-	struct Vertex
-	{
-		int8 m_boneID;	// for skeletal animation
-		DexVector3 m_location;
-	};
-	struct Triangle
-	{
-		float m_vertexNormals[3][3];
-		float m_s[3], m_t[3];
-		int m_vertexIndices[3];
-	};
-	struct Material
-	{
-		float m_ambient[4], m_diffuse[4], m_specular[4], m_emissive[4];
-		float m_shininess;
-		int32 m_texture;
-		char *m_pTextureFilename;
-	};
-	struct Mesh
-	{
-		int m_materialIndex;
-		int m_numTriangles;
-		int *m_pTriangleIndices;
-	};
-public:
 	DexModelBase();
 	virtual ~DexModelBase();
+protected:
+	/*
+	是否受外部光照影响,
+	如果是false,无论外部是否打开光照，内部渲染都会将光照关闭，然后显示默认的材质与贴图
+	如果是true,渲染时将光照打开，这时如果外部没有设置灯光信息的话，渲染效果与自发光有关，如果自发光是黑色的
+				那么最后就是黑色的。
+	默认为true,受光照影响
+	*/
+	bool	    m_bLightFlag; //is it influenced by engine light
 
+
+public:
+	void SetLightFlag(bool enable);
 public:
 	virtual bool Update(int delta);
 	virtual bool Render();
-	virtual bool LoadModel(const char* filename) = 0; //日后扩展从字节流中加载文件
+	virtual bool LoadModel(const char* filename){ return true; }; //日后扩展从字节流中加载文件
 protected:
-	//	Meshes used
-	int m_numMeshes;
-	Mesh *m_pMeshes;
-
-	//	Materials used
-	int m_numMaterials;
-	Material *m_pMaterials;
-
-	//	Triangles used
-	int m_numTriangles;
-	Triangle *m_pTriangles;
-
-	//	Vertices Used
-	int m_numVertices;
-	Vertex *m_pVertices;
-
-	CDexTex* m_textureList;
+	virtual bool CheckAnimate(){ return false; };
 };
 #endif

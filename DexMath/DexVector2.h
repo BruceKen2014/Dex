@@ -247,8 +247,8 @@ template<typename T1, typename T>
 DexVector2T<T> operator* (T1 _value, const DexVector2T<T>& vector2)
 {
 	DexVector2T<T> ret;
-	ret.x = vector2.x *  T1;
-	ret.y = vector2.y *  T1;
+	ret.x = (T)(vector2.x *  _value);
+	ret.y = (T)(vector2.y *  _value);
 	return ret;
 }
 typedef DexVector2T<float>  DexVector2;

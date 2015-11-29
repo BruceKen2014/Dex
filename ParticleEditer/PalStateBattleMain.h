@@ -3,6 +3,7 @@
 #define _PALGAMESTATE_BATTLE_MAIN_H
 #include <map>
 #include "state/DexGameState.h"
+#include "DexBase/DexLight.h"
 #include "PalTypeDefine.h"
 
 class PalPlayer;
@@ -18,7 +19,7 @@ class PalPanelInterface;
 class PalBattleStateMachine;
 class CDexWidgetImage;
 class DexModelBase;
-class TestSkinMesh;
+class DexSkinMesh;
 class PalGameStateBattleMain: public DexGameState
 {
 	Dex_DeclareClass(PalGameStateBattleMain,1)
@@ -48,8 +49,9 @@ protected:
 	typedef list<PalPlayer*> TlistPlayer;
 	TlistPlayer   m_listEnemies;
 	TlistPlayer   m_listPlayers;
-	DexModelBase* ms3d;
-	TestSkinMesh* testMesh;
+	DexSkinMesh* ms3d;
+	DexSkinMesh* testMesh;
+	DexLight light;
 	void* test_primitive_vertex;
 	void* test_primitive_indice;
 	PalBattleStateMachine* m_pBattleMainMachine;

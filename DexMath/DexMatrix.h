@@ -578,6 +578,37 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateZ(float32 radian)
 	_42 =  old_41*sin(a) + old_42*cos(a);
 	return *this;
 }
+template<typename T1, typename T>
+DexMatrix4x4T<T> operator* (T1 _value, const DexMatrix4x4T<T>& matrix)
+{
+	DexMatrix4x4T<T> ret;
+	ret.m[0] = (T)(matrix.m[0] * _value);
+	ret.m[1] = (T)(matrix.m[1] * _value);
+	ret.m[2] = (T)(matrix.m[2] * _value);
+	ret.m[3] = (T)(matrix.m[3] * _value);
+	ret.m[4] = (T)(matrix.m[4] * _value);
+	ret.m[5] = (T)(matrix.m[5] * _value);
+	ret.m[6] = (T)(matrix.m[6] * _value);
+	ret.m[7] = (T)(matrix.m[7] * _value);
+	ret.m[8] = (T)(matrix.m[8] * _value);
+	ret.m[9] = (T)(matrix.m[9] * _value);
+	ret.m[10] = (T)(matrix.m[10] * _value);
+	ret.m[11] = (T)(matrix.m[11] * _value);
+	ret.m[12] = (T)(matrix.m[12] * _value);
+	ret.m[13] = (T)(matrix.m[13] * _value);
+	ret.m[14] = (T)(matrix.m[14] * _value);
+	ret.m[15] = (T)(matrix.m[15] * _value);
+	return ret;
+}
+template<typename T1, typename T>
+DexVector3T<T1> operator* (const DexVector3T<T1>& vector, const DexMatrix4x4T<T>& matrix)
+{
+	DexVector3T<T1> ret;
+	ret.x = (T1)(vector.x * matrix._11 + vector.y * matrix._21 + vector.z * matrix._31 + 1 * matrix._41);
+	ret.y = (T1)(vector.x * matrix._12 + vector.y * matrix._22 + vector.z * matrix._32 + 1 * matrix._42);
+	ret.z = (T1)(vector.x * matrix._13 + vector.y * matrix._23 + vector.z * matrix._33 + 1 * matrix._43);
+	return ret;
+}
 typedef DexMatrix4x4T<float32>  DexMatrix4x4;
 
 #endif

@@ -19,6 +19,13 @@ typedef struct _DexColor
 	}
 	_DexColor(float _r, float _g, float _b):r(_r),g(_g),b(_b),a(1.0f){}
 	_DexColor(float _r, float _g, float _b, float _a):r(_r),g(_g),b(_b),a(_a){}
+	void Set(float _r, float _g, float _b, float _a) 
+	{
+		r = _r;
+		g = _g;
+		b = _b;
+		a = _a;
+	}
 	_DexColor& operator = (const _DexColor& color)
 	{
 		r = color.r;
@@ -74,8 +81,8 @@ const   DexColor  DEXCOLOR_YELLOW	 = DexColor(1.0f, 1.0f, 0.0f, 1.0f); //»ÆÉ«
 const   DexColor  DEXCOLOR_SILBLUE   = DexColor(1.0f, 0.0f, 1.0f, 1.0f); //ÒøÀ¶
 inline DWORD getD3DColor(const DexColor& color)
 {
-	return (DWORD)( (( ( (int32)(color.a*255) )&0xff) <<24)|((( (int32)(color.r*255) )&0xff)<<16) |
-		(( ( (int32)(color.g*255) )&0xff) <<8) |((( (int32)(color.b*255) )&0xff)<<0 )
+	return (DWORD)(((((int)(color.a * 255)) & 0xff) << 24) | ((((int)(color.r * 255)) & 0xff) << 16) |
+		((((int)(color.g * 255)) & 0xff) << 8) | ((((int)(color.b * 255)) & 0xff) << 0)
 		);
 }
 

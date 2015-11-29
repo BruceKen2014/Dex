@@ -354,9 +354,6 @@
     <ClInclude Include="DexModel\DexModelMs3d.h">
       <Filter>DexModel</Filter>
     </ClInclude>
-    <ClInclude Include="DexModel\TestSkinMesh.h">
-      <Filter>DexModel</Filter>
-    </ClInclude>
     <ClInclude Include="DexMath\DexMatrix.h">
       <Filter>DexMath</Filter>
     </ClInclude>
@@ -373,6 +370,21 @@
       <Filter>DexBase</Filter>
     </ClInclude>
     <ClInclude Include="DexBase\DexDefine.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexModelLoader.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexSkinMesh.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexModelMs3dLoader.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexMaterial.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexLight.h">
       <Filter>DexBase</Filter>
     </ClInclude>
   </ItemGroup>
@@ -677,7 +689,10 @@
     <ClCompile Include="DexModel\DexModelMs3d.cpp">
       <Filter>DexModel</Filter>
     </ClCompile>
-    <ClCompile Include="DexModel\TestSkinMesh.cpp">
+    <ClCompile Include="DexModel\DexSkinMesh.cpp">
+      <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexModelMs3dLoader.cpp">
       <Filter>DexModel</Filter>
     </ClCompile>
   </ItemGroup>

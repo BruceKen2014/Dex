@@ -133,6 +133,7 @@ inline DexVector3T<T>& DexVector3T<T>::operator = (const DexVector3T<T>& vector3
 	x = vector3.x;
 	y = vector3.y;
 	z = vector3.z;
+	return *this;
 }
 template<typename T>
 inline bool DexVector3T<T>::operator == (const DexVector3T<T>& vector3)const
@@ -155,6 +156,7 @@ inline DexVector3T<T> DexVector3T<T>::operator + (const DexVector3T<T>& vector3)
 	ret.x = x + vector3.x;
 	ret.y = y + vector3.y;
 	ret.z = z + vector3.z;
+	return ret;
 }
 template<typename T>
 inline DexVector3T<T> DexVector3T<T>::operator - (const DexVector3T<T>& vector3)const
@@ -163,6 +165,7 @@ inline DexVector3T<T> DexVector3T<T>::operator - (const DexVector3T<T>& vector3)
 	ret.x = x - vector3.x;
 	ret.y = y - vector3.y;
 	ret.z = z - vector3.z;
+	return ret;
 }
 template<typename T>
 inline DexVector3T<T> DexVector3T<T>::operator * (float _value)const
@@ -171,6 +174,7 @@ inline DexVector3T<T> DexVector3T<T>::operator * (float _value)const
 	ret.x = x * _value;
 	ret.y = y * _value;
 	ret.z = z * _value;
+	return ret;
 }
 template<typename T>
 inline DexVector3T<T> DexVector3T<T>::operator / (float _value)const
@@ -179,6 +183,7 @@ inline DexVector3T<T> DexVector3T<T>::operator / (float _value)const
 	ret.x = x / _value;
 	ret.y = y / _value;
 	ret.z = z / _value;
+	return ret;
 }
 
 template<typename T>
@@ -301,9 +306,9 @@ template<typename T1, typename T>
 DexVector3T<T> operator* (T1 _value, const DexVector3T<T>& vector3)
 {
 	DexVector3T<T> ret;
-	ret.x = vector3.x *  T1;
-	ret.y = vector3.y *  T1;
-	ret.z = vector3.z *  T1;
+	ret.x = (T)(vector3.x *  _value);
+	ret.y = (T)(vector3.y *  _value);
+	ret.z = (T)(vector3.z *  _value);
 	return ret;
 }
 typedef DexVector3T<float>  DexVector3;
