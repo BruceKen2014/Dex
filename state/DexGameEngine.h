@@ -143,7 +143,7 @@ public:
 											 //只渲染文字，所以不需要切换视图矩阵等参数
 	LPDIRECT3DSURFACE9 m_pBufferFontTextureSurface;
 	LPDIRECT3DSURFACE9 m_pBackSurface;  //最终渲染的Surface
-
+	DexRenderMode  m_RenderMode;
 public:
 
 public:
@@ -200,6 +200,9 @@ public:
 	void Render();
 // 	void SetRenderState(Dex_RenderState state, DWORD value);
 
+	//render mode
+	void SetRenderMode(DexRenderMode mode);
+	DexRenderMode	GetRenderMode();
 	//fog
 	void DisableFog();
 	bool OpenFog();

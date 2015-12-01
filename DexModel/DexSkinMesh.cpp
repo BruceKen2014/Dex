@@ -130,11 +130,40 @@ DexSkinMesh::DexMesh::DexMesh()
 	materialId = -1;
 	indices_count = 0;
 	indices = NULL;
+	indices_count_line = 0;
+	indices_line = NULL;
 }
 DexSkinMesh::DexMesh::~DexMesh()
 {
 	_SafeFree(indices);
+	_SafeFree(indices_line);
 }
+
+void DexSkinMesh::DexMesh::DestroyLineIndices()
+{
+	_SafeFree(indices_line);
+}
+int32* DexSkinMesh::DexMesh::CreateLineIndices()
+{
+	_SafeFree(indices_line);
+	indices_count_line = indices_count * 2;
+	indices_line = (int32*)malloc(sizeof(int32)* indices_count_line);
+	int32 line_indice_index = 0;
+	for (int i = 0; i+2 < indices_count;)
+	{//3个顶点为一个三角形
+		indices_line[line_indice_index++] = indices[i];
+		indices_line[line_indice_index++] = indices[i+1];
+
+		indices_line[line_indice_index++] = indices[i];
+		indices_line[line_indice_index++] = indices[i+2];
+
+		indices_line[line_indice_index++] = indices[i + 1];
+		indices_line[line_indice_index++] = indices[i + 2];
+		i = i + 3;
+	}
+	return indices_line;
+}
+
 DexSkinMesh::DexSkinMesh()
 {
 	AnimateStartTime = 0;
@@ -275,15 +304,33 @@ bool DexSkinMesh::Render()
 		DexGameEngine::getEngine()->Render3DLine(mesh_vertexs[i]->worldPosition, mesh_vertexs[i]->worldNormal, DexColor(1.0f, 0.0f, 1.0f), 10.0f, DexColor(1.0f, 0.0f, 1.0f));
 	}
 	bool enabelLight = DexGameEngine::getEngine()->GetLightEnable();
-	DexGameEngine::getEngine()->SetLightEnable(m_bLightFlag);
+	DexGameEngine::getEngine()->SetLightEnable(enabelLight && m_bLightFlag);
 	for (size_t i = 0; i < vec_Meshs.size(); ++i)
 	{
 		if (vec_Meshs[i] == NULL)
 			continue;
-		DexGameEngine::getEngine()->SetMaterial(vec_material[vec_Meshs[i]->materialId]);
-		DexGameEngine::getEngine()->SetTexture(0, vec_texture[vec_Meshs[i]->textureId]);
-		DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, vertexs, mesh_vertexs.size(), vec_Meshs[i]->indices, 
-			vec_Meshs[i]->indices_count / 3, FVF_XYZ_COLOR_T1_N, sizeof(stVertex3));
+		if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_LINE)
+		{
+			DexGameEngine::getEngine()->SetLightEnable(false);
+			if (vec_Meshs[i]->indices_line == NULL)
+			{
+				vec_Meshs[i]->CreateLineIndices();
+			}
+			DexGameEngine::getEngine()->DrawPrimitive(DexPT_LINELIST, vertexs, mesh_vertexs.size(), vec_Meshs[i]->indices_line,
+				vec_Meshs[i]->indices_count_line / 2, FVF_XYZ_COLOR_T1_N, sizeof(stVertex3));
+		}
+		else if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_TRIANGLE)
+		{
+			if (vec_Meshs[i]->indices_line != NULL)
+			{
+				vec_Meshs[i]->DestroyLineIndices();
+			}
+			DexGameEngine::getEngine()->SetMaterial(vec_material[vec_Meshs[i]->materialId]);
+			DexGameEngine::getEngine()->SetTexture(0, vec_texture[vec_Meshs[i]->textureId]);
+			DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, vertexs, mesh_vertexs.size(), vec_Meshs[i]->indices,
+				vec_Meshs[i]->indices_count / 3, FVF_XYZ_COLOR_T1_N, sizeof(stVertex3));
+		}
+
 	}
 	DexGameEngine::getEngine()->SetLightEnable(enabelLight);
 	DexGameEngine::getEngine()->SetTexture(0, NULL);

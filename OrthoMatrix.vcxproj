@@ -170,6 +170,7 @@
     <ClInclude Include="DexCommonFunction.h" />
     <ClInclude Include="DexMath\DexMath.h" />
     <ClInclude Include="DexMath\DexMatrix.h" />
+    <ClInclude Include="DexMath\DexQuaternion.h" />
     <ClInclude Include="DexMath\DexVector2.h" />
     <ClInclude Include="DexMath\DexVector3.h" />
     <ClInclude Include="DexMath\Dex_To_Dx.h" />
@@ -292,6 +293,7 @@
   <ItemGroup>
     <ClCompile Include="DexCommonFunction.cpp" />
     <ClCompile Include="DexMath\DexMath.cpp" />
+    <ClCompile Include="DexMath\DexQuaternion.cpp" />
     <ClCompile Include="DexModel\DexModelBase.cpp" />
     <ClCompile Include="DexModel\DexModelMs3d.cpp" />
     <ClCompile Include="DexModel\DexModelMs3dLoader.cpp" />

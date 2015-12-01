@@ -31,10 +31,10 @@ public:
 public:
 	T Length();
 	T				Dot(const DexVector2T<T>& vector2) const;
-	DexVector2T<T>& Normalize();
-	DexVector2T<T>& Set(T* value);//一个3元素数组
-	DexVector2T<T>& Set(const DexVector2T<T>& vector2);
-	DexVector2T<T>& Set(const T& _x, const T& _y);
+	DexVector2T<T>  Normalize();
+	DexVector2T<T>  Set(T* value);//一个3元素数组
+	DexVector2T<T>  Set(const DexVector2T<T>& vector2);
+	DexVector2T<T>  Set(const T& _x, const T& _y);
 public:
 	DexVector2T<T>& operator = (const DexVector2T<T>& vector2);
 	bool operator == (const DexVector2T<T>& vector2)const;
@@ -88,7 +88,7 @@ inline DexVector2T<T>::~DexVector2T()
 }
 
 template<typename T>
-inline DexVector2T<T>& DexVector2T<T>::Normalize()
+inline DexVector2T<T> DexVector2T<T>::Normalize()
 {
 	float length = Length();
 	if (length < 0.00001f)
@@ -100,21 +100,21 @@ inline DexVector2T<T>& DexVector2T<T>::Normalize()
 	return *this;
 }
 template<typename T>
-inline DexVector2T<T>& DexVector2T<T>::Set(T* value)
+inline DexVector2T<T> DexVector2T<T>::Set(T* value)
 {
 	memcpy(m, value, sizeof(T) * 2);
 	return *this;
 }
 
 template<typename T>
-inline DexVector2T<T>& DexVector2T<T>::Set(const DexVector2T<T>& vector2)
+inline DexVector2T<T> DexVector2T<T>::Set(const DexVector2T<T>& vector2)
 {
 	memcpy(m, vector2.m, sizeof(vector2));
 	return *this;
 }
 
 template<typename T>
-inline DexVector2T<T>& DexVector2T<T>::Set(const T& _x, const T& _y)
+inline DexVector2T<T> DexVector2T<T>::Set(const T& _x, const T& _y)
 {
 	x = _x;
 	y = _y;

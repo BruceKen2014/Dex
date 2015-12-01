@@ -11,4 +11,10 @@ typedef enum _DexPrimitivetType{
 	DexPT_TRIANGLEFAN = 6,
 } DexPrimitivetType;
 
+typedef enum _DexRenderMode{
+	DexRenderMode_LINE = 1,
+	DexRenderMode_TRIANGLE = 2,
+	DexRenderMode_TOTAL = 6,
+} DexRenderMode;
+
 #endif

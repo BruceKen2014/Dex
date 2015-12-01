@@ -7,6 +7,7 @@
 #ifndef _DEX_MATH_VECTOR3_H
 #define _DEX_MATH_VECTOR3_H
 
+#include <memory.h>
 #include "DexMath.h"
 template<typename T>
 class DexVector3T
@@ -34,10 +35,10 @@ public:
 	T				Dot(const DexVector3T<T>& vector3) const;
 	void			Invert();
 	DexVector3T<T>  GetInvert()const;
-	DexVector3T<T>& Normalize();
-	DexVector3T<T>& Set(T* value);//一个3元素数组
-	DexVector3T<T>& Set(const DexVector3T<T>& vector3);
-	DexVector3T<T>& Set(const T& _x, const T& _y, const T& _z);
+	DexVector3T<T>  Normalize();
+	DexVector3T<T>  Set(T* value);//一个3元素数组
+	DexVector3T<T>  Set(const DexVector3T<T>& vector3);
+	DexVector3T<T>  Set(const T& _x, const T& _y, const T& _z);
 public:
 	DexVector3T<T>& operator = (const DexVector3T<T>& vector3);
 	bool operator == (const DexVector3T<T>& vector3)const;
@@ -92,7 +93,7 @@ inline DexVector3T<T>::~DexVector3T()
 }
 
 template<typename T>
-inline DexVector3T<T>& DexVector3T<T>::Normalize()
+inline DexVector3T<T> DexVector3T<T>::Normalize()
 {
 	float length = Length();
 	if (length < 0.00001f)
@@ -105,21 +106,21 @@ inline DexVector3T<T>& DexVector3T<T>::Normalize()
 	return *this;
 }
 template<typename T>
-inline DexVector3T<T>& DexVector3T<T>::Set(T* value)
+inline DexVector3T<T> DexVector3T<T>::Set(T* value)
 {
 	memcpy(m, value, sizeof(T) * 3);
 	return *this;
 }
 
 template<typename T>
-inline DexVector3T<T>& DexVector3T<T>::Set(const DexVector3T<T>& vector3)
+inline DexVector3T<T> DexVector3T<T>::Set(const DexVector3T<T>& vector3)
 {
 	memcpy(m, vector3.m, sizeof(vector3));
 	return *this;
 }
 
 template<typename T>
-inline DexVector3T<T>& DexVector3T<T>::Set(const T& _x, const T& _y, const T& _z)
+inline DexVector3T<T> DexVector3T<T>::Set(const T& _x, const T& _y, const T& _z)
 {
 	x = _x;
 	y = _y;

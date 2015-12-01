@@ -20,8 +20,8 @@ MS3D STRUCTURES
 // File header
 struct MS3DHeader
 {
-	char m_ID[10];
-	int32 m_version;
+	char m_ID[10]; //固定的标志 MS3D000000
+	int32 m_version; //格式版本号
 } PACK_STRUCT;
 
 // Vertex information

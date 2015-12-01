@@ -10,6 +10,7 @@
 #include "DexModel/DexModelMs3d.h"
 #include "DexModel/DexSkinMesh.h"
 #include "DexMath/DexVector3.h"
+#include "DexMath/DexQuaternion.h"
 #include "Source/CModelXAni.h"
 #include "PalStateBattleMain.h"
 #include "DexBase/DexCollideObject.h"
@@ -213,14 +214,16 @@ bool PalGameStateBattleMain::ApplyRes()
 	
 	light.type = DexLight::DexLight_POINT;
 	light.attenuation0 = 1.0f;
-	light.diffuse = DexColor(1.0f, 0.0f, 0.0f);
+	light.diffuse = DexColor(1.0f, 1.0f, 1.0f);
 	light.SetPointLight(DexVector3(0.0f, 300.0f, 0.0f), 2000.0f);
 	DexGameEngine::getEngine()->SetLight(1, light);
 	DexGameEngine::getEngine()->SetLightIdEnable(1, true);
-	DexGameEngine::getEngine()->SetLightEnable(true);
-
+	DexGameEngine::getEngine()->SetLightEnable(false);
+	DexGameEngine::getEngine()->SetRenderMode(DexRenderMode_LINE);
 	world_matrix.Identity();
-	world_matrix.SetPosition(0.0f, 100.0f, 0.0f);
+	world_matrix.RotateY(_getRadian(-90.0f));
+	DexVector3 skin_pos(100.0f, 100.0f, 100.0f);
+	world_matrix.Translate(skin_pos);
 	testMesh->SetSceneNodeMatrix(world_matrix);
 	m_bApply = true;
 	return true;
@@ -379,6 +382,14 @@ void PalGameStateBattleMain::Render()
 	DexGameEngine::getEngine()->RenderCoorLines();
 	ms3d->Render();
 	testMesh->Render();
+	static float degree = 0.0f;
+	degree = degree > 360.0f ? 0.0f : (degree + 1.0f);
+	DexQuaternion qua(DexVector3(1.0f, 0.0f, 1.0f), _getRadian(degree));
+	qua.Normalize();
+	DexMatrix4x4 matrix = qua.GetMatrix();
+	DexVector3 newPoint(20.0f, 0.0f, -20.0f);// = qua.Rotate(DexVector3(20.0f, 0.0f, -20.0f), DexVector3(10.0f, 0.0f, -10.0f));
+	newPoint = newPoint * matrix;
+	DexGameEngine::getEngine()->Render3DLine(DexVector3(10.0f, 0.0f, -10.0f), newPoint, DEXCOLOR_WHITE,DEXCOLOR_WHITE);
 	//DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 	//getGlobal()->g_pJingtian->Render();
 	get2DDrawer()->BeginDraw2D();
@@ -524,6 +535,11 @@ void PalGameStateBattleMain::KeyDown()
 	if(CInputSystem::GetInputSingleton().KeyDown(DIK_LCONTROL))
 	{
 		DexGameEngine::getEngine()->MoveCamera(CCamera::DIR_UP,-5);
+	}
+	if (CInputSystem::GetInputSingleton().KeyUp(DIK_LCONTROL))
+	{
+		DexGameEngine::getEngine()->SetRenderMode(DexGameEngine::getEngine()->GetRenderMode()
+			== DexRenderMode_LINE ? DexRenderMode_TRIANGLE : DexRenderMode_LINE);
 	}
 	if(CInputSystem::GetInputSingleton().KeyDown(DIK_ESCAPE))
 	{

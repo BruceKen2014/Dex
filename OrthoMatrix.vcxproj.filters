@@ -387,6 +387,9 @@
     <ClInclude Include="DexBase\DexLight.h">
       <Filter>DexBase</Filter>
     </ClInclude>
+    <ClInclude Include="DexMath\DexQuaternion.h">
+      <Filter>DexMath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
@@ -694,6 +697,9 @@
     </ClCompile>
     <ClCompile Include="DexModel\DexModelMs3dLoader.cpp">
       <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexMath\DexQuaternion.cpp">
+      <Filter>DexMath</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

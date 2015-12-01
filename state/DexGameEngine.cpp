@@ -56,6 +56,7 @@ DexGameEngine::DexGameEngine()
 	g_material.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 	g_material.Power = 0;
 	ms3dLoader = new DexModelMs3dLoader;
+	m_RenderMode = DexRenderMode_TRIANGLE;
 }
 DexGameEngine::~DexGameEngine()
 {
@@ -674,6 +675,16 @@ void DexGameEngine::Render()
 	g_pCurrState->BeginRender();
 	g_pCurrState->Render();
 	g_pCurrState->EndRender();
+}
+
+void DexGameEngine::SetRenderMode(DexRenderMode mode)
+{
+	m_RenderMode = mode;
+}
+
+DexRenderMode DexGameEngine::GetRenderMode()
+{
+	return m_RenderMode;
 }
 
 #define case_value2value(value1, para, value2) \

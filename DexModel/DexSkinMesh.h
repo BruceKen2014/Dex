@@ -83,17 +83,26 @@ class DexSkinMesh: public DexModelBase
 	Dex_DeclareClass(DexSkinMesh, 0)
 	friend class DexModelMs3dLoader;
 	class DexMesh
-	{
+	{		/*目前渲染时，将indices统一一次送给directx渲染，这样的话渲染三角形和渲染线段必须用不同的indice,
+			有点浪费空间，如果保存的是三角形信息，三角形里面保存的是顶点索引，这样就不用保存两份indice，但是
+			这样渲染模型必须一个一个三角形渲染，效率会有问题。现在省空间的做法是，如果选择线段渲染，那么由三角形
+			的indice生成一份线段indice，不选择线段渲染时将线段indice删除掉
+			*/
 	public:
 		int8	    id;
 		int8		textureId;
 		int8		materialId;
 		int32		indices_count;
 		int32*		indices;
+		int32		indices_count_line;
+		int32*      indices_line;
 
 	public:
 		DexMesh();
 		~DexMesh();
+	public:
+		void DestroyLineIndices();
+		int32* CreateLineIndices();
 	};
 protected:
 	Joint*		root_joint;
