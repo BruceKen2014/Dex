@@ -145,7 +145,7 @@ public:
 template<typename T>
 inline DexMatrix4x4T<T>::DexMatrix4x4T()
 {
-	memset(m_m, 0, sizeof(T)*16);
+	Identity();
 }
 template<typename T>
 inline DexMatrix4x4T<T>::DexMatrix4x4T(const DexMatrix4x4T<T> &matrix)

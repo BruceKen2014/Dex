@@ -404,6 +404,67 @@ bool DexSkinMesh::AddJointKeyFrame(int32 jointid, int32 time, const DexMatrix4x4
 	return true;
 }
 
+bool DexSkinMesh::AddJointKeyFrame(int32 jointid, int32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, float32 radian)
+{
+	Joint* joint = FindJoint(jointid);
+	DEX_ENSURE_B(joint);
+	DexQuaternion qua(axis, radian);
+	DexMatrix4x4 rotationMatrix = qua.GetMatrix();
+	DexMatrix4x4 scaleMatrix; scaleMatrix.Scale(scale);
+	DexMatrix4x4 TransMatrix; TransMatrix.Translate(pos);
+	DexMatrix4x4 matrix = scaleMatrix * rotationMatrix * TransMatrix;
+	joint->AddKeyFrame(time, matrix);
+}
+
+bool DexSkinMesh::AddJointKeyFrame(int32 jointid, int32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua)
+{
+	Joint* joint = FindJoint(jointid);
+	DEX_ENSURE_B(joint);
+	DexMatrix4x4 rotationMatrix = qua.GetMatrix();
+	DexMatrix4x4 scaleMatrix; scaleMatrix.Scale(scale);
+	DexMatrix4x4 TransMatrix; TransMatrix.Translate(pos);
+	DexMatrix4x4 matrix = scaleMatrix * rotationMatrix * TransMatrix;
+	joint->AddKeyFrame(time, matrix);
+}
+
+bool DexSkinMesh::AddJointKeyFrameTrans(int32 jointId, int32 time, const DexVector3& pos)
+{
+	Joint* joint = FindJoint(jointId);
+	DEX_ENSURE_B(joint);
+	DexMatrix4x4 matrix;
+	matrix.Translate(pos);
+	joint->AddKeyFrame(time, matrix);
+	return true;
+}
+
+bool DexSkinMesh::AddJointKeyFrameScale(int32 jointId, int32 time, const DexVector3& scale)
+{
+	Joint* joint = FindJoint(jointId);
+	DEX_ENSURE_B(joint);
+	DexMatrix4x4 matrix;
+	joint->AddKeyFrame(time, matrix.Scale(scale));
+	return true;
+}
+
+bool DexSkinMesh::AddJointKeyFrameRotation(int32 jointId, int32 time, const DexVector3& axis, float32 radian)
+{
+	Joint* joint = FindJoint(jointId);
+	DEX_ENSURE_B(joint);
+	DexQuaternion qua(axis, radian);
+	DexMatrix4x4 matrix = qua.GetMatrix();
+	joint->AddKeyFrame(time, matrix);
+	return true;
+}
+
+bool DexSkinMesh::AddJointKeyFrameRotation(int32 jointId, int32 time, const DexQuaternion& qua)
+{
+	Joint* joint = FindJoint(jointId);
+	DEX_ENSURE_B(joint);
+	DexMatrix4x4 matrix = qua.GetMatrix();
+	joint->AddKeyFrame(time, matrix);
+	return true;
+}
+
 bool DexSkinMesh::SetTexture(int8 meshId, int8 textureId)
 {
 	DexMesh* mesh = FindMesh(meshId);

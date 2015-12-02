@@ -8,6 +8,7 @@
 #include "../DexBase/DexVertex.h"
 #include "../DexMath/DexVector2.h"
 #include "../DexMath/DexVector3.h"
+#include "../DexMath/DexQuaternion.h"
 #include "../DexMath/DexMatrix.h"
 
 #include "DexModelBase.h"
@@ -136,8 +137,21 @@ public:
 	DexMesh* AddMesh(int8 meshId);
 	bool AddJoint(int id, int father_id, const DexMatrix4x4& father_matrix);
 	bool AddJointKeyFrame(int32 jointid, int32 time, const DexMatrix4x4& matrix);
-	bool SetTexture(int8 meshId, int8 textureId);
+	bool AddJointKeyFrame(int32 jointid, int32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, float32 radian);
+	bool AddJointKeyFrame(int32 jointid, int32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua);
+	//某一帧，某个节点相对父亲节点，只有位移的话，调用这个接口
+	//pos是相对于父joint的位移
+	bool AddJointKeyFrameTrans(int32 jointId, int32 time, const DexVector3& pos);
+	//某一帧，某个节点相对父亲节点，只有缩放的话，调用这个接口
+	//scale是相对于父joint的缩放
+	bool AddJointKeyFrameScale(int32 jointId, int32 time, const DexVector3& scale);
+	//某一帧，某个节点自身只有旋转的话，调用这个接口，节点没必要绕别的点旋转，任何绕别的点旋转的操作都可以转换到父亲节点自身的旋转
+	//axis:绕自身的哪个轴旋转
+	//radian:旋转的弧度
+	bool AddJointKeyFrameRotation(int32 jointId, int32 time, const DexVector3& axis, float32 radian);
+	bool AddJointKeyFrameRotation(int32 jointId, int32 time, const DexQuaternion& qua);
 
+	bool SetTexture(int8 meshId, int8 textureId);
 	bool AddTexture(CDexTex* tex);
 	bool AddTexture(const char* filename);
 	bool AddMaterial(const DexMaterial& material);
