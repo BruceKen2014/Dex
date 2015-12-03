@@ -51,7 +51,7 @@ DexQuaternion DexQuaternion::Set(float32 pitch, float32 yaw, float32 roll)
 DexQuaternion DexQuaternion::Normalize()
 {
 	float32 mag2 = x*x + y*y + z*z + w*w;
-	if (DexMath::equal(mag2, 0.0f))
+	if (DexMath::Equal(mag2, 0.0f))
 	{
 		mag2 = DexMath::Sqrt(mag2);
 		x /= mag2;
@@ -143,10 +143,10 @@ inline DexQuaternion& DexQuaternion::operator=(const DexQuaternion& quaternion)
 
 inline bool DexQuaternion::operator==(const DexQuaternion& quaternion) const
 {
-	return DexMath::equal(x, quaternion.x)
-		&& DexMath::equal(y, quaternion.y)
-		&& DexMath::equal(z, quaternion.z)
-		&& DexMath::equal(w, quaternion.w);
+	return DexMath::Equal(x, quaternion.x)
+		&& DexMath::Equal(y, quaternion.y)
+		&& DexMath::Equal(z, quaternion.z)
+		&& DexMath::Equal(w, quaternion.w);
 }
 /*
 q1 = x1i + y1j + z1k +w1
@@ -245,7 +245,7 @@ inline DexQuaternion& DexQuaternion::operator*=(float32 value)
 inline DexQuaternion DexQuaternion::operator/(float32 div) const
 {
 	DexQuaternion ret;
-	if (DexMath::equal(div, 0.0f))
+	if (DexMath::Equal(div, 0.0f))
 	{
 		return ret;
 	}
@@ -258,7 +258,7 @@ inline DexQuaternion DexQuaternion::operator/(float32 div) const
 
 inline DexQuaternion& DexQuaternion::operator/=(float32 div) 
 {
-	if (DexMath::equal(div, 0.0f))
+	if (DexMath::Equal(div, 0.0f))
 	{
 		return *this;
 	}

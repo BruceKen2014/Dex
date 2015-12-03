@@ -168,10 +168,10 @@ template<typename T>
 inline bool DexMatrix4x4T<T>::IsIdentity()	const
 {
 	//先判断对角线，算法速度会快一点
-	if( !DexMath::equal(m_m[0][0], (T)1) ||
-		!DexMath::equal(m_m[1][1], (T)1) ||
-		!DexMath::equal(m_m[2][2], (T)1) ||
-		!DexMath::equal(m_m[3][3], (T)1) 
+	if( !DexMath::Equal(m_m[0][0], (T)1) ||
+		!DexMath::Equal(m_m[1][1], (T)1) ||
+		!DexMath::Equal(m_m[2][2], (T)1) ||
+		!DexMath::Equal(m_m[3][3], (T)1) 
 		)
 		return false;
 	for(int i = 0 ; i < 4; ++i)
@@ -180,7 +180,7 @@ inline bool DexMatrix4x4T<T>::IsIdentity()	const
 		{
 			if( i != j)
 			{
-				if(!DexMath::equal(m_m[i][j], (T)0))
+				if(!DexMath::Equal(m_m[i][j], (T)0))
 				{
 					return false;
 				}
@@ -389,7 +389,7 @@ template<typename T>
 inline DexMatrix4x4T<T> DexMatrix4x4T<T>::operator/( const T& value ) const
 {
 	DexMatrix4x4T<T> ret;
-	if(DexMath::equal(value, 0.0f))
+	if(DexMath::Equal(value, 0.0f))
 	{
 		ret.Identity();
 		return ret;
@@ -417,7 +417,7 @@ inline bool DexMatrix4x4T<T>::operator == (const DexMatrix4x4T<T>& matrix) const
 {
 	for(int i = 0; i < 16;++i)
 	{
-		if(!DexMath::equal(m[i], matrix.m[i]))
+		if(!DexMath::Equal(m[i], matrix.m[i]))
 			return false;
 	}
 	return true;
@@ -427,7 +427,7 @@ inline bool DexMatrix4x4T<T>::operator != (const DexMatrix4x4T<T>& matrix) const
 {
 	for(int i = 0; i < 16;++i)
 	{
-		if(!DexMath::equal(m[i], matrix.m[i]))
+		if(!DexMath::Equal(m[i], matrix.m[i]))
 			return true;
 	}
 	return false;

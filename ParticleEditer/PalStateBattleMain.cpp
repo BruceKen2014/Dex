@@ -127,10 +127,8 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
-	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("ms3d/Model.ms3d");
-	DexMatrix4x4 world_matrix; world_matrix.Identity();
-	world_matrix.SetPosition(-50.0f, 0.0f, -50.0f);
-	ms3d->SetSceneNodeMatrix(world_matrix);
+	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("ms3d/treasure.ms3d");
+	DexMatrix4x4 world_matrix; 
 
 	testMesh = new DexSkinMesh(2000); 
 	testMesh->SetAnimateTime(0, 2000);
@@ -218,12 +216,12 @@ bool PalGameStateBattleMain::ApplyRes()
 	DexGameEngine::getEngine()->SetLight(1, light);
 	DexGameEngine::getEngine()->SetLightIdEnable(1, true);
 	DexGameEngine::getEngine()->SetLightEnable(false);
-	DexGameEngine::getEngine()->SetRenderMode(DexRenderMode_LINE);
+	//DexGameEngine::getEngine()->SetRenderMode(DexRenderMode_LINE);
 	world_matrix.Identity();
 	world_matrix.RotateY(_getRadian(-90.0f));
 	DexVector3 skin_pos(100.0f, 100.0f, 100.0f);
 	world_matrix.Translate(skin_pos);
-	testMesh->SetSceneNodeMatrix(world_matrix.Identity());
+	testMesh->SetSceneNodeMatrix(world_matrix);
 	m_bApply = true;
 	return true;
 }
@@ -356,7 +354,7 @@ bool PalGameStateBattleMain::Update(int delta)
 		
 	}
 	ms3d->Update(delta);
-	testMesh->Update(delta/4);
+	//testMesh->Update(delta/4);
 	return true;
 	//getGlobal()->g_pJingtian->Update();
 }
@@ -380,7 +378,7 @@ void PalGameStateBattleMain::Render()
 	m_pBattleMainMachine->Render();
 	DexGameEngine::getEngine()->RenderCoorLines();
 	ms3d->Render();
-	testMesh->Render();
+	//testMesh->Render();
 	static float degree = 0.0f;
 	degree = degree > 360.0f ? 0.0f : (degree + 1.0f);
 	DexQuaternion qua(DexVector3(1.0f, 0.0f, 1.0f), _getRadian(degree));

@@ -11,9 +11,11 @@
 class DexMath
 {
 public:
-	static float Sqrt(float _value);
-	static float Abs(float _value);
-	static bool  equal(float value1, float value2, float pre = 1e-04f);
-	static bool  equal(int32 value1, int32 value2);
+	static float32 Sqrt(float32 _value);
+	static float32 Abs(float32 _value);
+	static bool    Equal(float value1, float value2, float pre = 1e-04f);
+	static bool    Equal(int32 value1, int32 value2);
+	static float32 Acos(float32 Radian);
+	static float64 Acos(float64 Radian);
 };
 #endif

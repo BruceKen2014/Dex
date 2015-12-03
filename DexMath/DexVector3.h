@@ -30,15 +30,24 @@ public:
 	DexVector3T(T* value); //一个3元素数组
 	~DexVector3T<T>();
 public:
-	T Length();
-	DexVector3T<T>  Cross(const DexVector3T<T>& vector3) const;
-	T				Dot(const DexVector3T<T>& vector3) const;
-	void			Invert();
+	DexVector3T<T>	Invert();
 	DexVector3T<T>  GetInvert()const;
-	DexVector3T<T>  Normalize();
 	DexVector3T<T>  Set(T* value);//一个3元素数组
 	DexVector3T<T>  Set(const DexVector3T<T>& vector3);
 	DexVector3T<T>  Set(const T& _x, const T& _y, const T& _z);
+public:
+	//for vector
+	T Length() const;
+	T LengthSq() const; //length square
+	DexVector3T<T>  Cross(const DexVector3T<T>& vector3) const;
+	static DexVector3T<T>  S_Cross(const DexVector3T<T>& v1, const DexVector3T<T>& v2);
+	T				Dot(const DexVector3T<T>& vector3) const;
+	static T  S_Dot(const DexVector3T<T>& v1, const DexVector3T<T>& v2);
+	T		  GetRadian(const DexVector3T<T> vector) const; //取得与vector之间的夹角，单位弧度
+	DexVector3T<T>  Normalize();
+	//for point
+	T Distance(const DexVector3T<T>& Point)const;
+	static T S_Distance(const DexVector3T<T>& Point1, const DexVector3T<T>& Point2) ;
 public:
 	DexVector3T<T>& operator = (const DexVector3T<T>& vector3);
 	bool operator == (const DexVector3T<T>& vector3)const;
@@ -105,6 +114,19 @@ inline DexVector3T<T> DexVector3T<T>::Normalize()
 	z = z / length;
 	return *this;
 }
+
+template<typename T>
+inline T DexVector3T<T>::Distance(const DexVector3T<T>& Point) const
+{
+	DexVector3T<T> temp = Point - *this;
+	return temp.Length();
+}
+
+template<typename T>
+static T DexVector3T<T>::S_Distance(const DexVector3T<T>& Point1, const DexVector3T<T>& Point2) 
+{
+	return Point1.Distance(Point2);
+}
 template<typename T>
 inline DexVector3T<T> DexVector3T<T>::Set(T* value)
 {
@@ -139,16 +161,16 @@ inline DexVector3T<T>& DexVector3T<T>::operator = (const DexVector3T<T>& vector3
 template<typename T>
 inline bool DexVector3T<T>::operator == (const DexVector3T<T>& vector3)const
 {
-	return DexMath::equal(x, vector3.x)
-		&& DexMath::equal(y, vector3.y)
-		&& DexMath::equal(z, vector3.z);
+	return DexMath::Equal(x, vector3.x)
+		&& DexMath::Equal(y, vector3.y)
+		&& DexMath::Equal(z, vector3.z);
 }
 template<typename T>
 inline bool DexVector3T<T>::operator != (const DexVector3T<T>& vector3)const
 {
-	return !DexMath::equal(x, vector3.x)
-		|| !DexMath::equal(y, vector3.y)
-		|| !DexMath::equal(z, vector3.z);
+	return !DexMath::Equal(x, vector3.x)
+		|| !DexMath::Equal(y, vector3.y)
+		|| !DexMath::Equal(z, vector3.z);
 }
 template<typename T>
 inline DexVector3T<T> DexVector3T<T>::operator + (const DexVector3T<T>& vector3)const
@@ -221,9 +243,15 @@ inline DexVector3T<T>& DexVector3T<T>::operator /= (float _value)
 }
 
 template<typename T>
-inline T DexVector3T<T>::Length()
+inline T DexVector3T<T>::Length() const
 {
 	return DexMath::Sqrt(x*x + y*y + z*z);
+}
+
+template<typename T>
+inline T DexVector3T<T>::LengthSq() const
+{
+	return x*x + y*y + z*z;
 }
 
 template<typename T>
@@ -245,19 +273,44 @@ inline DexVector3T<T> DexVector3T<T>::Cross(const DexVector3T<T>& vector3) const
 }
 
 template<typename T>
+static DexVector3T<T> DexVector3T<T>::S_Cross(const DexVector3T<T>& v1, const DexVector3T<T>& v2)
+{
+	return v1.Cross(v2);
+}
+
+template<typename T>
 inline T DexVector3T<T>::Dot(const DexVector3T<T>& vector3) const
 {
 	T ret =x * vector3.x + y * vector3.y + z * vector3.z;
 	return ret;
 }
 
+template<typename T>
+static T DexVector3T<T>::S_Dot(const DexVector3T<T>& v1, const DexVector3T<T>& v2)
+{
+	return v1.Dot(v2);
+}
 
 template<typename T>
-inline void DexVector3T<T>::Invert()
+T DexVector3T<T>::GetRadian(const DexVector3T<T> vector) const
+{
+	T dot = x*vector.x + y*vector*y + z*vector.z;
+	T length1 = Length();
+	T length2 = vector.Length();
+	if (DexMath::Equal(length1, (T)0.0f) ||
+		DexMath::Equal(length2, (T)0.0f))
+		return (T)0;
+	T cosf = dot / (length1*length2);
+	return DexMath::Acos(cosf);
+}
+
+template<typename T>
+inline DexVector3T<T> DexVector3T<T>::Invert()
 {
 	x *= (T)(-1);
 	y *= (T)(-1);
 	z *= (T)(-1);
+	return *this;
 }
 
 

@@ -131,14 +131,14 @@ inline DexVector2T<T>& DexVector2T<T>::operator = (const DexVector2T<T>& vector2
 template<typename T>
 inline bool DexVector2T<T>::operator == (const DexVector2T<T>& vector2)const
 {
-	return DexMath::equal(x, vector2.x)
-		&& DexMath::equal(y, vector2.y);
+	return DexMath::Equal(x, vector2.x)
+		&& DexMath::Equal(y, vector2.y);
 }
 template<typename T>
 inline bool DexVector2T<T>::operator != (const DexVector2T<T>& vector2)const
 {
-	return !DexMath::equal(x, vector2.x)
-		|| !DexMath::equal(y, vector2.y);
+	return !DexMath::Equal(x, vector2.x)
+		|| !DexMath::Equal(y, vector2.y);
 }
 template<typename T>
 inline DexVector2T<T> DexVector2T<T>::operator + (const DexVector2T<T>& vector2)const
