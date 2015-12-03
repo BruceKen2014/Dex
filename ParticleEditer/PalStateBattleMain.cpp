@@ -135,38 +135,25 @@ bool PalGameStateBattleMain::ApplyRes()
 	testMesh = new DexSkinMesh(2000); 
 	testMesh->SetAnimateTime(0, 2000);
 	testMesh->SetLightFlag(true);
-	//testMesh->SetAnimateEnable(false);
 	DexMatrix4x4 temp_matrix;	temp_matrix.Identity();
 	temp_matrix.SetPosition(0, 0, 0); testMesh->AddJoint(1, -1, temp_matrix);
-	//temp_matrix.Identity(); testMesh->AddJointKeyFrame(1, 0, temp_matrix);
 	testMesh->AddJointKeyFrameTrans(1, 0, DexVector3(0.0f, 0.0f, 0.0f));
-	//temp_matrix.Identity(); temp_matrix.RotateZ(_getRadian(90.0f)); testMesh->AddJointKeyFrame(1, 1000, temp_matrix);
 	testMesh->AddJointKeyFrameRotation(1, 1000, DexVector3(0.0f, 0.0f, 1.0f), _getRadian(-90.0f));
-	//temp_matrix.Identity(); testMesh->AddJointKeyFrame(1, 2000, temp_matrix);
 	testMesh->AddJointKeyFrameTrans(1, 2000, DexVector3(0.0f, 0.0f, 0.0f));
 
 	temp_matrix.SetPosition(100, 0, 0); testMesh->AddJoint(2, 1, temp_matrix);
-	//temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 0, temp_matrix);
 	testMesh->AddJointKeyFrame(2, 0, DexVector3(100.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	//temp_matrix.Identity(); temp_matrix.RotateX(_getRadian(90.0f)); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 1000, temp_matrix);
 	testMesh->AddJointKeyFrame(2, 1000, DexVector3(100.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(1.0f, 0.0f, 0.0f), _getRadian(90.0f));
-	//temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(100, 0, 0); testMesh->AddJointKeyFrame(2, 2000, temp_matrix);
 	testMesh->AddJointKeyFrame(2, 2000, DexVector3(100.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(1.0f, 0.0f, 0.0f), _getRadian(0.0f));
 
 	temp_matrix.SetPosition(0, 0, 20); testMesh->AddJoint(3, 2, temp_matrix);
-	//temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(0, 0, 20);  testMesh->AddJointKeyFrame(3, 0, temp_matrix);
 	testMesh->AddJointKeyFrame(3, 0, DexVector3(0.0f, 0.0f, 20.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	//temp_matrix.Identity(); temp_matrix.RotateX(_getRadian(0.0f)); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(0, 0, 20);  testMesh->AddJointKeyFrame(3, 1000, temp_matrix);
 	testMesh->AddJointKeyFrame(3, 1000, DexVector3(0.0f, 0.0f, 20.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	//temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(0, 0, 20); testMesh->AddJointKeyFrame(3, 2000, temp_matrix);
 	testMesh->AddJointKeyFrame(3, 2000, DexVector3(0.0f, 0.0f, 20.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
 
 	temp_matrix.SetPosition(20, 0, 0); testMesh->AddJoint(4, 2, temp_matrix);
-	//temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(20, 0, 0);  testMesh->AddJointKeyFrame(4, 0, temp_matrix);
 	testMesh->AddJointKeyFrame(4, 0,    DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	//temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(20, 0, 0);  testMesh->AddJointKeyFrame(4, 1000, temp_matrix);
 	testMesh->AddJointKeyFrame(4, 1000, DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	//temp_matrix.Identity(); temp_matrix.Scale(1, 1, 1); temp_matrix.Translate(20, 0, 0); testMesh->AddJointKeyFrame(4, 2000, temp_matrix);
 	testMesh->AddJointKeyFrame(4, 2000, DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
 
 	stVertex0	vertexs[8];
