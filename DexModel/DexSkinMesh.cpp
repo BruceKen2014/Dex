@@ -249,6 +249,7 @@ bool DexSkinMesh::Update(int32 delta)
 			AnimateNowTime = AnimateStartTime;
 		}
 	}
+	//return true;
 	for (size_t i = 0; i < mesh_vertexs.size(); ++i)
 	{
 		if (mesh_vertexs[i] != NULL)
@@ -265,10 +266,27 @@ bool DexSkinMesh::Render()
 	{
 		root_joint->Render();
 	}
+	//return true;
 	for (size_t i = 0; i < mesh_vertexs.size(); ++i)
 	{
+		//绘制顶点法线，调试用
 		DexGameEngine::getEngine()->Render3DLine(mesh_vertexs[i]->worldPosition, mesh_vertexs[i]->worldNormal, DexColor(1.0f, 0.0f, 1.0f), 10.0f, DexColor(1.0f, 0.0f, 1.0f));
+		
+		//画出顶点到所绑定关节的线，用于调试
+		for (size_t k = 0; k < mesh_vertexs[i]->vec_JointId.size(); ++k)
+		{
+			int16 bindJointId = mesh_vertexs[i]->vec_JointId[k];
+			for (size_t j = 0; j < joints.size(); ++j)
+			{
+				if (joints[j]->id == bindJointId)
+				{
+					DexGameEngine::getEngine()->Render3DLine(mesh_vertexs[i]->worldPosition, joints[j]->world_matrix.GetPosition(), DEXCOLOR_GREEN, DEXCOLOR_GREEN);
+				}
+			}
+		}
+
 	}
+	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	bool enabelLight = DexGameEngine::getEngine()->GetLightEnable();
 	DexGameEngine::getEngine()->SetLightEnable(enabelLight && m_bLightFlag);
 	for (size_t i = 0; i < vec_Meshs.size(); ++i)
@@ -356,9 +374,31 @@ DexSkinMesh::Joint* DexSkinMesh::AddJoint(int id)
 	return joint;
 }
 
+DexSkinMesh::Joint* DexSkinMesh::SetJointInfo(int id, string name, string father_name, const DexMatrix4x4& father_matrix)
+{
+	bool find_father = false;
+	Joint* joint = FindJoint(id);
+	joint->str_name = name;
+	joint->frame_matrix = father_matrix;
+	for (size_t i = 0; i < joints.size(); ++i)
+	{
+		if (joints[i]->str_name == father_name)
+		{
+			joints[i]->AddChild(joint);
+			find_father = true;
+			break;
+		}
+	}
+	if (!find_father)
+	{//没有找到已经存在的joint,添加到root_joint中去
+		root_joint->AddChild(joint);
+	}
+	return joint;
+}
+
 DexSkinMesh::Joint* DexSkinMesh::AddJoint(int id, int father_id, const DexMatrix4x4& father_matrix)
 {
-	bool ret = false;
+	bool find_father = false;
 	Joint* joint = new Joint;
 	joint->id = id;
 	joint->frame_matrix = father_matrix;
@@ -367,12 +407,12 @@ DexSkinMesh::Joint* DexSkinMesh::AddJoint(int id, int father_id, const DexMatrix
 		if (joints[i]->id == father_id)
 		{
 			joints[i]->AddChild(joint);
-			ret = true;
+			find_father = true;
 			break;
 		}
 	}
 	joints.push_back(joint);
-	if (!ret)
+	if (!find_father)
 	{//没有找到已经存在的joint,添加到root_joint中去
 		root_joint->AddChild(joint);
 	}
@@ -409,6 +449,27 @@ DexSkinMesh::Joint* DexSkinMesh::AddJoint(string name)
 		}
 	}
 	joints.push_back(joint);
+	return joint;
+}
+
+DexSkinMesh::Joint* DexSkinMesh::SetJointInfo(string name, int father_id, const DexMatrix4x4& father_matrix)
+{
+	bool find_father = false;
+	Joint* joint = FindJoint(name);
+	joint->frame_matrix = father_matrix;
+	for (size_t i = 0; i < joints.size(); ++i)
+	{
+		if (joints[i]->id == father_id)
+		{
+			joints[i]->AddChild(joint);
+			find_father = true;
+			break;
+		}
+	}
+	if (!find_father)
+	{//没有找到已经存在的joint,添加到root_joint中去
+		root_joint->AddChild(joint);
+	}
 	return joint;
 }
 

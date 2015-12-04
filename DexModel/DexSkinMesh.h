@@ -142,12 +142,16 @@ public:
 	DexMesh* AddMesh(int8 meshId);
 	//设置对应mesh的顶点索引信息
 	void SetIndices(int8 meshId, void* indics, int32 count);
-//joint
-	Joint* AddJoint(int id); //只单纯添加一个关节，之后赋值相关数据
+//joint by id
+	Joint* AddJoint(int id); //只单纯添加一个关节，之后调用setjointinfo赋值相关数据
+	Joint* SetJointInfo(int id, string name, string father_name, const DexMatrix4x4& father_matrix);
+	//一次性添加骨骼及其数据
 	Joint* AddJoint(int id, int father_id, const DexMatrix4x4& father_matrix);
 	Joint* FindJoint(int32 jointId);
+//joint by name
 	//一些模型文件joint只有name没有id,则调用以下接口
 	Joint* AddJoint(string name);
+	Joint* SetJointInfo(string name, int father_id, const DexMatrix4x4& father_matrix);
 	Joint* AddJoint(string name, string father_name, const DexMatrix4x4& father_matrix);
 	Joint* FindJoint(string name);
 //joint frame by id

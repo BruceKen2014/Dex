@@ -32,3 +32,13 @@ float64 DexMath::Acos(float64 Radian)
 {
 	return acos(Radian);
 }
+
+float32 DexMath::Cosf(float32 radian)
+{
+	return cosf(radian);
+}
+
+float32 DexMath::Sinf(float32 radian)
+{
+	return sinf(radian);
+}

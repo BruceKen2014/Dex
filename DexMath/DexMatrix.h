@@ -340,7 +340,7 @@ template<typename T>
 inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::operator*=( const DexMatrix4x4T<T> &matrix )
 {
 	*this = *this * matrix;
-	return this;
+	return *this;
 }
 template<typename T>
 inline DexMatrix4x4T<T> DexMatrix4x4T<T>::operator*( const T& value ) const
@@ -504,78 +504,104 @@ inline DexVector3 DexMatrix4x4T<T>::GetPosition()	const
 template<typename T>
 inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateX(float radian)
 {
-	float32 old_12 = _12;
-	float32 old_13 = _13;
-	float32 a = radian;
-	_12 = old_12*cos(a) - old_13*sin(a);
-	_13 = old_12*sin(a) + old_13*cos(a);
+	//float32 old_12 = _12;
+	//float32 old_13 = _13;
+	//float32 a = radian;
+	//_12 = old_12*cos(a) - old_13*sin(a);
+	//_13 = old_12*sin(a) + old_13*cos(a);
 
-	float32 old_22 = _22;
-	float32 old_23 = _23;
-	_22 = old_22*cos(a) - old_23*sin(a);
-	_23 = old_22*sin(a) + old_23*cos(a);
+	//float32 old_22 = _22;
+	//float32 old_23 = _23;
+	//_22 = old_22*cos(a) - old_23*sin(a);
+	//_23 = old_22*sin(a) + old_23*cos(a);
 
-	float32 old_32 = _32;
-	float32 old_33 = _33;
-	_32 = old_32*cos(a) - old_33*sin(a);
-	_33 = old_32*sin(a) + old_33*cos(a);
+	//float32 old_32 = _32;
+	//float32 old_33 = _33;
+	//_32 = old_32*cos(a) - old_33*sin(a);
+	//_33 = old_32*sin(a) + old_33*cos(a);
 
-	float32 old_42 = _42;
-	float32 old_43 = _43;
-	_42 = old_42*cos(a) - old_43*sin(a);
-	_43 = old_42*sin(a) + old_43*cos(a);
+	//float32 old_42 = _42;
+	//float32 old_43 = _43;
+	//_42 = old_42*cos(a) - old_43*sin(a);
+	//_43 = old_42*sin(a) + old_43*cos(a);
+	T value[16] =
+	{
+		1, 0, 0, 0,
+		0,  DexMath::Cosf(radian), DexMath::Sinf(radian), 0,
+		0, -DexMath::Sinf(radian), DexMath::Cosf(radian), 0,
+		0, 0, 0, 1,
+	};
+	DexMatrix4x4T temp(value);
+	*this = *this * temp;
 	return *this;
 }
 template<typename T>
 inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateY(float32 radian)
 {
-	float32 old_11 = _11;
-	float32 old_13 = _13;
-	float32 a = radian;
-	_11 =  old_11*cos(a) + old_13*sin(a);
-	_13 = -old_11*sin(a) + old_13*cos(a);
+	//float32 old_11 = _11;
+	//float32 old_13 = _13;
+	//float32 a = radian;
+	//_11 =  old_11*cos(a) + old_13*sin(a);
+	//_13 = -old_11*sin(a) + old_13*cos(a);
 
-	float32 old_21 = _21;
-	float32 old_23 = _23;
-	_21 =  old_21*cos(a) + old_23*sin(a);
-	_23 = -old_21*sin(a) + old_23*cos(a);
+	//float32 old_21 = _21;
+	//float32 old_23 = _23;
+	//_21 =  old_21*cos(a) + old_23*sin(a);
+	//_23 = -old_21*sin(a) + old_23*cos(a);
 
-	float32 old_31 = _31;
-	float32 old_33 = _33;
-	_31 =  old_31*cos(a) + old_33*sin(a);
-	_33 = -old_31*sin(a) + old_33*cos(a);
+	//float32 old_31 = _31;
+	//float32 old_33 = _33;
+	//_31 =  old_31*cos(a) + old_33*sin(a);
+	//_33 = -old_31*sin(a) + old_33*cos(a);
 
-	float32 old_41 = _41;
-	float32 old_43 = _43;
-	_41 =  old_41*cos(a) + old_43*sin(a);
-	_43 = -old_41*sin(a) + old_43*cos(a);
-
+	//float32 old_41 = _41;
+	//float32 old_43 = _43;
+	//_41 =  old_41*cos(a) + old_43*sin(a);
+	//_43 = -old_41*sin(a) + old_43*cos(a);
+	T value[16] =
+	{
+		DexMath::Cosf(radian), 0, -DexMath::Sinf(radian), 0,
+		0, 1, 0, 0,
+		DexMath::Sinf(radian), 0, DexMath::Cosf(radian), 0,
+		0, 0, 0, 1,
+	};
+	DexMatrix4x4T temp(value);
+	*this = *this * temp;
 	return *this;
 }
 
 template<typename T>
 inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateZ(float32 radian)
 {
-	float32 old_11 = _11;
-	float32 old_12 = _12;
-	float32 a = radian;
-	_11 =  old_11*cos(a) - old_12*sin(a);
-	_12 =  old_11*sin(a) + old_12*cos(a);
+	//float32 old_11 = _11;
+	//float32 old_12 = _12;
+	//float32 a = radian;
+	//_11 =  old_11*cos(a) - old_12*sin(a);
+	//_12 =  old_11*sin(a) + old_12*cos(a);
 
-	float32 old_21 = _21;
-	float32 old_22 = _22;
-	_21 =  old_21*cos(a) - old_22*sin(a);
-	_22 =  old_21*sin(a) + old_22*cos(a);
+	//float32 old_21 = _21;
+	//float32 old_22 = _22;
+	//_21 =  old_21*cos(a) - old_22*sin(a);
+	//_22 =  old_21*sin(a) + old_22*cos(a);
 
-	float32 old_31 = _31;
-	float32 old_32 = _32;
-	_31 =  old_31*cos(a) - old_32*sin(a);
-	_32 =  old_31*sin(a) + old_32*cos(a);
+	//float32 old_31 = _31;
+	//float32 old_32 = _32;
+	//_31 =  old_31*cos(a) - old_32*sin(a);
+	//_32 =  old_31*sin(a) + old_32*cos(a);
 
-	float32 old_41 = _41;
-	float32 old_42 = _42;
-	_41 =  old_41*cos(a) - old_42*sin(a);
-	_42 =  old_41*sin(a) + old_42*cos(a);
+	//float32 old_41 = _41;
+	//float32 old_42 = _42;
+	//_41 =  old_41*cos(a) - old_42*sin(a);
+	//_42 =  old_41*sin(a) + old_42*cos(a);
+	T value[16] =
+	{
+		DexMath::Cosf(radian), DexMath::Sinf(radian), 0, 0,
+		-DexMath::Sinf(radian), DexMath::Cosf(radian), 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1,
+	};
+	DexMatrix4x4T temp(value);
+	*this = *this * temp;
 	return *this;
 }
 template<typename T1, typename T>

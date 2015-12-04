@@ -379,14 +379,6 @@ void PalGameStateBattleMain::Render()
 	DexGameEngine::getEngine()->RenderCoorLines();
 	ms3d->Render();
 	//testMesh->Render();
-	static float degree = 0.0f;
-	degree = degree > 360.0f ? 0.0f : (degree + 1.0f);
-	DexQuaternion qua(DexVector3(1.0f, 0.0f, 1.0f), _getRadian(degree));
-	qua.Normalize();
-	DexMatrix4x4 matrix = qua.GetMatrix();
-	DexVector3 newPoint(20.0f, 0.0f, -20.0f);// = qua.Rotate(DexVector3(20.0f, 0.0f, -20.0f), DexVector3(10.0f, 0.0f, -10.0f));
-	newPoint = newPoint * matrix;
-	DexGameEngine::getEngine()->Render3DLine(DexVector3(10.0f, 0.0f, -10.0f), newPoint, DEXCOLOR_WHITE,DEXCOLOR_WHITE);
 	//DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 	//getGlobal()->g_pJingtian->Render();
 	get2DDrawer()->BeginDraw2D();

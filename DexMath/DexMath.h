@@ -17,5 +17,8 @@ public:
 	static bool    Equal(int32 value1, int32 value2);
 	static float32 Acos(float32 Radian);
 	static float64 Acos(float64 Radian);
+
+	static float32 Cosf(float32 radian);
+	static float32 Sinf(float32 radian);
 };
 #endif
