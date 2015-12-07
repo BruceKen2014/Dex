@@ -112,6 +112,8 @@ public:
 public:
 	DexMatrix4x4T<T> Identity();
 	bool			 IsIdentity()	const	;
+	DexMatrix4x4T<T> GetTranspose() const; //得到矩阵的转置矩阵
+	DexMatrix4x4T<T> MakeTranspose(); //转置本矩阵
 	void			 Reset();
 
 	DexMatrix4x4T<T>&  operator= ( const DexMatrix4x4T<T>& matrix );
@@ -188,6 +190,34 @@ inline bool DexMatrix4x4T<T>::IsIdentity()	const
 		}
 	}
 	return true;
+}
+template<typename T>
+inline DexMatrix4x4T<T> DexMatrix4x4T<T>::GetTranspose()	const
+{
+	DexMatrix4x4T<T> ret;
+	//for (int line = 0; line < 4; ++line)
+	//{
+	//	for (int col = 0; col < 4; ++col)
+	//	{
+	//		ret.m_m[line][col] = m_m[col][line];
+	//	}
+	//}
+	ret.m_m[0][1] = m_m[1][0]; ret.m_m[0][2] = m_m[2][0]; ret.m_m[0][3] = m_m[3][0];
+	ret.m_m[1][0] = m_m[0][1]; ret.m_m[1][2] = m_m[2][1]; ret.m_m[1][3] = m_m[3][1];
+	ret.m_m[2][0] = m_m[0][2]; ret.m_m[2][1] = m_m[1][2]; ret.m_m[2][3] = m_m[3][2];
+	ret.m_m[3][0] = m_m[0][3]; ret.m_m[3][1] = m_m[1][3]; ret.m_m[3][2] = m_m[2][3];
+	return ret;
+}
+template<typename T>
+inline DexMatrix4x4T<T> DexMatrix4x4T<T>::MakeTranspose()
+{
+	DexMatrix4x4T<T> ret;
+	ret.m_m[0][1] = m_m[1][0]; ret.m_m[0][2] = m_m[2][0]; ret.m_m[0][3] = m_m[3][0];
+	ret.m_m[1][0] = m_m[0][1]; ret.m_m[1][2] = m_m[2][1]; ret.m_m[1][3] = m_m[3][1];
+	ret.m_m[2][0] = m_m[0][2]; ret.m_m[2][1] = m_m[1][2]; ret.m_m[2][3] = m_m[3][2];
+	ret.m_m[3][0] = m_m[0][3]; ret.m_m[3][1] = m_m[1][3]; ret.m_m[3][2] = m_m[2][3];
+	*this = ret;
+	return ret;
 }
 template<typename T>
 inline void DexMatrix4x4T<T>::Reset()
