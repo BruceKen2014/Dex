@@ -63,6 +63,27 @@ protected:
 	LPDIRECT3DSURFACE9 m_testBufferSurface;
 	D3DXMATRIX m_testProjection, m_testProjectionOld;
 	CDexWidgetImage* g_pImageBackgroud;
+protected:
+	//vertex shader
+	LPDIRECT3DVERTEXSHADER9 BasicShader; //顶点着色器指针
+	LPD3DXCONSTANTTABLE     BasicConstTable; //常量表指针
+	D3DXHANDLE				WVPMatrixHandle;//句柄
+	D3DXHANDLE				ColorHandle;
+	void InitVertexShader();
+	void UpdateVertexShader(int32 delta);
+	void RenderVertexShader();
+	//pixel shader
+	LPDIRECT3DPIXELSHADER9 pixelShader;
+	LPD3DXCONSTANTTABLE	   pixelConstTable;
+	D3DXHANDLE			   ScalarHandle;
+	D3DXHANDLE			   Samp0Handle;
+	D3DXHANDLE			   Samp1Handle;
+	D3DXCONSTANT_DESC	   Samp0Desc;//常量描述结构
+	D3DXCONSTANT_DESC	   Samp1Desc;
+	void InitPixelShader();
+	void UpdatePixelShader(int32 delta);
+	void RenderPixelShader();
+
 public:
 	void setCurrOperationPlayer(PalPlayer* player);
 	static PalGameStateBattleMain* getBattleMain();

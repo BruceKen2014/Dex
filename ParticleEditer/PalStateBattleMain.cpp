@@ -60,6 +60,127 @@ PalGameStateBattleMain::~PalGameStateBattleMain()
 
 }
 
+void PalGameStateBattleMain::InitVertexShader()
+{
+	ID3DXBuffer* shaderBuffer = NULL;
+	ID3DXBuffer* errorBuffer = NULL;
+	HRESULT hr = D3DXCompileShaderFromFile("VertexShader.fx", 0, 0, "SetColor", "vs_2_0", D3DXSHADER_DEBUG, &shaderBuffer, &errorBuffer, &BasicConstTable);
+	if (errorBuffer)
+	{
+		getLog()->BeginLog();
+		getLog()->Log(log_error, (char*)(errorBuffer->GetBufferPointer()));
+		getLog()->EndLog();
+		errorBuffer->Release();
+	}
+	DexGameEngine::getEngine()->GetDevice()->CreateVertexShader((DWORD*)shaderBuffer->GetBufferPointer(), &BasicShader);
+	shaderBuffer->Release();
+	WVPMatrixHandle = BasicConstTable->GetConstantByName(0, "WVPMatrix");
+	ColorHandle = BasicConstTable->GetConstantByName(0, "color");
+}
+void PalGameStateBattleMain::UpdateVertexShader(int32 delta)
+{
+	D3DXMATRIX matWorld, matView, matProj; 
+	DexMatrix4x4 worldMatrix;
+	worldMatrix.Translate(100.0f, 0.0f ,0.0f);
+	memcpy(&matWorld, &worldMatrix, sizeof(DexMatrix4x4));
+	//DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_WORLD, &matWorld);
+	DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_VIEW, &matView);
+	DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_PROJECTION, &matProj);
+	D3DXMATRIX	matWVP = matWorld * matView * matProj;
+	BasicConstTable->SetMatrix(DexGameEngine::getEngine()->GetDevice(), WVPMatrixHandle, &matWVP);
+	D3DXVECTOR4 color(1.0f, 1.0f, 0.0f, 0.5f);
+	BasicConstTable->SetVector(DexGameEngine::getEngine()->GetDevice(), ColorHandle, &color);
+
+}
+void PalGameStateBattleMain::RenderVertexShader()
+{
+	DexGameEngine::getEngine()->GetDevice()->SetVertexShader(BasicShader);
+	g_pVertexList0[0].m_pos = D3DXVECTOR3(-10.0f, 20.0f, 0.0f);
+	g_pVertexList0[1].m_pos = D3DXVECTOR3(-10.0f, 0.0f, 0.0f);
+	g_pVertexList0[2].m_pos = D3DXVECTOR3(10.0f, 20.0f, 0.0f);
+	g_pVertexList0[3].m_pos = D3DXVECTOR3(10.0f, 0.0f, 0.0f);
+	
+	
+	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, g_pVertexList0, sizeof(stVertex0));
+	DexGameEngine::getEngine()->GetDevice()->SetVertexShader(NULL);
+}
+struct CUSTOMVERTEX
+{
+	DexVector3 pos;
+	D3DCOLOR color;
+	DexVector2 uv0;
+	DexVector2 uv1;
+};
+CUSTOMVERTEX vertex[4];
+void PalGameStateBattleMain::InitPixelShader()
+{
+	LPDIRECT3DDEVICE9 device = DexGameEngine::getEngine()->GetDevice();
+	vertex[0].color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.5f)); 
+	vertex[1].color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.5f));
+	vertex[2].color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 1.0f));
+	vertex[3].color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 1.0f));
+	vertex[0].pos = DexVector3(-10.0f, 20.0f, 0.0f);  vertex[0].uv0 = DexVector2(0.0f, 0.0f); vertex[0].uv1 = DexVector2(0.0f, 0.0f);
+	vertex[1].pos = DexVector3(-10.0f, 0.0f, 0.0f);   vertex[1].uv0 = DexVector2(0.0f, 1.0f); vertex[1].uv1 = DexVector2(0.0f, 1.0f);
+	vertex[2].pos = DexVector3(10.0f, 20.0f, 0.0f);	  vertex[2].uv0 = DexVector2(1.0f, 0.0f); vertex[2].uv1 = DexVector2(1.0f, 0.0f);
+	vertex[3].pos = DexVector3(10.0f, 0.0f, 0.0f);	  vertex[3].uv0 = DexVector2(1.0f, 1.0f); vertex[3].uv1 = DexVector2(1.0f, 1.0f);
+	//vertex->pos = DexVector3(-10.0f);
+	D3DCAPS9 caps;
+	device->GetDeviceCaps(&caps);
+	//测试pixelshader的支持
+	if (caps.PixelShaderVersion < D3DPS_VERSION(1, 1))
+	{
+		getLog()->BeginLog();
+		getLog()->Log(log_error, "pixel shader version error!");
+		getLog()->EndLog();
+	}
+	ID3DXBuffer* shaderBuffer = NULL;
+	ID3DXBuffer* errorBuffer = NULL;
+	//编译shader
+	HRESULT hr = D3DXCompileShaderFromFile("tex2Shader.fx", 0, 0, "PS_Main", "ps_1_1", D3DXSHADER_DEBUG, &shaderBuffer, &errorBuffer, &pixelConstTable);
+	if (errorBuffer)
+	{
+		getLog()->BeginLog();
+		getLog()->Log(log_error, (char*)(errorBuffer->GetBufferPointer()));
+		getLog()->EndLog();
+		errorBuffer->Release();
+	}
+	device->CreatePixelShader((DWORD*)shaderBuffer->GetBufferPointer(), &pixelShader);
+	shaderBuffer->Release();
+
+	//得到常量句柄
+	ScalarHandle = pixelConstTable->GetConstantByName(0, "Scalar");
+	Samp0Handle = pixelConstTable->GetConstantByName(0, "Samp0");
+	Samp1Handle = pixelConstTable->GetConstantByName(0, "Samp1");
+	//得到对着色器变量Samp0 Samp1的描述
+	UINT count;
+	pixelConstTable->GetConstantDesc(Samp0Handle, &Samp0Desc, &count);
+	pixelConstTable->GetConstantDesc(Samp1Handle, &Samp1Desc, &count);
+	//设置各着色器变量为初始值
+	pixelConstTable->SetDefaults(DexGameEngine::getEngine()->GetDevice());
+
+	D3DXVECTOR4 scalar(0.5f, 0.5f, 0.5f, 0.5f);
+	pixelConstTable->SetVector(device, ScalarHandle, &scalar);//为着色器全局变量Scalar赋值
+
+}
+
+void PalGameStateBattleMain::UpdatePixelShader(int32 delta)
+{
+
+}
+
+void PalGameStateBattleMain::RenderPixelShader()
+{
+#define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ |D3DFVF_DIFFUSE |D3DFVF_TEX2)
+	LPDIRECT3DDEVICE9 device = DexGameEngine::getEngine()->GetDevice();
+	device->SetPixelShader(pixelShader);
+	device->SetTexture(Samp0Desc.RegisterIndex, getUiSrcMgrSingleton()->getUiTexFactory()->FindTex("女孩0.png")->GetTexPt());
+	device->SetTexture(Samp1Desc.RegisterIndex, getUiSrcMgrSingleton()->getUiTexFactory()->FindTex("b23.png")->GetTexPt());
+	device->SetFVF(D3DFVF_CUSTOMVERTEX); //这里必须设置FVF，shader里面的input接受uv0 和uv1，如果不设置数据格式，设备将不知道数据流中那一块是uv
+	device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, vertex, sizeof(CUSTOMVERTEX));
+	device->SetPixelShader(NULL);
+#undef D3DFVF_CUSTOMVERTEX
+}
+
 void PalGameStateBattleMain::setCurrOperationPlayer(PalPlayer* player)
 {
 	m_pCurrOperationPlayer = player;
@@ -222,6 +343,9 @@ bool PalGameStateBattleMain::ApplyRes()
 	DexVector3 skin_pos(100.0f, 100.0f, 100.0f);
 	world_matrix.Translate(skin_pos);
 	testMesh->SetSceneNodeMatrix(world_matrix);
+
+	InitVertexShader();
+	InitPixelShader();
 	m_bApply = true;
 	return true;
 }
@@ -354,6 +478,8 @@ bool PalGameStateBattleMain::Update(int delta)
 		
 	}
 	ms3d->Update(delta);
+	UpdateVertexShader(delta);
+	UpdatePixelShader(delta);
 	//testMesh->Update(delta/4);
 	return true;
 	//getGlobal()->g_pJingtian->Update();
@@ -378,6 +504,8 @@ void PalGameStateBattleMain::Render()
 	m_pBattleMainMachine->Render();
 	DexGameEngine::getEngine()->RenderCoorLines();
 	ms3d->Render();
+	RenderVertexShader();
+	RenderPixelShader();
 	//testMesh->Render();
 	//DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 	//getGlobal()->g_pJingtian->Render();
