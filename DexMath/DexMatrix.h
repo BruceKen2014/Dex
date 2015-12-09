@@ -114,6 +114,7 @@ public:
 	bool			 IsIdentity()	const	;
 	DexMatrix4x4T<T> GetTranspose() const; //得到矩阵的转置矩阵
 	DexMatrix4x4T<T> MakeTranspose(); //转置本矩阵
+	DexMatrix4x4T<T> GetInvert() const; //得到本矩阵的逆矩阵
 	void			 Reset();
 
 	DexMatrix4x4T<T>&  operator= ( const DexMatrix4x4T<T>& matrix );
@@ -218,6 +219,45 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::MakeTranspose()
 	ret.m_m[3][0] = m_m[0][3]; ret.m_m[3][1] = m_m[1][3]; ret.m_m[3][2] = m_m[2][3];
 	*this = ret;
 	return ret;
+}
+template<typename T>
+inline DexMatrix4x4T<T> DexMatrix4x4T<T>::GetInvert() const
+{
+//矩阵A的逆矩阵A^-1 = A^*/|A|
+//即A的伴随阵除以A的行列式
+	if (IsIdentity())
+		return *this;
+#define determinant22(a11,a12,a21,a22)	(a11*a22 - a21*a12)
+#define determinant33(a11,a12,a13,a21,a22,a23,a31,a32,a33)	\
+	(a11 * determinant22(a22, a23, a32, a33) - a12*determinant22(a21, a23, a31, a33) + a13*determinant22(a21,a22,a31,a32))
+	T d = _11 * determinant33(_22, _23, _24, _32, _33, _34, _42, _43, _44)
+		- _12 * determinant33(_21, _23, _24, _31, _33, _34, _41, _43, _44)
+		+ _13 * determinant33(_21, _22, _24, _31, _32, _34, _41, _42, _44)
+		- _14 * determinant33(_21, _22, _23, _31, _32, _33, _41, _42, _43);
+	if (DexMath::Equal(d, 0.0f))
+		return *this;
+	T A11 = determinant33(_22, _23, _24, _32, _33, _34, _42, _43, _44);
+	T A12 =-determinant33(_21, _23, _24, _31, _33, _34, _41, _43, _44);
+	T A13 = determinant33(_21, _22, _24, _31, _32, _34, _41, _42, _44);
+	T A14 =-determinant33(_21, _22, _23, _31, _32, _33, _41, _42, _43);
+	T A21 =-determinant33(_12, _13, _14, _32, _33, _34, _42, _43, _44);
+	T A22 = determinant33(_11, _13, _14, _31, _33, _34, _41, _43, _44);
+	T A23 =-determinant33(_11, _12, _14, _31, _32, _34, _41, _42, _44);
+	T A24 = determinant33(_11, _12, _13, _31, _32, _33, _41, _42, _43);
+	T A31 = determinant33(_12, _13, _14, _22, _23, _24, _42, _43, _44);
+	T A32 =-determinant33(_11, _13, _14, _21, _23, _24, _41, _43, _44);
+	T A33 = determinant33(_11, _12, _14, _21, _22, _24, _41, _42, _44);
+	T A34 =-determinant33(_11, _12, _13, _21, _22, _23, _41, _42, _43);
+	T A41 =-determinant33(_12, _13, _14, _22, _23, _24, _32, _33, _34);
+	T A42 = determinant33(_11, _13, _14, _21, _23, _24, _31, _33, _34);
+	T A43 =-determinant33(_11, _12, _14, _21, _22, _24, _31, _32, _34);
+	T A44 = determinant33(_11, _12, _13, _21, _22, _23, _31, _32, _33);
+	T A[16] = { A11,A12,A13,A14,A21,A22,A23,A24,A31,A32,A33,A34,A41,A42,A43,A44};
+	DexMatrix4x4T<T> ret(A);
+	ret /= d;
+	return ret;
+#undef determinant22
+#undef determinant33
 }
 template<typename T>
 inline void DexMatrix4x4T<T>::Reset()
