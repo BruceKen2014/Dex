@@ -1,6 +1,7 @@
 
 #include "DexBase/typedefine.h"
 #include "DexBase/CInput.h"
+#include "DexBase/DexMemoryLeakCheck.h"
 #include "widget/DexWidgetFactory.h"
 #include "widget/DexWidgetImage.h"
 #include "widget/CDexUiSrcMgr.h"
@@ -249,6 +250,9 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
 	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("ms3d/treasure.ms3d");
+	ms3d->SetAnimateType(SkinMeshAnimateType_Loop);
+	ms3d->SetAnimateRatio(0.2f);
+	//ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
 	DexMatrix4x4 world_matrix; 
 
 	testMesh = new DexSkinMesh(2000); 
@@ -336,14 +340,15 @@ bool PalGameStateBattleMain::ApplyRes()
 	light.SetPointLight(DexVector3(0.0f, 300.0f, 0.0f), 2000.0f);
 	DexGameEngine::getEngine()->SetLight(1, light);
 	DexGameEngine::getEngine()->SetLightIdEnable(1, true);
-	DexGameEngine::getEngine()->SetLightEnable(false);
+	DexGameEngine::getEngine()->SetLightEnable(true);
 	//DexGameEngine::getEngine()->SetRenderMode(DexRenderMode_LINE);
 	world_matrix.Identity();
-	world_matrix.RotateY(_getRadian(-90.0f));
-	DexVector3 skin_pos(100.0f, 100.0f, 100.0f);
-	world_matrix.Translate(skin_pos);
+	//world_matrix.RotateY(_getRadian(-90.0f));
+	//DexVector3 skin_pos(100.0f, 100.0f, 100.0f);
+	//world_matrix.Translate(skin_pos);
 	testMesh->SetSceneNodeMatrix(world_matrix);
 
+	delete testMesh;
 	InitVertexShader();
 	InitPixelShader();
 	m_bApply = true;

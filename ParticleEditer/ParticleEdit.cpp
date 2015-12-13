@@ -4,6 +4,7 @@
 #include "state/DexGameEngine.h"
 #include "widget/DexDesktop.h"
 #include "DexBase/DexLog.h"
+#include "DexBase/DexMemoryLeakCheck.h"
 #include "widget/CDexUiSrcMgr.h"
 #include "widget/DexWidgetFactory.h"
 
@@ -39,7 +40,7 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevhInst, LPSTR cmdLine, int show)
 {
-	
+	//DexCheckMemLeak::getDexMemoryLeakCheck()->SetBreakAlloc(8843);
 	DexGameEngine::getEngine()->SetHInstance(hInst);
 	DexGameEngine::getEngine()->SetIcon(IDI_ICON1);
 	DexGameEngine::getEngine()->SetMsgPro(MsgProc);
@@ -65,5 +66,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevhInst, LPSTR cmdLine, int show
 	//DexGameEngine::getEngine()->SetCurrState(pStateBattle->GetStateId());
 	DexGameEngine::getEngine()->Run();
 	DexGameEngine::getEngine()->ShutDownEngine();
+	DexCheckMemLeak::getDexMemoryLeakCheck()->CheckMemoryLeakEnd();
 	return 0;
 }

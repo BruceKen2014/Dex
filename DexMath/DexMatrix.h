@@ -114,6 +114,7 @@ public:
 	bool			 IsIdentity()	const	;
 	DexMatrix4x4T<T> GetTranspose() const; //得到矩阵的转置矩阵
 	DexMatrix4x4T<T> MakeTranspose(); //转置本矩阵
+	DexMatrix4x4T<T> Invert();   //变为自己的逆矩阵
 	DexMatrix4x4T<T> GetInvert() const; //得到本矩阵的逆矩阵
 	void			 Reset();
 
@@ -128,6 +129,7 @@ public:
 	DexMatrix4x4T<T>   operator* ( const T& value ) const;
 	DexMatrix4x4T<T>&  operator*=( const T& value );
 	DexMatrix4x4T<T>   operator/ ( const T& value ) const;
+	DexMatrix4x4T<T>&  operator/=( const T& value);
 	bool  operator== ( const DexMatrix4x4T<T>& matrix ) const;
 	bool  operator!= ( const DexMatrix4x4T<T>& matrix ) const;
 
@@ -221,6 +223,12 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::MakeTranspose()
 	return ret;
 }
 template<typename T>
+inline DexMatrix4x4T<T> DexMatrix4x4T<T>::Invert()
+{
+	*this = GetInvert();
+	return *this;
+}
+template<typename T>
 inline DexMatrix4x4T<T> DexMatrix4x4T<T>::GetInvert() const
 {
 //矩阵A的逆矩阵A^-1 = A^*/|A|
@@ -252,7 +260,7 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::GetInvert() const
 	T A42 = determinant33(_11, _13, _14, _21, _23, _24, _31, _33, _34);
 	T A43 =-determinant33(_11, _12, _14, _21, _22, _24, _31, _32, _34);
 	T A44 = determinant33(_11, _12, _13, _21, _22, _23, _31, _32, _33);
-	T A[16] = { A11,A12,A13,A14,A21,A22,A23,A24,A31,A32,A33,A34,A41,A42,A43,A44};
+	T A[16] = { A11,A21,A31,A41,A12,A22,A32,A42,A13,A23,A33,A43,A14,A24,A34,A44};
 	DexMatrix4x4T<T> ret(A);
 	ret /= d;
 	return ret;
@@ -481,6 +489,31 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::operator/( const T& value ) const
 	ret.m[14] = m[14] / value; 
 	ret.m[15] = m[15] / value; 
 	return ret;
+}
+template<typename T>
+inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::operator/=(const T& value)
+{
+	if (DexMath::Equal(value, 0.0f))
+	{
+		return *this;
+	}
+	m[0] = m[0] / value;
+	m[1] = m[1] / value;
+	m[2] = m[2] / value;
+	m[3] = m[3] / value;
+	m[4] = m[4] / value;
+	m[5] = m[5] / value;
+	m[6] = m[6] / value;
+	m[7] = m[7] / value;
+	m[8] = m[8] / value;
+	m[9] = m[9] / value;
+	m[10] = m[10] / value;
+	m[11] = m[11] / value;
+	m[12] = m[12] / value;
+	m[13] = m[13] / value;
+	m[14] = m[14] / value;
+	m[15] = m[15] / value;
+	return *this;
 }
 template<typename T>
 inline bool DexMatrix4x4T<T>::operator == (const DexMatrix4x4T<T>& matrix) const

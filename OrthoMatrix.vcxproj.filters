@@ -390,6 +390,9 @@
     <ClInclude Include="DexMath\DexQuaternion.h">
       <Filter>DexMath</Filter>
     </ClInclude>
+    <ClInclude Include="DexBase\DexMemoryLeakCheck.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">

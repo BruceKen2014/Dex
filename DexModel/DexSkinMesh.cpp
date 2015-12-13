@@ -1,6 +1,6 @@
 
 
-
+#include "DexBase/DexLog.h"
 #include "../Source/CTexture.h"
 #include "../state/DexGameEngine.h"
 #include "DexSkinMesh.h"
@@ -29,13 +29,21 @@ void DexSkinMesh::Joint::AddKeyFrame(int32 time, const DexMatrix4x4& matrix)
 void DexSkinMesh::Joint::Render()
 {
 	DexGameEngine::getEngine()->RenderCube(world_matrix);
-	if (father != NULL)
-	{
-		DexGameEngine::getEngine()->Render3DLine(father->world_matrix.GetPosition(), world_matrix.GetPosition(), DexColor(1.0f, 1.0f, 1.0f), DexColor(1.0f, 1.0f, 1.0f));
-	}
 	for (size_t i = 0; i < children.size(); ++i)
 	{
 		children[i]->Render();
+	}
+
+}
+void DexSkinMesh::Joint::Render2Joint()
+{
+	if (father != NULL)
+	{
+		DexGameEngine::getEngine()->Render3DLine(father->world_matrix.GetPosition(), world_matrix.GetPosition(), DexColor(0.0f, 1.0f, 1.0f), DexColor(0.0f, 1.0f, 1.0f));
+	}
+	for (size_t i = 0; i < children.size(); ++i)
+	{
+		children[i]->Render2Joint();
 	}
 }
 void DexSkinMesh::Joint::Update(int time)
@@ -52,40 +60,39 @@ void DexSkinMesh::Joint::ComputeWorldMatrix(int32 time)
 	float time2;
 	DexMatrix4x4 matrix1;
 	DexMatrix4x4 matrix2;
-	for (size_t i = 0; i < frames.size(); ++i)
+	if (frames.size() == 0)
+		return;
+	if (frames.size() == 1)
 	{
-		if (time > frames[i].time)
+		frame_matrix = frames[0].matrix;
+	}
+	else
+	{
+		for (size_t i = 0; i < frames.size(); ++i)
 		{
-			time1 = frames[i].time;
-			matrix1 = frames[i].matrix;
-			continue;
+			if (time > frames[i].time)
+			{
+				time1 = frames[i].time;
+				matrix1 = frames[i].matrix;
+				continue;
+			}
+			else
+			{
+				time2 = frames[i].time;
+				matrix2 = frames[i].matrix;
+				break;
+			}
 		}
-		else
-		{
-			time2 = frames[i].time;
-			matrix2 = frames[i].matrix;
-			break;
-		}
+		frame_matrix = matrix1 + (matrix2 - matrix1) * ((float32)(time - time1)) / ((float32)(time2 - time1));
 	}
 	if (father != NULL)
 	{
-		frame_matrix = matrix1 + (matrix2 - matrix1) * ((float32)(time - time1)) / ((float32)(time2 - time1));
+		
 		world_matrix = frame_matrix * father->world_matrix;
 	}
 	else
 		world_matrix = frame_matrix;
 }
-
-DexVector3 DexSkinMesh::Joint::GetPosInMeshSpace()const
-{
-	DexVector3 ret = frame_matrix.GetPosition();
-	if (father != NULL)
-	{
-		ret += father->GetPosInMeshSpace();
-	}
-	return ret;
-}
-
 DexSkinMesh::DexMesh::DexMesh()
 {
 	id = 0;
@@ -127,7 +134,8 @@ int32* DexSkinMesh::DexMesh::CreateLineIndices()
 	return indices_line;
 }
 
-DexSkinMesh::DexSkinMesh()
+DexSkinMesh::DexSkinMesh() :m_iRenderFlag(0), m_eAniType(SkinMeshAnimateType_Loop), m_fAnimateRatio(1.0f),
+m_eMeshType(SkinMeshModelType_UnKnown)
 {
 	AnimateStartTime = 0;
 	AnimateNowTime = 0;
@@ -144,8 +152,10 @@ DexSkinMesh::DexSkinMesh()
 	root_joint->id = _SKIN_MESH_ROOT_JOINT_ID;
 	root_joint->frame_matrix.Identity();
 	joints.push_back(root_joint);
+	SetRenderFlag(SKINMESH_RENDER_MESH);
 }
-DexSkinMesh::DexSkinMesh(int16 maxAniTime)
+DexSkinMesh::DexSkinMesh(int16 maxAniTime) :m_iRenderFlag(0), m_eAniType(SkinMeshAnimateType_Loop),
+m_eMeshType(SkinMeshModelType_UnKnown)
 {
 	AnimateStartTime = 0;
 	AnimateNowTime = 0;
@@ -155,11 +165,13 @@ DexSkinMesh::DexSkinMesh(int16 maxAniTime)
 	vertexs = NULL;
 	m_bHaveAnimation = true;
 	m_bAnimate = true;
+
 	root_joint = new Joint;
 	root_joint->father = NULL;
 	root_joint->id = _SKIN_MESH_ROOT_JOINT_ID;
 	root_joint->frame_matrix.Identity();
 	joints.push_back(root_joint);
+	SetRenderFlag(SKINMESH_RENDER_MESH);
 }
 DexSkinMesh::~DexSkinMesh()
 {
@@ -195,11 +207,58 @@ bool DexSkinMesh::SetAnimateTime(int16 start, int16 end)
 	bool ret = false;
 	if (start >= 0 && start <= end && end <= AnimateMaxTime)
 	{
+		AnimateNowTime = start;
 		AnimateStartTime = start;
 		AnimateEndTime = end;
 		ret = true;
 	}
 	return ret;
+}
+
+SkinMeshAnimateType DexSkinMesh::GetAnimateType()	const
+{
+	return m_eAniType;
+}
+
+void DexSkinMesh::SetAnimateType(SkinMeshAnimateType type)
+{
+	m_eAniType = type;
+}
+
+void DexSkinMesh::ReStartAnimation()
+{
+	if (m_eAniType == SkinMeshAnimateType_OneTime)
+	{
+		AnimateNowTime = AnimateStartTime;
+	}
+	else if (m_eAniType == SkinMeshAnimateType_OneTime_Back)
+	{
+		AnimateNowTime = AnimateEndTime;
+	}
+}
+int16 DexSkinMesh::GetAnimateNowTime() const
+{
+	return AnimateNowTime;
+}
+
+int16 DexSkinMesh::GetAnimateEndTime()const
+{
+	return AnimateEndTime;
+}
+
+int16 DexSkinMesh::GetAnimateStartTime() const
+{
+	return AnimateStartTime;
+}
+
+float32 DexSkinMesh::GetAnimateRatio() const
+{
+	return m_fAnimateRatio;
+}
+
+void DexSkinMesh::SetAnimateRatio(float32 ratio)
+{
+	m_fAnimateRatio = ratio;
 }
 
 void DexSkinMesh::SetAnimateEnable(bool animate)
@@ -226,98 +285,125 @@ void DexSkinMesh::CalculateVertex()
 		{
 			AddJointInfo(mesh_vertexs[i], _SKIN_MESH_ROOT_JOINT_ID, 1.0f);
 		}
-		BindVertexToJoint(mesh_vertexs[i]);
 	}
+}
+
+void DexSkinMesh::SetMeshType(SkinMeshModelType type)
+{
+	m_eMeshType = type;
+}
+
+SkinMeshModelType DexSkinMesh::GetMeshType() const
+{
+	return m_eMeshType;
 }
 
 bool DexSkinMesh::Update(int32 delta)
 {
+	delta = m_fAnimateRatio * delta;
 	DEX_ENSURE_B(DexModelBase::Update(delta));
+	bool aniVertex = false;
 	if (CheckAnimate())
 	{
-		AnimateNowTime += delta;
-		if (AnimateNowTime > AnimateEndTime)
+		switch (GetAnimateType())
 		{
-			AnimateNowTime = AnimateEndTime;
-		}
-		if (root_joint != NULL)
+		case SkinMeshAnimateType_OneTime:
 		{
-			root_joint->Update(AnimateNowTime);
+			UpdateOneTime(delta);
+			break;
 		}
-		if (AnimateNowTime >= AnimateEndTime)
+		case SkinMeshAnimateType_Loop:
 		{
-			AnimateNowTime = AnimateStartTime;
+			UpdateLoop(delta);
+			break;
 		}
+		case SkinMeshAnimateType_OneTime_Back:
+		{
+			UpdateOneTimeBack(delta);
+			break;
+		}
+		case SkinMeshAnimateType_Loop_Back:
+		{
+			UpdateLoopBack(delta);
+			break;
+		}
+		default:
+			UpdateOneTime(delta);
+		}
+
 	}
-	//return true;
-	for (size_t i = 0; i < mesh_vertexs.size(); ++i)
-	{
-		if (mesh_vertexs[i] != NULL)
-		{
-			ComputeVertex(mesh_vertexs[i]);
-		}
-	}
+	UpdateVertex();
 	return true;
 }
 bool DexSkinMesh::Render()
 {
 	DEX_ENSURE_B(DexModelBase::Render());
-	if (root_joint != NULL)
+#ifdef _DEBUG
+	if (GetRenderFlag(SKINMESH_RENDER_JOINT))
 	{
 		root_joint->Render();
 	}
-	//return true;
+	if (GetRenderFlag(SKINMESH_RENDER_JOINT2JOINT))
+	{
+		root_joint->Render2Joint();
+	}
 	for (size_t i = 0; i < mesh_vertexs.size(); ++i)
 	{
-		//绘制顶点法线，调试用
-		DexGameEngine::getEngine()->Render3DLine(mesh_vertexs[i]->worldPosition, mesh_vertexs[i]->worldNormal, DexColor(1.0f, 0.0f, 1.0f), 10.0f, DexColor(1.0f, 0.0f, 1.0f));
-		
-		//画出顶点到所绑定关节的线，用于调试
-		for (size_t k = 0; k < mesh_vertexs[i]->vec_JointId.size(); ++k)
-		{
-			int16 bindJointId = mesh_vertexs[i]->vec_JointId[k];
-			for (size_t j = 0; j < joints.size(); ++j)
+		if (GetRenderFlag(SKINMESH_RENDER_VERTEXNORMAL))
+		{//绘制顶点法线，调试用
+			DexGameEngine::getEngine()->Render3DLine(mesh_vertexs[i]->worldPosition, mesh_vertexs[i]->worldNormal, DexColor(1.0f, 0.0f, 1.0f), 10.0f, DexColor(1.0f, 0.0f, 1.0f));
+		}
+		if (GetRenderFlag(SKINMESH_RENDER_VERTEX2JOINT))
+		{//画出顶点到所绑定关节的线，用于调试
+			for (size_t k = 0; k < mesh_vertexs[i]->vec_JointId.size(); ++k)
 			{
-				if (joints[j]->id == bindJointId)
+				int16 bindJointId = mesh_vertexs[i]->vec_JointId[k];
+				for (size_t j = 0; j < joints.size(); ++j)
 				{
-					DexGameEngine::getEngine()->Render3DLine(mesh_vertexs[i]->worldPosition, joints[j]->world_matrix.GetPosition(), DEXCOLOR_GREEN, DEXCOLOR_GREEN);
+					if (joints[j]->id == bindJointId)
+					{
+						DexGameEngine::getEngine()->Render3DLine(mesh_vertexs[i]->worldPosition, joints[j]->world_matrix.GetPosition(), DEXCOLOR_GREEN, DEXCOLOR_GREEN);
+					}
 				}
 			}
 		}
-
 	}
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	bool enabelLight = DexGameEngine::getEngine()->GetLightEnable();
-	DexGameEngine::getEngine()->SetLightEnable(enabelLight && m_bLightFlag);
-	for (size_t i = 0; i < vec_Meshs.size(); ++i)
+#endif
+	if (GetRenderFlag(SKINMESH_RENDER_MESH))
 	{
-		if (vec_Meshs[i] == NULL)
-			continue;
-		if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_LINE)
+		DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+		bool enabelLight = DexGameEngine::getEngine()->GetLightEnable();
+		DexGameEngine::getEngine()->SetLightEnable(enabelLight && m_bLightFlag);
+		for (size_t i = 0; i < vec_Meshs.size(); ++i)
 		{
-			DexGameEngine::getEngine()->SetLightEnable(false);
-			if (vec_Meshs[i]->indices_line == NULL)
+			if (vec_Meshs[i] == NULL)
+				continue;
+			if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_LINE)
 			{
-				vec_Meshs[i]->CreateLineIndices();
+				DexGameEngine::getEngine()->SetLightEnable(false);
+				if (vec_Meshs[i]->indices_line == NULL)
+				{
+					vec_Meshs[i]->CreateLineIndices();
+				}
+				DexGameEngine::getEngine()->DrawPrimitive(DexPT_LINELIST, vertexs, mesh_vertexs.size(), vec_Meshs[i]->indices_line,
+					vec_Meshs[i]->indices_count_line / 2, FVF_XYZ_COLOR_T1_N, sizeof(stVertex3));
 			}
-			DexGameEngine::getEngine()->DrawPrimitive(DexPT_LINELIST, vertexs, mesh_vertexs.size(), vec_Meshs[i]->indices_line,
-				vec_Meshs[i]->indices_count_line / 2, FVF_XYZ_COLOR_T1_N, sizeof(stVertex3));
-		}
-		else if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_TRIANGLE)
-		{
-			if (vec_Meshs[i]->indices_line != NULL)
+			else if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_TRIANGLE)
 			{
-				vec_Meshs[i]->DestroyLineIndices();
+				if (vec_Meshs[i]->indices_line != NULL)
+				{
+					vec_Meshs[i]->DestroyLineIndices();
+				}
+				DexGameEngine::getEngine()->SetMaterial(vec_material[vec_Meshs[i]->materialId]);
+				DexGameEngine::getEngine()->SetTexture(0, vec_texture[vec_Meshs[i]->textureId]);
+				DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, vertexs, mesh_vertexs.size(), vec_Meshs[i]->indices,
+					vec_Meshs[i]->indices_count / 3, FVF_XYZ_COLOR_T1_N, sizeof(stVertex3));
 			}
-			DexGameEngine::getEngine()->SetMaterial(vec_material[vec_Meshs[i]->materialId]);
-			DexGameEngine::getEngine()->SetTexture(0, vec_texture[vec_Meshs[i]->textureId]);
-			DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, vertexs, mesh_vertexs.size(), vec_Meshs[i]->indices,
-				vec_Meshs[i]->indices_count / 3, FVF_XYZ_COLOR_T1_N, sizeof(stVertex3));
-		}
 
+		}
+		DexGameEngine::getEngine()->SetLightEnable(enabelLight);
+		DexGameEngine::getEngine()->SetTexture(0, NULL);
 	}
-	DexGameEngine::getEngine()->SetLightEnable(enabelLight);
-	DexGameEngine::getEngine()->SetTexture(0, NULL);
 	return true;
 }
 
@@ -376,46 +462,54 @@ DexSkinMesh::Joint* DexSkinMesh::AddJoint(int id)
 
 DexSkinMesh::Joint* DexSkinMesh::SetJointInfo(int id, string name, string father_name, const DexMatrix4x4& father_matrix)
 {
-	bool find_father = false;
 	Joint* joint = FindJoint(id);
+	Joint* father = NULL;
 	joint->str_name = name;
-	joint->frame_matrix = father_matrix;
 	for (size_t i = 0; i < joints.size(); ++i)
 	{
 		if (joints[i]->str_name == father_name)
 		{
 			joints[i]->AddChild(joint);
-			find_father = true;
+			father = joints[i];
 			break;
 		}
 	}
-	if (!find_father)
+	if (!father)
 	{//没有找到已经存在的joint,添加到root_joint中去
 		root_joint->AddChild(joint);
+		father = root_joint;
 	}
+	joint->meshMatrix = father_matrix * father->meshMatrix;
+	joint->localMeshMatrixInvert = joint->meshMatrix.GetInvert();
+	joint->frame_matrix = father_matrix;//设置默认第一帧的矩阵
+	joint->world_matrix = joint->meshMatrix;
 	return joint;
 }
 
 DexSkinMesh::Joint* DexSkinMesh::AddJoint(int id, int father_id, const DexMatrix4x4& father_matrix)
 {
-	bool find_father = false;
 	Joint* joint = new Joint;
 	joint->id = id;
-	joint->frame_matrix = father_matrix;
+	Joint* father = NULL;
 	for (size_t i = 0; i < joints.size(); ++i)
 	{
 		if (joints[i]->id == father_id)
 		{
 			joints[i]->AddChild(joint);
-			find_father = true;
+			father = joints[i];
 			break;
 		}
 	}
 	joints.push_back(joint);
-	if (!find_father)
+	if (!father)
 	{//没有找到已经存在的joint,添加到root_joint中去
 		root_joint->AddChild(joint);
+		father = root_joint;
 	}
+	joint->meshMatrix = father_matrix * father->meshMatrix;
+	joint->localMeshMatrixInvert = joint->meshMatrix.GetInvert();
+	joint->frame_matrix = father_matrix;//设置默认第一帧的矩阵
+	joint->world_matrix = joint->meshMatrix;
 	return joint;
 }
 
@@ -674,6 +768,82 @@ bool DexSkinMesh::AddJointKeyFrameRotation(Joint* joint, int32 time, const DexQu
 	return true;
 }
 
+void DexSkinMesh::UpdateVertex()
+{
+	for (size_t i = 0; i < mesh_vertexs.size(); ++i)
+	{
+		if (mesh_vertexs[i] != NULL)
+		{
+			ComputeVertex(mesh_vertexs[i]);
+		}
+	}
+}
+bool DexSkinMesh::UpdateOneTime(int32 delta)
+{
+	bool before_end = AnimateNowTime < AnimateEndTime;
+	if (root_joint != NULL)
+	{
+		root_joint->Update(AnimateNowTime);
+	}
+	if (AnimateNowTime > AnimateEndTime)
+		return false;
+	AnimateNowTime += delta;
+	if (before_end && AnimateNowTime > AnimateEndTime)
+	{//这是为了修复某些帧之间卡顿，导致这一帧更新之后，大于endtime,动画便不再更新从而无法停留在end位置的问题
+		AnimateNowTime = AnimateEndTime;
+	}
+	return true;
+}
+
+bool DexSkinMesh::UpdateLoop(int32 delta)
+{
+	if (AnimateNowTime > AnimateEndTime)
+	{
+		AnimateNowTime = AnimateEndTime;
+	}
+	if (root_joint != NULL)
+	{
+		root_joint->Update(AnimateNowTime);
+	}
+	if (AnimateNowTime >= AnimateEndTime)
+	{
+		AnimateNowTime = AnimateStartTime;
+	}
+	AnimateNowTime += delta;
+	return true;
+}
+
+bool DexSkinMesh::UpdateOneTimeBack(int32 delta)
+{
+	if (root_joint != NULL)
+	{
+		root_joint->Update(AnimateNowTime);
+	}
+	if (AnimateNowTime < AnimateStartTime)
+		return false;
+	AnimateNowTime -= delta;
+	return true;
+}
+
+bool DexSkinMesh::UpdateLoopBack(int32 delta)
+{
+	if (AnimateNowTime < AnimateStartTime)
+	{
+		AnimateNowTime = AnimateStartTime;
+	}
+	if (root_joint != NULL)
+	{
+		root_joint->Update(AnimateNowTime);
+	}
+	if (AnimateNowTime <= AnimateStartTime)
+	{
+		AnimateNowTime = AnimateEndTime;
+	}
+	AnimateNowTime -= delta;
+	return true;
+}
+
+
 bool DexSkinMesh::SetTexture(int8 meshId, int8 textureId)
 {
 	DexMesh* mesh = FindMesh(meshId);
@@ -785,6 +955,16 @@ bool DexSkinMesh::SetVertexUv(int32 vertexIndex, const DexVector2& uv)
 	return true;
 }
 
+bool DexSkinMesh::GetRenderFlag(int16 flag)
+{
+	return m_iRenderFlag & flag;
+}
+
+void DexSkinMesh::SetRenderFlag(int16 flag)
+{
+	m_iRenderFlag |= flag;
+}
+
 bool DexSkinMesh::CheckAnimate()
 {
 	return m_bHaveAnimation && m_bAnimate;
@@ -800,16 +980,16 @@ DexVector3 DexSkinMesh::ComputeVertex(MeshVertex* vertex)
 		for (size_t i = 0; i < vertex->vec_JointId.size(); ++i)
 		{
 			joint = FindJoint(vertex->vec_JointId[i]);
-			vertex->worldPosition += vertex->Joints_localPos[i] * joint->world_matrix* vertex->JointWeigth[i];
+			vertex->worldPosition += vertex->meshPosition * joint->localMeshMatrixInvert * joint->world_matrix* vertex->JointWeigth[i];
 			//now I havent find a method use matrix and normal to calculate world normal
 			//just use a temp point instead
-			vertex->worldNormal += vertex->Joints_localNormalPoint[i] * joint->world_matrix* vertex->JointWeigth[i];
+			vertex->worldNormal += vertex->normalPosition * joint->localMeshMatrixInvert * joint->world_matrix* vertex->JointWeigth[i];
 		}
 	}
 	else
 	{
 		vertex->worldPosition = vertex->meshPosition;
-		vertex->worldNormal = vertex->normalPosition;
+		
 	}
 	vertex->vertexData->SetPos(vertex->worldPosition);
 	vertex->worldNormal = vertex->worldNormal - vertex->worldPosition;
@@ -822,24 +1002,4 @@ void DexSkinMesh::AddJointInfo(MeshVertex* vertex, int16 jointId, float32 weight
 {
 	vertex->vec_JointId.push_back(jointId);
 	vertex->JointWeigth.push_back(weight);
-}
-
-bool DexSkinMesh::BindVertexToJoint(MeshVertex* vertex)
-{
-	//vec_jointWeight vec_JointId 这两个信息之前必须已经先设置了，这里只是计算一些顶点信息
-	DEX_ENSURE_B(vertex);
-	for (size_t i = 0; i < vertex->vec_JointId.size(); ++i)
-	{
-		Joint* joint = FindJoint(vertex->vec_JointId[i]);
-		if(joint == NULL)
-			continue;
-		DexVector3 pos = vertex->meshPosition;
-		DexVector3 norPos = vertex->normalPosition;
-		DexVector3 joint_mesh_pos = joint->GetPosInMeshSpace();
-		pos -= joint_mesh_pos;
-		norPos -= joint_mesh_pos;
-		vertex->Joints_localPos.push_back(pos);
-		vertex->Joints_localNormalPoint.push_back(norPos);
-	}
-	return true;
 }

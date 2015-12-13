@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include "../DexBase/DexDefine.h"
+#include "../DexBase/DexLog.h"
 #include "../DexMath/DexMatrix.h"
 #include "DexModelMs3dLoader.h"
 #include "DexSkinMesh.h"
@@ -33,6 +34,13 @@ struct MS3DVertex
 	float m_vertex[3];	// 顶点坐标
 	char m_boneID;		// 所属关节的索引，-1表示顶点没有被指定到关节
 	int8 m_refCount;	// 显示时无用，仅在编辑时使用
+} PACK_STRUCT;
+
+// vertex weights in 1.8.x
+struct MS3DVertexWeights
+{
+	char boneIds[3];
+	uint8 weights[3];
 } PACK_STRUCT;
 
 // Triangle information
@@ -103,11 +111,17 @@ DexModelMs3dLoader::~DexModelMs3dLoader()
 
 DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 {
+	getLog()->BeginLog();
+	int64 Time = getTime()->GetTotalMillSeconds();
+	getLog()->Log(log_ok, "load ms3d %s...\n", filename);
 	//TODO 把model加入object工程，采用query机制
 	DexSkinMesh* skinMesh = new DexSkinMesh();
+	skinMesh->SetMeshType(SkinMeshModelType_MS3D);
 	ifstream inputFile(filename, ios::in | ios::binary | ios::_Nocreate);
 	if (inputFile.fail())
 	{
+		getLog()->Log(log_error, "		load ms3d %s failed!\n");
+		getLog()->EndLog();
 		delete skinMesh;
 		return NULL;	
 	}
@@ -120,10 +134,13 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 	inputFile.close();
 
 	const int8 *pPtr = pBuffer;
+	const int8 *EndPtr = pBuffer + fileSize;
 	MS3DHeader *pHeader = (MS3DHeader*)pPtr;
 	pPtr += sizeof(MS3DHeader);
 	if (strncmp(pHeader->m_ID, "MS3D000000", 10) != 0)
 	{
+		getLog()->Log(log_error, "		load ms3d %s failed! Id error!\n");
+		getLog()->EndLog();
 		delete skinMesh;
 		delete[] pBuffer;
 		return NULL;
@@ -131,6 +148,8 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 
 	if (pHeader->m_version < 3 || pHeader->m_version > 4)
 	{
+		getLog()->Log(log_error, "		load ms3d %s failed! version error!\n");
+		getLog()->EndLog();
 		delete skinMesh;
 		return NULL;
 	}// "Unhandled file version. Only Milkshape3D Version 1.3 and 1.4 is supported." );
@@ -168,13 +187,15 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 		//memcpy(Triangles[i].m_t, t, sizeof(float)* 3);
 		memcpy(Triangles[i].m_vertexIndices, vertexIndices, sizeof(int)* 3);
 		//这里可能会对一些公用顶点进行重复设置
-		skinMesh->SetVertexNormal(pTriangle->m_vertexIndices[0], pTriangle->m_vertexNormals[0]);
+		DexVector3 normal;
+		normal.Set(pTriangle->m_vertexNormals[0][0], pTriangle->m_vertexNormals[0][1], -pTriangle->m_vertexNormals[0][2]);
+		skinMesh->SetVertexNormal(pTriangle->m_vertexIndices[0], normal);
 		skinMesh->SetVertexUv(pTriangle->m_vertexIndices[0], pTriangle->m_s[0], t[0]);
-
-		skinMesh->SetVertexNormal(pTriangle->m_vertexIndices[1], pTriangle->m_vertexNormals[1]);
+		normal.Set(pTriangle->m_vertexNormals[1][0], pTriangle->m_vertexNormals[0][1], -pTriangle->m_vertexNormals[1][2]);
+		skinMesh->SetVertexNormal(pTriangle->m_vertexIndices[1], normal);
 		skinMesh->SetVertexUv(pTriangle->m_vertexIndices[1], pTriangle->m_s[1], t[1]);
-
-		skinMesh->SetVertexNormal(pTriangle->m_vertexIndices[2], pTriangle->m_vertexNormals[2]);
+		normal.Set(pTriangle->m_vertexNormals[2][0], pTriangle->m_vertexNormals[0][1], -pTriangle->m_vertexNormals[2][2]);
+		skinMesh->SetVertexNormal(pTriangle->m_vertexIndices[2], normal);
 		skinMesh->SetVertexUv(pTriangle->m_vertexIndices[2], pTriangle->m_s[2], t[2]);
 		pPtr += sizeof(MS3DTriangle);
 	}
@@ -251,13 +272,15 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 	DexMatrix4x4 matrixRotateZ;
 	
 	float32 AniTime = 0.0f;
+	float32 minAniTime = 0;
 	for (int i = 0; i < jointCount; ++i)
 	{
 		baseMatrix.Identity(); matrixRotateX.Identity(); matrixRotateY.Identity(); matrixRotateZ.Identity();
 		MS3DJoint *ms3dJoint = (MS3DJoint*)pPtr;
 		baseMatrix.RotateX(-ms3dJoint->m_rotation[0]);
 		baseMatrix.RotateY(-ms3dJoint->m_rotation[1]);
-		baseMatrix.RotateZ( ms3dJoint->m_rotation[2]);
+		baseMatrix.RotateZ(ms3dJoint->m_rotation[2]);
+
 		baseMatrix.Translate(ms3dJoint->m_translation[0], ms3dJoint->m_translation[1], -ms3dJoint->m_translation[2]);
 
 		DexSkinMesh::Joint* newJoint = skinMesh->FindJoint(i); 
@@ -285,6 +308,15 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 				AniTime = key->m_time;
 			pPtr += sizeof(MS3DKeyframe);
 		}
+		//找到有变换的那一帧作为动作的有效开始时间
+		if (vec_rotation.size() != 0)
+		{
+			minAniTime = vec_rotation[0].m_time;
+		}
+		if (vec_position.size() != 0 && vec_position[0].m_time < minAniTime)
+		{
+			minAniTime = vec_position[0].m_time;
+		}
 		for (size_t k = 0; k < vec_rotation.size(); ++k)
 		{
 			float32 time = vec_rotation[k].m_time;
@@ -304,8 +336,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 			matrix.RotateY(-vec_rotation[k].m_parameter[1]);
 			matrix.RotateZ( vec_rotation[k].m_parameter[2]);
 			matrix.Translate(trans);
-
-			skinMesh->AddJointKeyFrame(newJoint->str_name, time * 1000, baseMatrix * matrix);
+			skinMesh->AddJointKeyFrame(newJoint->str_name, time * 1000, matrix *  baseMatrix);
 		}
 		for (size_t k = 0; k < vec_position.size(); ++k)
 		{
@@ -325,12 +356,45 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 				continue;
 			matrix.Identity();
 			matrix.Translate(trans);
-			skinMesh->AddJointKeyFrame(newJoint->str_name, time * 1000, baseMatrix * matrix);
+			skinMesh->AddJointKeyFrame(newJoint->str_name, time * 1000, matrix * baseMatrix);
+		}
+	}
+	if (pHeader->m_version == 4)
+	{
+		int32 subVersion = *(int32*)pPtr; // comment subVersion, always 1
+		pPtr += sizeof(subVersion);
+		for (int i = 0; i < 4; ++i)
+		{
+			uint32 numComment = *(uint32*)pPtr;
+			pPtr += sizeof(numComment);
+			for (uint32 j = 0; j < numComment; ++j)
+			{
+				// according to scorpiomidget this field does
+				// not exist for model comments. So avoid to
+				// read it
+				if (i != 3)
+				{
+					pPtr += sizeof(int32); //index
+				}
+				int32 commentLength = *(int32*)pPtr;
+				pPtr += sizeof(commentLength); 
+				pPtr += commentLength;
+			}
+		}
+		if (pPtr < EndPtr)
+		{
+			subVersion = *(int32*)pPtr; //vertex subversion
+			pPtr += sizeof(subVersion);
 		}
 	}
 	delete[] Triangles;
 	delete[] pBuffer;
 	skinMesh->SetMaxAniTime(AniTime * 1000);
+	skinMesh->SetAnimateTime(minAniTime * 1000, AniTime * 1000);
 	skinMesh->CalculateVertex();
+
+	Time = getTime()->GetTotalMillSeconds() - Time;
+	getLog()->Log(log_ok, "load ms3d %s ok, use time %dms\n", filename, Time);
+	getLog()->EndLog();
 	return skinMesh;
 }
