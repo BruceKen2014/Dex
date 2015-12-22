@@ -33,6 +33,6 @@ public:
 	virtual bool Render();
 	virtual bool LoadModel(const char* filename){ return true; }; //日后扩展从字节流中加载文件
 protected:
-	virtual bool CheckAnimate(){ return false; };
+	virtual bool IsStaticModel(){ return false; };
 };
 #endif

@@ -125,6 +125,7 @@ private:
 	LPD3DXMESH  g_sphere;
 	string         g_nextStateName;
 	IDexModelLoader* ms3dLoader;
+	IDexModelLoader* objLoader;
 private:
 	DexGameEngine();
 	~DexGameEngine();

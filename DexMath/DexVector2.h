@@ -220,27 +220,27 @@ template<typename T>
 inline bool DexVector2T<T>::operator>(const DexVector2T<T>& vector2) const
 {
 	return x > vector2.x &&
-		y > vector2.y &&;
+		y > vector2.y;
 }
 template<typename T>
 inline bool DexVector2T<T>::operator>=(const DexVector2T<T>& vector2) const
 {
 	return x >= vector2.x &&
-		y >= vector2.y &&;
+		y >= vector2.y;
 }
 
 template<typename T>
 inline bool DexVector2T<T>::operator<(const DexVector2T<T>& vector2) const
 {
 	return x < vector2.x &&
-		y < vector2.y &&;
+		y < vector2.y;
 }
 
 template<typename T>
 inline bool DexVector2T<T>::operator<=(const DexVector2T<T>& vector2) const
 {
 	return x <= vector2.x &&
-		y <= vector2.y &&;
+		y <= vector2.y;
 }
 
 template<typename T1, typename T>

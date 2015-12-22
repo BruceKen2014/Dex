@@ -1,6 +1,6 @@
 
-#ifndef _DEX_MODEL_LOAER_MS3D_H
-#define _DEX_MODEL_LOAER_MS3D_H
+#ifndef _DEX_MODEL_LOADER_MS3D_H
+#define _DEX_MODEL_LOADER_MS3D_H
 #include "DexModelLoader.h"
 
 

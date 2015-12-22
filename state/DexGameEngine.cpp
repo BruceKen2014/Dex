@@ -14,6 +14,7 @@
 #include "../DexMath/Dex_To_Dx.h"
 
 #include "../DexModel/DexModelMs3dLoader.h"
+#include "../DexModel/DexModelObjLoader.h"
 #include "../DexModel/DexSkinMesh.h"
 #include "../Source/CTexture.h"
 
@@ -56,6 +57,7 @@ DexGameEngine::DexGameEngine()
 	g_material.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 	g_material.Power = 0;
 	ms3dLoader = new DexModelMs3dLoader;
+	objLoader = new DexModelObjLoader;
 	m_RenderMode = DexRenderMode_TRIANGLE;
 }
 DexGameEngine::~DexGameEngine()
@@ -527,6 +529,13 @@ DexModelBase* DexGameEngine::CreateModel(const char* filename)
 	{//ms3d file
 		//load as DexSkinMesh
 		ret = ms3dLoader->LoadModel(filename);
+	}
+	else if (length > 3
+		&& filename[length - 3] == 'o'
+		&& filename[length - 2] == 'b'
+		&& filename[length - 1] == 'j')
+	{
+		ret = objLoader->LoadModel(filename);
 	}
 	return ret;
 }

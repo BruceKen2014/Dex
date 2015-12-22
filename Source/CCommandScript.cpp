@@ -49,6 +49,14 @@ BOOL CommandScript::OpenScript(const char *filename)
 	for(int iCurrLine = 0; iCurrLine < m_iScriptLine ; ++iCurrLine)
 	{
 		m_ppScript[iCurrLine] = (char *) malloc(MAX_LINE_SIZE + 1);
+		memset(m_ppScript[iCurrLine], 0, MAX_LINE_SIZE);
+		//if (iCurrLine >= 12606)
+		//{
+		//	char temptext[MAX_LINE_SIZE];
+		//	fgets(temptext, MAX_LINE_SIZE, pScriptFile);
+		//	int tttt = 0;
+		//}
+		//else
 		fgets(m_ppScript[iCurrLine], MAX_LINE_SIZE, pScriptFile);
 	}
 	fclose(pScriptFile);
@@ -104,7 +112,9 @@ void CommandScript::GetTotalLine(char* lineContent)
 {
 	m_iCurrChar = 0;
 	char cCurrChar;
-	while(m_iCurrChar < (int) strlen(m_ppScript[m_iCurrScriptLine]))
+	char* testcharText = m_ppScript[m_iCurrScriptLine];
+	size_t currLength = strlen(m_ppScript[m_iCurrScriptLine]);
+	while (m_iCurrChar < (int)currLength)
 	{
 		cCurrChar = m_ppScript[m_iCurrScriptLine][m_iCurrChar];
 		if(cCurrChar == '\n')

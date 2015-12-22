@@ -50,6 +50,7 @@ protected:
 	TlistPlayer   m_listEnemies;
 	TlistPlayer   m_listPlayers;
 	DexSkinMesh* ms3d;
+	DexSkinMesh* objModel;
 	DexSkinMesh* testMesh;
 	DexLight light;
 	void* test_primitive_vertex;

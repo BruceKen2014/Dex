@@ -7,6 +7,7 @@
 #include "../DexMath/DexMatrix.h"
 #include "DexModelMs3dLoader.h"
 #include "DexSkinMesh.h"
+#include "../DexMath/DexMath2.h"
 
 /*
 MS3D STRUCTURES
@@ -157,82 +158,88 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 	int nVertices = *(int16*)pPtr;  //顶点个数
 	pPtr += sizeof(int16);
 
-	int i;
-	for (i = 0; i < nVertices; i++)
+	MS3DVertex *pVertex = (MS3DVertex*)pPtr;
+	 for (int i = 0; i < nVertices; i++)
 	{
-		MS3DVertex *pVertex = (MS3DVertex*)pPtr;
 		//ms3d模型空间为右手坐标系，DX为左右坐标系
-		DexVector3 pos(pVertex->m_vertex[0], pVertex->m_vertex[1], -pVertex->m_vertex[2]);
-		skinMesh->AddVertex(pos, pVertex->m_boneID, 1.0f);
-		pPtr += sizeof(MS3DVertex);
+		 pVertex[i].m_vertex[2] *= -1;
+		 DexVector3 pos(pVertex[i].m_vertex);
+		 int16 jointId[1] = { pVertex[i].m_boneID };
+		 float weight[1] = {1.0f};
+		 skinMesh->AddVertex(pos, jointId, weight, 1);
 	}
+	 pPtr += sizeof(MS3DVertex)* nVertices;
 	int nTriangles = *(int16*)pPtr; //三角形个数
-	struct Triangle
-	{
-		float m_vertexNormals[3][3];
-		float m_s[3], m_t[3];
-		int m_vertexIndices[3];
-	};
-	Triangle* Triangles = new Triangle[nTriangles];
 	pPtr += sizeof(int16);
-	for (i = 0; i < nTriangles; i++)
-	{
-		MS3DTriangle *pTriangle = (MS3DTriangle*)pPtr;
-		int vertexIndices[3] = { pTriangle->m_vertexIndices[0], pTriangle->m_vertexIndices[1], pTriangle->m_vertexIndices[2] };
-		float t[3] = { 1.0f - pTriangle->m_t[0], 1.0f - pTriangle->m_t[1], 1.0f - pTriangle->m_t[2] };
-		
-		//对于我们的skinmesh而言，后面只需要indice，所以这里只记录indice
-		//memcpy(Triangles[i].m_vertexNormals, pTriangle->m_vertexNormals, sizeof(float)* 3 * 3);
-		//memcpy(Triangles[i].m_s, pTriangle->m_s, sizeof(float)* 3);
-		//memcpy(Triangles[i].m_t, t, sizeof(float)* 3);
-		memcpy(Triangles[i].m_vertexIndices, vertexIndices, sizeof(int)* 3);
-		//这里可能会对一些公用顶点进行重复设置
-		DexVector3 normal;
-		normal.Set(pTriangle->m_vertexNormals[0][0], pTriangle->m_vertexNormals[0][1], -pTriangle->m_vertexNormals[0][2]);
-		skinMesh->SetVertexNormal(pTriangle->m_vertexIndices[0], normal);
-		skinMesh->SetVertexUv(pTriangle->m_vertexIndices[0], pTriangle->m_s[0], t[0]);
-		normal.Set(pTriangle->m_vertexNormals[1][0], pTriangle->m_vertexNormals[0][1], -pTriangle->m_vertexNormals[1][2]);
-		skinMesh->SetVertexNormal(pTriangle->m_vertexIndices[1], normal);
-		skinMesh->SetVertexUv(pTriangle->m_vertexIndices[1], pTriangle->m_s[1], t[1]);
-		normal.Set(pTriangle->m_vertexNormals[2][0], pTriangle->m_vertexNormals[0][1], -pTriangle->m_vertexNormals[2][2]);
-		skinMesh->SetVertexNormal(pTriangle->m_vertexIndices[2], normal);
-		skinMesh->SetVertexUv(pTriangle->m_vertexIndices[2], pTriangle->m_s[2], t[2]);
-		pPtr += sizeof(MS3DTriangle);
-	}
+	MS3DTriangle* Triangles = (MS3DTriangle*)pPtr;
+	pPtr += sizeof(MS3DTriangle)*nTriangles;
 
 	int nGroups = *(int16*)pPtr; //mesh数量
 	pPtr += sizeof(int16);
-	for (i = 0; i < nGroups; i++)
+	for (int i = 0; i < nGroups; i++)
 	{
 		pPtr += sizeof(byte);	// flags
 		pPtr += 32;				// name
-		int16 nTriangles = *(int16*)pPtr; //这个mesh有多少个三角形
+		int16 iTriangles = *(int16*)pPtr; //这个mesh有多少个三角形
 		pPtr += sizeof(int16);
-		int *pTriangleIndices = new int[nTriangles]; //三角形索引
-
-		int32* indices = new int32[nTriangles * 3];
+		int16 *pTriangleIndices = (int16*)pPtr; //三角形索引
+		pPtr += sizeof(int16)* iTriangles;
+		int32* indices = new int32[iTriangles * 3];
 		int32 indice_index = 0;
 		DexSkinMesh::DexMesh* mesh =  skinMesh->AddMesh(i); //新建mesh
-		for (int j = 0; j < nTriangles; j++)
+		std::vector<stVertex3> vecMeshVertexs;
+		DexVector3 tempPos;
+		DexVector3 tempNormal;
+		float tempU,tempV;
+		stVertex3 tempVertex;
+		for (int j = 0; j < iTriangles; j++)
 		{//解析这个mesh所用到的所有三角形的顶点索引
-			int triangleIndex = *(int16*)pPtr;
-			pPtr += sizeof(int16);
-			indices[indice_index++] = Triangles[triangleIndex].m_vertexIndices[0];
-			indices[indice_index++] = Triangles[triangleIndex].m_vertexIndices[1];
-			indices[indice_index++] = Triangles[triangleIndex].m_vertexIndices[2];
+			int triangleIndex = pTriangleIndices[j];
+			//检测三角形的三个顶点是否可在当前mesh中查找到，需要匹配pos normal uv
+			for (int point = 0; point < 3; ++point)
+			{
+				tempPos.Set(pVertex[Triangles[triangleIndex].m_vertexIndices[point]].m_vertex);
+				tempNormal.Set(Triangles[triangleIndex].m_vertexNormals[point]);
+				tempNormal.z *= -1;
+				tempU = Triangles[triangleIndex].m_s[point]; tempV = Triangles[triangleIndex].m_t[point];
+				bool find = false;
+				for (size_t iMeshVertexIndex = 0; iMeshVertexIndex < vecMeshVertexs.size(); ++iMeshVertexIndex)
+				{
+					//if (DexMath2::Equal(vecMeshVertexs[iMeshVertexIndex].m_pos, tempPos)
+					//	&& DexMath2::Equal(vecMeshVertexs[iMeshVertexIndex].m_normal, tempNormal)
+					if (vecMeshVertexs[iMeshVertexIndex].m_pos == tempPos
+						&& vecMeshVertexs[iMeshVertexIndex].m_normal == tempNormal
+						&& DexMath::Equal(vecMeshVertexs[iMeshVertexIndex].m_u, tempU)
+						&& DexMath::Equal(vecMeshVertexs[iMeshVertexIndex].m_v, tempV))
+					{//找到已经存在的vertex
+						indices[indice_index++] = iMeshVertexIndex;
+						find = true;
+						break;
+					}
+				}
+				if (!find)
+				{//未找到已存在的，则新建顶点
+					tempVertex.SetPos(tempPos);
+					tempVertex.SetNormal(tempNormal);
+					tempVertex.SetUV(tempU, tempV);
+					tempVertex.SetColor(DEXCOLOR_WHITE);
+					indices[indice_index++] = vecMeshVertexs.size();
+					vecMeshVertexs.push_back(tempVertex);
+				}
+			}
 		}
-		skinMesh->SetIndices(i, indices, nTriangles * 3);
+		skinMesh->SetMeshVertexs(i, (void*)&(vecMeshVertexs[0]), vecMeshVertexs.size());
+		skinMesh->SetMeshIndices(i, indices, iTriangles * 3);
 		char materialIndex = *(char*)pPtr;
 		pPtr += sizeof(char);
-		mesh->materialId = materialIndex;
-		mesh->textureId = materialIndex;
+		mesh->m_iMaterialId = materialIndex;
+		mesh->m_iTextureId = materialIndex;
 		delete[] indices;
-		delete[] pTriangleIndices;
 	}
 
 	int nMaterials = *(int16*)pPtr;
 	pPtr += sizeof(int16);
-	for (i = 0; i < nMaterials; i++)
+	for (int i = 0; i < nMaterials; i++)
 	{
 		MS3DMaterial *pMaterial = (MS3DMaterial*)pPtr;
 		DexMaterial material;
@@ -359,7 +366,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 			skinMesh->AddJointKeyFrame(newJoint->str_name, time * 1000, matrix * baseMatrix);
 		}
 	}
-	if (pHeader->m_version == 4)
+	if (pPtr < EndPtr && pHeader->m_version == 4)
 	{
 		int32 subVersion = *(int32*)pPtr; // comment subVersion, always 1
 		pPtr += sizeof(subVersion);
@@ -385,16 +392,39 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 		{
 			subVersion = *(int32*)pPtr; //vertex subversion
 			pPtr += sizeof(subVersion);
+			// read vertex weights, ignoring data 'extra' from 1.8.2
+			int16 offset = subVersion == 1 ? 6 : 10;
+			for (int index = 0; index < nVertices; ++index)
+			{
+				MS3DVertexWeights* vertexEx = (MS3DVertexWeights*)pPtr;
+				for (int boneIndex = 0; boneIndex < 3; ++boneIndex)
+				{
+					if (vertexEx->boneIds[boneIndex] != -1)
+						skinMesh->AddVertexJointInfo(index, vertexEx->boneIds[boneIndex], vertexEx->weights[boneIndex]);
+				}
+				pPtr += offset;
+			}
+		}
+		if (pPtr < EndPtr)
+		{
+			subVersion = *(int32*)pPtr; //joint subversion
+			pPtr += sizeof(subVersion);
+			// skip joint colors
+			pPtr += 3 * sizeof(float32)*jointCount;
+		}
+		if (pPtr < EndPtr)
+		{
+			subVersion = *(int32*)pPtr; //model subversion
+			pPtr += sizeof(subVersion);
 		}
 	}
-	delete[] Triangles;
 	delete[] pBuffer;
 	skinMesh->SetMaxAniTime(AniTime * 1000);
 	skinMesh->SetAnimateTime(minAniTime * 1000, AniTime * 1000);
 	skinMesh->CalculateVertex();
 
 	Time = getTime()->GetTotalMillSeconds() - Time;
-	getLog()->Log(log_ok, "load ms3d %s ok, use time %dms\n", filename, Time);
+	getLog()->Log(log_ok, "load ms3d %s ok, use time %d ms\n", filename, Time);
 	getLog()->EndLog();
 	return skinMesh;
 }

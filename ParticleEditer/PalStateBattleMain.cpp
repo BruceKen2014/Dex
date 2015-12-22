@@ -8,7 +8,6 @@
 #include "state/DexGameEngine.h"
 #include "DexBase/CDexDraw2D.h"
 #include "DexModel/DexModelBase.h"
-#include "DexModel/DexModelMs3d.h"
 #include "DexModel/DexSkinMesh.h"
 #include "DexMath/DexVector3.h"
 #include "DexMath/DexQuaternion.h"
@@ -249,13 +248,16 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
+	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("SmoothCube.obj");
+	objModel->SetRenderFlag(SKINMESH_RENDER_JOINT | SKINMESH_RENDER_MESH);
 	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("ms3d/treasure.ms3d");
 	ms3d->SetAnimateType(SkinMeshAnimateType_Loop);
-	ms3d->SetAnimateRatio(0.2f);
-	//ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
+	ms3d->SetAnimateRatio(1.0f);
+	ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
 	DexMatrix4x4 world_matrix; 
 
 	testMesh = new DexSkinMesh(2000); 
+	testMesh->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
 	testMesh->SetAnimateTime(0, 2000);
 	testMesh->SetLightFlag(true);
 	DexMatrix4x4 temp_matrix;	temp_matrix.Identity();
@@ -278,41 +280,6 @@ bool PalGameStateBattleMain::ApplyRes()
 	testMesh->AddJointKeyFrame(4, 0,    DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
 	testMesh->AddJointKeyFrame(4, 1000, DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
 	testMesh->AddJointKeyFrame(4, 2000, DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-
-	stVertex0	vertexs[8];
-	vertexs[0].m_pos = D3DXVECTOR3(30.0f, 0, -30.0f); vertexs[0].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
-	vertexs[1].m_pos = D3DXVECTOR3(30.0f, 0, 30.0f); vertexs[1].m_color = getD3DColor(DexColor(1.0f, 0.0f, 1.0f, 0.1f));
-	vertexs[2].m_pos = D3DXVECTOR3(-30.0f, 0, 30.0f); vertexs[2].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
-	vertexs[3].m_pos = D3DXVECTOR3(-30.0f, 0, -30.0f); vertexs[3].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
-	vertexs[4].m_pos = D3DXVECTOR3(30.0f, 60, -30.0f); vertexs[4].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
-	vertexs[5].m_pos = D3DXVECTOR3(30.0f, 60, 30.0f); vertexs[5].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
-	vertexs[6].m_pos = D3DXVECTOR3(-30.0f, 60, 30.0f); vertexs[6].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
-	vertexs[7].m_pos = D3DXVECTOR3(-30.0f, 60, -30.0f); vertexs[7].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f, 0.1f));
-	int32 indices1[] = {0,4,1,1,4,5,2,6,3,6,7,3,0,3,4,3,7,4,1,5,2,2,5,6};
-	int32 indices2[] = {8,9,11,11,9,10,12,15,13,15,14,13};
-
-	//mesh1 vertex
-	testMesh->AddVertex(DexVector3(30.0f, 0, -30.0f), DexVector3(1.0f, -1.0f, -1.0f), DexVector2(0.33f, 1.0f), 2, 1.0f);
-	testMesh->AddVertex(DexVector3(30.0f, 0, 30.0f), DexVector3(1.0f, -1.0f, 1.0f), DexVector2(0.66f, 1.0f), 2, 1.0f);
-	testMesh->AddVertex(DexVector3(-30.0f, 0, 30.0f), DexVector3(-1.0f, -1.0f, 1.0f), DexVector2(0.99f, 1.0f), 4, 0.5f, 3, 0.5f);
-	testMesh->AddVertex(DexVector3(-30.0f, 0, -30.0f), DexVector3(-1.0f, -1.0f, -1.0f), DexVector2(0.0f, 1.0f), 4, 0.5f, 3, 0.5f);
-	testMesh->AddVertex(DexVector3(30.0f, 60, -30.0f), DexVector3(1.0f, 1.0f, -1.0f), DexVector2(0.33f, 0.0f), 4, 1.0f);
-	testMesh->AddVertex(DexVector3(30.0f, 60, 30.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector2(0.66f, 0.0f), 4, 1.0f);
-	testMesh->AddVertex(DexVector3(-30.0f, 60, 30.0f), DexVector3(-1.0f, 1.0f, 1.0f), DexVector2(0.99f, 0.0f), 3, 1.0f);
-	testMesh->AddVertex(DexVector3(-30.0f, 60, -30.0f), DexVector3(-1.0f, 1.0f, -1.0f), DexVector2(0.0f, 0.0f), 3, 1.0f);
-	//mesh2 vertex
-	testMesh->AddVertex(DexVector3(30.0f, 0, -30.0f), DexVector3(1.0f, -1.0f, -1.0f), DexVector2(1.0f, 0.0f), 2, 1.0f);
-	testMesh->AddVertex(DexVector3(30.0f, 0, 30.0f), DexVector3(1.0f, -1.0f, 1.0f), DexVector2(1.0f, 1.0f), 2, 1.0f);
-	testMesh->AddVertex(DexVector3(-30.0f, 0, 30.0f), DexVector3(-1.0f, -1.0f, 1.0f), DexVector2(0.0f, 1.0f), 4, 0.5f, 3, 0.5f);
-	testMesh->AddVertex(DexVector3(-30.0f, 0, -30.0f), DexVector3(-1.0f, -1.0f, -1.0f), DexVector2(0.0f, 0.0f), 4, 0.5f, 3, 0.5f);
-	testMesh->AddVertex(DexVector3(30.0f, 60, -30.0f), DexVector3(1.0f, 1.0f, -1.0f), DexVector2(1.0f, 0.0f), 4, 1.0f);
-	testMesh->AddVertex(DexVector3(30.0f, 60, 30.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector2(1.0f, 1.0f), 4, 1.0f);
-	testMesh->AddVertex(DexVector3(-30.0f, 60, 30.0f), DexVector3(-1.0f, 1.0f, 1.0f), DexVector2(0.0f, 1.0f), 3, 1.0f);
-	testMesh->AddVertex(DexVector3(-30.0f, 60, -30.0f), DexVector3(-1.0f, 1.0f, -1.0f), DexVector2(0.0f, 0.0f), 3, 1.0f);
-
-	DexSkinMesh::DexMesh* mesh1 = testMesh->AddMesh(1);
-	testMesh->SetIndices(1, indices1, sizeof(indices1) / sizeof(int32));
-	mesh1->materialId = mesh1->textureId = 0;
 	testMesh->AddTexture(getUiSrcMgrSingleton()->getUiTexFactory()->FindTex("b23.png"));
 	DexMaterial material1;
 	material1.diffuse = DexColor(1.0f, 1.0f, 1.0f);
@@ -320,10 +287,6 @@ bool PalGameStateBattleMain::ApplyRes()
 	material1.emissive = DexColor(0.0f, 0.0f, 0.0f);
 	material1.specular = DexColor(0.0f, 0.0f, 0.0f);
 	testMesh->AddMaterial(material1);
-
-	DexSkinMesh::DexMesh* mesh2 = testMesh->AddMesh(2);
-	testMesh->SetIndices(2, indices2, sizeof(indices2) / sizeof(int32));
-	mesh2->materialId = mesh2->textureId = 1;
 	testMesh->AddTexture(getUiSrcMgrSingleton()->getUiTexFactory()->FindTex("Å®º¢0.png"));
 	DexMaterial material2;
 	material2.diffuse = DexColor(1.0f, 1.0f, 1.0f);
@@ -331,6 +294,54 @@ bool PalGameStateBattleMain::ApplyRes()
 	material2.emissive = DexColor(0.0f, 0.0f, 0.0f);
 	material2.specular = DexColor(0.0f, 0.0f, 0.0f);
 	testMesh->AddMaterial(material2);
+	int16 arrJointId[2] = {0,0};
+	float arrJointWeight[2] = {0.0f, 0.0f};
+	arrJointId[0] = 4; arrJointWeight[0] = 1.0f;
+	testMesh->AddVertex(DexVector3(30.0f, 0, -30.0f), arrJointId, arrJointWeight, 1);
+	arrJointId[0] = 4; arrJointWeight[0] = 1.0f;
+	testMesh->AddVertex(DexVector3(30.0f, 0, 30.0f), arrJointId, arrJointWeight, 1);
+	arrJointId[0] = 4; arrJointWeight[0] = 0.5f; arrJointId[1] = 3; arrJointWeight[1] = 0.5f;
+	testMesh->AddVertex(DexVector3(-30.0f, 0, 30.0f), arrJointId, arrJointWeight, 2);
+	arrJointId[0] = 4; arrJointWeight[0] = 0.5f; arrJointId[1] = 3; arrJointWeight[1] = 0.5f;
+	testMesh->AddVertex(DexVector3(-30.0f, 0, -30.0f), arrJointId, arrJointWeight, 2);
+	arrJointId[0] = 4; arrJointWeight[0] = 1.0f;
+	testMesh->AddVertex(DexVector3(30.0f, 60, -30.0f), arrJointId, arrJointWeight, 1);
+	arrJointId[0] = 4; arrJointWeight[0] = 1.0f;
+	testMesh->AddVertex(DexVector3(30.0f, 60, 30.0f), arrJointId, arrJointWeight, 1);
+	arrJointId[0] = 3; arrJointWeight[0] = 1.0f;
+	testMesh->AddVertex(DexVector3(-30.0f, 60, 30.0f), arrJointId, arrJointWeight, 1);
+	arrJointId[0] = 3; arrJointWeight[0] = 1.0f;
+	testMesh->AddVertex(DexVector3(-30.0f, 60, -30.0f), arrJointId, arrJointWeight, 1);
+	DexSkinMesh::DexMesh* mesh1 = testMesh->AddMesh(1);
+	mesh1->m_iMaterialId = mesh1->m_iTextureId = 0;
+	//mesh1 vertex
+	std::vector<stVertex3> vecMeshVertexs;
+	vecMeshVertexs.push_back(stVertex3(DexVector3(30.0f, 0, -30.0f), DexVector3(1.0f, -1.0f, -1.0f), 0.33f, 1.0f));
+	vecMeshVertexs.push_back(stVertex3(DexVector3(30.0f, 0,  30.0f), DexVector3(1.0f, -1.0f,  1.0f), 0.66f, 1.0f));
+	vecMeshVertexs.push_back(stVertex3(DexVector3(-30.0f, 0, 30.0f), DexVector3(-1.0f, -1.0f, 1.0f), 0.99f, 1.0f));
+	vecMeshVertexs.push_back(stVertex3(DexVector3(-30.0f, 0, -30.0f), DexVector3(-1.0f, -1.0f, -1.0f), 0.0f, 1.0f));
+	vecMeshVertexs.push_back(stVertex3(DexVector3(30.0f, 60, -30.0f), DexVector3(1.0f, 1.0f, -1.0f), 0.33f, 0.0f));
+	vecMeshVertexs.push_back(stVertex3(DexVector3(30.0f, 60, 30.0f), DexVector3(1.0f, 1.0f, -1.0f), 0.33f, 0.0f));
+	vecMeshVertexs.push_back(stVertex3(DexVector3(-30.0f, 60, 30.0f), DexVector3(-1.0f, 1.0f, 1.0f), 0.99f, 0.0f));
+	vecMeshVertexs.push_back(stVertex3(DexVector3(-30.0f, 60, -30.0f), DexVector3(-1.0f, 1.0f, -1.0f), 0.0f, 0.0f));
+	testMesh->SetMeshVertexs(1, (void*)&vecMeshVertexs[0], vecMeshVertexs.size());
+	int32 indices1[] = { 0, 4, 1, 1, 4, 5, 2, 6, 3, 6, 7, 3, 0, 3, 4, 3, 7, 4, 1, 5, 2, 2, 5, 6 };
+	testMesh->SetMeshIndices(1, indices1, sizeof(indices1) / sizeof(int32));
+	//mesh2 vertex
+	DexSkinMesh::DexMesh* mesh2 = testMesh->AddMesh(2);
+	mesh2->m_iMaterialId = mesh2->m_iTextureId = 1;
+	int32 indices2[] = { 0, 1, 3, 3, 1, 2, 4, 7, 5, 7, 6, 5 };
+	testMesh->SetMeshIndices(2, indices2, sizeof(indices2) / sizeof(int32));
+	
+	testMesh->AddVertex(2, DexVector3(30.0f, 0, -30.0f), DexVector3(1.0f, -1.0f, -1.0f), DexVector2(1.0f, 0.0f));
+	testMesh->AddVertex(2, DexVector3(30.0f, 0, 30.0f), DexVector3(1.0f, -1.0f, 1.0f), DexVector2(1.0f, 1.0f));
+	testMesh->AddVertex(2, DexVector3(-30.0f, 0, 30.0f), DexVector3(-1.0f, -1.0f, 1.0f), DexVector2(0.0f, 1.0f));
+	testMesh->AddVertex(2, DexVector3(-30.0f, 0, -30.0f), DexVector3(-1.0f, -1.0f, -1.0f), DexVector2(0.0f, 0.0f));
+	testMesh->AddVertex(2, DexVector3(30.0f, 60, -30.0f), DexVector3(1.0f, 1.0f, -1.0f), DexVector2(1.0f, 0.0f));
+	testMesh->AddVertex(2, DexVector3(30.0f, 60, 30.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector2(1.0f, 1.0f));
+	testMesh->AddVertex(2, DexVector3(-30.0f, 60, 30.0f), DexVector3(-1.0f, 1.0f, 1.0f), DexVector2(0.0f, 1.0f));
+	testMesh->AddVertex(2, DexVector3(-30.0f, 60, -30.0f), DexVector3(-1.0f, 1.0f, -1.0f), DexVector2(0.0f, 0.0f));
+	
 
 	testMesh->CalculateVertex();
 	
@@ -343,12 +354,14 @@ bool PalGameStateBattleMain::ApplyRes()
 	DexGameEngine::getEngine()->SetLightEnable(true);
 	//DexGameEngine::getEngine()->SetRenderMode(DexRenderMode_LINE);
 	world_matrix.Identity();
+	world_matrix.Scale(3.0f, 3.0f, 3.0f);
 	//world_matrix.RotateY(_getRadian(-90.0f));
-	//DexVector3 skin_pos(100.0f, 100.0f, 100.0f);
-	//world_matrix.Translate(skin_pos);
+	DexVector3 skin_pos(100.0f, 100.0f, 100.0f);
+	world_matrix.Translate(skin_pos);
 	testMesh->SetSceneNodeMatrix(world_matrix);
-
-	delete testMesh;
+	world_matrix.Identity();
+	world_matrix.Scale(10.0f, 10.0f, 10.0f);
+	objModel->SetSceneNodeMatrix(world_matrix);
 	InitVertexShader();
 	InitPixelShader();
 	m_bApply = true;
@@ -482,7 +495,8 @@ bool PalGameStateBattleMain::Update(int delta)
 		}
 		
 	}
-	ms3d->Update(delta);
+	//ms3d->Update(delta);
+	objModel->Update(delta);
 	UpdateVertexShader(delta);
 	UpdatePixelShader(delta);
 	//testMesh->Update(delta/4);
@@ -508,9 +522,10 @@ void PalGameStateBattleMain::Render()
 	m_pScene->Render();
 	m_pBattleMainMachine->Render();
 	DexGameEngine::getEngine()->RenderCoorLines();
-	ms3d->Render();
-	RenderVertexShader();
-	RenderPixelShader();
+	//ms3d->Render();
+	objModel->Render();
+	//RenderVertexShader();
+	//RenderPixelShader();
 	//testMesh->Render();
 	//DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 	//getGlobal()->g_pJingtian->Render();

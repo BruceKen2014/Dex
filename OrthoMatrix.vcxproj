@@ -170,6 +170,7 @@
     <ClInclude Include="DexBase\DexVertex.h" />
     <ClInclude Include="DexCommonFunction.h" />
     <ClInclude Include="DexMath\DexMath.h" />
+    <ClInclude Include="DexMath\DexMath2.h" />
     <ClInclude Include="DexMath\DexMatrix.h" />
     <ClInclude Include="DexMath\DexQuaternion.h" />
     <ClInclude Include="DexMath\DexVector2.h" />
@@ -177,8 +178,8 @@
     <ClInclude Include="DexMath\Dex_To_Dx.h" />
     <ClInclude Include="DexModel\DexModelBase.h" />
     <ClInclude Include="DexModel\DexModelLoader.h" />
-    <ClInclude Include="DexModel\DexModelMs3d.h" />
     <ClInclude Include="DexModel\DexModelMs3dLoader.h" />
+    <ClInclude Include="DexModel\DexModelObjLoader.h" />
     <ClInclude Include="DexModel\DexSkinMesh.h" />
     <ClInclude Include="Pal3Wai\CBloodFlag.h" />
     <ClInclude Include="Pal3Wai\CDexQuad.h" />
@@ -292,12 +293,14 @@
     <ClInclude Include="state\DexGameState.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DexBase\DexVertex.cpp" />
     <ClCompile Include="DexCommonFunction.cpp" />
     <ClCompile Include="DexMath\DexMath.cpp" />
+    <ClCompile Include="DexMath\DexMath2.cpp" />
     <ClCompile Include="DexMath\DexQuaternion.cpp" />
     <ClCompile Include="DexModel\DexModelBase.cpp" />
-    <ClCompile Include="DexModel\DexModelMs3d.cpp" />
     <ClCompile Include="DexModel\DexModelMs3dLoader.cpp" />
+    <ClCompile Include="DexModel\DexModelObjLoader.cpp" />
     <ClCompile Include="DexModel\DexSkinMesh.cpp" />
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp" />
     <ClCompile Include="Pal3Wai\CDexQuad.cpp" />
