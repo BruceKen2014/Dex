@@ -1,4 +1,6 @@
-
+/*
+DexEngine& ms3d model loader
+*/
 #ifndef _DEX_MODEL_LOADER_MS3D_H
 #define _DEX_MODEL_LOADER_MS3D_H
 #include "DexModelLoader.h"

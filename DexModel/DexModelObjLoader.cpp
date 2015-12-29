@@ -19,36 +19,6 @@ DexModelObjLoader::~DexModelObjLoader()
 
 }
 
-struct stIndex
-{
-	int32 m_iPosIndex;
-	int32 m_iNormalIndex;
-	int32 m_iUvIndex;
-	stIndex(int32 i1, int32 i2, int i3) :m_iPosIndex(i1), m_iNormalIndex(i2), m_iUvIndex(i3)
-	{}
-	bool operator == (const stIndex& index)	const
-	{
-		return m_iPosIndex == index.m_iPosIndex &&
-			m_iNormalIndex == index.m_iNormalIndex &&
-			m_iUvIndex == index.m_iUvIndex;
-	}
-	bool operator < (const stIndex& index)	const
-	{
-		if (m_iPosIndex < index.m_iPosIndex)
-			return true;
-		if (m_iPosIndex > index.m_iPosIndex)
-			return false;
-		if (m_iNormalIndex < index.m_iNormalIndex)
-			return true;
-		if (m_iNormalIndex > index.m_iNormalIndex)
-			return false;
-		if (m_iUvIndex < index.m_iUvIndex)
-			return true;
-		if (m_iUvIndex > index.m_iUvIndex)
-			return false;
-		return false;
-	}
-};
 DexModelBase* DexModelObjLoader::LoadModel(const char* filename)
 {
 	getLog()->BeginLog();
@@ -57,272 +27,341 @@ DexModelBase* DexModelObjLoader::LoadModel(const char* filename)
 	//TODO 把model加入object工程，采用query机制
 	DexSkinMesh* skinMesh = new DexSkinMesh();
 	skinMesh->SetMeshType(SkinMeshModelType_OBJ);
-	DexSkinMesh::DexMesh* pMesh = skinMesh->AddMesh(1);
-	int8 loadType = 0;
-	if (loadType == 0)
+	skinMesh->SetAnimateType(SkinMeshAnimateType_Total);
+	int8* pBuffer = NULL;
+	int8* pBufferCurr = NULL;
+	int8* pBufferEnd = NULL;
+	uint32 fileSize = 0;
+	FILE* pFile = fopen(filename, "rb");
+	if (pFile == NULL)
 	{
-		int8* pBuffer = NULL;
-		int8* pBufferCurr = NULL;
-		int8* pBufferEnd = NULL;
-		uint32 fileSize = 0;
-		FILE* pFile = fopen(filename, "rb");
-		if (pFile == NULL)
+		getLog()->Log(log_error, "		load obj model %s failed!\n");
+		getLog()->EndLog();
+		delete skinMesh;
+		return NULL;
+	}
+	fseek(pFile, 0, SEEK_END);
+	fileSize = ftell(pFile);
+	fseek(pFile, 0, SEEK_SET);
+	pBuffer = new int8[fileSize];
+	fread(pBuffer, fileSize, 1, pFile);
+	fclose(pFile);
+	pBufferCurr = pBuffer;
+	pBufferEnd = pBuffer + fileSize;
+	DexVector3 tempV3;
+	DexVector2 tempV2;
+	int8 tempArry[32];
+	Vector<DexVector3> vecPos;
+	Vector<DexVector2> vecUv;
+	Vector<DexVector3> vecNormal;
+	Vector<ObjMaterial> vecMaterials;
+	map<stIndex, int32> mapVertexInfo2;
+	DexMaterial			tempMaterial;
+	DexSkinMesh::DexMesh* pMesh = NULL;
+	while (pBufferCurr != pBufferEnd)
+	{
+		switch (pBufferCurr[0])
 		{
-			getLog()->Log(log_error, "		load obj model %s failed!\n");
-			getLog()->EndLog();
-			delete skinMesh;
-			return NULL;
-		}
-		fseek(pFile, 0, SEEK_END);
-		fileSize = ftell(pFile);
-		fseek(pFile, 0, SEEK_SET);
-		pBuffer = new int8[fileSize];
-		fread(pBuffer, fileSize, 1, pFile);
-		fclose(pFile);
-		pBufferCurr = pBuffer;
-		pBufferEnd = pBuffer + fileSize;
-		DexVector3 tempV3;
-		DexVector2 tempV2;
-		int8 tempArry[32];
-		std::vector<DexVector3> vec_pos;
-		std::vector<DexVector2> vec_uv;
-		std::vector<DexVector3> vec_normal;
-		//pos normal uv index
-		map<int32, map<int32, map<int32, int32>>> mapVertexInfo;
-		map<stIndex, int32> mapVertexInfo2;
-		while (pBufferCurr != pBufferEnd)
-		{
-			switch (pBufferCurr[0])
+		case 'm':
+			pBufferCurr += sizeof(int8)* 7;//'mtllib' and space
+			getToken(pBufferCurr, tempArry, pBufferEnd);
+			readMaterial((const char*)tempArry, vecMaterials);
+			break;
+		case 'g':
+			pBufferCurr += sizeof(int8)* 2;//'g' and space
+			getToken(pBufferCurr, tempArry, pBufferEnd);
+			mapVertexInfo2.clear();
+			pMesh = skinMesh->AddMesh((const char*)tempArry);
+			break;
+		case 'u':
+			pBufferCurr += sizeof(int8)* 7;//'usemtl' and space
+			getToken(pBufferCurr, tempArry, pBufferEnd);
+			for (size_t i = 0; i < vecMaterials.size(); ++i)
 			{
-			case 'v':
-				switch (pBufferCurr[1])
+				if (strcmp((const char*)vecMaterials[i].name, (const char*)tempArry) == 0)
 				{
-				case ' ':
-				{//vertex
-							pBufferCurr += sizeof(int8)* 2;//'v' and space
-							GetToken(pBufferCurr, tempArry, pBufferEnd); tempV3.x = atof((const char*)tempArry);
-							GetToken(pBufferCurr, tempArry, pBufferEnd); tempV3.y = atof((const char*)tempArry);
-							GetToken(pBufferCurr, tempArry, pBufferEnd); tempV3.z = atof((const char*)tempArry);
-							if (vec_pos.size() >= vec_pos.capacity())
-							{
-								vec_pos.reserve(vec_pos.size() * 2);
-							}
-							vec_pos.push_back(tempV3);
-							skinMesh->AddVertex(tempV3, NULL, NULL, 0);
-							break;
-				}
-				case 't':
-				{//uv
-							pBufferCurr += sizeof(int8)* 3;//'v' and 't' and space
-							GetToken(pBufferCurr, tempArry, pBufferEnd); tempV2.x = atof((const char*)tempArry);
-							GetToken(pBufferCurr, tempArry, pBufferEnd); tempV2.y = atof((const char*)tempArry);
-							if (vec_uv.size() >= vec_uv.capacity())
-							{
-								vec_uv.reserve(vec_uv.size()*2);
-							}
-							vec_uv.push_back(tempV2);
-							break;
-				}
-				case 'n':
-				{//normal
-							pBufferCurr += sizeof(int8)* 3;//'v' and 'n' and space
-							GetToken(pBufferCurr, tempArry, pBufferEnd); tempV3.x = atof((const char*)tempArry);
-							GetToken(pBufferCurr, tempArry, pBufferEnd); tempV3.y = atof((const char*)tempArry);
-							GetToken(pBufferCurr, tempArry, pBufferEnd); tempV3.z = atof((const char*)tempArry);
-							if (vec_normal.size() >= vec_normal.capacity())
-							{
-								vec_normal.reserve(vec_normal.size() * 2);
-							}
-							vec_normal.push_back(tempV3);
-							break;
-				}
-				default:
+					tempMaterial.ambient.Set(vecMaterials[i].m_ambient[0], vecMaterials[i].m_ambient[1], vecMaterials[i].m_ambient[2], 1.0f);
+					tempMaterial.diffuse.Set(vecMaterials[i].m_diffuse[0], vecMaterials[i].m_diffuse[1], vecMaterials[i].m_diffuse[2], 1.0f);
+					tempMaterial.specular.Set(vecMaterials[i].m_specular[0], vecMaterials[i].m_specular[1], vecMaterials[i].m_specular[2], 1.0f);
+					tempMaterial.emissive.Set(vecMaterials[i].m_emissive[0], vecMaterials[i].m_emissive[1], vecMaterials[i].m_emissive[2], 1.0f);
+					tempMaterial.power = vecMaterials[i].m_shininess;
+					pMesh->m_iMaterialId = skinMesh->m_vecMaterials.size();
+					if (skinMesh->AddTexture((const char*)vecMaterials[i].m_texture))
+						//与material不同，texture有可能加载失败，所以需加安全判断
+						pMesh->m_iTextureId = skinMesh->m_vecTextures.size() - 1;
+					skinMesh->AddMaterial(tempMaterial);
 					break;
 				}
-				break;
-			case 'f':
+			}
+			break;
+		case 'v':
+			switch (pBufferCurr[1])
 			{
-						//MoveNextLine(pBufferCurr, pBufferEnd);
-						//break;
-						pBufferCurr += sizeof(int8)* 2;//'f' and space
-						int32 index[3] = { -1, -1, -1 };
-						int8  index_curr = 0;
-						int8  indexBuff[16];
-						int8  indexBuff_index = 0;
-						for (int p = 1; p <= 3; ++p)
+			case ' ':
+			{//vertex
+						pBufferCurr += sizeof(int8)* 2;//'v' and space
+						getToken(pBufferCurr, tempArry, pBufferEnd); tempV3.x = atof((const char*)tempArry);
+						getToken(pBufferCurr, tempArry, pBufferEnd); tempV3.y = atof((const char*)tempArry);
+						getToken(pBufferCurr, tempArry, pBufferEnd); tempV3.z = atof((const char*)tempArry);
+						vecPos.push_back(tempV3);
+						skinMesh->AddVertex(tempV3, NULL, NULL, 0);
+						break;
+			}
+			case 't':
+			{//uv
+						pBufferCurr += sizeof(int8)* 3;//'v' and 't' and space
+						getToken(pBufferCurr, tempArry, pBufferEnd); tempV2.x = atof((const char*)tempArry);
+						getToken(pBufferCurr, tempArry, pBufferEnd); tempV2.y = atof((const char*)tempArry);
+						vecUv.push_back(tempV2);
+						break;
+			}
+			case 'n':
+			{//normal
+						pBufferCurr += sizeof(int8)* 3;//'v' and 'n' and space
+						getToken(pBufferCurr, tempArry, pBufferEnd); tempV3.x = atof((const char*)tempArry);
+						getToken(pBufferCurr, tempArry, pBufferEnd); tempV3.y = atof((const char*)tempArry);
+						getToken(pBufferCurr, tempArry, pBufferEnd); tempV3.z = atof((const char*)tempArry);
+						vecNormal.push_back(tempV3);
+						break;
+			}
+			default:
+				break;
+			}
+			break;
+		case 'f':
+		{
+					/*
+					f	1 2 3			三角形顶点索引为1 2 3 ，不用UV 和normal
+					f	1/2	4/5	7/8		三角形顶点索引为1 4 7，UV索引为2 5 8
+					f	1/2/3 6/7/8 4/5/6	三角形顶点索引为1 6 5=4，UV索引为 2 7 5，normal索引为3 8 6
+					*/
+					pBufferCurr += sizeof(int8)* 2;//'f' and space
+					int32 index[3] = { 0, 0, 0 };
+					int8  index_curr = 0;
+					int8  indexBuff[32];
+					int8  indexBuff_index = 0;
+					DexVector3 temp_pos;
+					DexVector3 temp_normal;
+					float fTempU = 0.0f;
+					float fTempV = 0.0f;
+					for (int p = 1; p <= 3; ++p)
+					{
+						index_curr = 0;
+						indexBuff_index = 0;
+						index[0] = index[1] = index[2] = 0;
+						getToken(pBufferCurr, tempArry, pBufferEnd);
+						for (int i = 0; i < sizeof(tempArry); ++i)
 						{
-							index_curr = 0;
-							indexBuff_index = 0;
-							GetToken(pBufferCurr, tempArry, pBufferEnd);
-							for (int i = 0; i < sizeof(tempArry); ++i)
-							{
-								if (tempArry[i] == '\0')
-								{
-									indexBuff[indexBuff_index] = '\0';
-									index[index_curr++] = atoi((const char*)indexBuff);
-									break;
-								}
-								if (tempArry[i] == '/')
-								{
-									indexBuff[indexBuff_index] = '\0';
-									index[index_curr++] = atoi((const char*)indexBuff);
-									indexBuff_index = 0;
-									continue;
-								}
-								indexBuff[indexBuff_index++] = tempArry[i];
+							if (tempArry[i] == '\0')
+							{//一组index解析完毕
+								indexBuff[indexBuff_index] = '\0';
+								index[index_curr++] = atoi((const char*)indexBuff);
+								break;
 							}
-							int32 iPosIndex = index[0] - 1;
-							int32 iUvIndex = index[1] - 1;
-							int32 iNormalIndex = index[2] - 1;
-							stVertex3 newVertex(vec_pos[iPosIndex], vec_normal[iNormalIndex],
-								vec_uv[iUvIndex].x, vec_uv[iUvIndex].y);
-							stIndex tempIndex(iPosIndex, iNormalIndex, iUvIndex);
-							map<stIndex, int32>::iterator ite = mapVertexInfo2.find(tempIndex);
-							if (ite != mapVertexInfo2.end())
-							{
-								//realIndice[iRealIndiceCount++] = iRealVertexCount;
-								pMesh->AddVertexIndice(ite->second);
+							if (tempArry[i] == '/')
+							{//解析完一组index当中的一个index
+								indexBuff[indexBuff_index] = '\0';
+								index[index_curr++] = atoi((const char*)indexBuff);
+								indexBuff_index = 0;
 								continue;
 							}
+							indexBuff[indexBuff_index++] = tempArry[i];
+						}
+						//三角形必然有顶点索引
+						int32 iPosIndex = index[0] - 1;
+						temp_pos = vecPos[iPosIndex];
+						int32 iUvIndex = -1;
+						int32 iNormalIndex = -1;
+						if (index[1] != 0)
+						{//用到了uv索引
+							iUvIndex = index[1] - 1;
+							fTempU = vecUv[iUvIndex].x;
+							fTempV = vecUv[iUvIndex].y;
+						}
+						else
+						{
+							fTempU = fTempV = 0.0f;
+						}
+						if (index[2] != 0)
+						{//用到了normal索引
+							iNormalIndex = index[2] - 1;
+							temp_normal = vecNormal[iNormalIndex];
+						}
+						else
+						{
+							temp_normal.Set(0.0f, 1.0f, 0.0f);
+						}
+						temp_normal.Normalize();
+						stVertex3 newVertex(temp_pos, temp_normal, fTempU, fTempV);
+						stIndex tempIndex(iPosIndex, iNormalIndex, iUvIndex);
+						map<stIndex, int32>::iterator ite = mapVertexInfo2.find(tempIndex);
+						if (ite != mapVertexInfo2.end())
+						{//已经在当前mesh中找到了同样的顶点，则直接添加顶点indice即可
+							pMesh->AddVertexIndice(ite->second);
+						}
+						else
+						{
 							mapVertexInfo2.insert(std::make_pair(tempIndex, pMesh->m_vecVertexs.size()));
 							pMesh->AddVertexIndice(pMesh->m_vecVertexs.size());
-							
-
-							MeshVertex* tempMeshVertex = skinMesh->m_vecMeshVertexs[iPosIndex];
-							std::map<int8, std::vector<int32>>::iterator vertexIte = tempMeshVertex->m_mapMeshVertex.find(pMesh->id);
+							DexSkinMesh::MeshVertex* tempMeshVertex = skinMesh->m_vecMeshVertexs[iPosIndex];
+							std::map<DexSkinMesh::DexMesh*, std::vector<int32>>::iterator vertexIte = tempMeshVertex->m_mapMeshVertex.find(pMesh);
 							if (vertexIte != tempMeshVertex->m_mapMeshVertex.end())
 							{
 								vertexIte->second.push_back(pMesh->m_vecVertexs.size());
 							}
 							else
 							{
-								tempMeshVertex->m_mapMeshVertex[pMesh->id].push_back(pMesh->m_vecVertexs.size());
+								VectorInt32 vec;
+								vec.push_back(pMesh->m_vecVertexs.size());
+								tempMeshVertex->m_mapMeshVertex.insert(std::make_pair(pMesh, vec));
 							}
-							DexVector3 tempNormalPos = tempMeshVertex->meshPosition + vec_normal[iNormalIndex] * 10.0f;
+							DexVector3 tempNormalPos = tempMeshVertex->meshPosition + temp_normal * 0.1f;
 							(tempMeshVertex->m_vecNormalPosition).push_back(tempNormalPos);
 							tempMeshVertex->m_vecWorldNormal.push_back(DexVector3(0.0f, 0.0f, 0.0f));
 							pMesh->m_vecVertexs.push_back(newVertex);
 						}
-						
-						break;
-			}
-			case '#':
-			case ' ':
-				MoveNextLine(pBufferCurr, pBufferEnd);
-				break;
-			default:
-				MoveNextLine(pBufferCurr, pBufferEnd);
-				break;
-			}
-		}
-		delete[] pBuffer;
-	}
-	else if (loadType == 1)
-	{
-		CommandScript* pScript = getComandScript();
-		if (!pScript->OpenScript(filename))
-		{
-			pScript->CloseScript();
-			getLog()->Log(log_error, "		load obj model %s failed!\n");
-			getLog()->EndLog();
-			delete skinMesh;
-			return NULL;
-		}
-		char lineContent[512];
-		std::vector<DexVector3> vec_pos;
-		std::vector<DexVector2> vec_uv;
-		std::vector<DexVector3> vec_normal;
-		std::vector<string> out;
-		stVertex3  tempVertex;
-		DexVector3 tempV3;
-		DexVector2 tempV2;
-		//pos normal uv index
-		map<int32, map<int32, map<int32, int32>>> mapVertexInfo;
-		while (pScript->GetCurrLine() < pScript->GetScriptLine())
-		{
-			pScript->GetTotalLine(lineContent);
-			if (strlen(lineContent) == 0)//空行
-			{
-				pScript->MoveCurrLine();
-				continue;
-			}
-			if (lineContent[0] == '#') //注释行
-			{
-				pScript->MoveCurrLine();
-				continue;
-			}
-			out.clear();
-			SplitStr(lineContent, ' ', out);
-			if (out[0] == "v")
-			{//vertex
-				tempV3.x = atof(out[1].c_str()); tempV3.y = atof(out[2].c_str()); tempV3.z = atof(out[3].c_str());
-				vec_pos.push_back(tempV3);
-				skinMesh->AddVertex(tempV3, NULL, NULL, 0);
-			}
-			else if (out[0] == "vt")
-			{//uv
-				tempV2.x = atof(out[1].c_str()); tempV2.y = atof(out[2].c_str());
-				vec_uv.push_back(tempV2);
-			}
-			else if (out[0] == "vn")
-			{//normal
-				tempV3.x = atof(out[1].c_str()); tempV3.y = atof(out[2].c_str()); tempV3.z = atof(out[3].c_str());
-				vec_normal.push_back(tempV3);
-			}
-			else if (out[0] == "f")
-			{//triangle
-				std::vector<string> vec_triangle;
-				int32 iPosIndex = 0;
-				int32 iNormalIndex = 0;
-				int32 iUvIndex = 0;
-				for (int p = 1; p <= 3; ++p)
-				{
-					vec_triangle.clear();
-					SplitStr(out[p], '/', vec_triangle);
-					iPosIndex = atoi(vec_triangle[0].c_str()) - 1;
-					iUvIndex = atoi(vec_triangle[1].c_str()) - 1;
-					iNormalIndex = atoi(vec_triangle[2].c_str()) - 1;
-					if (mapVertexInfo.find(iPosIndex) != mapVertexInfo.end())
-					{
-						if (mapVertexInfo[iPosIndex].find(iNormalIndex) != mapVertexInfo[iPosIndex].end())
-						{
-							if (mapVertexInfo[iPosIndex][iNormalIndex].find(iUvIndex)
-								!= mapVertexInfo[iPosIndex][iNormalIndex].end())
-							{
-								pMesh->AddVertexIndice(mapVertexInfo[iPosIndex][iNormalIndex][iUvIndex]);
-								continue;
-							}
-						}
 					}
-					mapVertexInfo[iPosIndex][iNormalIndex][iUvIndex] = pMesh->m_vecVertexs.size();
-					pMesh->AddVertexIndice(pMesh->m_vecVertexs.size());
-					pMesh->m_vecVertexs.push_back(stVertex3(vec_pos[iPosIndex], vec_normal[iNormalIndex],
-						vec_uv[iUvIndex].x, vec_uv[iUvIndex].y));
-					/*这里并未直接调用DexMesh的AddVertex函数，AddVertex函数里面遍历vector进行查找判断
-					当vector size非常大的时候，非常耗费时间，这里用了map来代替判断功能，能够加快一定的速度
-					对于有3500+个顶点的obj,可节省时间2+秒
-					*/
-					//uint32 index = pMesh->AddVertex(vec_pos[iPosIndex], vec_normal[iNormalIndex], vec_uv[iUvIndex].x, vec_uv[iUvIndex].y);
-					//pMesh->AddVertexIndice(index);
-				}
-			}
-			pScript->MoveCurrLine();
+					break;
 		}
-		pScript->CloseScript();
+		default:
+			moveNextLine(pBufferCurr, pBufferEnd);
+			break;
+		}
 	}
-	//skinMesh->CalculateVertex();
+
+	delete[] pBuffer;
 	Time = getTime()->GetTotalMillSeconds() - Time;
 	getLog()->Log(log_ok, "load obj model %s ok, use time %d ms\n", filename, Time);
 	getLog()->EndLog();
 	return skinMesh;
 }
 
-void DexModelObjLoader::GetToken(int8*& pBuffer, int8* pOut, int8* pEnd)
+bool DexModelObjLoader::readMaterial(const char* filename, Vector<ObjMaterial>& vecMaterial)
+{
+	int8* pBuffer = NULL;
+	int8* pBufferCurr = NULL;
+	int8* pBufferEnd = NULL;
+	uint32 fileSize = 0;
+	FILE* pFile = fopen(filename, "rb");
+	if (pFile == NULL)
+	{
+		return false;
+	}
+	fseek(pFile, 0, SEEK_END);
+	fileSize = ftell(pFile);
+	fseek(pFile, 0, SEEK_SET);
+	pBuffer = new int8[fileSize];
+	fread(pBuffer, fileSize, 1, pFile);
+	fclose(pFile);
+	pBufferCurr = pBuffer;
+	pBufferEnd = pBuffer + fileSize;
+
+	int8	tempArr[64];
+	ObjMaterial tempMaterial;
+	bool	readingMaterial = false;
+	while (pBufferCurr != pBufferEnd)
+	{
+		switch (pBufferCurr[0])
+		{
+		case 'n':
+			//newmtl
+			if (readingMaterial)
+			{//上次正在读取material，更新到vecMaterial,
+				vecMaterial.push_back(tempMaterial);
+			}
+			pBufferCurr += sizeof(int8)* 7; //'newmtl' and space
+			getToken(pBufferCurr, tempMaterial.name, pBufferEnd);
+			readingMaterial = true;
+			break;
+		case 'i':
+			pBufferCurr += sizeof(int8)* 6; //'illum' and space
+			getToken(pBufferCurr, tempArr, pBufferEnd);
+			tempMaterial.m_Illumination = atoi((const char*)tempArr);
+			break;
+		case 'm':
+			//map texture 目前支持一种texture
+			pBufferCurr += sizeof(int8)* 7;//'map_Kd' and space
+			getToken(pBufferCurr, tempMaterial.m_texture, pBufferEnd);
+			break;
+		case 'N':
+			switch (pBufferCurr[1])
+			{
+			case 's':
+				//shiness
+				pBufferCurr += sizeof(int8)* 3;//	'Ns' and space
+				getToken(pBufferCurr, tempArr, pBufferEnd);
+				tempMaterial.m_shininess = atof((const char*)tempArr);
+				break;
+			case 'i':
+				//refraction index
+				pBufferCurr += sizeof(int8)* 3;//	'Ni' and space
+				getToken(pBufferCurr, tempArr, pBufferEnd);
+				//暂时不作处理
+				break;
+			default:
+				break;
+			}
+			break;
+		case 'K':
+			switch (pBufferCurr[1])
+			{
+			case 'd':
+				//diffuse
+				pBufferCurr += sizeof(int8)* 3; //'Kd' and space
+				//r g b
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_diffuse[0] = atof((const char*)tempArr);
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_diffuse[1] = atof((const char*)tempArr);
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_diffuse[2] = atof((const char*)tempArr);
+				break;
+			case 'a':
+				//ambient
+				pBufferCurr += sizeof(int8)* 3; //'Ka' and space
+				//r g b
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_ambient[0] = atof((const char*)tempArr);
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_ambient[1] = atof((const char*)tempArr);
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_ambient[2] = atof((const char*)tempArr);
+				break;
+			case 's':
+				//specular
+				pBufferCurr += sizeof(int8)* 3; //'Ks' and space
+				//r g b
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_specular[0] = atof((const char*)tempArr);
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_specular[1] = atof((const char*)tempArr);
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_specular[2] = atof((const char*)tempArr);
+				break;
+			case 'e':
+				//emissive
+				pBufferCurr += sizeof(int8)* 3; //'Ke' and space
+				//r g b
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_emissive[0] = atof((const char*)tempArr);
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_emissive[1] = atof((const char*)tempArr);
+				getToken(pBufferCurr, tempArr, pBufferEnd); tempMaterial.m_emissive[2] = atof((const char*)tempArr);
+				break;
+			default:
+				break;
+			}
+			break;
+		default:
+			//其他空行和注释行等
+			moveNextLine(pBufferCurr, pBufferEnd);
+			break;
+		}
+	}
+	//文件结束时将最后一次正在读的material添加到vec中
+	vecMaterial.push_back(tempMaterial);
+	delete[] pBuffer;
+	return true;
+}
+void DexModelObjLoader::getToken(int8*& pBuffer, int8* pOut, int8* pEnd)
 {
 	while (pBuffer <= pEnd)
 	{
-		if (*pBuffer == ' ' ||
-			*pBuffer == '\n')
+		if (*pBuffer == '\r')
+		{
+			pBuffer++;
+		}
+		else if (*pBuffer == ' ' ||
+				 *pBuffer == '\n')
 		{
 			pBuffer++;
 			break;
@@ -335,7 +374,7 @@ void DexModelObjLoader::GetToken(int8*& pBuffer, int8* pOut, int8* pEnd)
 	*pOut = '\0';
 }
 
-void DexModelObjLoader::MoveNextLine(int8*& pBuffer, int8* pEnd)
+void DexModelObjLoader::moveNextLine(int8*& pBuffer, int8* pEnd)
 {
 	while (pBuffer <= pEnd)
 	{

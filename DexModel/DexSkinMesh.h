@@ -5,11 +5,11 @@
 
 
 #include <d3dx9math.h>
-#include <vector>
 #include <map>
 #include <string>
 #include "../DexBase/DexMaterial.h"
 #include "../DexBase/DexVertex.h"
+#include "../DexBase/DexSTLVector.h"
 #include "../DexMath/DexVector2.h"
 #include "../DexMath/DexVector3.h"
 #include "../DexMath/DexQuaternion.h"
@@ -49,31 +49,6 @@ typedef enum
 	SkinMeshModelType_X,       //.X
 	SkinMeshModelType_Total
 }SkinMeshModelType;
-class MeshVertex
-{
-	friend class DexSkinMesh;
-	friend class DexModelObjLoader;
-protected:
-	DexVector3 meshPosition; //mesh空间坐标
-	DexVector3 worldPosition;
-	vector<DexVector3> m_vecWorldNormal;
-	vector<DexVector3> m_vecNormalPosition; //skinmesh 空间中相对于各个骨骼的normal坐标
-	vector<stVertex3*>  m_vecVertexData; 
-	std::vector<int16>  m_vecJointId;
-	std::vector<float>  m_vecJointWeigth;
-	std::map<int8, std::vector<int32>> m_mapMeshVertex; //对应于某个mesh里面的顶点索引
-
-public:
-	MeshVertex()
-	{
-		m_vecWorldNormal.clear();
-		m_vecNormalPosition.clear();
-		m_vecVertexData.clear();
-		m_vecJointId.clear();
-		m_vecJointWeigth.clear();
-	}
-	~MeshVertex(){}
-};
 class CDexTex;
 //根节点ID
 #define _SKIN_MESH_ROOT_JOINT_ID	0x0FFF
@@ -103,8 +78,8 @@ class DexSkinMesh: public DexModelBase
 		//初始化之后，运行过程中不再改变
 		DexMatrix4x4   meshMatrix;	//mesh空间矩阵
 		DexMatrix4x4   localMeshMatrixInvert; //关节在模型空间的逆矩阵，保存一次即可
-		std::vector<matrix_key> m_vecKeyFrames;
-		std::vector<Joint*> m_vecChildren;
+		Vector<matrix_key> m_vecKeyFrames;
+		Vector<Joint*> m_vecChildren;
 
 	public:
 		Joint();
@@ -117,6 +92,33 @@ class DexSkinMesh: public DexModelBase
 		void Update(int time);
 		void ComputeWorldMatrix(int32 time);
 	};
+	class DexMesh;
+	class MeshVertex
+	{
+		friend class DexSkinMesh;
+		friend class DexModelObjLoader;
+		friend class DexModelMs3dLoader;
+	protected:
+		DexVector3 meshPosition; //mesh空间坐标
+		DexVector3 worldPosition;
+		Vector<DexVector3> m_vecWorldNormal;
+		Vector<DexVector3> m_vecNormalPosition; //skinmesh 空间中相对于各个骨骼的normal坐标
+		Vector<stVertex3*>  m_vecVertexData;
+		Vector<Joint*>		m_vecJoints;
+		VectorFloat32   m_vecJointWeigth;
+		std::map<DexMesh*, VectorInt32> m_mapMeshVertex; //对应于某个mesh里面的顶点索引
+
+	public:
+		MeshVertex()
+		{
+			m_vecWorldNormal.clear();
+			m_vecNormalPosition.clear();
+			m_vecVertexData.clear();
+			m_vecJoints.clear();
+			m_vecJointWeigth.clear();
+		}
+		~MeshVertex(){}
+	};
 	class DexMesh
 	{		/*目前渲染时，将indices统一一次送给directx渲染，这样的话渲染三角形和渲染线段必须用不同的indice,
 			有点浪费空间，如果保存的是三角形信息，三角形里面保存的是顶点索引，这样就不用保存两份indice，但是
@@ -124,12 +126,13 @@ class DexSkinMesh: public DexModelBase
 			的indice生成一份线段indice，不选择线段渲染时将线段indice删除掉
 			*/
 	public:
+		char		name[64];
 		int8	    id;
 		int8		m_iTextureId;
 		int8		m_iMaterialId;
-		std::vector<stVertex3>	m_vecVertexs; //用于向device传输要渲染的顶点信息
-		std::vector<int32>		m_vecIndices;//vertex indice
-		std::vector<int32>		m_vecLineIndices;//line vertex indice
+		Vector<stVertex3>	m_vecVertexs; //用于向device传输要渲染的顶点信息
+		VectorInt32		m_vecIndices;//vertex indice
+		VectorInt32		m_vecLineIndices;//line vertex indice
 	public:
 		DexMesh();
 		~DexMesh();
@@ -160,11 +163,11 @@ protected:
 	SkinMeshModelType m_eMeshType;
 
 	DexMatrix4x4 bindMatrix; //一个skinmesh被绑定在场景中的一个节点上，这是该节点的matrix
-	std::vector<DexMesh*>	 m_vecMeshs;		//mesh
-	std::vector<Joint*>		 m_vecJoints;		//joint
-	std::vector<MeshVertex*> m_vecMeshVertexs;	//vertex
-	std::vector<CDexTex*>	 m_vecTextures;		//texture
-	std::vector<DexMaterial> m_vecMaterials;	//material
+	Vector<DexMesh*>	 m_vecMeshs;		//mesh
+	Vector<Joint*>		 m_vecJoints;		//joint
+	Vector<MeshVertex*> m_vecMeshVertexs;	//vertex
+	Vector<CDexTex*>	 m_vecTextures;		//texture
+	Vector<DexMaterial> m_vecMaterials;	//material
 
 public:
 	DexSkinMesh();
@@ -196,7 +199,9 @@ public:
 	void  SetAnimateRatio(float32 ratio);
 //mesh
 	DexMesh* FindMesh(int8 meshId);
+	DexMesh* FindMesh(const char* meshName);
 	DexMesh* AddMesh(int8 meshId);
+	DexMesh* AddMesh(const char* meshName);
 	//设置对应mesh的顶点信息
 	void SetMeshVertexs(int8 meshId, void* vertexs, int32 count);
 	void SetMeshIndices(int8 meshId, void* indics, int32 count);
@@ -243,9 +248,11 @@ public:
 	bool AddMaterial(const DexMaterial& material);
 
 //vertex
+	void AddVertex(const DexVector3& pos);
 	//这里添加的顶点属于skinmesh，如果JointId=NULL,则绑定到根节点上
-	void AddVertex(const DexVector3& pos, int16* JointId = NULL, float* weight = NULL, int16 jointCount=0);
+	void AddVertex(const DexVector3& pos, int16* JointId, float* weight, int16 jointCount);
 	void AddVertexJointInfo(int32 vertexIndex, int16 jointId, float32 weight);//向一个已存在的顶点添加joint信息
+	void AddJointInfo(MeshVertex* vertex, Joint* pJoint, float32 fWeight);
 	//这里添加的顶点属于mesh，pos应当是已经在skinmesh中的，
 	//如果pos不在skinmesh中，则向skinmesh添加pos顶点
 	void AddVertex(int8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv);
@@ -274,7 +281,6 @@ protected:
 	//calculate position and normal
 	//return position
 	DexVector3 ComputeVertex(MeshVertex* vertex);
-	void	   AddJointInfo(MeshVertex* vertex, int16 jointId, float32 weight);
 	//判断一个pos的顶点是否在skinmesh中
 	bool	   FindVertex(const DexVector3& pos);
 	virtual bool IsStaticModel();

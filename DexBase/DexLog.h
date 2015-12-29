@@ -40,6 +40,7 @@ class CDexLog
 private:
 	bool m_OpenFontBack;  //是否开启控制台背景色的打印功能
 	bool m_BackHighLight; //背景是否高亮
+	bool m_bLogFile;	  //是否向文件输出log
 	bool m_FrontHighlight[log_count]; 
 	WORD m_consoleBackgroundColor;
 	WORD m_consoleFontColor[log_count];
@@ -74,7 +75,9 @@ protected:
 	void LogOK(char* msg);
 	void LogAllert(char* msg);
 	void LogError(char* msg);
+	
 public:
+	void SetLogFile(bool bLogFile);
 	void BeginLog();
 	void Log(DexLogType log_type, char* msg, ...);
 	void EndLog();

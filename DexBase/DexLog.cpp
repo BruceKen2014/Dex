@@ -6,7 +6,7 @@
 #include "CDexTime.h"
 
 using namespace std;
-CDexLog::CDexLog()
+CDexLog::CDexLog() :m_bLogFile(true)
 {
 #ifdef DEX_LOG
 	AllocConsole();
@@ -122,6 +122,10 @@ void CDexLog::EnableBackColor(bool enable)
 	}
 }
 
+void CDexLog::SetLogFile(bool bLogFile)
+{
+	m_bLogFile = bLogFile;
+}
 void CDexLog::BeginLog()
 {
 #ifdef DEX_LOG
@@ -134,27 +138,31 @@ void CDexLog::LogTime()
 		getTime()->m_time.hour, getTime()->m_time.minute, getTime()->m_time.second);
 	m_logByte += strlen(getDexBuffer());
 	cout<<getDexBuffer();
-	m_logFile->InString(getDexBuffer());
+	if (m_bLogFile)
+		m_logFile->InString(getDexBuffer());
 }
 void CDexLog::LogOK(char* msg)
 {
 	LogTime();
 	cout<<"[  log_OK  ]"<<msg;
-	m_logFile->InString("[  log_OK  ]%s", msg);
+	if (m_bLogFile)
+		m_logFile->InString("[  log_OK  ]%s", msg);
 	m_logByte += 12;
 }
 void CDexLog::LogAllert(char* msg)
 {
 	LogTime();
 	cout<<"[log_Allert]"<<msg;
-	m_logFile->InString("[log_Allert]%s", msg);
+	if (m_bLogFile)
+		m_logFile->InString("[log_Allert]%s", msg);
 	m_logByte += 12;
 }
 void CDexLog::LogError(char* msg)
 {
 	LogTime();
 	cout<<"[log_Error ]"<<msg;
-	m_logFile->InString("[log_Error ]%s", msg);
+	if (m_bLogFile)
+		m_logFile->InString("[log_Error ]%s", msg);
 	m_logByte += 12;
 }
 void CDexLog::Log(DexLogType log_type, char* msg, ...)
@@ -184,7 +192,8 @@ void CDexLog::Log(DexLogType log_type, char* msg, ...)
 void CDexLog::EndLog()
 {
 #ifdef DEX_LOG
-	m_logFile->InBlankLine();
+	if (m_bLogFile)
+		m_logFile->InBlankLine();
 	//此处处理控制抬的log
 	if(!m_OpenFontBack)
 	{//未开启背景打印则无需打印剩下的空格 只须换行即可

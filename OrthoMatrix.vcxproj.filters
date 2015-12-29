@@ -396,6 +396,9 @@
     <ClInclude Include="DexMath\DexMath2.h">
       <Filter>DexMath</Filter>
     </ClInclude>
+    <ClInclude Include="DexBase\DexSTLVector.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">

@@ -166,6 +166,7 @@
     <ClInclude Include="DexBase\DexMaterial.h" />
     <ClInclude Include="DexBase\DexMemoryLeakCheck.h" />
     <ClInclude Include="DexBase\DexPrimitive.h" />
+    <ClInclude Include="DexBase\DexSTLVector.h" />
     <ClInclude Include="DexBase\DexType.h" />
     <ClInclude Include="DexBase\DexVertex.h" />
     <ClInclude Include="DexCommonFunction.h" />

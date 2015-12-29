@@ -248,8 +248,8 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
-	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("SmoothCube.obj");
-	objModel->SetRenderFlag(SKINMESH_RENDER_JOINT | SKINMESH_RENDER_MESH);
+	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/arakkoa.obj");
+	objModel->SetRenderFlag(SKINMESH_RENDER_MESH);
 	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("ms3d/treasure.ms3d");
 	ms3d->SetAnimateType(SkinMeshAnimateType_Loop);
 	ms3d->SetAnimateRatio(1.0f);
@@ -351,7 +351,7 @@ bool PalGameStateBattleMain::ApplyRes()
 	light.SetPointLight(DexVector3(0.0f, 300.0f, 0.0f), 2000.0f);
 	DexGameEngine::getEngine()->SetLight(1, light);
 	DexGameEngine::getEngine()->SetLightIdEnable(1, true);
-	DexGameEngine::getEngine()->SetLightEnable(true);
+	DexGameEngine::getEngine()->SetLightEnable(0);
 	//DexGameEngine::getEngine()->SetRenderMode(DexRenderMode_LINE);
 	world_matrix.Identity();
 	world_matrix.Scale(3.0f, 3.0f, 3.0f);
@@ -495,7 +495,7 @@ bool PalGameStateBattleMain::Update(int delta)
 		}
 		
 	}
-	//ms3d->Update(delta);
+	ms3d->Update(delta);
 	objModel->Update(delta);
 	UpdateVertexShader(delta);
 	UpdatePixelShader(delta);
@@ -522,7 +522,7 @@ void PalGameStateBattleMain::Render()
 	m_pScene->Render();
 	m_pBattleMainMachine->Render();
 	DexGameEngine::getEngine()->RenderCoorLines();
-	//ms3d->Render();
+	ms3d->Render();
 	objModel->Render();
 	//RenderVertexShader();
 	//RenderPixelShader();
