@@ -351,7 +351,7 @@ bool PalGameStateBattleMain::ApplyRes()
 	light.SetPointLight(DexVector3(0.0f, 300.0f, 0.0f), 2000.0f);
 	DexGameEngine::getEngine()->SetLight(1, light);
 	DexGameEngine::getEngine()->SetLightIdEnable(1, true);
-	DexGameEngine::getEngine()->SetLightEnable(0);
+	DexGameEngine::getEngine()->SetLightEnable(1);
 	//DexGameEngine::getEngine()->SetRenderMode(DexRenderMode_LINE);
 	world_matrix.Identity();
 	world_matrix.Scale(3.0f, 3.0f, 3.0f);
@@ -359,8 +359,9 @@ bool PalGameStateBattleMain::ApplyRes()
 	DexVector3 skin_pos(100.0f, 100.0f, 100.0f);
 	world_matrix.Translate(skin_pos);
 	testMesh->SetSceneNodeMatrix(world_matrix);
+	ms3d->SetSceneNodeMatrix(world_matrix);
 	world_matrix.Identity();
-	world_matrix.Scale(10.0f, 10.0f, 10.0f);
+	world_matrix.Scale(100.0f, 100.0f, 100.0f);
 	objModel->SetSceneNodeMatrix(world_matrix);
 	InitVertexShader();
 	InitPixelShader();
@@ -495,7 +496,7 @@ bool PalGameStateBattleMain::Update(int delta)
 		}
 		
 	}
-	ms3d->Update(delta);
+	//ms3d->Update(delta);
 	objModel->Update(delta);
 	UpdateVertexShader(delta);
 	UpdatePixelShader(delta);
@@ -522,7 +523,13 @@ void PalGameStateBattleMain::Render()
 	m_pScene->Render();
 	m_pBattleMainMachine->Render();
 	DexGameEngine::getEngine()->RenderCoorLines();
-	ms3d->Render();
+	//ms3d->Render();
+	static float rotate = 0.0f;
+	rotate += 0.02f;
+	DexMatrix4x4 matrix;
+	matrix.Scale(10.0f, 10.0f, 10.0f);
+	matrix.RotateY(rotate);
+	objModel->SetSceneNodeMatrix(matrix);
 	objModel->Render();
 	//RenderVertexShader();
 	//RenderPixelShader();

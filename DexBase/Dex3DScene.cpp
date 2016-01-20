@@ -165,7 +165,7 @@ CDexScene::CDexScene()
 	m_bRender = true;
 	m_bRenderCollideObject = true;
 	m_bFog = false;
-	m_clearColor = DexColor(0.5, 0.5f, 0.5f, 1.0f);
+	m_clearColor = DexColor(0.5f, 0.5f, 0.5f, 1.0f);
 	m_bAddObject = NULL;
 	m_pTerrain = NULL;
 }
@@ -232,7 +232,7 @@ void CDexScene::Reset()
 	m_bRender = true;
 	m_bRenderCollideObject = true;
 	m_bFog = false;
-	m_clearColor = DexColor(0.5, 0.5f, 0.5f, 1.0f);
+	m_clearColor = DexColor(0.5f, 0.5f, 0.5f, 1.0f);
 	m_bAddObject = NULL;
 	m_pTerrain = NULL;
 	CDexObject::Reset();

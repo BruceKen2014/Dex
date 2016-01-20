@@ -715,7 +715,7 @@ void CButtonText::Render()
 	}
 	else if(m_bsState == BS_DOWN)
 	{
-		m_pFont->UseColor(DexColor(0, 0.5f, 0));
+		m_pFont->UseColor(DexColor(0.0f, 0.5f, 0.0f));
 		m_pFont->Print(m_pText);
 		m_pFont->ResetColor();
 	}

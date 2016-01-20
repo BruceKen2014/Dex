@@ -374,9 +374,9 @@ CDexParticalEmit::CDexParticalEmit()
 	m_iTexFrameTotal  = 1;
 	m_fScaleMiddle = 2.0f;
 	m_fScaleEnd = 1.0f;
-	m_startColor = DexColor(1.0f, 1.0f, 0,1.0f);
-	m_middleColor = DexColor(1.0f, 1.0f, 0,1.0f);
-	m_endColor = DexColor(1.0f, 1.0f, 0, 1.0f);
+	m_startColor = DexColor(1.0f, 1.0f, 0.0f,1.0f);
+	m_middleColor = DexColor(1.0f, 1.0f, 0.0f,1.0f);
+	m_endColor = DexColor(1.0f, 1.0f, 0.0f, 1.0f);
 	m_SeeTexState = false;
 	m_bAlphaSort = true; 
 	///m_bFolloEmitRotate = false;
@@ -1314,10 +1314,10 @@ CDexClassParticalPool::CDexClassParticalPool()
 		&m_pBuffer, NULL))) return ;
 
 	void* ptr;
-	m_pParticalList[0] = stVertex1(D3DXVECTOR3(-0.5f, 0.5f, 0.0f), DexColor(0,0.5f,0.5f,0.5f),0.0f, 0.0f ); 
-	m_pParticalList[1] = stVertex1(D3DXVECTOR3(0.5f, 0.5f, 0.0f),  DexColor(0,0.5f,0.5f,0.5f), 1.0f, 0.0f ); 
-	m_pParticalList[2] = stVertex1(D3DXVECTOR3(-0.5f, -0.5f, 0.0f), DexColor(0,0.5f,0.5f,0.5f), 0.0f, 1.0f ); 
-	m_pParticalList[3] = stVertex1(D3DXVECTOR3(0.5f, -0.5f, 0.0f),  DexColor(0,0.5f,0.5f,0.5f), 1.0f, 1.0f ); 
+	m_pParticalList[0] = stVertex1(D3DXVECTOR3(-0.5f, 0.5f, 0.0f), DexColor(0.0f,0.5f,0.5f,0.5f),0.0f, 0.0f ); 
+	m_pParticalList[1] = stVertex1(D3DXVECTOR3(0.5f, 0.5f, 0.0f),  DexColor(0.0f,0.5f,0.5f,0.5f), 1.0f, 0.0f ); 
+	m_pParticalList[2] = stVertex1(D3DXVECTOR3(-0.5f, -0.5f, 0.0f), DexColor(0.0f,0.5f,0.5f,0.5f), 0.0f, 1.0f ); 
+	m_pParticalList[3] = stVertex1(D3DXVECTOR3(0.5f, -0.5f, 0.0f),  DexColor(0.0f,0.5f,0.5f,0.5f), 1.0f, 1.0f ); 
 	m_pBuffer->Lock(0, sizeof(m_pParticalList),(void**)&ptr,0);
 	memcpy(ptr, m_pParticalList, sizeof(m_pParticalList));
 	m_pBuffer->Unlock();

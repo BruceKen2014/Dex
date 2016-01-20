@@ -492,9 +492,6 @@ DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_ver
 */
 void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize)
 {
-	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	g_D3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;
 	switch (type)
 	{
@@ -507,14 +504,10 @@ void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, i
 	default:
 		break;
 	}
-	D3DXMatrixIdentity(&g_worldMatrix);
 	DexGameEngine::getEngine()->GetDevice()->SetFVF((DWORD)fvf);
-	DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &g_worldMatrix);
 	//DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, vertexs, sizeof(stVertex0));
 	//这里的D3DFMT_INDEX32，如果indices是int32整型数组的话，设置D3DFMT_INDEX32,如果是int16类型的整型数组的话，那么设置D3DFMT_INDEX16
 	g_D3DDevice->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
-
-	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
 DexModelBase* DexGameEngine::CreateModel(const char* filename)

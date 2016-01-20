@@ -119,6 +119,15 @@ class DexSkinMesh: public DexModelBase
 		}
 		~MeshVertex(){}
 	};
+	typedef struct _stMeshVertex
+	{
+		DexVector3 pos;
+		DexVector3 normal;
+		DexColor   color;
+		DexVector2 uv;
+		uint8	   JointIndex[4]; //support 4 joints
+		float32	   JointWeights[4];
+	}stMeshVertex;
 	class DexMesh
 	{		/*目前渲染时，将indices统一一次送给directx渲染，这样的话渲染三角形和渲染线段必须用不同的indice,
 			有点浪费空间，如果保存的是三角形信息，三角形里面保存的是顶点索引，这样就不用保存两份indice，但是
@@ -133,6 +142,8 @@ class DexSkinMesh: public DexModelBase
 		Vector<stVertex3>	m_vecVertexs; //用于向device传输要渲染的顶点信息
 		VectorInt32		m_vecIndices;//vertex indice
 		VectorInt32		m_vecLineIndices;//line vertex indice
+		//
+		Vector<stMeshVertex> m_vecVertexsTestShader;
 	public:
 		DexMesh();
 		~DexMesh();
@@ -158,6 +169,7 @@ protected:
 	int16		m_iRenderFlag;
 	bool		m_bHaveAnimation;
 	bool		m_bAnimate;
+	bool		m_bRendeUseShader; //true:use shader,false:FVF
 	float32		m_fAnimateRatio; //动画速率，默认1.0f
 	SkinMeshAnimateType m_eAniType;
 	SkinMeshModelType m_eMeshType;
@@ -168,7 +180,17 @@ protected:
 	Vector<MeshVertex*> m_vecMeshVertexs;	//vertex
 	Vector<CDexTex*>	 m_vecTextures;		//texture
 	Vector<DexMaterial> m_vecMaterials;	//material
+public:
+//test effect fx
+	LPD3DXEFFECT pFxEffect;
+	D3DXHANDLE	 WVPMatrixHandle;
+	D3DXHANDLE	 Tex0Handle;
+	D3DXHANDLE	 TechHandle;
 
+	D3DXHANDLE	 JointMatrixHandle;
+	D3DXHANDLE	 JointInvertMatrixHandle;
+	IDirect3DVertexDeclaration9 *m_pDecl;
+	void InitShader();
 public:
 	DexSkinMesh();
 	DexSkinMesh(int16 maxAniTime);
@@ -284,5 +306,7 @@ protected:
 	//判断一个pos的顶点是否在skinmesh中
 	bool	   FindVertex(const DexVector3& pos);
 	virtual bool IsStaticModel();
-
+protected:
+	void RenderUseShader();
+	void RenderFVF();
 };

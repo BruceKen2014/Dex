@@ -5,26 +5,49 @@
 
 typedef struct _DexColor
 {
-	float r;
-	float g;
-	float b;
-	float a;
-	_DexColor():r(1.0f),g(1.0f),b(1.0f),a(1.0f){}
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
+	unsigned char a;
+	_DexColor():r(255),g(255),b(255),a(255){}
 	_DexColor(DWORD d)
 	{
-		a = ((float)((d >> 24) & (0xff)))/(float)0xff;
-		r = ((float)((d >> 16) & (0xff)))/(float)0xff;
-		g = ((float)((d >> 8) & (0xff)))/(float)0xff;
-		b = ((float)((d >> 0) & (0xff)))/(float)0xff;
+		a = (d >> 24) & (0xff);
+		r = (d >> 16) & (0xff);
+		g = (d >> 8)  & (0xff);
+		b = (d >> 0)  & (0xff);
 	}
-	_DexColor(float _r, float _g, float _b):r(_r),g(_g),b(_b),a(1.0f){}
-	_DexColor(float _r, float _g, float _b, float _a):r(_r),g(_g),b(_b),a(_a){}
+	_DexColor(unsigned char _r, unsigned char _g, unsigned char _b) :r(_r), g(_g), b(_b), a(255){}
+	_DexColor(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a) :r(_r), g(_g), b(_b), a(_a){}
+	_DexColor(int _r, int _g, int _b) :r(_r), g(_g), b(_b), a(255){}
+	_DexColor(int _r, int _g, int _b, int _a) :r(_r), g(_g), b(_b), a(_a){}
+	//只处理0~1.0f中间的float
+	_DexColor(float _r, float _g, float _b) :r(_r * 255), g(_g * 255), b(_b * 255), a(255){}
+	_DexColor(float _r, float _g, float _b, float _a) :r(_r * 255), g(_g * 255), b(_b * 255), a(_a * 255){}
+	_DexColor(double _r, double _g, double _b, double _a) :r(_r * 255), g(_g * 255), b(_b * 255), a(_a * 255){}
 	void Set(float _r, float _g, float _b, float _a) 
+	{
+		r = _r * 255;
+		g = _g * 255;
+		b = _b * 255;
+		a = _a * 255;
+	}
+	void Set(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
 	{
 		r = _r;
 		g = _g;
 		b = _b;
 		a = _a;
+	}
+	DWORD DWord()
+	{
+		return (DWORD)
+			(
+				((((int)a) & 0xff) << 24) | 
+				((((int)r) & 0xff) << 16) |
+				((((int)g) & 0xff) << 8 ) | 
+				((((int)b) & 0xff) << 0 )
+			);
 	}
 	_DexColor& operator = (const _DexColor& color)
 	{
@@ -60,7 +83,8 @@ typedef struct _DexColor
 	}
 	_DexColor operator * (const _DexColor& color) const  
 	{
-		return _DexColor(r * color.r, g * color.g,  b * color.b, a * color.a);
+		return _DexColor(r / 255.0f * color.r / 255.0f, g / 255.0f * color.g / 255.0f,
+			b / 255.0f * color.b / 255.0f, a / 255.0f * color.a / 255.0f);
 	}
 	bool operator == (const _DexColor& color) const 
 	{
@@ -81,8 +105,8 @@ const   DexColor  DEXCOLOR_YELLOW	 = DexColor(1.0f, 1.0f, 0.0f, 1.0f); //黄色
 const   DexColor  DEXCOLOR_SILBLUE   = DexColor(1.0f, 0.0f, 1.0f, 1.0f); //银蓝
 inline DWORD getD3DColor(const DexColor& color)
 {
-	return (DWORD)(((((int)(color.a * 255)) & 0xff) << 24) | ((((int)(color.r * 255)) & 0xff) << 16) |
-		((((int)(color.g * 255)) & 0xff) << 8) | ((((int)(color.b * 255)) & 0xff) << 0)
+	return (DWORD)(((((int)(color.a)) & 0xff) << 24) | ((((int)(color.r)) & 0xff) << 16) |
+		((((int)(color.g)) & 0xff) << 8) | ((((int)(color.b)) & 0xff) << 0)
 		);
 }
 

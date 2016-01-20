@@ -25,7 +25,7 @@
 #include "CCommandScript.h"
 
 
-#define     CGUI_TEXTCOLOR     DexColor(0 ,0 ,1.0f)        //文字GUI默认字体颜色
+#define     CGUI_TEXTCOLOR     DexColor(0.0f ,0.0f ,1.0f)        //文字GUI默认字体颜色
 #define     CGUI_TEXTWIDTH     1280							   //文字GUI默认宽度
 #define     CGUI_TEXTHEIGHT    768							   //文件GUI默认高度
 #define     CGUI_TEXTBYTE      128                             //字体GUI最大字节数

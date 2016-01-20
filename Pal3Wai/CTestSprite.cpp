@@ -137,7 +137,7 @@ void CTestSprite::Update(float delta, int mousex, int mousey)
 void CTestSprite::Render()
 {
 	if(m_collide)
-		get2DDrawer()->SetRectColor(DexColor(1.0f, 0, 0));
+		get2DDrawer()->SetRectColor(DexColor(1.0f, 0.0f, 0.0f));
 	else
 		get2DDrawer()->SetRectColor(m_color);
 	get2DDrawer()->DrawRect(m_rect);

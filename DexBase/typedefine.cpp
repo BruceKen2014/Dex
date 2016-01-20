@@ -306,10 +306,10 @@ bool InitVertexBuff()
 		D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY |
 		D3DUSAGE_POINTS, FVF_XYZ_DIFF_TEX1, D3DPOOL_DEFAULT,
 		&g_pBuffer1, NULL))) return false;
-	g_pVertexList1[0] = stVertex1(D3DXVECTOR3(-0.5f, 0.5f, 0.0f), DexColor(0,0.5f,0.5f,0.5f),0.0f, 0.0f ); 
-	g_pVertexList1[1] = stVertex1(D3DXVECTOR3(0.5f, 0.5f, 0.0f),  DexColor(0,0.5f,0.5f,0.5f), 1.0f, 0.0f ); 
-	g_pVertexList1[2] = stVertex1(D3DXVECTOR3(-0.5f, -0.5f, 0.0f), DexColor(0,0.5f,0.5f,0.5f), 0.0f, 1.0f ); 
-	g_pVertexList1[3] = stVertex1(D3DXVECTOR3(0.5f, -0.5f, 0.0f),  DexColor(0,0.5f,0.5f,0.5f), 1.0f, 1.0f ); 
+	g_pVertexList1[0] = stVertex1(D3DXVECTOR3(-0.5f, 0.5f, 0.0f), DexColor(0.0f,0.5f,0.5f,0.5f),0.0f, 0.0f ); 
+	g_pVertexList1[1] = stVertex1(D3DXVECTOR3(0.5f, 0.5f, 0.0f),  DexColor(0.0f,0.5f,0.5f,0.5f), 1.0f, 0.0f ); 
+	g_pVertexList1[2] = stVertex1(D3DXVECTOR3(-0.5f, -0.5f, 0.0f), DexColor(0.0f,0.5f,0.5f,0.5f), 0.0f, 1.0f ); 
+	g_pVertexList1[3] = stVertex1(D3DXVECTOR3(0.5f, -0.5f, 0.0f),  DexColor(0.0f,0.5f,0.5f,0.5f), 1.0f, 1.0f ); 
 	g_pBuffer1->Lock(0, sizeof(g_pVertexList1),(void**)&ptr,0);
 	memcpy(ptr, g_pVertexList1, sizeof(g_pVertexList1));
 	g_pBuffer1->Unlock();
