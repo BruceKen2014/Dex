@@ -5,9 +5,9 @@
 
 typedef struct _DexColor
 {
-	unsigned char r;
-	unsigned char g;
 	unsigned char b;
+	unsigned char g;
+	unsigned char r;
 	unsigned char a;
 	_DexColor():r(255),g(255),b(255),a(255){}
 	_DexColor(DWORD d)

@@ -11,6 +11,7 @@
 #include "../DexBase/CInput.h"
 #include "../DexBase/CDexTime.h"
 #include "../DexBase/DexObjectFactory.h"
+#include "../DexBase/DexVertexDeclDx9.h"
 #include "../DexMath/Dex_To_Dx.h"
 
 #include "../DexModel/DexModelMs3dLoader.h"
@@ -183,8 +184,8 @@ bool DexGameEngine::Initialize()
 	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
 
 	d3dpp.MultiSampleType = multiType;
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_ONE;
-	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
+	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
 
 	// Create the D3DDevice
 	getLog()->BeginLog();
@@ -510,6 +511,25 @@ void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, i
 	g_D3DDevice->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
 }
 
+void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize)
+{
+	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;
+	switch (type)
+	{
+	case DexPT_POINTLIST:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_POINTLIST; break; }
+	case DexPT_LINELIST:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_LINELIST; break; }
+	case DexPT_LINESTRIP:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_LINESTRIP; break; }
+	case DexPT_TRIANGLELIST:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_TRIANGLELIST; break; }
+	case DexPT_TRIANGLESTRIP:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_TRIANGLESTRIP; break; }
+	case DexPT_TRIANGLEFAN:{d3d_primitive_type = D3DPRIMITIVETYPE::D3DPT_TRIANGLEFAN; break; }
+	default:
+		break;
+	}
+	//DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, vertexs, sizeof(stVertex0));
+	//这里的D3DFMT_INDEX32，如果indices是int32整型数组的话，设置D3DFMT_INDEX32,如果是int16类型的整型数组的话，那么设置D3DFMT_INDEX16
+	g_D3DDevice->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
+}
+
 DexModelBase* DexGameEngine::CreateModel(const char* filename)
 {
 	DexModelBase* ret = NULL;
@@ -586,6 +606,10 @@ void DexGameEngine::UpdateFps()
 	{
 		g_iCounter++;
 	}
+}
+
+void DexGameEngine::CalculateLightData()
+{
 }
 void DexGameEngine::Run()
 {
@@ -817,25 +841,54 @@ void DexGameEngine::EnableRangeFog()
 
 void DexGameEngine::SetWorldAmbient(const DexColor& color)
 {
-	g_D3DDevice->SetRenderState(D3DRS_AMBIENT, getD3DColor(color));
+	g_ambientColor = color;
+	//g_D3DDevice->SetRenderState(D3DRS_AMBIENT, getD3DColor(color));
+	CalculateLightData();
+}
+
+void DexGameEngine::SetLightEffect(bool enable)
+{
+	m_bLightEffect = enable;
+	CalculateLightData();
 }
 
 void DexGameEngine::SetLightEnable(bool enable)
 {
 	m_bLightEnable = enable;
-	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, enable);
+	CalculateLightData();
+	//g_D3DDevice->SetRenderState(D3DRS_LIGHTING, enable);
 }
 
-void DexGameEngine::SetLightIdEnable(int32 index, bool enable)
+void DexGameEngine::SetLightIdEnable(int32 lightId, bool enable)
 {
-	g_D3DDevice->LightEnable(index, enable);
+	for (size_t i = 0; i < g_vecLight.size(); ++i)
+	{
+		if (g_vecLight[i].id == lightId)
+		{
+			g_vecLight[i].enable = enable;
+			return;
+		}
+	}
+	CalculateLightData();
+	//g_D3DDevice->LightEnable(lightId, enable);
 }
 
-void DexGameEngine::SetLight(int32 index, const DexLight& light)
+DexLight* DexGameEngine::GetLight(int32 lightId)
 {
-	D3DLIGHT9 dxLight;
-	light.GetDXLight(&dxLight);
-	g_D3DDevice->SetLight(index, &dxLight);
+	for (size_t i = 0; i < g_vecLight.size(); ++i)
+	{
+		if (g_vecLight[i].id == lightId)
+		{
+			return &g_vecLight[i];
+		}
+	}
+	return NULL;
+}
+
+void DexGameEngine::AddLight(const DexLight& light)
+{
+	g_vecLight.push_back(light);
+	CalculateLightData();
 }
 
 bool DexGameEngine::GetLightEnable()
@@ -1011,4 +1064,11 @@ void DexGameEngine::updateViewMatrix()
 {
 	D3DXMatrixLookAtLH(&g_ViewMatrix, &g_camera->GetPosition(), &g_camera->GetFocusPoint(), &g_camera->GetUpVector());
 	g_D3DDevice->SetTransform(D3DTS_VIEW, &g_ViewMatrix);
+}
+
+void DexGameEngine::setDexVertexDecl(IDexVertexDecl* decl)
+{
+	DEX_ENSURE(decl);
+	//ifdef dx9
+	g_D3DDevice->SetVertexDeclaration(((DexVertexDeclDx9*)decl)->m_pDecl);
 }

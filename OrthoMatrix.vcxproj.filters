@@ -399,6 +399,15 @@
     <ClInclude Include="DexBase\DexSTLVector.h">
       <Filter>DexBase</Filter>
     </ClInclude>
+    <ClInclude Include="DexBase\IDexVertexDecl.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexVertexDeclDx9.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexMath\DexVector4.h">
+      <Filter>DexMath</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
@@ -714,6 +723,9 @@
       <Filter>DexMath</Filter>
     </ClCompile>
     <ClCompile Include="DexBase\DexVertex.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexVertexDeclDx9.cpp">
       <Filter>DexBase</Filter>
     </ClCompile>
   </ItemGroup>

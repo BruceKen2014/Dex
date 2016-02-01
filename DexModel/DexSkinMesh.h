@@ -17,6 +17,8 @@
 
 #include "DexModelBase.h"
 
+//skinmesh vertex can bind to 4 joints
+#define  SKINMESH_VERTEX_JOINT_COUNT  4
 //渲染关节点
 #define SKINMESH_RENDER_JOINT		  1<<0		
 //渲染关节到关节连线
@@ -32,6 +34,7 @@
 	SKINMESH_RENDER_JOINT2JOINT | SKINMESH_RENDER_MESH | SKINMESH_RENDER_VERTEX2JOINT|\
 	SKINMESH_RENDER_VERTEXNORMAL)
 
+class IDexVertexDecl;
 typedef enum
 {
 	SkinMeshAnimateType_OneTime,//只播放一次
@@ -40,6 +43,14 @@ typedef enum
 	SkinMeshAnimateType_Loop_Back,//反向循环播放
 	SkinMeshAnimateType_Total
 }SkinMeshAnimateType;
+
+typedef enum
+{
+	SkinMeshVertexBlend_VertexColor,
+	SkinMeshVertexBlend_TexColor,
+	SkinMeshVertexBlend_Blend,
+	SkinMeshVertexBlend_Count
+}SkinMeshVertexBlendType;
 typedef enum
 {
 	SkinMeshModelType_UnKnown, //unknown
@@ -92,41 +103,20 @@ class DexSkinMesh: public DexModelBase
 		void Update(int time);
 		void ComputeWorldMatrix(int32 time);
 	};
-	class DexMesh;
-	class MeshVertex
-	{
-		friend class DexSkinMesh;
-		friend class DexModelObjLoader;
-		friend class DexModelMs3dLoader;
-	protected:
-		DexVector3 meshPosition; //mesh空间坐标
-		DexVector3 worldPosition;
-		Vector<DexVector3> m_vecWorldNormal;
-		Vector<DexVector3> m_vecNormalPosition; //skinmesh 空间中相对于各个骨骼的normal坐标
-		Vector<stVertex3*>  m_vecVertexData;
-		Vector<Joint*>		m_vecJoints;
-		VectorFloat32   m_vecJointWeigth;
-		std::map<DexMesh*, VectorInt32> m_mapMeshVertex; //对应于某个mesh里面的顶点索引
-
-	public:
-		MeshVertex()
-		{
-			m_vecWorldNormal.clear();
-			m_vecNormalPosition.clear();
-			m_vecVertexData.clear();
-			m_vecJoints.clear();
-			m_vecJointWeigth.clear();
-		}
-		~MeshVertex(){}
-	};
 	typedef struct _stMeshVertex
 	{
 		DexVector3 pos;
 		DexVector3 normal;
 		DexColor   color;
 		DexVector2 uv;
-		uint8	   JointIndex[4]; //support 4 joints
-		float32	   JointWeights[4];
+		uint8	   JointIndex[SKINMESH_VERTEX_JOINT_COUNT];
+		float32	   JointWeights[SKINMESH_VERTEX_JOINT_COUNT];
+		_stMeshVertex() :color(DEXCOLOR_WHITE)
+		{
+			memset(JointIndex, 0, sizeof(JointIndex));
+			memset(JointWeights, 0, sizeof(JointWeights));
+			JointWeights[0] = 1.0f;
+		}
 	}stMeshVertex;
 	class DexMesh
 	{		/*目前渲染时，将indices统一一次送给directx渲染，这样的话渲染三角形和渲染线段必须用不同的indice,
@@ -139,23 +129,51 @@ class DexSkinMesh: public DexModelBase
 		int8	    id;
 		int8		m_iTextureId;
 		int8		m_iMaterialId;
-		Vector<stVertex3>	m_vecVertexs; //用于向device传输要渲染的顶点信息
+
+		////用于向device传输要渲染的顶点信息
 		VectorInt32		m_vecIndices;//vertex indice
-		VectorInt32		m_vecLineIndices;//line vertex indice
-		//
-		Vector<stMeshVertex> m_vecVertexsTestShader;
+		Vector<stMeshVertex> m_vecVertexsBuffer;
+		VectorInt32		m_vecLineIndices;//line vertex indice,用的buffer就是m_vecVertexsBuffer
+
+		//用于debug 法线
+		VectorInt32		m_vecDebugNormalIndices;
+		Vector<stMeshVertex> m_vecDebugNormalBuffer;
+
+		//debug vertex to joint
+		VectorInt32		m_vecDebugVertexToJointIndices;
+		Vector<stMeshVertex> m_vecDebugVertexToJointBuffer;
 	public:
 		DexMesh();
 		~DexMesh();
 	public:
 		void   DestroyLineIndices();
 		int32* CreateLineIndices();
+
 		uint32 GetVertexCount()	const;
 		void*  GetVertexBuffer();
 		uint32 GetIndiceCount() const;
 		void*  GetIndiceBuffer();
+
 		uint32 GetLineIndiceCount() const;
 		void*  GetLineIndiceBuffer();
+	public:
+		//用于debug normal
+		void DestroyNormalBuffer();
+		void CreateNormalBuffer();
+		uint32 GetNormalBufferCount()	const;
+		void*  GetNormalBuffer();
+		uint32 GetNormalIndiceCount() const;
+		void*  GetNormalIndiceBuffer();
+	public:
+		//debug vertex to joint
+		void DestroyVertexToJointlBuffer();
+		void CreateVertexToJointBuffer(const Vector<Joint*>& vecJoints);
+		uint32 GetVertexToJointBufferCount()	const;
+		void*  GetVertexToJointBuffer();
+		uint32 GetVertexToJointIndiceCount() const;
+		void*  GetVertexToJointIndiceBuffer();
+	public:
+
 		//返回新插入顶点的index
 		uint32 AddVertex(const DexVector3& pos, const DexVector3& normal, float u, float v);
 		void   AddVertexIndice(const int32& index);
@@ -169,7 +187,6 @@ protected:
 	int16		m_iRenderFlag;
 	bool		m_bHaveAnimation;
 	bool		m_bAnimate;
-	bool		m_bRendeUseShader; //true:use shader,false:FVF
 	float32		m_fAnimateRatio; //动画速率，默认1.0f
 	SkinMeshAnimateType m_eAniType;
 	SkinMeshModelType m_eMeshType;
@@ -177,7 +194,6 @@ protected:
 	DexMatrix4x4 bindMatrix; //一个skinmesh被绑定在场景中的一个节点上，这是该节点的matrix
 	Vector<DexMesh*>	 m_vecMeshs;		//mesh
 	Vector<Joint*>		 m_vecJoints;		//joint
-	Vector<MeshVertex*> m_vecMeshVertexs;	//vertex
 	Vector<CDexTex*>	 m_vecTextures;		//texture
 	Vector<DexMaterial> m_vecMaterials;	//material
 public:
@@ -186,10 +202,15 @@ public:
 	D3DXHANDLE	 WVPMatrixHandle;
 	D3DXHANDLE	 Tex0Handle;
 	D3DXHANDLE	 TechHandle;
-
+	D3DXHANDLE   VertexBlendFlag;
 	D3DXHANDLE	 JointMatrixHandle;
-	D3DXHANDLE	 JointInvertMatrixHandle;
-	IDirect3DVertexDeclaration9 *m_pDecl;
+	D3DXHANDLE   m_bLightEffect;
+	D3DXHANDLE   m_bLightEnable;
+	D3DXHANDLE   m_biPointLightCount;
+	D3DXHANDLE   m_bPointData;
+	D3DXHANDLE   m_ambientColor;
+	D3DXHANDLE   m_material;
+	IDexVertexDecl* m_pDecl;
 	void InitShader();
 public:
 	DexSkinMesh();
@@ -273,11 +294,9 @@ public:
 	void AddVertex(const DexVector3& pos);
 	//这里添加的顶点属于skinmesh，如果JointId=NULL,则绑定到根节点上
 	void AddVertex(const DexVector3& pos, int16* JointId, float* weight, int16 jointCount);
-	void AddVertexJointInfo(int32 vertexIndex, int16 jointId, float32 weight);//向一个已存在的顶点添加joint信息
-	void AddJointInfo(MeshVertex* vertex, Joint* pJoint, float32 fWeight);
-	//这里添加的顶点属于mesh，pos应当是已经在skinmesh中的，
-	//如果pos不在skinmesh中，则向skinmesh添加pos顶点
+	//直接向mesh添加顶点
 	void AddVertex(int8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv);
+	void AddVertex(int8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv, int16* JointId, float* weight, uint16 jointCount);
 	//add triangle, for mesh,3个index是对应于mesh已经存在的顶点索引
 	void AddMeshTriangle(int8 meshId, int32 index0, int32 index1, int32 index2);
 //render flag
@@ -292,21 +311,18 @@ protected:
 	bool AddJointKeyFrameScale(Joint* joint, int32 time, const DexVector3& scale);
 	bool AddJointKeyFrameRotation(Joint* joint, int32 time, const DexVector3& axis, float32 radian);
 	bool AddJointKeyFrameRotation(Joint* joint, int32 time, const DexQuaternion& qua);
-//animation
-	//return value:当前关节是否有动画，根据返回值来决定是否更新顶点
-	void UpdateVertex();
+
+protected:
+	//判断一个pos的顶点是否在skinmesh中
+	bool	   FindVertex(const DexVector3& pos);
+	//animation
 	bool UpdateOneTime(int32 delta);
 	bool UpdateLoop(int32 delta);
 	bool UpdateOneTimeBack(int32 delta);
 	bool UpdateLoopBack(int32 delta);
-protected:
-	//calculate position and normal
-	//return position
-	DexVector3 ComputeVertex(MeshVertex* vertex);
-	//判断一个pos的顶点是否在skinmesh中
-	bool	   FindVertex(const DexVector3& pos);
 	virtual bool IsStaticModel();
 protected:
-	void RenderUseShader();
-	void RenderFVF();
+	void RenderMesh();
+	void RenderVertexNormal();
+	void RenderVertexToJoint();
 };

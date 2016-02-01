@@ -169,6 +169,8 @@
     <ClInclude Include="DexBase\DexSTLVector.h" />
     <ClInclude Include="DexBase\DexType.h" />
     <ClInclude Include="DexBase\DexVertex.h" />
+    <ClInclude Include="DexBase\DexVertexDeclDx9.h" />
+    <ClInclude Include="DexBase\IDexVertexDecl.h" />
     <ClInclude Include="DexCommonFunction.h" />
     <ClInclude Include="DexMath\DexMath.h" />
     <ClInclude Include="DexMath\DexMath2.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="DexMath\DexQuaternion.h" />
     <ClInclude Include="DexMath\DexVector2.h" />
     <ClInclude Include="DexMath\DexVector3.h" />
+    <ClInclude Include="DexMath\DexVector4.h" />
     <ClInclude Include="DexMath\Dex_To_Dx.h" />
     <ClInclude Include="DexModel\DexModelBase.h" />
     <ClInclude Include="DexModel\DexModelLoader.h" />
@@ -295,6 +298,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DexBase\DexVertex.cpp" />
+    <ClCompile Include="DexBase\DexVertexDeclDx9.cpp" />
     <ClCompile Include="DexCommonFunction.cpp" />
     <ClCompile Include="DexMath\DexMath.cpp" />
     <ClCompile Include="DexMath\DexMath2.cpp" />

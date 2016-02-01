@@ -3,6 +3,7 @@
 #define _DEXGAMEENGINE_H
 
 #include "../DexBase/typedefine.h"
+#include "../DexBase/DexSTLVector.h"
 #include "../DexBase/DexMem.h"
 #include "../DexBase/DexPrimitive.h"
 #include "../DexBase/DexMaterial.h"
@@ -19,6 +20,7 @@ class DexGlobal;
 class CDexTex;
 class DexModelBase;
 class IDexModelLoader;
+class IDexVertexDecl;
 // typedef enum
 // {
 // 	DEXRS_ZENABLE					,   //是否开启Z buff
@@ -110,7 +112,8 @@ private:
 	bool              m_bRenderActionRouteLine;    //object action 軌跡
 	bool              m_bRenderPieceEffectRoute;   //麵片軌跡 
 	bool              m_bLoading;
-	bool              m_bLightEnable;
+	bool              m_bLightEffect; //是否开启灯光效果
+	bool              m_bLightEnable; //开启灯光效果后，灯光是否开启
 
 	std::map<string, DexGameState*> g_States;  //引擎管理多个游戏状态
 
@@ -126,6 +129,14 @@ private:
 	string         g_nextStateName;
 	IDexModelLoader* ms3dLoader;
 	IDexModelLoader* objLoader;
+
+
+	//light data
+	Vector<DexLight> g_vecLight;
+	DexColor		 g_ambientColor;
+	float			 g_pointLightData[100];
+	float			 g_DirLightData[100];
+	int				 g_lightDataSize;
 private:
 	DexGameEngine();
 	~DexGameEngine();
@@ -218,11 +229,14 @@ public:
 
 	//灯光：这里负责赋参数，具体灯光管理应由各个场景管理
 	void SetWorldAmbient(const DexColor& color); //世界环境光，默认是黑色
-	void SetLightEnable(bool enable);
-	void SetLightIdEnable(int32 index, bool enable);
-	void SetLight(int32 index, const DexLight& light);
+	void SetLightEffect(bool enable); //设置是否使用灯光效果
+	void SetLightEnable(bool enable);//控制全部灯光是否有效
+	void SetLightIdEnable(int32 lightId, bool enable);
+	void AddLight(const DexLight& light);
+	//const float* GetPointLightData()const;
+	DexLight* GetLight(int32 lightId);
 	bool GetLightEnable();
-
+	void CalculateLightData();//如果使用DexLight* GetLight(int32 lightId);改变灯光数据，需要手动调用此函数更新灯光数据
 
 	//render line cube sphere
 	void RenderCoorLines();
@@ -240,8 +254,10 @@ public:
 
 	void SetMaterial(const DexMaterial& material);
 	void SetTexture(int32 stage, CDexTex* texture);
+	//for固定管线，需要设置FVF
 	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize);
-	
+	//for shader，不需要设置FVF
+	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize);
 	DexModelBase* CreateModel(const char* filename);
 	
 	void LookAtLH(const D3DXVECTOR3 *pEye, const D3DXVECTOR3 *pAt, const D3DXVECTOR3 *pUp);
@@ -257,6 +273,7 @@ public:
 	bool getRenderPieceEffectRoute();
 public:
 	void updateViewMatrix();
+	void setDexVertexDecl(IDexVertexDecl* decl);
 public:	
 	//lua
 	bool DoLuaFile(const char* filename);

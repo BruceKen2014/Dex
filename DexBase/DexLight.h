@@ -15,14 +15,15 @@ class DexLight
 {
 public:
 	typedef enum _DexLightType{
-		DexLight_POINT = 1,
-		DexLight_SPOT = 2,
-		DexLight_DIRECTIONAL = 3,
+		DexLight_POINT = 0,
+		DexLight_SPOT = 1,
+		DexLight_DIRECTIONAL = 2,
 		DexLight_TOTAL
 	} DexLightType;
 public:
 	DexLightType    type;    
 	int32			id;      //灯光ID序号
+	bool			enable;
 	DexColor	    diffuse;        
 	DexColor	    specular;       
 	DexColor	    ambient;      
@@ -40,7 +41,7 @@ public:
 	DexLight() :type(DexLight_TOTAL), id(-1), diffuse(DEXCOLOR_WHITE), specular(DEXCOLOR_BLACK), 
 		ambient(DEXCOLOR_BLACK), position(DexVector3(0.0f, 0.0f, 0.0f)), direction(DexVector3(0.0f, -1.0f, 0.0f)),
 		range(100.0f), falloff(0.0f), attenuation0(0.0f), attenuation1(0.0f), attenuation2(0.0f), theta(0.0f),
-		phi(0.0f)
+		phi(0.0f), enable(true)
 	{
 	};
 	DexLight(DexLightType _type, const DexColor& color)  //无论哪种灯光，这些属性都是共同的 

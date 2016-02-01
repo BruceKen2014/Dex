@@ -124,7 +124,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 		getLog()->Log(log_error, "		load ms3d %s failed!\n");
 		getLog()->EndLog();
 		delete skinMesh;
-		return NULL;	
+		return NULL;
 	}
 	inputFile.seekg(0, ios::end);
 	long fileSize = inputFile.tellg();
@@ -159,38 +159,14 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 	pPtr += sizeof(int16);
 
 	MS3DVertex *pVertex = (MS3DVertex*)pPtr;
-	struct JointVertex
-	{
-		uint32	vertexIndex;
-		float32 weight;
-		JointVertex(uint32 i, float32 w) :vertexIndex(i), weight(w)
-		{}
-	};
-	map<int16, Vector<JointVertex>> joint_Vertexs;
-	for (int32 i = 0; i < nVertices; i++)
-	{
-		//ms3d模型空间为右手坐标系，DX为左手坐标系
-		 pVertex[i].m_vertex[2] *= -1;
-		 DexVector3 pos(pVertex[i].m_vertex);
-		 map<int16, Vector<JointVertex>>::iterator ite = joint_Vertexs.find(pVertex[i].m_boneID);
-		 if (ite != joint_Vertexs.end())
-		 {
-			 ite->second.push_back(JointVertex(i, 1.0f));
-		 }
-		 else
-		 {
-			 Vector<JointVertex> vec;
-			 vec.push_back(JointVertex(i, 1.0f));
-			 joint_Vertexs.insert(std::make_pair(pVertex[i].m_boneID, vec));
-		 }
-		 skinMesh->AddVertex(pos);
-	}
-	 pPtr += sizeof(MS3DVertex)* nVertices;
+
+	MS3DVertex pVertex22[100];
+	memcpy(pVertex22, pVertex, sizeof(MS3DVertex)* nVertices);
+	pPtr += sizeof(MS3DVertex)* nVertices;
 	int nTriangles = *(int16*)pPtr; //三角形个数
 	pPtr += sizeof(int16);
 	MS3DTriangle* Triangles = (MS3DTriangle*)pPtr;
 	pPtr += sizeof(MS3DTriangle)*nTriangles;
-
 	int nGroups = *(int16*)pPtr; //mesh数量
 	pPtr += sizeof(int16);
 	for (int i = 0; i < nGroups; i++)
@@ -202,11 +178,11 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 		int16 *pTriangleIndices = (int16*)pPtr; //三角形索引
 		pPtr += sizeof(int16)* iTriangles;
 		int32 indice_index = 0;
-		DexSkinMesh::DexMesh* mesh =  skinMesh->AddMesh(i); //新建mesh
+		DexSkinMesh::DexMesh* mesh = skinMesh->AddMesh(i); //新建mesh
 		DexVector3 tempPos;
 		DexVector3 tempNormal;
-		float tempU,tempV;
-		stVertex3 tempVertex;
+		float tempU, tempV;
+		DexSkinMesh::stMeshVertex tempVertex;
 		for (int j = 0; j < iTriangles; j++)
 		{//解析这个mesh所用到的所有三角形的顶点索引
 			int triangleIndex = pTriangleIndices[j];
@@ -215,45 +191,33 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 			{
 				uint32 iPosIndex = Triangles[triangleIndex].m_vertexIndices[point];
 				tempPos.Set(pVertex[iPosIndex].m_vertex);
+				tempPos.z *= -1;
 				tempNormal.Set(Triangles[triangleIndex].m_vertexNormals[point]);
 				tempNormal.z *= -1;
 				tempU = Triangles[triangleIndex].m_s[point]; tempV = Triangles[triangleIndex].m_t[point];
 				bool find = false;
-				for (size_t iMeshVertexIndex = 0; iMeshVertexIndex < mesh->m_vecVertexs.size(); ++iMeshVertexIndex)
+				for (size_t index = 0; index < mesh->m_vecVertexsBuffer.size(); ++index)
 				{
-					if (mesh->m_vecVertexs[iMeshVertexIndex].m_pos == tempPos
-						&& mesh->m_vecVertexs[iMeshVertexIndex].m_normal == tempNormal
-						&& DexMath::Equal(mesh->m_vecVertexs[iMeshVertexIndex].m_u, tempU)
-						&& DexMath::Equal(mesh->m_vecVertexs[iMeshVertexIndex].m_v, tempV))
+					if (mesh->m_vecVertexsBuffer[index].pos == tempPos
+						&& mesh->m_vecVertexsBuffer[index].normal == tempNormal
+						&& DexMath::Equal(mesh->m_vecVertexsBuffer[index].uv.x, tempU)
+						&& DexMath::Equal(mesh->m_vecVertexsBuffer[index].uv.y, tempV))
 					{//找到已经存在的vertex
-						mesh->AddVertexIndice(iMeshVertexIndex);
+						mesh->AddVertexIndice(index);
 						find = true;
 						break;
 					}
 				}
 				if (!find)
 				{//未找到已存在的，则新建顶点
-					tempVertex.SetPos(tempPos);
-					tempVertex.SetNormal(tempNormal);
-					tempVertex.SetUV(tempU, tempV);
-					tempVertex.SetColor(DEXCOLOR_WHITE);
-					mesh->AddVertexIndice(mesh->m_vecVertexs.size());
-					DexSkinMesh::MeshVertex* tempMeshVertex = skinMesh->m_vecMeshVertexs[iPosIndex];
-					std::map<DexSkinMesh::DexMesh*, Vector<int32>>::iterator vertexIte = tempMeshVertex->m_mapMeshVertex.find(mesh);
-					if (vertexIte != tempMeshVertex->m_mapMeshVertex.end())
-					{
-						vertexIte->second.push_back(mesh->m_vecVertexs.size());
-					}
-					else
-					{
-						VectorInt32 vec;
-						vec.push_back(mesh->m_vecVertexs.size());
-						tempMeshVertex->m_mapMeshVertex.insert(std::make_pair(mesh, vec));
-					}
-					DexVector3 tempNormalPos = tempMeshVertex->meshPosition + tempNormal * 1.0f;
-					(tempMeshVertex->m_vecNormalPosition).push_back(tempNormalPos);
-					tempMeshVertex->m_vecWorldNormal.push_back(DexVector3(0.0f, 0.0f, 0.0f));
-					mesh->m_vecVertexs.push_back(tempVertex);
+					tempVertex.pos = (tempPos);
+					tempVertex.normal = (tempNormal);
+					tempVertex.uv = DexVector2(tempU, tempV);
+					tempVertex.color = DEXCOLOR_WHITE;
+					tempVertex.JointIndex[0] = pVertex[iPosIndex].m_boneID +1;//第0个是root
+					tempVertex.JointWeights[0] = 1.0f;
+					mesh->AddVertexIndice(mesh->m_vecVertexsBuffer.size());
+					mesh->m_vecVertexsBuffer.push_back(tempVertex);
 				}
 			}
 		}
@@ -279,7 +243,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 			pMaterial->m_emissive[3]);
 		material.power = pMaterial->m_shininess;
 		//还有几个material目前还没支持
-		char* filename = (char*) malloc(strlen(pMaterial->m_texture) + 1);
+		char* filename = (char*)malloc(strlen(pMaterial->m_texture) + 1);
 		strcpy(filename, pMaterial->m_texture);
 		skinMesh->AddMaterial(material);
 		skinMesh->AddTexture(filename);
@@ -303,10 +267,10 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 	DexMatrix4x4 matrixRotateX;
 	DexMatrix4x4 matrixRotateY;
 	DexMatrix4x4 matrixRotateZ;
-	
+
 	float32 AniTime = 0.0f;
 	float32 minAniTime = 0;
-	for (int i = 0; i < jointCount; ++i)
+	for (int i = 1; i <= jointCount; ++i)
 	{
 		baseMatrix.Identity(); matrixRotateX.Identity(); matrixRotateY.Identity(); matrixRotateZ.Identity();
 		MS3DJoint *ms3dJoint = (MS3DJoint*)pPtr;
@@ -316,17 +280,9 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 
 		baseMatrix.Translate(ms3dJoint->m_translation[0], ms3dJoint->m_translation[1], -ms3dJoint->m_translation[2]);
 
-		DexSkinMesh::Joint* newJoint = skinMesh->FindJoint(i); 
+		DexSkinMesh::Joint* newJoint = skinMesh->FindJoint(i);
 		if (newJoint == NULL)
 			newJoint = skinMesh->AddJoint(i);
-		map<int16, Vector<JointVertex>>::iterator ite = joint_Vertexs.find(i);
-		if (ite != joint_Vertexs.end())
-		{
-			for (size_t v = 0; v < ite->second.size(); ++v)
-			{
-				skinMesh->AddJointInfo(skinMesh->m_vecMeshVertexs[ite->second[v].vertexIndex], newJoint, ite->second[v].weight);
-			}
-		}
 		skinMesh->SetJointInfo(newJoint->id, string(ms3dJoint->m_name), string(ms3dJoint->m_parentName), baseMatrix);
 		int rotationFrames = ms3dJoint->m_numRotationKeyframes;
 		int positionFrames = ms3dJoint->m_numTranslationKeyframes;
@@ -372,10 +328,10 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 				}
 			}
 			matrix.Identity();
-			
+
 			matrix.RotateX(-vec_rotation[k].m_parameter[0]);
 			matrix.RotateY(-vec_rotation[k].m_parameter[1]);
-			matrix.RotateZ( vec_rotation[k].m_parameter[2]);
+			matrix.RotateZ(vec_rotation[k].m_parameter[2]);
 			matrix.Translate(trans);
 			skinMesh->AddJointKeyFrame(newJoint->str_name, time * 1000, matrix *  baseMatrix);
 		}
@@ -400,14 +356,14 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 			skinMesh->AddJointKeyFrame(newJoint->str_name, time * 1000, matrix * baseMatrix);
 		}
 	}
-	map<int16, Vector<JointVertex>>::iterator ite = joint_Vertexs.find(-1);
-	if (ite != joint_Vertexs.end())
-	{//处理没有绑定的顶点
-		for (int v = 0; v < ite->second.size(); ++v)
-		{
-			skinMesh->AddVertexJointInfo(ite->second[v].vertexIndex, skinMesh->m_pRootJoint->id, 1.0f);
-		}
-	}
+	//map<int16, Vector<JointVertex>>::iterator ite = joint_Vertexs.find(-1);
+	//if (ite != joint_Vertexs.end())
+	//{//处理没有绑定的顶点
+	//	for (int v = 0; v < ite->second.size(); ++v)
+	//	{
+	//		skinMesh->AddVertexJointInfo(ite->second[v].vertexIndex, skinMesh->m_pRootJoint->id, 1.0f);
+	//	}
+	//}
 	if (pPtr < EndPtr && pHeader->m_version == 4)
 	{
 		int32 subVersion = *(int32*)pPtr; // comment subVersion, always 1
@@ -426,7 +382,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 					pPtr += sizeof(int32); //index
 				}
 				int32 commentLength = *(int32*)pPtr;
-				pPtr += sizeof(commentLength); 
+				pPtr += sizeof(commentLength);
 				pPtr += commentLength;
 			}
 		}
@@ -441,8 +397,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
 				MS3DVertexWeights* vertexEx = (MS3DVertexWeights*)pPtr;
 				for (int boneIndex = 0; boneIndex < 3; ++boneIndex)
 				{
-					if (vertexEx->boneIds[boneIndex] != -1)
-						skinMesh->AddVertexJointInfo(index, vertexEx->boneIds[boneIndex], vertexEx->weights[boneIndex]);
+					//if (vertexEx->boneIds[boneIndex] != -1)
 				}
 				pPtr += offset;
 			}
