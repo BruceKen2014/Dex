@@ -97,7 +97,7 @@ D3DXVECTOR3 PalPlayer::getTopPosition()
 		{
 			DexCollideObjectSphere* sphere = (DexCollideObjectSphere*)m_pCollideObject;
 			stBall ball= sphere->getBall();
-			pos = ball.m_center;
+			memcpy(&pos, &ball.m_center, sizeof(D3DXVECTOR3));
 			D3DXVECTOR3 up(0,1,0);
 			pos += ball.m_radius * up;
 		}

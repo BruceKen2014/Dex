@@ -25,7 +25,7 @@ int SetCameraPos(lua_State *L)
 	xpos = (double)lua_tonumber(L, 1);
 	ypos = (double)lua_tonumber(L, 2);
 	zpos = (double)lua_tonumber(L, 3);
-	g_camera.SetPosition(D3DXVECTOR3(xpos, ypos, zpos));
+	g_camera.SetPosition(DexVector3(xpos, ypos, zpos));
 
 	//返回压栈参数的个数,没有就返回0
 	return 0;
@@ -39,7 +39,7 @@ int SetCameraFox(lua_State* L)
 	xpos = (double)lua_tonumber(L, 1);
 	ypos = (double)lua_tonumber(L, 2);
 	zpos = (double)lua_tonumber(L, 3);
-	g_camera.SetFocus(D3DXVECTOR3(xpos, ypos, zpos));
+	g_camera.SetFocus(DexVector3(xpos, ypos, zpos));
 	//返回压栈参数的个数,没有就返回0
 	return 0;
 }
@@ -52,7 +52,7 @@ int SetCameraDest(lua_State* L)
 	xpos = (double)lua_tonumber(L, 1);
 	ypos = (double)lua_tonumber(L, 2);
 	zpos = (double)lua_tonumber(L, 3);
-	g_camera.SetDestPos(D3DXVECTOR3(xpos, ypos, zpos));
+	g_camera.SetDestPos(DexVector3(xpos, ypos, zpos));
 	//返回压栈参数的个数,没有就返回0
 	return 0;
 }

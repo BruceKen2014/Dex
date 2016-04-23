@@ -265,9 +265,9 @@ bool ParticalEditState::ApplyRes()
 	//particalMgr->setCollideObject(box2);
 	//DexGameEngine::getEngine()->getCamera()->addAction(action3);
 
-	D3DXVECTOR3 cameraPos(0, 300.0f,-200.0f);
-	D3DXVECTOR3 lookAtPos(0, 170, 0);	
-	D3DXVECTOR3 upDir(0.0f, 1.0f, 0.0f);	
+	DexVector3 cameraPos(0, 300.0f,-200.0f);
+	DexVector3 lookAtPos(0, 170, 0);
+	DexVector3 upDir(0.0f, 1.0f, 0.0f);
 	// Build view matrix.
 	DexGameEngine::getEngine()->LookAtLH(&cameraPos, &lookAtPos, &upDir);
 	m_bApply = true;
@@ -434,7 +434,7 @@ void ParticalEditState::Render()
 	DexGameEngine::getEngine()->Render3DLine(pos, dir, DEXCOLOR_PINK, 100,DEXCOLOR_PINK);
 
 	DexGameEngine::getEngine()->SetMeshColor(DEXCOLOR_RED);
-	DexGameEngine::getEngine()->RenderCube(g_TerrainClickPoint, D3DXVECTOR3(2.0f, 2.0f ,2.0f));
+	DexGameEngine::getEngine()->RenderCube(DexVector3(g_TerrainClickPoint.x, g_TerrainClickPoint.y, g_TerrainClickPoint.z), DexVector3(2.0f, 2.0f, 2.0f));
 	//DexGameEngine::getEngine()->RenderCube(*matrix);
 	
 	//g_pEmittInstance->Render();
@@ -447,7 +447,7 @@ void ParticalEditState::Render()
 
 	get2DDrawer()->SetTextSize(15);
 	get2DDrawer()->DrawString(0,0,"fps:%d", DexGameEngine::getEngine()->getFps());
-	D3DXVECTOR3 camera_pos = DexGameEngine::getEngine()->getCamera()->GetPosition();
+	DexVector3 camera_pos = DexGameEngine::getEngine()->getCamera()->GetPosition();
 	get2DDrawer()->DrawString(0,15,"camera:X:%d Y:%d Z:%d", (int)camera_pos.x, (int)camera_pos.y, (int)camera_pos.z);
 	int iXMouse = (int)CInputSystem::GetInputSingleton().GetMouseXPos();
 	int iYMouse = (int)CInputSystem::GetInputSingleton().GetMouseYPos(); 
@@ -502,10 +502,11 @@ void ParticalEditState::MouseLDown(int xPos, int yPos)
 	g_pJingtian->setPosition(CDexSceneObject::AXIS_Y,new_y);
 	float y_delta = new_y - old_y;
 
-	CPlane plane(D3DXVECTOR3(0,new_y,0), D3DXVECTOR3(50,new_y,0), D3DXVECTOR3(0,new_y,50));
+	CPlane plane(DexVector3(0, new_y, 0), DexVector3(50, new_y, 0), DexVector3(0, new_y, 50));
 	stRay ray;
 	DexGameEngine::getEngine()->GetRay(xPos, yPos, ray);
-	D3DXVECTOR3 crossPoint = plane.GetCrossPoint(ray);
+	D3DXVECTOR3 crossPoint;
+	memcpy(&crossPoint, &plane.GetCrossPoint(ray), sizeof(D3DXVECTOR3));
 	D3DXVECTOR3 collide_center; 
 	g_pJingtian->getCollideObject()->getCenter(collide_center);
 	D3DXVECTOR3 set_vector = crossPoint - collide_center;
@@ -514,8 +515,8 @@ void ParticalEditState::MouseLDown(int xPos, int yPos)
 	//g_pJingtian->SetVel(0.0f);
 	g_pJingtian->getAniModel()->SetAnimation(4);
 	//g_pJingtian->SetMoving(true);
-	DexGameEngine::getEngine()->MoveCamera(set_vector,4.0f, true);
-	DexGameEngine::getEngine()->MoveCamera(D3DXVECTOR3(0, 1.0f, 0), y_delta, true);
+	DexGameEngine::getEngine()->MoveCamera(DexVector3(set_vector.x, set_vector.y, set_vector.z),4.0f, true);
+	DexGameEngine::getEngine()->MoveCamera(DexVector3(0, 1.0f, 0), y_delta, true);
 	g_pJingtian->Move(set_vector, 4.0f);
 }
 void ParticalEditState::MouseLUp(int xPos, int yPos)
@@ -524,7 +525,7 @@ void ParticalEditState::MouseLUp(int xPos, int yPos)
 	if(CPalTalkSystem::getTalkSystem()->IsCompleteThisTalkScript())
 	{
 		g_pJingtian->getAniModel()->SetAnimation(0);
-		CPlane plane(D3DXVECTOR3(0,0,0), D3DXVECTOR3(50,0,0), D3DXVECTOR3(0,0,50));
+		CPlane plane(DexVector3(0, 0, 0), DexVector3(50, 0, 0), DexVector3(0, 0, 50));
 		stRay ray;
 		DexGameEngine::getEngine()->GetRay(xPos, yPos, ray);
 		CPalNpc* clickNpc = getClickNpc(ray);
@@ -556,10 +557,11 @@ void ParticalEditState::MouseRDown(int xPos, int yPos)
 	float jingtian_y = g_pTerrain->GetHeight(jingtian_pos.x, jingtian_pos.z);
 	g_pJingtian->setPosition(CDexSceneObject::AXIS_Y, jingtian_y);
 	float y_delta = jingtian_y- old_y;
-	CPlane plane(D3DXVECTOR3(0,jingtian_y,0), D3DXVECTOR3(50,jingtian_y,0), D3DXVECTOR3(0,jingtian_y,50));
+	CPlane plane(DexVector3(0, jingtian_y, 0), DexVector3(50, jingtian_y, 0), DexVector3(0, jingtian_y, 50));
 	stRay ray;
 	DexGameEngine::getEngine()->GetRay(xPos, yPos, ray);
-	D3DXVECTOR3 crossPoint = plane.GetCrossPoint(ray);
+	D3DXVECTOR3 crossPoint;
+	memcpy(&crossPoint, &plane.GetCrossPoint(ray), sizeof(D3DXVECTOR3));
 	D3DXVECTOR3 collide_center; 
 	g_pJingtian->getCollideObject()->getCenter(collide_center);
 	D3DXVECTOR3 set_vector = crossPoint - collide_center;
@@ -568,8 +570,8 @@ void ParticalEditState::MouseRDown(int xPos, int yPos)
 	//g_pJingtian->SetVel(0.0f);
 	g_pJingtian->getAniModel()->SetAnimation(4);
 	//g_pJingtian->SetMoving(true);
-	DexGameEngine::getEngine()->MoveCamera(set_vector,4.0f, true);
-	DexGameEngine::getEngine()->MoveCamera(D3DXVECTOR3(0, 1.0f, 0), y_delta, true);
+	DexGameEngine::getEngine()->MoveCamera(DexVector3(set_vector.x, set_vector.y, set_vector.z), 4.0f, true);
+	DexGameEngine::getEngine()->MoveCamera(DexVector3(0, 1.0f, 0), y_delta, true);
 	g_pJingtian->Move(set_vector, 4.0f);
 }
 void ParticalEditState::MouseRUp(int xPos, int yPos)
@@ -625,7 +627,9 @@ void ParticalEditState::KeyDown()
 	DEX_ENSURE(object);
 	if(CInputSystem::GetInputSingleton().KeyDown(DIK_LEFT))
 	{
-		object->Move(DexGameEngine::getEngine()->getCamera()->GetRight(),-1);
+		D3DXVECTOR3 rig;
+		memcpy(&rig, &DexGameEngine::getEngine()->getCamera()->GetRight(), sizeof(D3DXVECTOR3));
+		object->Move(rig, -1);
 
 		D3DXVECTOR3 pos = get2DDrawer()->GetCameraPos();
 		pos.x -= 1;
@@ -633,7 +637,9 @@ void ParticalEditState::KeyDown()
 	}
 	if(CInputSystem::GetInputSingleton().KeyDown(DIK_RIGHT))
 	{
-		object->Move(DexGameEngine::getEngine()->getCamera()->GetRight(),1);
+		D3DXVECTOR3 rig;
+		memcpy(&rig, &DexGameEngine::getEngine()->getCamera()->GetRight(), sizeof(D3DXVECTOR3));
+		object->Move(rig, 1);
 
 		D3DXVECTOR3 pos = get2DDrawer()->GetCameraPos();
 		pos.x += 1;
@@ -641,7 +647,8 @@ void ParticalEditState::KeyDown()
 	}
 	if(CInputSystem::GetInputSingleton().KeyDown(DIK_UP))
 	{
-		D3DXVECTOR3 dir = DexGameEngine::getEngine()->getCamera()->GetView();
+		D3DXVECTOR3 dir;
+		memcpy(&dir, &DexGameEngine::getEngine()->getCamera()->GetView(), sizeof(D3DXVECTOR3));
 		dir.y = 0;
 		object->Move(dir,1);
 
@@ -651,7 +658,8 @@ void ParticalEditState::KeyDown()
 	}
 	if(CInputSystem::GetInputSingleton().KeyDown(DIK_DOWN))
 	{
-		D3DXVECTOR3 dir = DexGameEngine::getEngine()->getCamera()->GetView();
+		D3DXVECTOR3 dir;
+		memcpy(&dir, &DexGameEngine::getEngine()->getCamera()->GetView(), sizeof(D3DXVECTOR3));
 		dir.y = 0;
 		object->Move(dir,-1);
 

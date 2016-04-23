@@ -16,6 +16,7 @@
 #include "../DexMath/DexMatrix.h"
 
 #include "DexModelBase.h"
+#include "DexShaderHlslSkinMesh.h"
 
 //skinmesh vertex can bind to 4 joints
 #define  SKINMESH_VERTEX_JOINT_COUNT  4
@@ -68,6 +69,7 @@ class DexSkinMesh: public DexModelBase
 	Dex_DeclareClass(DexSkinMesh, 0)
 	friend class DexModelMs3dLoader;
 	friend class DexModelObjLoader;
+	friend class DexShaderHlslSkinMesh;
 	class Joint
 	{
 	public:
@@ -211,6 +213,10 @@ public:
 	D3DXHANDLE   m_ambientColor;
 	D3DXHANDLE   m_material;
 	IDexVertexDecl* m_pDecl;
+
+	D3DXMATRIX   matWVP;
+	D3DXMATRIX* jointsMatrix;
+	DexShaderHlslSkinMesh* shader;
 	void InitShader();
 public:
 	DexSkinMesh();

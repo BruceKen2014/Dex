@@ -7,22 +7,23 @@
 #ifndef _CRAY_H
 #define _CRAY_H
 //射线结构
+#include "../DexMath/DexVector3.h"
 typedef struct _stRay
 {
-	D3DXVECTOR3 m_vector;  //发射方向
-	D3DXVECTOR3 m_origin;  //发射点
+	DexVector3 m_vector;  //发射方向
+	DexVector3 m_origin;  //发射点
 
 	_stRay()
 	{
-		m_vector = D3DXVECTOR3(0,0,1);
-		m_origin = D3DXVECTOR3(0,0,0);
+		m_vector = DexVector3(0, 0, 1);
+		m_origin = DexVector3(0, 0, 0);
 	}
-	D3DXVECTOR3 getVector() const
+	DexVector3 getVector() const
 	{
 		//D3DXVec3Normalize(&m_vector, &m_vector);
 		return m_vector;
 	}
-	D3DXVECTOR3 getOrigin() const
+	DexVector3 getOrigin() const
 	{
 		return m_origin;
 	}

@@ -12,6 +12,7 @@
 #include "../DexBase/CDexTime.h"
 #include "../DexBase/DexObjectFactory.h"
 #include "../DexBase/DexVertexDeclDx9.h"
+#include "../DexBase/DexRenderDirectx9.h"
 #include "../DexMath/Dex_To_Dx.h"
 
 #include "../DexModel/DexModelMs3dLoader.h"
@@ -59,6 +60,7 @@ DexGameEngine::DexGameEngine()
 	g_material.Power = 0;
 	ms3dLoader = new DexModelMs3dLoader;
 	objLoader = new DexModelObjLoader;
+	m_pRender = new DexRenderDirectX9();
 	m_RenderMode = DexRenderMode_TRIANGLE;
 }
 DexGameEngine::~DexGameEngine()
@@ -274,7 +276,7 @@ void DexGameEngine::SetMeshColor(const DexColor& color)
 	g_material.Emissive = g_material.Diffuse;
 }
 
-void DexGameEngine::RenderCube(const D3DXVECTOR3& pos, const D3DXVECTOR3& scale)
+void DexGameEngine::RenderCube(const DexVector3& pos, const DexVector3& scale)
 {
 	DEX_ENSURE(g_cube);
 	D3DXMatrixIdentity(&g_transMatrix);
@@ -303,37 +305,6 @@ void DexGameEngine::RenderCube(const D3DXVECTOR3& pos, const D3DXVECTOR3& scale)
 	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
 	//g_D3DDevice->SetMaterial(NULL);
 }
-
-void DexGameEngine::RenderCube(const DexVector3& pos, const D3DXVECTOR3& scale)
-{
-	DEX_ENSURE(g_cube);
-	D3DXMatrixIdentity(&g_transMatrix);
-	D3DXMatrixIdentity(&g_worldMatrix);
-	D3DXMatrixIdentity(&g_scaleMatrix);
-	D3DXMatrixScaling(&g_scaleMatrix, scale.x, scale.y, scale.z);
-
-	D3DXMatrixTranslation(&g_transMatrix, 0, 0, 0);
-	D3DXMatrixMultiply(&g_worldMatrix, &g_worldMatrix, &g_transMatrix);
-	D3DXMatrixMultiply(&g_worldMatrix, &g_worldMatrix, &g_scaleMatrix);
-	D3DXMatrixTranslation(&g_transMatrix, pos.x, pos.y, pos.z);
-	D3DXMatrixMultiply(&g_worldMatrix, &g_worldMatrix, &g_transMatrix);
-
-	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	g_D3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	g_D3DDevice->SetTexture(0, NULL);
-	//g_D3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	g_D3DDevice->SetTransform(D3DTS_WORLD, &g_worldMatrix);
-	g_D3DDevice->SetMaterial(&g_material);
-	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
-	g_cube->DrawSubset(0);
-	D3DXMatrixIdentity(&g_worldMatrix);
-	g_D3DDevice->SetTransform(D3DTS_WORLD, &g_worldMatrix);
-	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-	//g_D3DDevice->SetMaterial(NULL);
-}
-
 void DexGameEngine::RenderCube(const D3DXMATRIX& matrix)
 {
 	DEX_ENSURE(g_cube);
@@ -371,7 +342,7 @@ void DexGameEngine::RenderCube(const DexMatrix4x4& matrix)
 }
 
 
-void DexGameEngine::RenderSphere(const D3DXVECTOR3& pos, float scale /* = 1.0f */)
+void DexGameEngine::RenderSphere(const DexVector3& pos, float scale /* = 1.0f */)
 {
 	DEX_ENSURE(g_sphere);
 	D3DXMatrixIdentity(&g_transMatrix);
@@ -457,7 +428,12 @@ void DexGameEngine::Render3DLine(const D3DXVECTOR3& p, const D3DXVECTOR3& vec, c
 
 void DexGameEngine::SetMaterial(const DexMaterial& material)
 {
-	material.GetDXMaterial(g_material);
+	size_t size = sizeof(DexColor);
+	memcpy(&g_material.Diffuse, &material.diffuse, size);
+	memcpy(&g_material.Ambient, &material.ambient, size);
+	memcpy(&g_material.Emissive, &material.emissive, size);
+	memcpy(&g_material.Specular, &material.specular, size);
+	g_material.Power = material.power;
 	g_D3DDevice->SetMaterial(&g_material);
 }
 void DexGameEngine::SetTexture(int32 stage, CDexTex* texture)
@@ -940,7 +916,7 @@ void DexGameEngine::SetProjectArgus(float fov, float aspect, float near_distance
 	g_D3DDevice->SetTransform(D3DTS_PROJECTION, &g_projection);
 }
 
-void DexGameEngine::LookAtLH(const D3DXVECTOR3 *pEye, const D3DXVECTOR3 *pAt, const D3DXVECTOR3 *pUp)
+void DexGameEngine::LookAtLH(const DexVector3 *pEye, const DexVector3 *pAt, const DexVector3 *pUp)
 {
 	g_camera->SetCamera(*pEye, *pAt, *pUp);
 	updateViewMatrix();
@@ -986,17 +962,17 @@ bool DexGameEngine::getRenderPieceEffectRoute()
 	return m_bRenderPieceEffectRoute;
 }
 
-void DexGameEngine::SetCameraPos(const D3DXVECTOR3& pos)
+void DexGameEngine::SetCameraPos(const DexVector3& pos)
 {
 	g_camera->SetPosition(pos);
 	updateViewMatrix();
 }
-void DexGameEngine::SetCameraLookAt(const D3DXVECTOR3& lookAt)
+void DexGameEngine::SetCameraLookAt(const DexVector3& lookAt)
 {
 	g_camera->SetFocus(lookAt);
 	updateViewMatrix();
 }
-void DexGameEngine::MoveCamera(D3DXVECTOR3 vec, float amount, bool move_focus /* = false */)
+void DexGameEngine::MoveCamera(DexVector3 vec, float amount, bool move_focus /* = false */)
 {
 	g_camera->MoveCamera(vec, amount, move_focus);
 	updateViewMatrix();
@@ -1021,25 +997,29 @@ void DexGameEngine::GetRay(int x, int y, stRay& ray)
 	//视区、投影变换
 	px=(((2.0f*x)/viewport.Width)-1.0f)/g_projection(0,0);
 	py=(((-2.0f*y)/viewport.Height)+1.0f)/g_projection(1,1);
-	ray.m_origin = D3DXVECTOR3(0,0,0);
-	ray.m_vector = D3DXVECTOR3(px,py,1);
+	ray.m_origin = DexVector3(0, 0, 0);
+	ray.m_vector = DexVector3(px, py, 1);
 
 	D3DXMATRIX oppo_view;
 	//矩阵求逆
 	D3DXMatrixInverse(&oppo_view, 0, &g_ViewMatrix);
 
-	D3DXVec3TransformCoord(&ray.m_origin, &ray.m_origin, &oppo_view);
-	D3DXVec3TransformNormal(&ray.m_vector, &ray.m_vector, &oppo_view);
-
-	D3DXVec3Normalize(&ray.m_vector, &ray.m_vector);
+	D3DXVECTOR3 origin, vector;
+	memcpy(&origin, &ray.m_origin, sizeof(D3DXVECTOR3));
+	memcpy(&vector, &ray.m_vector, sizeof(D3DXVECTOR3));
+	D3DXVec3TransformCoord(&origin, &origin, &oppo_view);
+	D3DXVec3TransformNormal(&vector, &vector, &oppo_view);
+	memcpy(&ray.m_origin, &origin, sizeof(D3DXVECTOR3));
+	memcpy(&ray.m_vector, &vector, sizeof(D3DXVECTOR3));
+	ray.m_vector.Normalize();
 }
 DexGUI::DexPoint  DexGameEngine::GetXY(const D3DXVECTOR3& world_point)
 {
 	DexGUI::DexPoint p;
 	stRay ray;
 	ray.m_origin = g_camera->GetPosition();
-	ray.m_vector = ray.m_origin - world_point;  
-	D3DXVec3Normalize(&ray.m_vector, &ray.m_vector);
+	ray.m_vector = ray.m_origin - DexVector3(world_point.x, world_point.y, world_point.z);  
+	ray.m_vector.Normalize();
 
 	D3DXMATRIX oppo_view;
 	//矩阵求逆
@@ -1047,9 +1027,13 @@ DexGUI::DexPoint  DexGameEngine::GetXY(const D3DXVECTOR3& world_point)
 
 	//D3DXVec3TransformCoord(&ray.m_origin, &ray.m_origin, &oppo_view);
 	//D3DXVec3TransformNormal(&ray.m_vector, &ray.m_vector, &oppo_view);
-
-	D3DXVec3TransformCoord(&ray.m_origin, &ray.m_origin, &g_ViewMatrix);
-	D3DXVec3TransformNormal(&ray.m_vector, &ray.m_vector, &g_ViewMatrix);
+	D3DXVECTOR3 origin, vector;
+	memcpy(&origin, &ray.m_origin, sizeof(D3DXVECTOR3));
+	memcpy(&vector, &ray.m_vector, sizeof(D3DXVECTOR3));
+	D3DXVec3TransformCoord(&origin, &origin, &g_ViewMatrix);
+	D3DXVec3TransformNormal(&vector, &vector, &g_ViewMatrix);
+	memcpy(&ray.m_origin, &origin, sizeof(D3DXVECTOR3));
+	memcpy(&ray.m_vector, &vector, sizeof(D3DXVECTOR3));
 	float px = ray.m_vector.x/ray.m_vector.z;
 	float py = ray.m_vector.y/ray.m_vector.z;
 	D3DVIEWPORT9 viewport;
@@ -1062,7 +1046,10 @@ DexGUI::DexPoint  DexGameEngine::GetXY(const D3DXVECTOR3& world_point)
 }
 void DexGameEngine::updateViewMatrix()
 {
-	D3DXMatrixLookAtLH(&g_ViewMatrix, &g_camera->GetPosition(), &g_camera->GetFocusPoint(), &g_camera->GetUpVector());
+	D3DXVECTOR3 pos(g_camera->GetPosition().x, g_camera->GetPosition().y, g_camera->GetPosition().z);
+	D3DXVECTOR3 focus(g_camera->GetFocusPoint().x, g_camera->GetFocusPoint().y, g_camera->GetFocusPoint().z);
+	D3DXVECTOR3 up(g_camera->GetUpVector().x, g_camera->GetUpVector().y, g_camera->GetUpVector().z);
+	D3DXMatrixLookAtLH(&g_ViewMatrix, &pos, &focus, &up);
 	g_D3DDevice->SetTransform(D3DTS_VIEW, &g_ViewMatrix);
 }
 

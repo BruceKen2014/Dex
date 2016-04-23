@@ -8,6 +8,7 @@
 
 #include "CPlane.h"
 #include "CBall.h"
+#include "../DexMath/DexVector3.h"
 
 #define FT_COUNT   6
 enum
@@ -29,10 +30,10 @@ public:
 	~CFrustum();
 
 public:
-	void   SetPlane(int index, D3DXVECTOR3 _normal, D3DXVECTOR3 _point); //设置面参数
+	void   SetPlane(int index, DexVector3 _normal, DexVector3 _point); //设置面参数
 	CPlane GetPlane(int index);
 
-	bool   CheckPointIn(D3DXVECTOR3 _point); //判断点是否在平截头体中
+	bool   CheckPointIn(DexVector3 _point); //判断点是否在平截头体中
 	bool   CheckPointIn(float x, float y ,float z);	   
 	bool   CheckBallIn(const stBall& ball);	 //判断球是否落在平截头体中
 };

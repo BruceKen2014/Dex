@@ -134,7 +134,7 @@ bool DexSceneObjectActionCatmull::Update(int delta)
 		
 		if(m_pSceneObject->getType() == CCamera::getClassType())
 		{//对摄像机进行特别处理
-			DexGameEngine::getEngine()->SetCameraPos(pos);
+			DexGameEngine::getEngine()->SetCameraPos(DexVector3(pos.x, pos.y, pos.z));
 		}
 		else
 		{

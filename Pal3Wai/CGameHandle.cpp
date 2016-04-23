@@ -70,7 +70,7 @@ extern size_t g_talkcontrol;
 extern int   g_clickId;
 extern size_t g_clickVIndex;
 
-extern D3DXVECTOR3    g_crossPoint; 
+extern DexVector3    g_crossPoint;
 
 extern PAL2_STATE	g_State2;	
 extern int  g_iXMouse, g_iYMouse;
@@ -347,7 +347,7 @@ void MouseLDownTown(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 			}
 		}
 	}
-	CPlane plane(D3DXVECTOR3(-1000, 0, -1000), D3DXVECTOR3(-1000, 0, 0), D3DXVECTOR3(1000, 0, 1000)); 
+	CPlane plane(DexVector3(-1000, 0, -1000), DexVector3(-1000, 0, 0), DexVector3(1000, 0, 1000));
 	stRay ray = g_pPick->GetRay(g_projection, g_ViewMatrix, xPos, yPos);
 	//测试鼠标点击时，地面是否能够接受到射线
 	if(plane.GetRelation(ray))
@@ -355,10 +355,11 @@ void MouseLDownTown(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 		g_crossPoint = plane.GetCrossPoint(ray);
 		//g_Jintian->SetPosition(g_crossPoint);
 	}
-	D3DXVECTOR3 set_vector = g_crossPoint - g_Jintian->GetBall().m_center;
+	DexVector3  set_vector;
+	memcpy(&set_vector, &(g_crossPoint - g_Jintian->GetBall().m_center), sizeof(D3DXVECTOR3));;
 	set_vector.y = 0;
 
-	g_Jintian->SetDirection(set_vector);
+	g_Jintian->SetDirection(D3DXVECTOR3(set_vector.x, set_vector.y, set_vector.z));
 	g_Jintian->SetVel(0.0f);
 	g_Jintian->SetAnimation(JINTTIAN_RUN);
 	g_Jintian->SetMoving(true);
@@ -372,10 +373,11 @@ void MouseLDownTown(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 	}
 
 	stBall player_ball = g_Jintian->GetBall();
-	D3DXVECTOR3 player_direction = g_Jintian->GetDirection();
+	DexVector3 player_direction;
+	memcpy(&player_direction, &g_Jintian->GetDirection(), sizeof(DexVector3));
 	stBall temp_ball;
 	bool collide = false;
-	D3DXVECTOR3 vec = g_camera.GetView();	   
+	DexVector3 vec = g_camera.GetView();	   
 	vec.y = 0;
 	for( std::vector<CModel*>::iterator it = g_modelVector.begin(); it != g_modelVector.end(); it++)
 	{
@@ -385,8 +387,8 @@ void MouseLDownTown(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 		if(player_ball.GetRelation(temp_ball) == 0)
 		{//相交,检测到碰撞 
 			collide = true;
-			D3DXVECTOR3 temp_vector = g_Jintian->GetBall().m_center - (*it)->GetBall().m_center;
-			if(D3DXVec3Dot(&player_direction, &temp_vector) > 0)
+			DexVector3 temp_vector = g_Jintian->GetBall().m_center - (*it)->GetBall().m_center;
+			if(player_direction.Dot(temp_vector) > 0)
 			{//背着物体前进
 				collide = false;
 			}
@@ -401,8 +403,9 @@ void MouseLDownTown(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 		if(player_ball.GetRelation(temp_ball) == 0)
 		{//相交,检测到碰撞 
 			collide = true;
-			D3DXVECTOR3 temp_vector = g_Jintian->GetBall().m_center - (*it)->GetBall().m_center;
-			if(D3DXVec3Dot(&player_direction, &temp_vector) > 0)
+			DexVector3 temp_vector;
+			memcpy(&temp_vector, &(g_Jintian->GetBall().m_center - (*it)->GetBall().m_center), sizeof(D3DXVECTOR3));
+			if (player_direction.Dot(temp_vector) > 0)
 			{//背着物体前进
 				collide = false;
 			}
@@ -419,8 +422,9 @@ void MouseLDownTown(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 			if(player_ball.GetRelation(temp_ball) == 0)
 			{//相交,检测到碰撞 
 				collide = true;
-				D3DXVECTOR3 temp_vector = g_Jintian->GetBall().m_center - (*it)->GetBall().m_center;
-				if(D3DXVec3Dot(&player_direction, &temp_vector) > 0)
+				DexVector3 temp_vector;
+				memcpy(&temp_vector, &(g_Jintian->GetBall().m_center - (*it)->GetBall().m_center), sizeof(D3DXVECTOR3));
+				if (player_direction.Dot(temp_vector) > 0)
 				{//背着物体前进
 					collide = false;
 				}
@@ -436,8 +440,10 @@ void MouseLDownTown(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 			if((*it)->GetRelation(g_Jintian->GetBall()) == 0)
 			{//相交,检测到碰撞 
 				collide = true;
-				D3DXVECTOR3 temp_vector = g_Jintian->GetBall().m_center - (*it)->m_center;
-				if(D3DXVec3Dot(&player_direction, &temp_vector) > 0)
+
+				DexVector3 temp_vector;
+				memcpy(&temp_vector, &(g_Jintian->GetBall().m_center - (*it)->m_center), sizeof(D3DXVECTOR3));
+				if (player_direction.Dot(temp_vector) > 0)
 				{//背着物体前进
 					collide = false;
 				}
@@ -450,15 +456,15 @@ void MouseLDownTown(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 	{
 		for( std::vector<CCollideBox*>::iterator it = g_collideBox.begin(); it != g_collideBox.end(); it++)
 		{
-			D3DXVECTOR3 inci;
+			DexVector3 inci;
 			if((*it)->CheckCollide(g_Jintian->GetBall(), inci))
 			{//检测到碰撞 
 				collide = true;
-				D3DXVECTOR3 bcenter = g_Jintian->GetBall().m_center;
-				D3DXVECTOR3 temp_vector = inci - bcenter;
+				DexVector3 bcenter = g_Jintian->GetBall().m_center;
+				DexVector3 temp_vector = inci - bcenter;
 				temp_vector.y = 0;
-				D3DXVec3Normalize(&temp_vector, &temp_vector);
-				if(D3DXVec3Dot(&player_direction, &temp_vector) < 0)
+				temp_vector.Normalize();
+				if (player_direction.Dot(temp_vector) > 0)
 				{//背着物体前进
 
 					collide = false;
@@ -488,7 +494,7 @@ void MouseLDownTown(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 	if(!collide)
 	{
 		g_camera.MoveCamera(set_vector,4.0f, true);
-		g_Jintian->Move(set_vector, 4.0f);
+		g_Jintian->Move(D3DXVECTOR3(set_vector.x, set_vector.y, set_vector.z), 4.0f);
 		//g_camera.MoveCamera(D3DXVECTOR3(0.0f, 1.0f, 0.0f),delta, true);
 	}
 
@@ -504,7 +510,7 @@ void MouseLDownOutdoors(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 		CSound::getSoundSingleton().Play("sound\\walk_grass2.wav");
 		de = 15;
 	}
-	CPlane plane(D3DXVECTOR3(-1000, g_Jintian->GetPosition().y, -1000), D3DXVECTOR3(-1000, g_Jintian->GetPosition().y, 0), D3DXVECTOR3(1000, g_Jintian->GetPosition().y, 1000)); 
+	CPlane plane(DexVector3(-1000, g_Jintian->GetPosition().y, -1000), DexVector3(-1000, g_Jintian->GetPosition().y, 0), DexVector3(1000, g_Jintian->GetPosition().y, 1000)); 
 	stRay ray = g_pPick->GetRay(g_projection, g_ViewMatrix, xPos, yPos);
 	//测试鼠标点击时，地面是否能够接受到射线
 	if(plane.GetRelation(ray))
@@ -513,22 +519,22 @@ void MouseLDownOutdoors(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 		//g_Jintian->SetPosition(g_crossPoint);
 	}
 
-	D3DXVECTOR3 set_vector = g_crossPoint - g_Jintian->GetBall().m_center;
+	DexVector3 set_vector = g_crossPoint - g_Jintian->GetBall().m_center;
 	set_vector.y = 0;
 
-	g_Jintian->SetDirection(set_vector);
+	g_Jintian->SetDirection(D3DXVECTOR3(set_vector.x, set_vector.y, set_vector.z));
 	g_Jintian->SetVel(0.0f);
 	g_Jintian->SetAnimation(JINTTIAN_RUN);
 	g_Jintian->SetMoving(true);
 
 	g_camera.MoveCamera(set_vector,4.0f, true);
-	g_Jintian->Move(set_vector, 4.0f);
+	g_Jintian->Move(D3DXVECTOR3(set_vector.x, set_vector.y, set_vector.z), 4.0f);
 
 
 	float playerY = g_terrain->GetHeight(g_Jintian->GetPosition().x, g_Jintian->GetPosition().z);
 	float delta = playerY - g_Jintian->GetPosition().y;  
 	g_Jintian->SetPositionY(playerY);
-	g_camera.MoveCamera(D3DXVECTOR3(0,1,0),delta, true);
+	g_camera.MoveCamera(DexVector3(0,1,0),delta, true);
 }
 void  MouseLDowhFight(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 {
@@ -866,8 +872,8 @@ void  MouseRUpFight(TSHORT xPos, TSHORT yPos, MouseFlag flag)
 #ifdef DEX_DEBGU
 	g_palState = PAL_OUTDOORS;
 
-	g_camera.SetPosition(g_cameraPos);
-	g_camera.SetFocus(g_playPos);
+	g_camera.SetPosition(DexVector3(g_cameraPos.x, g_cameraPos.y, g_cameraPos.y));
+	g_camera.SetFocus(DexVector3(g_playPos.x, g_playPos.y, g_playPos.y)); 
 	g_camera.EnableMove(false);
 
 	g_Jintian->SetPosition(g_playPos);
@@ -949,7 +955,7 @@ void KeyDownTown()
 		g_camera.RotateFocus(0.2f);
 	}
 	float vel = 4.0f;	
-	D3DXVECTOR3 vec = g_camera.GetView();
+	DexVector3 vec = g_camera.GetView();
 	vec.y = 0;
 	if(CInputSystem::GetInputSingleton().KeyDown(DIK_S))
 	{	

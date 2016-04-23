@@ -45,7 +45,7 @@ lua_State *L = NULL;
 
 PAL_STATE   g_palState; //Ö÷×´Ì¬
 PAL2_STATE	g_State2;	//¸±×´Ì¬
-D3DXVECTOR3    g_crossPoint = D3DXVECTOR3(0,0,0); 
+DexVector3    g_crossPoint = DexVector3(0, 0, 0);
 CEnemy  *  g_Jintian = NULL;
 CTerrain*     g_terrain = NULL;
 

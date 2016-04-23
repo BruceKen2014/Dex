@@ -624,7 +624,8 @@ void CDexParticalEmit::_InitParticalData(CDexPartical* partical)
 bool CDexParticalEmit::Update(int delta)
 {
 	DEX_ENSURE_B(CDexSceneObject::Update(delta));
-	D3DXVECTOR3 cam_pos = DexGameEngine::getEngine()->getCamera()->GetPosition();
+	D3DXVECTOR3 cam_pos;
+	memcpy(&cam_pos, &DexGameEngine::getEngine()->getCamera()->GetPosition(), sizeof(D3DXVECTOR3));
 	switch(m_EmitType)
 	{
 	case EET_NORMAL:
@@ -668,7 +669,8 @@ void CDexParticalEmit::Reset()
 bool CDexParticalEmit::Render()
 {
 	DEX_ENSURE_B(CDexSceneObject::Render());
-	D3DXVECTOR3 cam_pos = DexGameEngine::getEngine()->getCamera()->GetPosition();
+	D3DXVECTOR3 cam_pos;
+	memcpy(&cam_pos, &DexGameEngine::getEngine()->getCamera()->GetPosition(), sizeof(D3DXVECTOR3));
 	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_ZENABLE,TRUE);
 	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_ZWRITEENABLE,FALSE);	  //必须禁止深度缓冲的写入
 	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);

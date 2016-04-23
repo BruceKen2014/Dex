@@ -11,6 +11,7 @@
 
 
 #include "../DexBase/typedefine.h"
+#include "../DexMath/DexVector3.h"
 #include "CLine.h"
 #include "CRay.h"
 
@@ -32,35 +33,35 @@ protected:
 public:
 	CPlane();
 	CPlane(float a, float b, float c, float d);	      //一般初始化
-	CPlane(D3DXVECTOR3 _normal, float d);			  //一般初始化重载
-	CPlane(D3DXVECTOR3 _normal, D3DXVECTOR3 point);   //点法式初始化
-	CPlane(D3DXVECTOR3 point1, D3DXVECTOR3 point2, D3DXVECTOR3 point3);  //三点初始化
+	CPlane(DexVector3 _normal, float d);			  //一般初始化重载
+	CPlane(DexVector3 _normal, DexVector3 point);   //点法式初始化
+	CPlane(DexVector3 point1, DexVector3 point2, DexVector3 point3);  //三点初始化
 	~CPlane();
 
 public:
 	void  ShutDown();
 
-	D3DXVECTOR3 GetNormal() const;                    //取得平面法线
-	void        SetNormal(D3DXVECTOR3 normal);
+	DexVector3 GetNormal() const;                    //取得平面法线
+	void        SetNormal(DexVector3 normal);
 	void        Setm_d(float d);
-	void        SetPoint(D3DXVECTOR3 point);
+	void        SetPoint(DexVector3 point);
 
 	//处理与点的关系
 	int   GetRelation(float x, float y, float z);     //点在平面上、前面、后面
-	int   GetRelation(D3DXVECTOR3 point);			  
+	int   GetRelation(DexVector3 point);
 	float CalDistance(float x, float y, float z);	  //点到平面的距离
-	float CalDistance(D3DXVECTOR3 point);
-	D3DXVECTOR3 GetIncidence(D3DXVECTOR3 _point);  //取得投射点
+	float CalDistance(DexVector3 point);
+	DexVector3 GetIncidence(DexVector3 _point);  //取得投射点
 
 	//处理与直线的关系
 	int   GetRelation(CLine line);                    //平面与直线平行还是相交
 	float GetAngle(CLine line);						  //取得直线与平面的夹角
 	float CalDistance(CLine line);                    //如果平面直线平行，求直线到平面的距离
-	D3DXVECTOR3 GetCrossPoint(CLine line);            //如果平面直线相交，取得交点
+	DexVector3 GetCrossPoint(CLine line);            //如果平面直线相交，取得交点
 
 	//处理与射线的关系
 	int   GetRelation(stRay ray);                                
-	D3DXVECTOR3 GetCrossPoint(stRay ray);           
+	DexVector3 GetCrossPoint(stRay ray);
 
 	//处理与平面的关系
 	int   GetRelation(CPlane panel);

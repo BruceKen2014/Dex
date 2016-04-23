@@ -6,11 +6,11 @@
 CLine::CLine()
 {
 	//默认是向上的Y轴
-	m_vector = D3DXVECTOR3(0,1,0);
-	m_point  = D3DXVECTOR3(0,0,0);
+	m_vector = DexVector3(0, 1, 0);
+	m_point = DexVector3(0, 0, 0);
 }
 
-CLine::CLine(D3DXVECTOR3 _vector, D3DXVECTOR3 _point)
+CLine::CLine(DexVector3 _vector, DexVector3 _point)
 {
 	m_vector = _vector;
 	m_point  = _point;
@@ -19,7 +19,7 @@ CLine::CLine(D3DXVECTOR3 _vector, D3DXVECTOR3 _point)
 		m_point += m_vector*1;
 }
 
-CLine::CLine(D3DXVECTOR3 point1, D3DXVECTOR3 point2, int flag)
+CLine::CLine(DexVector3 point1, DexVector3 point2, int flag)
 {
 	m_vector = point1 - point2;
 	m_point = point1;
@@ -38,19 +38,19 @@ CLine::~CLine()
 {
 }
 
-const D3DXVECTOR3 CLine::GetVector() const
+const DexVector3 CLine::GetVector() const
 {
 	return m_vector;
 }
-const D3DXVECTOR3 CLine::GetPoint() const
+const DexVector3 CLine::GetPoint() const
 {
 	return m_point;
 }
-void CLine::SetVector(D3DXVECTOR3 _vector)
+void CLine::SetVector(DexVector3 _vector)
 {
 	m_vector = _vector;
 }
-void CLine::SetPoint(D3DXVECTOR3 _point)
+void CLine::SetPoint(DexVector3 _point)
 {
 	m_point = _point;
 }
@@ -154,25 +154,25 @@ float CLine::CalDistance(float x, float y, float z)
 	float temp_distance = sqrt((m_point.x - x)*(m_point.x - x) + (m_point.y - y)*(m_point.y - y)	+ (m_point.z - z)*(m_point.z - z));
 	
 	//两点连线向量
-	D3DXVECTOR3 two_point_vector(x - m_point.x, y - m_point.y, z - m_point.z); 
-	D3DXVec3Normalize(&two_point_vector, &two_point_vector);
-	D3DXVec3Normalize(&m_vector, &m_vector);
-	float vecotr_length = D3DXVec3Length(&m_vector);
-	float point_vector_length = D3DXVec3Length(&two_point_vector);
+	DexVector3 two_point_vector(x - m_point.x, y - m_point.y, z - m_point.z);
+	two_point_vector.Normalize();
+	m_vector.Normalize();
+	float vecotr_length = m_vector.Length();
+	float point_vector_length = two_point_vector.Length();
 	if(vecotr_length * point_vector_length == 0)
 		return 0;
-	float cos_value = D3DXVec3Dot(&m_vector, &two_point_vector)/(vecotr_length * point_vector_length); 
+	float cos_value = m_vector.Dot(two_point_vector)/ (vecotr_length * point_vector_length);
 	float sin_value = sqrt(1.000f - cos_value * cos_value);
 
 	return temp_distance * sin_value;
 }
 
-float CLine::CalDistance(D3DXVECTOR3 _point)
+float CLine::CalDistance(DexVector3 _point)
 {
 	return CalDistance(_point.x, _point.y, _point.z);
 }
 
-D3DXVECTOR3 CLine::GetIncidence(D3DXVECTOR3 _point)
+DexVector3 CLine::GetIncidence(DexVector3 _point)
 {
 	/*思路：设直线上一点 m_p+t*v，取得该点到待测点的向量， 乘以直线向量为0，解出t*/
 	float x0 = m_point.x;
@@ -181,7 +181,7 @@ D3DXVECTOR3 CLine::GetIncidence(D3DXVECTOR3 _point)
 	float x1 = _point.x;
 	float y1 = _point.y;
 	float z1 = _point.z;  
-	D3DXVec3Normalize(&m_vector, &m_vector);
+	m_vector.Normalize();
 	float a = m_vector.x;
 	float b = m_vector.y;
 	float c = m_vector.z;
@@ -201,12 +201,12 @@ int CLine::GetRelation(CLine line)
 	if(m_vector.x == 0 && m_vector.y == 0 && m_vector.z == 0)
 		return DEMO_ERROR;
 
-	D3DXVECTOR3 line_vector = line.GetVector();
+	DexVector3 line_vector = line.GetVector();
 	if(line_vector.x == 0 && line_vector.y == 0 && line_vector.z == 0)
 		return DEMO_ERROR;
 	float t = rand()%100;;               //对称式方程中的t，随机取一个数
 	float a_divide, b_divide, c_divide;	 //向量三个分量的比值
-	D3DXVECTOR3 line_point = line.GetPoint();
+	DexVector3 line_point = line.GetPoint();
 	
 
 	//两直线相交，求解，看是否有解
@@ -393,7 +393,7 @@ float CLine::CalDistance(CLine line)
 		return 0;
 	if(relation == PARALLEL)
 	{
-		D3DXVECTOR3 line_point = line.GetPoint();
+		DexVector3 line_point = line.GetPoint();
 		return CalDistance(line_point.x, line_point.y, line_point.z);
 	}
 	//异面

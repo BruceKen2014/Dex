@@ -21,6 +21,7 @@ class CDexTex;
 class DexModelBase;
 class IDexModelLoader;
 class IDexVertexDecl;
+class IDexRender;
 // typedef enum
 // {
 // 	DEXRS_ZENABLE					,   //是否开启Z buff
@@ -130,7 +131,7 @@ private:
 	IDexModelLoader* ms3dLoader;
 	IDexModelLoader* objLoader;
 
-
+	IDexRender*      m_pRender;
 	//light data
 	Vector<DexLight> g_vecLight;
 	DexColor		 g_ambientColor;
@@ -206,7 +207,7 @@ public:
 	LPDIRECT3DDEVICE9 GetDevice()             { return g_D3DDevice;}
 	void SetGlobalVariable(DexGlobal* global) { g_pGlobalVariable = global;}
 	DexGlobal* GetGlobalVariable()            { return g_pGlobalVariable;}
-	
+	IDexRender* GetRender()					  { return m_pRender; };
 	void Run();
 	void Update();
 	void Render();
@@ -241,11 +242,10 @@ public:
 	//render line cube sphere
 	void RenderCoorLines();
 	void SetMeshColor(const DexColor& color);
-	void RenderCube(const D3DXVECTOR3& pos, const D3DXVECTOR3& scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f));
-	void RenderCube(const DexVector3& pos, const D3DXVECTOR3& scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f));
+	void RenderCube(const DexVector3& pos, const DexVector3& scale = DexVector3(1.0f, 1.0f, 1.0f));
 	void RenderCube(const D3DXMATRIX& matrix);
 	void RenderCube(const DexMatrix4x4& matrix);
-	void RenderSphere(const D3DXVECTOR3& pos, float scale = 1.0f);
+	void RenderSphere(const DexVector3& pos, float scale = 1.0f);
 	void Render3DLine(const D3DXVECTOR3& p0, const D3DXVECTOR3& p1, const DexColor& color1 = 0xffffffff, const DexColor& color2 = 0xffffffff); 
 	void Render3DLine(const DexVector3& p0, const DexVector3& p1, const DexColor& color1 = 0xffffffff, const DexColor& color2 = 0xffffffff);
 	//从点p出发，朝vec方向绘制直线 color1:颜色 length:线段长度 color2末断点颜色
@@ -260,7 +260,7 @@ public:
 	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize);
 	DexModelBase* CreateModel(const char* filename);
 	
-	void LookAtLH(const D3DXVECTOR3 *pEye, const D3DXVECTOR3 *pAt, const D3DXVECTOR3 *pUp);
+	void LookAtLH(const DexVector3 *pEye, const DexVector3 *pAt, const DexVector3 *pUp);
 	
 	//輔助調試函數
 	void setRendeCollideMesh(bool b);
@@ -284,10 +284,10 @@ public:
 	//camera
 	CCamera* getCamera();
 	void SetProjectArgus(float fov, float aspect, float near_distance, float far_distance);
-	void MoveCamera(D3DXVECTOR3 vec, float amount, bool move_focus = false);
+	void MoveCamera(DexVector3 vec, float amount, bool move_focus = false);
 	void MoveCamera(CCamera::MOVE_DIRECTION direction, float amount, bool move_focus = false);
-	void SetCameraPos(const D3DXVECTOR3& pos);
-	void SetCameraLookAt(const D3DXVECTOR3& lookAt);
+	void SetCameraPos(const DexVector3& pos);
+	void SetCameraLookAt(const DexVector3& lookAt);
 	void RotateCameraByFocus(float value);
 
 	//ray

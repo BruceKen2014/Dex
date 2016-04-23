@@ -408,6 +408,21 @@
     <ClInclude Include="DexMath\DexVector4.h">
       <Filter>DexMath</Filter>
     </ClInclude>
+    <ClInclude Include="DexBase\IDexRender.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexRenderDirectx9.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\IDexShader.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\IDexShaderHlsl.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexShaderHlslSkinMesh.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
@@ -727,6 +742,18 @@
     </ClCompile>
     <ClCompile Include="DexBase\DexVertexDeclDx9.cpp">
       <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\IDexRender.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexRenderDirectX9.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\IDexShaderHlsl.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexShaderHlslSkinMesh.cpp">
+      <Filter>DexModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -314,7 +314,8 @@ void CModel::SetBallScale(float scale)
 
 D3DXVECTOR3 CModel::GetBallTop()
 {
-	D3DXVECTOR3 p = m_ball.m_center;
+	D3DXVECTOR3 p;
+	memcpy(&p, &m_ball.m_center, sizeof(D3DXVECTOR3));
 	p.y += m_ball.m_radius;
 	return p;
 }

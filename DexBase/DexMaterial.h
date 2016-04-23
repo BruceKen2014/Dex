@@ -39,14 +39,5 @@ public:
 		emissive = _emissive;
 		power = _power;
 	}
-	void GetDXMaterial(D3DMATERIAL9& material)	const
-	{
-		size_t size = sizeof(DexColor);
-		memcpy(&material.Diffuse, &diffuse, size);
-		memcpy(&material.Ambient, &ambient, size);
-		memcpy(&material.Emissive, &emissive, size);
-		memcpy(&material.Specular, &specular, size);
-		material.Power = power;
-	}
 };
 #endif

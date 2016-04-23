@@ -11,7 +11,7 @@ CFrustum::~CFrustum()
 }
 
 
-void CFrustum::SetPlane(int index, D3DXVECTOR3 _normal, D3DXVECTOR3 _point)
+void CFrustum::SetPlane(int index, DexVector3 _normal, DexVector3 _point)
 {
 	if(index < FT_FRONT || index > FT_RIGHT)
 		return;
@@ -26,7 +26,7 @@ CPlane CFrustum::GetPlane(int index)
 	return m_planes[index]; 
 }
 
-bool CFrustum::CheckPointIn(D3DXVECTOR3 _point)
+bool CFrustum::CheckPointIn(DexVector3 _point)
 {
 	for(short i = 0 ; i < FT_COUNT; i++)
 	{

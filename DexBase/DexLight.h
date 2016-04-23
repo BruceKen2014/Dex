@@ -7,10 +7,11 @@ DexEngine&Light
 #define _DEX_LIGHT_H
 
 #include <memory.h>
-#include <d3d9types.h>
+//#include <d3d9types.h>
 #include "DexType.h"
 #include "DexColor.h"
 #include "../DexMath/DexVector3.h"
+#include "../DexMath/DexVector4.h"
 class DexLight
 {
 public:
@@ -57,13 +58,6 @@ public:
 		position = pos;
 		range = _range;
 	}
-	void SetPointLight(const D3DXVECTOR3& pos, float32 _range)
-	{
-		position.x = pos.x;
-		position.y = pos.y;
-		position.z = pos.z;
-		range = _range;
-	}
 	void SetDirectionLight(const DexVector3& dir)
 	{
 		direction = dir;
@@ -78,44 +72,19 @@ public:
 		theta = _theta;
 		phi = _phi;
 	}
-	void   GetDXLight(D3DLIGHT9* dxLight) const
-	{
-		D3DLIGHTTYPE t = D3DLIGHT_FORCE_DWORD;
-		switch (type)
-		{
-		case DexLight_POINT:
-		{
-			t = D3DLIGHT_POINT;
-			break;
-		}
-		case DexLight_SPOT:
-		{
-			 t = D3DLIGHT_SPOT;
-			 break;
-		}
-		case DexLight_DIRECTIONAL:
-		{
-			t = D3DLIGHT_DIRECTIONAL;
-			break;
-		}
-		default:
-			break;
-		}
-		dxLight->Type = t;
-		memcpy(&dxLight->Ambient, &ambient, sizeof(DexColor));
-		memcpy(&dxLight->Specular, &specular, sizeof(DexColor));
-		memcpy(&dxLight->Diffuse, &diffuse, sizeof(DexColor));
-		memcpy(&dxLight->Position, &position, sizeof(DexVector3));
-		memcpy(&dxLight->Direction, &direction, sizeof(DexVector3));
-		dxLight->Range = range;
-		dxLight->Falloff = falloff;
-		dxLight->Attenuation0 = attenuation0;
-		dxLight->Attenuation1 = attenuation1;
-		dxLight->Attenuation2 = attenuation2;
-		dxLight->Theta = theta;
-		dxLight->Phi = phi;
-	}
 };
-
+struct stDexPointLight
+{
+	DexVector4  color;
+	DexVector4  position;
+	DexVector4  rangeAtte;
+	stDexPointLight(DexVector4 _color, DexVector4 _pos, DexVector4 _range) :color(_color),
+		position(_pos), rangeAtte(_range)
+	{}
+};
+struct stDexDirectionLight
+{
+	DexVector4  color;
+};
 
 #endif

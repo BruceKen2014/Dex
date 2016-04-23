@@ -1,13 +1,14 @@
 
 
 #include "DexBase/DexLog.h"
+#include "DexBase/DexRenderDirectx9.h"
 #include "DexBase/DexVertexDeclDx9.h"
 #include "DexMath/DexVector4.h"
 #include "../Source/CTexture.h"
 #include "../state/DexGameEngine.h"
 #include "../DexMath/DexMath2.h"
 #include "DexSkinMesh.h"
-
+const int JointNumber = 40;
 DexSkinMesh::Joint::Joint() :m_bAnimate(true)
 {
 	id = 0;
@@ -105,6 +106,7 @@ DexSkinMesh::DexMesh::DexMesh()
 	memset(name, 0, sizeof(name));
 	m_iTextureId = -1;
 	m_iMaterialId = -1;
+	
 }
 DexSkinMesh::DexMesh::~DexMesh()
 {
@@ -328,7 +330,7 @@ m_eMeshType(SkinMeshModelType_UnKnown)
 
 	m_vecJoints.push_back(m_pRootJoint);
 	SetRenderFlag(SKINMESH_RENDER_MESH);
-
+	jointsMatrix = new D3DXMATRIX[JointNumber];
 	InitShader();
 }
 DexSkinMesh::DexSkinMesh(int16 maxAniTime) :m_iRenderFlag(0), m_eAniType(SkinMeshAnimateType_Loop), m_fAnimateRatio(1.0f),
@@ -348,12 +350,15 @@ m_eMeshType(SkinMeshModelType_UnKnown)
 	m_pRootJoint->frame_matrix.Identity();
 	m_vecJoints.push_back(m_pRootJoint);
 	SetRenderFlag(SKINMESH_RENDER_MESH);
-
+	jointsMatrix = new D3DXMATRIX[JointNumber];
 	InitShader();
 }
 void DexSkinMesh::InitShader()
 {
-
+	D3DXMatrixIdentity(&matWVP);
+	memset(jointsMatrix, 0, sizeof(D3DXMATRIX)* JointNumber);
+	shader = new DexShaderHlslSkinMesh;
+	shader->SetTarget(this);
 	//test fx effect
 	LPD3DXBUFFER	pbuff = NULL;
 	HRESULT hr = D3DXCreateEffectFromFile(DexGameEngine::getEngine()->GetDevice(), "shader\\effect.fx", NULL, NULL, D3DXSHADER_DEBUG, NULL,
@@ -404,6 +409,7 @@ DexSkinMesh::~DexSkinMesh()
 	_SafeClearVector(m_vecJoints);
 	_SafeClearVector(m_vecMeshs);
 	_SafeDelete(m_pDecl);
+	_SafeDeleteArr(jointsMatrix);
 	m_vecMaterials.clear();
 	for (size_t i = 0; i < m_vecTextures.size(); ++i)
 	{
@@ -551,17 +557,15 @@ bool DexSkinMesh::Update(int32 delta)
 	memcpy(&matWorld, &worldMatrix, sizeof(DexMatrix4x4));
 	DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_VIEW, &matView);
 	DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_PROJECTION, &matProj);
-	D3DXMATRIX	matWVP = matWorld * matView * matProj;
+	matWVP = matWorld * matView * matProj;
 	pFxEffect->SetMatrix(WVPMatrixHandle, &matWVP);
-	int number = 40;
-	D3DXMATRIX* jointMatrix = new D3DXMATRIX[number];
-	memset(jointMatrix, 0, sizeof(D3DXMATRIX)* number);
+	
+	memset(jointsMatrix, 0, sizeof(D3DXMATRIX)* JointNumber);
 	for (size_t i = 0; i < m_vecJoints.size(); ++i)
 	{
-		jointMatrix[i] = *(D3DXMATRIX*)&(m_vecJoints[i]->localMeshMatrixInvert) * (*(D3DXMATRIX*)&(m_vecJoints[i]->world_matrix));
+		jointsMatrix[i] = *(D3DXMATRIX*)&(m_vecJoints[i]->localMeshMatrixInvert) * (*(D3DXMATRIX*)&(m_vecJoints[i]->world_matrix));
 	}
-	pFxEffect->SetMatrixArray(JointMatrixHandle, jointMatrix, number);
-	delete[]jointMatrix;
+	pFxEffect->SetMatrixArray(JointMatrixHandle, jointsMatrix, JointNumber);
 	return true;
 }
 bool DexSkinMesh::Render()
@@ -1190,6 +1194,9 @@ bool DexSkinMesh::IsStaticModel()
 
 void DexSkinMesh::RenderMesh()
 {
+	DexGameEngine::getEngine()->GetRender()->SetShader(shader);
+	DexGameEngine::getEngine()->GetRender()->RenderShader();
+	return;
 	//得找一下如何在shader中开启alphablend
 	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
@@ -1215,12 +1222,13 @@ void DexSkinMesh::RenderMesh()
 	};
 	tempPointLight tLight;
 	tLight.color = DexVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	D3DXVECTOR3 vec = DexGameEngine::getEngine()->getCamera()->GetPosition();
+	DexVector3 vec = DexGameEngine::getEngine()->getCamera()->GetPosition();
 	tLight.position = DexVector4(vec.x, vec.y, vec.z, 1.0f);
-
+	tLight.rangeAtte = DexVector4(500.0f, 0.0f, 0.0f, 0.0f);
 	tempPointLight tLight2;
 	tLight2.color = DexVector4(0.0f, 1.0f, 0.0f, 1.0f);
 	tLight2.position = DexVector4(0.0f, 0.0f, -100.0f, 1.0f);
+	tLight2.rangeAtte = DexVector4(1000.0f, 0.0f, 0.0f, 0.0f);
 	tempPointLight arrLight[2] = { tLight, tLight2 };
 
 	DexVector4 ambientColor(0.2f, 0.2f, 0.2f, 1.0f);

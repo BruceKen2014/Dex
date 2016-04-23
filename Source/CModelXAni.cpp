@@ -695,8 +695,9 @@ HRESULT CModelXAni::LoadXFile(const char* filename)
 
 	//建立各级框架的组合变换矩阵
 	SetupBoneMatrixPointers(m_pFrameRoot); 
-
-	D3DXFrameCalculateBoundingSphere(m_pFrameRoot, &m_iniBall.m_center,
+	D3DXVECTOR3 center;
+	memcpy(&center, &m_iniBall.m_center, sizeof(D3DXVECTOR3));
+	D3DXFrameCalculateBoundingSphere(m_pFrameRoot, &center,
 		&m_iniBall.m_radius);
 	m_ball = m_iniBall;
 	m_referBall = m_iniBall;

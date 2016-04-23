@@ -48,8 +48,10 @@ CModelX::CModelX(LPDIRECT3DDEVICE9 device, char* filename):CModel()
 	}
 	unsigned char * data;
 	m_model->LockVertexBuffer( D3DLOCK_READONLY, (LPVOID*)&data );
+	D3DXVECTOR3 center;
+	memcpy(&center, &m_iniBall.m_center, sizeof(D3DXVECTOR3));
 	D3DXComputeBoundingSphere((D3DXVECTOR3 *)data,m_model->GetNumVertices(), D3DXGetFVFVertexSize(m_model->GetFVF()), 
-		&m_iniBall.m_center, &m_iniBall.m_radius);
+		&center, &m_iniBall.m_radius);
 	m_model->UnlockVertexBuffer();
 	m_referBall = m_iniBall;
 	m_referBall.m_radius =	m_iniBall.m_radius * BALL_SCALE; //稍微缩放，提高精度

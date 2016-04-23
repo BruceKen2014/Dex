@@ -8,7 +8,7 @@ CBox::CBox()
 {
 }
 
-bool CBox::Initialize(const D3DXVECTOR3& pos, const D3DXVECTOR3& _size)
+bool CBox::Initialize(const DexVector3& pos, const DexVector3& _size)
 {
 	m_posX = pos.x;	 
 	m_posY = pos.y;
@@ -26,18 +26,18 @@ bool CBox::Initialize(const D3DXVECTOR3& pos, const D3DXVECTOR3& _size)
 	m_centerY = m_posY + m_height/2;
 	m_centerZ = m_posZ + m_depth/2;
 
-	m_point0 = D3DXVECTOR3(m_posX, m_posY, m_posZ);
-	m_point1 = D3DXVECTOR3(m_maxX, m_posY, m_posZ);
-	m_point2 = D3DXVECTOR3(m_maxX, m_posY, m_maxZ);
-	m_point3 = D3DXVECTOR3(m_posX, m_posY, m_maxZ);
-	m_point4 = D3DXVECTOR3(m_posX, m_maxY, m_posZ);
-	m_point5 = D3DXVECTOR3(m_maxX, m_maxY, m_posZ);
-	m_point6 = D3DXVECTOR3(m_maxX, m_maxY, m_maxZ);
-	m_point7 = D3DXVECTOR3(m_posX, m_maxY, m_maxZ);
+	m_point0 = DexVector3(m_posX, m_posY, m_posZ);
+	m_point1 = DexVector3(m_maxX, m_posY, m_posZ);
+	m_point2 = DexVector3(m_maxX, m_posY, m_maxZ);
+	m_point3 = DexVector3(m_posX, m_posY, m_maxZ);
+	m_point4 = DexVector3(m_posX, m_maxY, m_posZ);
+	m_point5 = DexVector3(m_maxX, m_maxY, m_posZ);
+	m_point6 = DexVector3(m_maxX, m_maxY, m_maxZ);
+	m_point7 = DexVector3(m_posX, m_maxY, m_maxZ);
 	return true;
 }
 
-bool CBox::Initialize(const D3DXVECTOR3& center, const D3DXVECTOR3& _size, bool flagcenter)
+bool CBox::Initialize(const DexVector3& center, const DexVector3& _size, bool flagcenter)
 {
 	m_posX = center.x - _size.x;	 
 	m_posY = center.y - _size.y;	 
@@ -55,21 +55,21 @@ bool CBox::Initialize(const D3DXVECTOR3& center, const D3DXVECTOR3& _size, bool 
 	m_centerY = center.y;
 	m_centerZ = center.z;
 
-	m_point0 = D3DXVECTOR3(m_posX, m_posY, m_posZ);
-	m_point1 = D3DXVECTOR3(m_maxX, m_posY, m_posZ);
-	m_point2 = D3DXVECTOR3(m_maxX, m_posY, m_maxZ);
-	m_point3 = D3DXVECTOR3(m_posX, m_posY, m_maxZ);
-	m_point4 = D3DXVECTOR3(m_posX, m_maxY, m_posZ);
-	m_point5 = D3DXVECTOR3(m_maxX, m_maxY, m_posZ);
-	m_point6 = D3DXVECTOR3(m_maxX, m_maxY, m_maxZ);
-	m_point7 = D3DXVECTOR3(m_posX, m_maxY, m_maxZ);
+	m_point0 = DexVector3(m_posX, m_posY, m_posZ);
+	m_point1 = DexVector3(m_maxX, m_posY, m_posZ);
+	m_point2 = DexVector3(m_maxX, m_posY, m_maxZ);
+	m_point3 = DexVector3(m_posX, m_posY, m_maxZ);
+	m_point4 = DexVector3(m_posX, m_maxY, m_posZ);
+	m_point5 = DexVector3(m_maxX, m_maxY, m_posZ);
+	m_point6 = DexVector3(m_maxX, m_maxY, m_maxZ);
+	m_point7 = DexVector3(m_posX, m_maxY, m_maxZ);
 	return true;
 }
 CBox::~CBox()
 {
 }
 
-bool CBox::IsPointIn(D3DXVECTOR3 _point) const
+bool CBox::IsPointIn(DexVector3 _point) const
 {
 	if( _point.x >= m_posX && _point.x <= m_maxX &&
 		_point.y >= m_posY && _point.y <= m_maxY &&
@@ -77,12 +77,12 @@ bool CBox::IsPointIn(D3DXVECTOR3 _point) const
 		return true;
 	return false;
 }
-D3DXVECTOR3 CBox::GetCenter()
+DexVector3 CBox::GetCenter()
 {
-	return D3DXVECTOR3(m_centerX, m_centerY, m_centerZ);
+	return DexVector3(m_centerX, m_centerY, m_centerZ);
 }
 
-void CBox::setPosition(const D3DXVECTOR3& pos)
+void CBox::setPosition(const DexVector3& pos)
 {
 	m_posX = pos.x;	 
 	m_posY = pos.y;
@@ -96,19 +96,19 @@ void CBox::setPosition(const D3DXVECTOR3& pos)
 	m_centerY = m_posY + m_height/2;
 	m_centerZ = m_posZ + m_depth/2;
 
-	m_point0 = D3DXVECTOR3(m_posX, m_posY, m_posZ);
-	m_point1 = D3DXVECTOR3(m_maxX, m_posY, m_posZ);
-	m_point2 = D3DXVECTOR3(m_maxX, m_posY, m_maxZ);
-	m_point3 = D3DXVECTOR3(m_posX, m_posY, m_maxZ);
-	m_point4 = D3DXVECTOR3(m_posX, m_maxY, m_posZ);
-	m_point5 = D3DXVECTOR3(m_maxX, m_maxY, m_posZ);
-	m_point6 = D3DXVECTOR3(m_maxX, m_maxY, m_maxZ);
-	m_point7 = D3DXVECTOR3(m_posX, m_maxY, m_maxZ);
+	m_point0 = DexVector3(m_posX, m_posY, m_posZ);
+	m_point1 = DexVector3(m_maxX, m_posY, m_posZ);
+	m_point2 = DexVector3(m_maxX, m_posY, m_maxZ);
+	m_point3 = DexVector3(m_posX, m_posY, m_maxZ);
+	m_point4 = DexVector3(m_posX, m_maxY, m_posZ);
+	m_point5 = DexVector3(m_maxX, m_maxY, m_posZ);
+	m_point6 = DexVector3(m_maxX, m_maxY, m_maxZ);
+	m_point7 = DexVector3(m_posX, m_maxY, m_maxZ);
 }
 
-void CBox::setCenter(const D3DXVECTOR3& pos)
+void CBox::setCenter(const DexVector3& pos)
 {
-	D3DXVECTOR3 new_pos;
+	DexVector3 new_pos;
 	new_pos.x = pos.x - m_width/2;
 	new_pos.y = pos.y - m_height/2;
 	new_pos.z = pos.z - m_depth/2;
@@ -116,12 +116,12 @@ void CBox::setCenter(const D3DXVECTOR3& pos)
 }
 
 
-D3DXVECTOR3 CBox::getSize()
+DexVector3 CBox::getSize()
 {
-	return D3DXVECTOR3(m_width, m_height, m_depth);
+	return DexVector3(m_width, m_height, m_depth);
 }
 
-D3DXVECTOR3 CBox::getPoint(int index) const
+DexVector3 CBox::getPoint(int index) const
 {
 	switch(index)
 	{
@@ -144,7 +144,7 @@ D3DXVECTOR3 CBox::getPoint(int index) const
 	default:
 		break;
 	}
-	return D3DXVECTOR3(0,0,0);
+	return DexVector3(0, 0, 0);
 }
 
 bool CBox::CheckCollide(const CBox* box) const
@@ -162,9 +162,9 @@ bool CBox::CheckCollide(const CBox* box) const
 }
 
 
-bool CBox::CheckCollide(stBall &ball, D3DXVECTOR3& inci_point) const
+bool CBox::CheckCollide(stBall &ball, DexVector3& inci_point) const
 {
-	D3DXVECTOR3 ball_center = ball.m_center;
+	DexVector3 ball_center = ball.m_center;
 	float ball_radius = ball.m_radius;
 	//根据圆球的中心位置将立方体所在空间分为26个区间
 	//正上方、正下方、正前方、正后方、正左方、正右方 6
@@ -185,7 +185,7 @@ bool CBox::CheckCollide(stBall &ball, D3DXVECTOR3& inci_point) const
 						if(ball_center.z >= m_maxZ)
 						{// x>x1 y>y1 z>z1
 						 //右前上方,若碰撞必然和 顶点6 碰撞
-							if(D3DXVec3Length(&(m_point6 - ball_center)) <= ball_radius)
+							if((m_point6 - ball_center).Length() <= ball_radius)
 							{
 								inci_point = m_point6;
 								return true;
@@ -286,7 +286,7 @@ bool CBox::CheckCollide(stBall &ball, D3DXVECTOR3& inci_point) const
 					if(ball_center.y >= m_maxY)
 					{//x>x0 y>y0 z<z0   x>x1 y>y1
 						//右后上方,若碰撞必然和顶点5碰撞
-						if(D3DXVec3Length(&(m_point5 - ball_center)) <= ball_radius)
+						if((m_point5 - ball_center).Length() <= ball_radius)
 						{
 							inci_point = m_point5;
 							return true;
@@ -341,7 +341,7 @@ bool CBox::CheckCollide(stBall &ball, D3DXVECTOR3& inci_point) const
 					if(ball_center.z >= m_maxZ)
 					{//x>x0 y<y0 z>z0 x>x1 z>z1
 						//右前下方，和 顶点2 碰撞 
-						if(D3DXVec3Length(&(m_point2 - ball_center)) <= ball_radius)
+						if((m_point2 - ball_center).Length() <= ball_radius)
 						{
 							inci_point = m_point2;
 							return true;
@@ -391,7 +391,7 @@ bool CBox::CheckCollide(stBall &ball, D3DXVECTOR3& inci_point) const
 				if(ball_center.x >= m_maxX)
 				{//x>x0 y<y0 z<z0     x>x1
 					//右后下方 和顶点1碰撞
-					if(D3DXVec3Length(&(m_point1 - ball_center)) <= ball_radius)
+					if((m_point1 - ball_center).Length() <= ball_radius)
 					{
 						inci_point = m_point1;
 						return true;
@@ -423,7 +423,7 @@ bool CBox::CheckCollide(stBall &ball, D3DXVECTOR3& inci_point) const
 					if(ball_center.z >= m_maxZ)
 					{//x<x0 y>y0 z>z0    y>y1 z>z1
 						//左前上方,若碰撞必然和 顶点7 碰撞
-						if(D3DXVec3Length(&(m_point7 - ball_center)) <= ball_radius)
+						if((m_point7 - ball_center).Length() <= ball_radius)
 						{
 							inci_point = m_point7;
 							return true;
@@ -473,7 +473,7 @@ bool CBox::CheckCollide(stBall &ball, D3DXVECTOR3& inci_point) const
 				if(ball_center.y >= m_maxY)
 				{//x<x0 y>y0 z<z0   y>y1
 					//左后上方,顶点4
-					if(D3DXVec3Length(&(m_point4 - ball_center)) <= ball_radius)
+					if((m_point4 - ball_center).Length() <= ball_radius)
 					{
 						inci_point = m_point4;
 						return true;
@@ -500,7 +500,7 @@ bool CBox::CheckCollide(stBall &ball, D3DXVECTOR3& inci_point) const
 				if(ball_center.z >= m_maxZ)
 				{//x<x0 y<y0 z>z0  z>z1
 					//左前下方，和 顶点3 碰撞
-					if(D3DXVec3Length(&(m_point3 - ball_center)) <= ball_radius)
+					if((m_point3 - ball_center).Length() <= ball_radius)
 					{
 						inci_point = m_point3;
 						return true;
@@ -522,7 +522,7 @@ bool CBox::CheckCollide(stBall &ball, D3DXVECTOR3& inci_point) const
 			else
 			{//z<z0 故没必要在比较maxZ了
 				//左后下方 顶点0
-				if(D3DXVec3Length(&(m_point0 - ball_center)) <= ball_radius)
+				if((m_point0 - ball_center).Length() <= ball_radius)
 				{
 					inci_point = m_point0;
 					return true;

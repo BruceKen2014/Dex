@@ -5,7 +5,7 @@
 
 CCollideBox::CCollideBox(LPDIRECT3DDEVICE9 device, D3DXVECTOR3 pos, D3DXVECTOR3 _size, bool render)
 {
-	Initialize(pos, _size);
+	Initialize(DexVector3(pos.x, pos.y, pos.z), DexVector3(_size.x, _size.y, _size.z));
 	m_device = device;
 	m_render = render;
 #ifdef DEX_DEBGU

@@ -5,7 +5,7 @@
 CCollideSphere::CCollideSphere(LPDIRECT3DDEVICE9 device, D3DXVECTOR3 center, float radius, bool render)
 {
 	m_device = device;
-	m_center = center;
+	memcpy(&m_center, &center, sizeof(D3DXVECTOR3));
 	m_radius = radius;
 	m_render = render;
 #ifdef DEX_DEBGU

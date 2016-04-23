@@ -218,9 +218,9 @@ bool PalGameStateBattleMain::getVisible(string type)
 bool PalGameStateBattleMain::ApplyRes() 
 {
 	
-	D3DXVECTOR3 cameraPos(-200, 100.0f,-5.0f);
-	D3DXVECTOR3 lookAtPos(0, 0, 0);	
-	D3DXVECTOR3 upDir(0.0f, 1.0f, 0.0f);	
+	DexVector3 cameraPos(-200, 100.0f,-5.0f);
+	DexVector3 lookAtPos(0, 0, 0);
+	DexVector3 upDir(0.0f, 1.0f, 0.0f);
 	// Build view matrix.
 	m_pScene = new CDexScene;
 	DexGameEngine::getEngine()->LookAtLH(&cameraPos, &lookAtPos, &upDir);
@@ -558,7 +558,8 @@ void PalGameStateBattleMain::Render()
 	m_pNumberManager->Render();
 	get2DDrawer()->SetTextSize(15);
 	get2DDrawer()->DrawString(0,0,"fps:%d", DexGameEngine::getEngine()->getFps());
-	D3DXVECTOR3 pos = DexGameEngine::getEngine()->getCamera()->GetPosition();
+	D3DXVECTOR3 pos;
+	memcpy(&pos, &DexGameEngine::getEngine()->getCamera()->GetPosition(), sizeof(D3DXVECTOR3));
 	get2DDrawer()->DrawString(0,15,"camera:X:%d Y:%d Z:%d", (int)pos.x, (int)pos.y, (int)pos.z);
 	pos = g_pJingtian->getPosition();
 	get2DDrawer()->DrawString(0,30,"jingtian:X:%d Y:%d Z:%d", (int)pos.x, (int)pos.y, (int)pos.z);
@@ -627,17 +628,18 @@ void PalGameStateBattleMain::MouseLDown(int xPos, int yPos)
 {
 	m_pBattleMainMachine->MouseLDown(xPos, yPos);
 	return;
-	CPlane plane(D3DXVECTOR3(0,0,0), D3DXVECTOR3(50,0,0), D3DXVECTOR3(0,0,50));
+	CPlane plane(DexVector3(0, 0, 0), DexVector3(50, 0, 0), DexVector3(0, 0, 50));
 	stRay ray;
 	DexGameEngine::getEngine()->GetRay(xPos, yPos, ray);
-	D3DXVECTOR3 crossPoint = plane.GetCrossPoint(ray);
+	D3DXVECTOR3 crossPoint;
+	memcpy(&crossPoint, &plane.GetCrossPoint(ray), sizeof(D3DXVECTOR3)); 
 	g_pJingtian->getAniModel()->SetAnimation(4);
 	D3DXVECTOR3 collide_center; 
 	panda->getCollideObject()->getCenter(collide_center);
 	D3DXVECTOR3 set_vector = crossPoint - collide_center;
 	set_vector.y = 0;
 	panda->setDirection(set_vector);
-	DexGameEngine::getEngine()->MoveCamera(set_vector,4.0f, true);
+	DexGameEngine::getEngine()->MoveCamera(DexVector3(set_vector.x, set_vector.y, set_vector.z),4.0f, true);
 	panda->Move(set_vector, 4.0f);
 }
 void PalGameStateBattleMain::MouseLUp(int xPos, int yPos)

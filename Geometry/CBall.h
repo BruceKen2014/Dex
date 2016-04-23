@@ -14,20 +14,20 @@
 
 typedef struct _stBall
 {
-	D3DXVECTOR3  m_center;
+	DexVector3  m_center;
 	float        m_radius;
 
 	_stBall()
 	{
-		m_center = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		m_center = DexVector3(0.0f, 0.0f, 0.0f);
 		m_radius = 1.0f;
 	}
 
 	//取得和点的关系
 	//0： 点在球上  1：点在球内  2：点在球外
-	int GetRelation(D3DXVECTOR3 point)
+	int GetRelation(DexVector3 point)
 	{
-		float length = D3DXVec3Length(&(m_center - point));
+		float length = (m_center - point).Length();
 		if(_equal(length, m_radius))
 			return 0;
 		if(length < m_radius)
@@ -50,10 +50,10 @@ typedef struct _stBall
 		if(length <= m_radius)
 		{
 			//如果射线所在的直线穿过球体，那么接下来判断射线方向
-			D3DXVECTOR3 temp_vector = m_center - line.GetPoint();
-			D3DXVECTOR3 ray_vector = ray.getVector();
-			D3DXVec3Normalize(&ray_vector,&ray_vector);
-			float cross = D3DXVec3Dot(&temp_vector, &ray_vector);
+			DexVector3 temp_vector = m_center - line.GetPoint();
+			DexVector3 ray_vector = ray.getVector();
+			ray_vector.Normalize();
+			float cross = temp_vector.Dot(ray_vector); 
 			if(cross < 0.0f)
 				//两向量方向相反
 				return 1;
@@ -65,7 +65,7 @@ typedef struct _stBall
 	//返回值 0：相交 1:不相交
 	int GetRelation(const _stBall& _other)
 	{
-		float length = D3DXVec3Length(&(m_center - _other.m_center));
+		float length = (m_center - _other.m_center).Length();
 		if(length <= (m_radius + _other.m_radius))
 			return 0;
 		return 1;
