@@ -23,11 +23,11 @@ protected:
 				那么最后就是黑色的。
 	默认为true,受光照影响
 	*/
-	bool	    m_bLightFlag; //is it influenced by engine light
+	uint8	    m_iLightFlag; //is it influenced by engine light
 
 
 public:
-	void SetLightFlag(bool enable);
+	void SetLightFlag(uint8 flag);
 public:
 	virtual bool Update(int delta);
 	virtual bool Render();

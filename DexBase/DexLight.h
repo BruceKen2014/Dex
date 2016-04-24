@@ -12,6 +12,14 @@ DexEngine&Light
 #include "DexColor.h"
 #include "../DexMath/DexVector3.h"
 #include "../DexMath/DexVector4.h"
+
+#define DEXRENDER_LIGHT_ENABLE	  (1 << 0)
+#define DEXRENDER_LIGHT_AMBIENT   (1 << 1)
+#define DEXRENDER_LIGHT_POINT	  (1 << 2)
+#define DEXRENDER_LIGHT_DIRECTION (1 << 3)
+#define DEXRENDER_LIGHT_ALL_ON    (DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | \
+	DEXRENDER_LIGHT_POINT | DEXRENDER_LIGHT_DIRECTION)
+#define DEXRENDER_LIGHT_MAX_COUNT 8
 class DexLight
 {
 public:
@@ -78,13 +86,19 @@ struct stDexPointLight
 	DexVector4  color;
 	DexVector4  position;
 	DexVector4  rangeAtte;
-	stDexPointLight(DexVector4 _color, DexVector4 _pos, DexVector4 _range) :color(_color),
+	stDexPointLight()
+	{}
+	stDexPointLight(const DexVector4& _color, const DexVector4& _pos, const DexVector4& _range) :color(_color),
 		position(_pos), rangeAtte(_range)
 	{}
 };
 struct stDexDirectionLight
 {
 	DexVector4  color;
+	DexVector4  direction;
+	stDexDirectionLight(){}
+	stDexDirectionLight(const DexVector4& _color, const DexVector4& _direction) :color(_color), direction(_direction)
+	{}
 };
 
 #endif

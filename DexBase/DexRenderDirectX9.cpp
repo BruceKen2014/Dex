@@ -1,6 +1,9 @@
 
 #include "../state/DexGameEngine.h"
 #include "DexRenderDirectx9.h"
+#include "../DexModel/DexShaderHlslSkinMesh.h"
+#include "../DexModel/DexShaderHlslSkinMeshVertexToJoint.h"
+#include "../DexModel/DexShaderHlslSkinMeshVertexNormal.h"
 
 
 DexRenderDirectX9::DexRenderDirectX9()
@@ -11,6 +14,18 @@ DexRenderDirectX9::~DexRenderDirectX9()
 {
 }
 
+bool DexRenderDirectX9::InitShader()
+{
+	IDexShader* shader = nullptr;
+	shader = new DexShaderHlslSkinMesh;
+	m_mapShaders[DexShaderHlslSkinMesh::getClassType()] = shader;
+	shader = new DexShaderHlslSkinMeshVertexToJoint;
+	m_mapShaders[DexShaderHlslSkinMeshVertexToJoint::getClassType()] = shader;
+	shader = new DexShaderHlslSkinMeshVertexNormal;
+	m_mapShaders[DexShaderHlslSkinMeshVertexNormal::getClassType()] = shader;
+	return true;
+
+}
 void DexRenderDirectX9::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize)
 {
 	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;

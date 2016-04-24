@@ -396,9 +396,6 @@
     <ClInclude Include="DexMath\DexMath2.h">
       <Filter>DexMath</Filter>
     </ClInclude>
-    <ClInclude Include="DexBase\DexSTLVector.h">
-      <Filter>DexBase</Filter>
-    </ClInclude>
     <ClInclude Include="DexBase\IDexVertexDecl.h">
       <Filter>DexBase</Filter>
     </ClInclude>
@@ -422,6 +419,21 @@
     </ClInclude>
     <ClInclude Include="DexModel\DexShaderHlslSkinMesh.h">
       <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexNormal.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexDVector.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexDMap.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexString.h">
+      <Filter>DexBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -754,6 +766,15 @@
     </ClCompile>
     <ClCompile Include="DexModel\DexShaderHlslSkinMesh.cpp">
       <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.cpp">
+      <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexNormal.cpp">
+      <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\IDexShader.cpp">
+      <Filter>DexBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -58,9 +58,6 @@ DexGameEngine::DexGameEngine()
 	g_material.Specular = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 	g_material.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 	g_material.Power = 0;
-	ms3dLoader = new DexModelMs3dLoader;
-	objLoader = new DexModelObjLoader;
-	m_pRender = new DexRenderDirectX9();
 	m_RenderMode = DexRenderMode_TRIANGLE;
 }
 DexGameEngine::~DexGameEngine()
@@ -217,6 +214,10 @@ bool DexGameEngine::Initialize()
 	CInputSystem::GetInputSingleton();
 	CDexObjectFactroy::getObjectFactory();
 	CDexScene::RegisterLuaFunction(L);
+	ms3dLoader = new DexModelMs3dLoader;
+	objLoader = new DexModelObjLoader;
+	m_pRender = new DexRenderDirectX9();
+	m_pRender->InitShader();
 	GetDevice()->CreateTexture(512,512,1,D3DUSAGE_RENDERTARGET,D3DFMT_A8R8G8B8, 
 		D3DPOOL_DEFAULT, & m_pBufferFontTexture, NULL);
 	m_pBufferFontTexture->GetSurfaceLevel(0, &m_pBufferFontTextureSurface);

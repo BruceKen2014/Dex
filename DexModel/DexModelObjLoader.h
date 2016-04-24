@@ -4,7 +4,7 @@ DexEngine&Obj model loader
 #ifndef _DEX_MODEL_LOADER_OBJ_H
 #define _DEX_MODEL_LOADER_OBJ_H
 #include "DexModelLoader.h"
-#include "../DexBase/DexSTLVector.h"
+#include "../DexBase/DexDVector.h"
 #include "../DexMath/DexVector3.h"
 
 
@@ -33,7 +33,7 @@ public:
 public:
 	virtual DexModelBase* LoadModel(const char* filename);
 private:
-	bool readMaterial(const char* filename, Vector<ObjMaterial>& vecMaterial);
+	bool readMaterial(const char* filename, DVector<ObjMaterial>& vecMaterial);
 	void getToken(int8*& pBuffer, int8* pOut, int8* pEnd);
 	void moveNextLine(int8*& pBuffer, int8* pEnd);
 	

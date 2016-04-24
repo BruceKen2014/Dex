@@ -9,6 +9,7 @@
 
 #include <memory.h>
 #include "DexMath.h"
+#include "DexVector3.h"
 template<typename T>
 class DexVector4T
 {
@@ -27,6 +28,7 @@ public:
 	DexVector4T();
 	DexVector4T(const DexVector4T& vector4);
 	DexVector4T(T _x, T _y, T _z, T w);
+	DexVector4T(const DexVector3T<T>& vector3, T w);
 	DexVector4T(T* value); //一个4元素数组
 	~DexVector4T<T>();
 public:
@@ -78,6 +80,15 @@ inline DexVector4T<T>::DexVector4T(T _x, T _y, T _z, T _w)
 	x = _x;
 	y = _y;
 	z = _z;
+	w = _w;
+}
+
+template<typename T>
+inline DexVector4T<T>::DexVector4T(const DexVector3T<T>& vector3, T _w)
+{
+	x = vector3.x;
+	y = vector3.y;
+	z = vector3.z;
 	w = _w;
 }
 

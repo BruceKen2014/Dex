@@ -3,7 +3,7 @@
 #define _DEXGAMEENGINE_H
 
 #include "../DexBase/typedefine.h"
-#include "../DexBase/DexSTLVector.h"
+#include "../DexBase/DexDVector.h"
 #include "../DexBase/DexMem.h"
 #include "../DexBase/DexPrimitive.h"
 #include "../DexBase/DexMaterial.h"
@@ -133,7 +133,7 @@ private:
 
 	IDexRender*      m_pRender;
 	//light data
-	Vector<DexLight> g_vecLight;
+	DVector<DexLight> g_vecLight;
 	DexColor		 g_ambientColor;
 	float			 g_pointLightData[100];
 	float			 g_DirLightData[100];

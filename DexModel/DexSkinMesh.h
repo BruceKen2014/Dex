@@ -9,7 +9,7 @@
 #include <string>
 #include "../DexBase/DexMaterial.h"
 #include "../DexBase/DexVertex.h"
-#include "../DexBase/DexSTLVector.h"
+#include "../DexBase/DexDVector.h"
 #include "../DexMath/DexVector2.h"
 #include "../DexMath/DexVector3.h"
 #include "../DexMath/DexQuaternion.h"
@@ -17,6 +17,8 @@
 
 #include "DexModelBase.h"
 #include "DexShaderHlslSkinMesh.h"
+#include "DexShaderHlslSkinMeshVertexToJoint.h"
+#include "DexShaderHlslSkinMeshVertexNormal.h"
 
 //skinmesh vertex can bind to 4 joints
 #define  SKINMESH_VERTEX_JOINT_COUNT  4
@@ -70,6 +72,8 @@ class DexSkinMesh: public DexModelBase
 	friend class DexModelMs3dLoader;
 	friend class DexModelObjLoader;
 	friend class DexShaderHlslSkinMesh;
+	friend class DexShaderHlslSkinMeshVertexToJoint;
+	friend class DexShaderHlslSkinMeshVertexNormal;
 	class Joint
 	{
 	public:
@@ -91,8 +95,8 @@ class DexSkinMesh: public DexModelBase
 		//初始化之后，运行过程中不再改变
 		DexMatrix4x4   meshMatrix;	//mesh空间矩阵
 		DexMatrix4x4   localMeshMatrixInvert; //关节在模型空间的逆矩阵，保存一次即可
-		Vector<matrix_key> m_vecKeyFrames;
-		Vector<Joint*> m_vecChildren;
+		DVector<matrix_key> m_vecKeyFrames;
+		DVector<Joint*> m_vecChildren;
 
 	public:
 		Joint();
@@ -134,16 +138,16 @@ class DexSkinMesh: public DexModelBase
 
 		////用于向device传输要渲染的顶点信息
 		VectorInt32		m_vecIndices;//vertex indice
-		Vector<stMeshVertex> m_vecVertexsBuffer;
+		DVector<stMeshVertex> m_vecVertexsBuffer;
 		VectorInt32		m_vecLineIndices;//line vertex indice,用的buffer就是m_vecVertexsBuffer
 
 		//用于debug 法线
 		VectorInt32		m_vecDebugNormalIndices;
-		Vector<stMeshVertex> m_vecDebugNormalBuffer;
+		DVector<stMeshVertex> m_vecDebugNormalBuffer;
 
 		//debug vertex to joint
 		VectorInt32		m_vecDebugVertexToJointIndices;
-		Vector<stMeshVertex> m_vecDebugVertexToJointBuffer;
+		DVector<stMeshVertex> m_vecDebugVertexToJointBuffer;
 	public:
 		DexMesh();
 		~DexMesh();
@@ -169,7 +173,7 @@ class DexSkinMesh: public DexModelBase
 	public:
 		//debug vertex to joint
 		void DestroyVertexToJointlBuffer();
-		void CreateVertexToJointBuffer(const Vector<Joint*>& vecJoints);
+		void CreateVertexToJointBuffer(const DVector<Joint*>& vecJoints);
 		uint32 GetVertexToJointBufferCount()	const;
 		void*  GetVertexToJointBuffer();
 		uint32 GetVertexToJointIndiceCount() const;
@@ -194,30 +198,27 @@ protected:
 	SkinMeshModelType m_eMeshType;
 
 	DexMatrix4x4 bindMatrix; //一个skinmesh被绑定在场景中的一个节点上，这是该节点的matrix
-	Vector<DexMesh*>	 m_vecMeshs;		//mesh
-	Vector<Joint*>		 m_vecJoints;		//joint
-	Vector<CDexTex*>	 m_vecTextures;		//texture
-	Vector<DexMaterial> m_vecMaterials;	//material
-public:
-//test effect fx
-	LPD3DXEFFECT pFxEffect;
-	D3DXHANDLE	 WVPMatrixHandle;
-	D3DXHANDLE	 Tex0Handle;
-	D3DXHANDLE	 TechHandle;
-	D3DXHANDLE   VertexBlendFlag;
-	D3DXHANDLE	 JointMatrixHandle;
-	D3DXHANDLE   m_bLightEffect;
-	D3DXHANDLE   m_bLightEnable;
-	D3DXHANDLE   m_biPointLightCount;
-	D3DXHANDLE   m_bPointData;
-	D3DXHANDLE   m_ambientColor;
-	D3DXHANDLE   m_material;
-	IDexVertexDecl* m_pDecl;
-
+	DVector<DexMesh*>	 m_vecMeshs;		//mesh
+	DVector<Joint*>		 m_vecJoints;		//joint
+	DVector<CDexTex*>	 m_vecTextures;		//texture
+	DVector<DexMaterial> m_vecMaterials;	//material
+protected:
 	D3DXMATRIX   matWVP;
 	D3DXMATRIX* jointsMatrix;
-	DexShaderHlslSkinMesh* shader;
+
+	IDexShader* m_pShaderForMesh;
+	IDexShader* m_pShaderForVertexToJoint;
+	IDexShader* m_pShaderForVertexNormal;
+	//模型受影响的灯光，暂时先放zhe里
+	DexColor	 m_ambientColor;
+	DVector<stDexPointLight>  m_vecPointLight;
+	stDexDirectionLight m_directionLight;
 	void InitShader();
+public:
+	void SetAmbientColor(const DexColor& color);
+	void SetDirectionLight(const stDexDirectionLight& light);
+	void ClearPointLight();
+	void AddPointLight(const stDexPointLight& light);
 public:
 	DexSkinMesh();
 	DexSkinMesh(int16 maxAniTime);

@@ -249,11 +249,13 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
 	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/arakkoa.obj");
+	objModel->SetLightFlag(DEXRENDER_LIGHT_ALL_ON);
 	//objModel->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
 	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("ms3d/Model.ms3d");
 	ms3d->SetAnimateType(SkinMeshAnimateType_Loop);
 	ms3d->SetAnimateRatio(1.0f);
 	ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
+	ms3d->SetLightFlag(DEXRENDER_LIGHT_ALL_ON);
 	DexMatrix4x4 world_matrix; 
 
 	testMesh = new DexSkinMesh(2000); 
@@ -514,6 +516,15 @@ void PalGameStateBattleMain::Render()
 	m_pScene->Render();
 	m_pBattleMainMachine->Render();
 	DexGameEngine::getEngine()->RenderCoorLines();
+	stDexPointLight pointLight1(DexVector4(1.0f, 1.0f, 1.0f, 1.0f), DexVector4(DexGameEngine::getEngine()->getCamera()->GetPosition(), 1.0f),
+		DexVector4(500.0f, 0.0f, 0.0f, 0.0f));
+	stDexPointLight pointLight2(DexVector4(0.0f, 1.0f, 0.0f, 1.0f), DexVector4(0.0f, 0.0f, -100.0f, 1.0f),
+		DexVector4(1000.0f, 0.0f, 0.0f, 0.0f));
+	stDexDirectionLight dirLight(DexVector4(1.0f, 1.0f, 1.0f, 2.0f), DexVector4(0.0f, -1.0f, 0.0f, 1.0f));
+	ms3d->ClearPointLight();
+	ms3d->SetDirectionLight(dirLight);
+	ms3d->AddPointLight(pointLight1);
+	ms3d->AddPointLight(pointLight2);
 	ms3d->Render();
 	static float rotate = 0.0f;
 	rotate += 0.01f;
@@ -523,6 +534,10 @@ void PalGameStateBattleMain::Render()
 	matrix.Translate(50.0f, 0.0f, 50.0f);
 	
 	objModel->SetSceneNodeMatrix(matrix);
+	objModel->ClearPointLight();
+	objModel->AddPointLight(pointLight1);
+	objModel->AddPointLight(pointLight2);
+	objModel->SetDirectionLight(dirLight);
 	objModel->Render();
 	//RenderVertexShader();
 	//RenderPixelShader();

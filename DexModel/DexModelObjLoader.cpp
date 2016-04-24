@@ -51,10 +51,10 @@ DexModelBase* DexModelObjLoader::LoadModel(const char* filename)
 	DexVector3 tempV3;
 	DexVector2 tempV2;
 	int8 tempArry[32];
-	Vector<DexVector3> vecPos;
-	Vector<DexVector2> vecUv;
-	Vector<DexVector3> vecNormal;
-	Vector<ObjMaterial> vecMaterials;
+	DVector<DexVector3> vecPos;
+	DVector<DexVector2> vecUv;
+	DVector<DexVector3> vecNormal;
+	DVector<ObjMaterial> vecMaterials;
 	map<stIndex, int32> mapVertexInfo2;
 	DexMaterial			tempMaterial;
 	DexSkinMesh::DexMesh* pMesh = NULL;
@@ -229,7 +229,7 @@ DexModelBase* DexModelObjLoader::LoadModel(const char* filename)
 	return skinMesh;
 }
 
-bool DexModelObjLoader::readMaterial(const char* filename, Vector<ObjMaterial>& vecMaterial)
+bool DexModelObjLoader::readMaterial(const char* filename, DVector<ObjMaterial>& vecMaterial)
 {
 	int8* pBuffer = NULL;
 	int8* pBufferCurr = NULL;

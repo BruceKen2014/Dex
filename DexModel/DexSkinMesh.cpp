@@ -179,7 +179,7 @@ void* DexSkinMesh::DexMesh::GetNormalIndiceBuffer()
 	return (void*)&m_vecDebugNormalIndices[0];
 }
 
-void DexSkinMesh::DexMesh::CreateVertexToJointBuffer(const Vector<Joint*>& vecJoints)
+void DexSkinMesh::DexMesh::CreateVertexToJointBuffer(const DVector<Joint*>& vecJoints)
 {
 	uint32 iVertexSize = m_vecVertexsBuffer.size();
 	for (size_t i = 0; i < iVertexSize; ++i)
@@ -317,7 +317,7 @@ m_eMeshType(SkinMeshModelType_UnKnown)
 	m_pRootJoint = NULL;
 	m_bHaveAnimation = false;
 	m_bAnimate = false;
-	m_bLightFlag = true;
+	m_iLightFlag = true;
 
 	m_pRootJoint = new Joint;
 	m_pRootJoint->m_pFather = NULL;
@@ -357,58 +357,36 @@ void DexSkinMesh::InitShader()
 {
 	D3DXMatrixIdentity(&matWVP);
 	memset(jointsMatrix, 0, sizeof(D3DXMATRIX)* JointNumber);
-	shader = new DexShaderHlslSkinMesh;
-	shader->SetTarget(this);
-	//test fx effect
-	LPD3DXBUFFER	pbuff = NULL;
-	HRESULT hr = D3DXCreateEffectFromFile(DexGameEngine::getEngine()->GetDevice(), "shader\\effect.fx", NULL, NULL, D3DXSHADER_DEBUG, NULL,
-		&pFxEffect, &pbuff);
-	if (pbuff)
-	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, (char*)(pbuff->GetBufferPointer()));
-		pbuff->Release();
-	}
-	if (FAILED(hr))
-	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, "D3DXCreateEffectFromFile 调用失败！");
-		getLog()->EndLog();
-	}
-	else
-	{
-		WVPMatrixHandle = pFxEffect->GetParameterByName(0, "WVPMarix");
-		Tex0Handle = pFxEffect->GetParameterByName(0, "Tex0");
-		TechHandle = pFxEffect->GetTechniqueByName("T0");
-		VertexBlendFlag = pFxEffect->GetParameterByName(0, "VertexBlendFlag");
-		m_bLightEffect = pFxEffect->GetParameterByName(0, "g_bLightEffect"); 
-		m_bLightEnable = pFxEffect->GetParameterByName(0, "g_bLightEnable");
-		m_biPointLightCount = pFxEffect->GetParameterByName(0, "g_iLightCountPoint");
-		m_bPointData = pFxEffect->GetParameterByName(0, "g_LightPoints"); 
-		m_ambientColor = pFxEffect->GetParameterByName(0, "g_ambientColor");
-		m_material = pFxEffect->GetParameterByName(0, "g_material");
-		JointMatrixHandle = pFxEffect->GetParameterByName(0, "JointsMatrix");
-		//JointInvertMatrixHandle = pFxEffect->GetParameterByName(0, "JointsMatrixInvert");
-	}
-	D3DVERTEXELEMENT9 decl[] =
-	{
-		{ 0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0 },
-		{ 0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0 },
-		{ 0, 24, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0 },
-		{ 0, 28, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0 },
-		{ 0, 36, D3DDECLTYPE_UBYTE4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES, 0 },
-		{ 0, 40, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0 },
-		//{ 0, 60, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0 },
-		//{ 0, 64, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0 },
-		D3DDECL_END()
-	};
-	m_pDecl = new DexVertexDeclDx9(DexGameEngine::getEngine()->GetDevice(), decl);
+	m_pShaderForMesh = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMesh::getClassType());
+	m_pShaderForVertexToJoint = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMeshVertexToJoint::getClassType());
+	m_pShaderForVertexNormal = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMeshVertexNormal::getClassType());
+	SetAmbientColor(DexColor(0.3f, 0.0f, 0.0f, 1.0f));
 }
+
+void DexSkinMesh::SetAmbientColor(const DexColor& color)
+{
+	m_ambientColor = color;
+}
+
+void DexSkinMesh::SetDirectionLight(const stDexDirectionLight& light)
+{
+	m_directionLight = light;
+}
+
+void DexSkinMesh::ClearPointLight()
+{
+	m_vecPointLight.clear();
+}
+
+void DexSkinMesh::AddPointLight(const stDexPointLight& light)
+{
+	m_vecPointLight.push_back(light);
+}
+
 DexSkinMesh::~DexSkinMesh()
 {
 	_SafeClearVector(m_vecJoints);
 	_SafeClearVector(m_vecMeshs);
-	_SafeDelete(m_pDecl);
 	_SafeDeleteArr(jointsMatrix);
 	m_vecMaterials.clear();
 	for (size_t i = 0; i < m_vecTextures.size(); ++i)
@@ -558,14 +536,11 @@ bool DexSkinMesh::Update(int32 delta)
 	DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_VIEW, &matView);
 	DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_PROJECTION, &matProj);
 	matWVP = matWorld * matView * matProj;
-	pFxEffect->SetMatrix(WVPMatrixHandle, &matWVP);
-	
 	memset(jointsMatrix, 0, sizeof(D3DXMATRIX)* JointNumber);
 	for (size_t i = 0; i < m_vecJoints.size(); ++i)
 	{
 		jointsMatrix[i] = *(D3DXMATRIX*)&(m_vecJoints[i]->localMeshMatrixInvert) * (*(D3DXMATRIX*)&(m_vecJoints[i]->world_matrix));
 	}
-	pFxEffect->SetMatrixArray(JointMatrixHandle, jointsMatrix, JointNumber);
 	return true;
 }
 bool DexSkinMesh::Render()
@@ -579,9 +554,6 @@ bool DexSkinMesh::Render()
 	if (GetRenderFlag(SKINMESH_RENDER_JOINT2JOINT))
 	{
 		m_pRootJoint->Render2Joint();
-	}
-	if (GetRenderFlag(SKINMESH_RENDER_VERTEX2JOINT))
-	{//画出顶点到所绑定关节的线，用于调试
 	}
 #endif
 	if (GetRenderFlag(SKINMESH_RENDER_MESH))
@@ -1194,162 +1166,24 @@ bool DexSkinMesh::IsStaticModel()
 
 void DexSkinMesh::RenderMesh()
 {
-	DexGameEngine::getEngine()->GetRender()->SetShader(shader);
+	m_pShaderForMesh->SetTarget(this);
+	DexGameEngine::getEngine()->GetRender()->SetShader(m_pShaderForMesh);
 	DexGameEngine::getEngine()->GetRender()->RenderShader();
-	return;
-	//得找一下如何在shader中开启alphablend
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	//这些属于固定管线的设置可以在shader中设置，所以这里不需要设置
-	//D3DXMatrixIdentity(&DexGameEngine::getEngine()->g_worldMatrix);
-	//DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &DexGameEngine::getEngine()->g_worldMatrix);
-	//DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	DexGameEngine::getEngine()->setDexVertexDecl(m_pDecl);
-	int lighDSize = 0;
-	struct tempPointLight
-	{
-		DexVector4  color;
-		DexVector4  position;
-		DexVector4  rangeAtte;
-	};
-	struct tempMaterial
-	{
-		DexVector4 diffuse;
-		DexVector4 specular;
-		DexVector4 ambient;
-		DexVector4 emissive;
-	};
-	tempPointLight tLight;
-	tLight.color = DexVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	DexVector3 vec = DexGameEngine::getEngine()->getCamera()->GetPosition();
-	tLight.position = DexVector4(vec.x, vec.y, vec.z, 1.0f);
-	tLight.rangeAtte = DexVector4(500.0f, 0.0f, 0.0f, 0.0f);
-	tempPointLight tLight2;
-	tLight2.color = DexVector4(0.0f, 1.0f, 0.0f, 1.0f);
-	tLight2.position = DexVector4(0.0f, 0.0f, -100.0f, 1.0f);
-	tLight2.rangeAtte = DexVector4(1000.0f, 0.0f, 0.0f, 0.0f);
-	tempPointLight arrLight[2] = { tLight, tLight2 };
-
-	DexVector4 ambientColor(0.2f, 0.2f, 0.2f, 1.0f);
-
-	tempMaterial material;
-	material.diffuse = DexVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.specular = DexVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.ambient = DexVector4(1.0f, 1.0f, 1.0f, 1.0f);
-	material.emissive = DexVector4(0.0f, 0.0f, 0.0f, 1.0f);
-	pFxEffect->SetRawValue(m_material, &material, 0, sizeof(tempMaterial));
-	pFxEffect->SetRawValue(m_bPointData, arrLight, 0, sizeof(tempPointLight) * 2);
-	pFxEffect->SetFloatArray(m_ambientColor, (float*)&ambientColor, 4);
-	pFxEffect->SetInt(m_biPointLightCount, 2);
-	pFxEffect->SetBool(m_bLightEffect, true);
-	pFxEffect->SetBool(m_bLightEnable, true);
-	pFxEffect->SetTechnique(TechHandle);
-	pFxEffect->SetInt(VertexBlendFlag, SkinMeshVertexBlend_Blend);
-	uint32 pass = 0;
-	pFxEffect->Begin(&pass, 0);
-	for (size_t i = 0; i < m_vecMeshs.size(); ++i)
-	{
-		if (m_vecMeshs[i] == NULL)
-			continue;
-		if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_LINE)
-		{
-			if (m_vecMeshs[i]->GetLineIndiceCount() == 0)
-			{
-				m_vecMeshs[i]->CreateLineIndices();
-			}
-			pFxEffect->SetTexture(Tex0Handle, NULL);
-			for (uint32 p = 0; p < pass; ++p)
-			{
-				pFxEffect->BeginPass(p);
-				DexGameEngine::getEngine()->DrawPrimitive(DexPT_LINELIST, m_vecMeshs[i]->GetVertexBuffer(),
-					m_vecMeshs[i]->GetVertexCount(), m_vecMeshs[i]->GetLineIndiceBuffer(),
-					m_vecMeshs[i]->GetLineIndiceCount() / 2, sizeof(stMeshVertex));
-				pFxEffect->EndPass();
-			}
-		}
-		else if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_TRIANGLE)
-		{
-			if (m_vecMeshs[i]->GetLineIndiceCount() != 0)
-			{
-				m_vecMeshs[i]->DestroyLineIndices();
-			}
-			if (m_vecMeshs[i]->m_iMaterialId != -1)
-				DexGameEngine::getEngine()->SetMaterial(m_vecMaterials[m_vecMeshs[i]->m_iMaterialId]);
-			if (m_vecMeshs[i]->m_iTextureId != -1)
-			{
-				pFxEffect->SetTexture(Tex0Handle, m_vecTextures[m_vecMeshs[i]->m_iTextureId]->GetTexPt());
-			}
-			else
-			{
-				pFxEffect->SetTexture(0, NULL);
-			}
-			for (uint32 p = 0; p < pass; ++p)
-			{
-				pFxEffect->BeginPass(p);
-				DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, m_vecMeshs[i]->GetVertexBuffer(),
-					m_vecMeshs[i]->GetVertexCount(), m_vecMeshs[i]->GetIndiceBuffer(),
-					m_vecMeshs[i]->GetIndiceCount() / 3, sizeof(stMeshVertex));
-				pFxEffect->EndPass();
-			}
-		}
-	}
-	pFxEffect->End();
+	m_pShaderForMesh->SetTarget(nullptr);
 }
 
 void DexSkinMesh::RenderVertexNormal()
 {
-	//得找一下如何在shader中开启alphablend
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	DexGameEngine::getEngine()->setDexVertexDecl(m_pDecl);
-	pFxEffect->SetTechnique(TechHandle);
-	pFxEffect->SetInt(VertexBlendFlag, SkinMeshVertexBlend_VertexColor);
-	uint32 pass = 0;
-	pFxEffect->Begin(&pass, 0);
-	for (size_t i = 0; i < m_vecMeshs.size(); ++i)
-	{
-		if (m_vecMeshs[i] == NULL)
-			continue;
-		//pFxEffect->SetTexture(Tex0Handle, NULL);
-		for (uint32 p = 0; p < pass; ++p)
-		{
-			pFxEffect->BeginPass(p);
-			DexGameEngine::getEngine()->DrawPrimitive(DexPT_LINELIST, m_vecMeshs[i]->GetNormalBuffer(),
-				m_vecMeshs[i]->GetNormalBufferCount(), m_vecMeshs[i]->GetNormalIndiceBuffer(),
-				m_vecMeshs[i]->GetNormalIndiceCount() / 2, sizeof(stMeshVertex));
-			pFxEffect->EndPass();
-		}
-	}
-	pFxEffect->End();
+	m_pShaderForVertexNormal->SetTarget(this);
+	DexGameEngine::getEngine()->GetRender()->SetShader(m_pShaderForVertexNormal);
+	DexGameEngine::getEngine()->GetRender()->RenderShader();
+	m_pShaderForVertexNormal->SetTarget(nullptr);
 }
 
 void DexSkinMesh::RenderVertexToJoint()
 {
-	//得找一下如何在shader中开启alphablend
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-	DexGameEngine::getEngine()->setDexVertexDecl(m_pDecl);
-	pFxEffect->SetTechnique(TechHandle);
-	pFxEffect->SetInt(VertexBlendFlag, SkinMeshVertexBlend_VertexColor);
-	uint32 pass = 0;
-	pFxEffect->Begin(&pass, 0);
-	//pFxEffect->
-	for (size_t i = 0; i < m_vecMeshs.size(); ++i)
-	{
-		if (m_vecMeshs[i] == NULL)
-			continue;
-		//pFxEffect->SetTexture(Tex0Handle, NULL);
-		for (uint32 p = 0; p < pass; ++p)
-		{
-			pFxEffect->BeginPass(p);
-			DexGameEngine::getEngine()->DrawPrimitive(DexPT_LINELIST, m_vecMeshs[i]->GetVertexToJointBuffer(),
-				m_vecMeshs[i]->GetVertexToJointBufferCount(), m_vecMeshs[i]->GetVertexToJointIndiceBuffer(),
-				m_vecMeshs[i]->GetVertexToJointIndiceCount() / 2, sizeof(stMeshVertex));
-			pFxEffect->EndPass();
-		}
-	}
-	pFxEffect->End();
+	m_pShaderForVertexToJoint->SetTarget(this);
+	DexGameEngine::getEngine()->GetRender()->SetShader(m_pShaderForVertexToJoint);
+	DexGameEngine::getEngine()->GetRender()->RenderShader();
+	m_pShaderForVertexToJoint->SetTarget(nullptr);
 }

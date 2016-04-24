@@ -162,15 +162,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DexBase\DexDefine.h" />
+    <ClInclude Include="DexBase\DexDMap.h" />
     <ClInclude Include="DexBase\DexLight.h" />
     <ClInclude Include="DexBase\DexMaterial.h" />
     <ClInclude Include="DexBase\DexMemoryLeakCheck.h" />
     <ClInclude Include="DexBase\DexPrimitive.h" />
     <ClInclude Include="DexBase\DexRenderDirectx9.h" />
-    <ClInclude Include="DexBase\DexSTLVector.h" />
+    <ClInclude Include="DexBase\DexDVector.h" />
     <ClInclude Include="DexBase\DexType.h" />
     <ClInclude Include="DexBase\DexVertex.h" />
     <ClInclude Include="DexBase\DexVertexDeclDx9.h" />
+    <ClInclude Include="DexBase\DexString.h" />
     <ClInclude Include="DexBase\IDexRender.h" />
     <ClInclude Include="DexBase\IDexShader.h" />
     <ClInclude Include="DexBase\IDexShaderHlsl.h" />
@@ -189,6 +191,8 @@
     <ClInclude Include="DexModel\DexModelMs3dLoader.h" />
     <ClInclude Include="DexModel\DexModelObjLoader.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMesh.h" />
+    <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.h" />
+    <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexNormal.h" />
     <ClInclude Include="DexModel\DexSkinMesh.h" />
     <ClInclude Include="Pal3Wai\CBloodFlag.h" />
     <ClInclude Include="Pal3Wai\CDexQuad.h" />
@@ -306,6 +310,7 @@
     <ClCompile Include="DexBase\DexVertex.cpp" />
     <ClCompile Include="DexBase\DexVertexDeclDx9.cpp" />
     <ClCompile Include="DexBase\IDexRender.cpp" />
+    <ClCompile Include="DexBase\IDexShader.cpp" />
     <ClCompile Include="DexBase\IDexShaderHlsl.cpp" />
     <ClCompile Include="DexCommonFunction.cpp" />
     <ClCompile Include="DexMath\DexMath.cpp" />
@@ -315,6 +320,8 @@
     <ClCompile Include="DexModel\DexModelMs3dLoader.cpp" />
     <ClCompile Include="DexModel\DexModelObjLoader.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMesh.cpp" />
+    <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexNormal.cpp" />
+    <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.cpp" />
     <ClCompile Include="DexModel\DexSkinMesh.cpp" />
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp" />
     <ClCompile Include="Pal3Wai\CDexQuad.cpp" />

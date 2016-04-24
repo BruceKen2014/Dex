@@ -4,11 +4,11 @@
 
 DexModelBase::DexModelBase()
 {
-	m_bLightFlag = true;
+	m_iLightFlag = 0;
 }
-void DexModelBase::SetLightFlag(bool enable)
+void DexModelBase::SetLightFlag(uint8 flag)
 {
-	m_bLightFlag = enable;
+	m_iLightFlag = flag;
 }
 
 DexModelBase::~DexModelBase()
