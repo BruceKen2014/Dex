@@ -90,9 +90,9 @@ bool CDexWidgetFactory::removeWidget(string name)
 }
 bool CDexWidgetFactory::loadWidgetsFromXml(const char* xmlName)
 {
-	TiXmlDocument* Xml = new TiXmlDocument(xmlName);
-	Xml->LoadFile(); 
-	parseXmlNode(Xml->FirstChild(), 0, NULL);
+	TiXmlDocument Xml(xmlName);
+	Xml.LoadFile(); 
+	parseXmlNode(Xml.FirstChild(), 0, NULL);
 	return true;
 }
 

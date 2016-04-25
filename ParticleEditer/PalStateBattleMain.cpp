@@ -248,10 +248,11 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
-	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/arakkoa.obj");
-	objModel->SetLightFlag(DEXRENDER_LIGHT_ALL_ON);
+	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/cm/dae1.xml");
+	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/obj/RYU.obj");
+	objModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
 	//objModel->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
-	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("ms3d/Model.ms3d");
+	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/ms3d/Model.ms3d");
 	ms3d->SetAnimateType(SkinMeshAnimateType_Loop);
 	ms3d->SetAnimateRatio(1.0f);
 	ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
@@ -354,7 +355,7 @@ bool PalGameStateBattleMain::ApplyRes()
 	testMesh->SetSceneNodeMatrix(world_matrix);
 	//ms3d->SetSceneNodeMatrix(world_matrix);
 	world_matrix.Identity();
-	world_matrix.Scale(100.0f, 100.0f, 100.0f);
+	world_matrix.Scale(1000.0f, 1000.0f, 1000.0f);
 	objModel->SetSceneNodeMatrix(world_matrix);
 	InitVertexShader();
 	InitPixelShader();
@@ -529,9 +530,9 @@ void PalGameStateBattleMain::Render()
 	static float rotate = 0.0f;
 	rotate += 0.01f;
 	DexMatrix4x4 matrix;
-	matrix.Scale(10.0f, 10.0f, 10.0f);
+	matrix.Scale(100.0f, 100.0f, 100.0f);
 	matrix.RotateY(rotate);
-	matrix.Translate(50.0f, 0.0f, 50.0f);
+	matrix.Translate(200.0f, 0.0f, 200.0f);
 	
 	objModel->SetSceneNodeMatrix(matrix);
 	objModel->ClearPointLight();

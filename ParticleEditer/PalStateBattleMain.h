@@ -51,6 +51,7 @@ protected:
 	TlistPlayer   m_listPlayers;
 	DexSkinMesh* ms3d;
 	DexSkinMesh* objModel;
+	DexSkinMesh* daeModel;
 	DexSkinMesh* testMesh;
 	DexLight light;
 	void* test_primitive_vertex;

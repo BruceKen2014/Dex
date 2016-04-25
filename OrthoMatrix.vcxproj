@@ -187,6 +187,7 @@
     <ClInclude Include="DexMath\DexVector4.h" />
     <ClInclude Include="DexMath\Dex_To_Dx.h" />
     <ClInclude Include="DexModel\DexModelBase.h" />
+    <ClInclude Include="DexModel\DexModelDaeLoader.h" />
     <ClInclude Include="DexModel\DexModelLoader.h" />
     <ClInclude Include="DexModel\DexModelMs3dLoader.h" />
     <ClInclude Include="DexModel\DexModelObjLoader.h" />
@@ -317,6 +318,7 @@
     <ClCompile Include="DexMath\DexMath2.cpp" />
     <ClCompile Include="DexMath\DexQuaternion.cpp" />
     <ClCompile Include="DexModel\DexModelBase.cpp" />
+    <ClCompile Include="DexModel\DexModelDaeLoader.cpp" />
     <ClCompile Include="DexModel\DexModelMs3dLoader.cpp" />
     <ClCompile Include="DexModel\DexModelObjLoader.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMesh.cpp" />

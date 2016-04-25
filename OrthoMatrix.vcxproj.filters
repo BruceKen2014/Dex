@@ -435,6 +435,9 @@
     <ClInclude Include="DexBase\DexString.h">
       <Filter>DexBase</Filter>
     </ClInclude>
+    <ClInclude Include="DexModel\DexModelDaeLoader.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
@@ -775,6 +778,9 @@
     </ClCompile>
     <ClCompile Include="DexBase\IDexShader.cpp">
       <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexModelDaeLoader.cpp">
+      <Filter>DexModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

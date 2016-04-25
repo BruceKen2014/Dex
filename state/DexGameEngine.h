@@ -130,6 +130,7 @@ private:
 	string         g_nextStateName;
 	IDexModelLoader* ms3dLoader;
 	IDexModelLoader* objLoader;
+	IDexModelLoader* daeLoader;
 
 	IDexRender*      m_pRender;
 	//light data

@@ -17,6 +17,7 @@
 
 #include "../DexModel/DexModelMs3dLoader.h"
 #include "../DexModel/DexModelObjLoader.h"
+#include "../DexModel/DexModelDaeLoader.h"
 #include "../DexModel/DexSkinMesh.h"
 #include "../Source/CTexture.h"
 
@@ -216,6 +217,7 @@ bool DexGameEngine::Initialize()
 	CDexScene::RegisterLuaFunction(L);
 	ms3dLoader = new DexModelMs3dLoader;
 	objLoader = new DexModelObjLoader;
+	daeLoader = new DexModelDaeLoader;
 	m_pRender = new DexRenderDirectX9();
 	m_pRender->InitShader();
 	GetDevice()->CreateTexture(512,512,1,D3DUSAGE_RENDERTARGET,D3DFMT_A8R8G8B8, 
@@ -526,6 +528,20 @@ DexModelBase* DexGameEngine::CreateModel(const char* filename)
 		&& filename[length - 1] == 'j')
 	{
 		ret = objLoader->LoadModel(filename);
+	}
+	else if (length > 3
+		&& filename[length - 3] == 'd'
+		&& filename[length - 2] == 'a'
+		&& filename[length - 1] == 'e')
+	{
+		ret = daeLoader->LoadModel(filename);
+	}
+	else if (length > 3
+		&& filename[length - 3] == 'x'
+		&& filename[length - 2] == 'm'
+		&& filename[length - 1] == 'l')
+	{
+		ret = daeLoader->LoadModel(filename);
 	}
 	return ret;
 }
