@@ -5,6 +5,7 @@ DexEngine& dae model loader
 #define _DEX_MODEL_LOADER_DAE_H
 #include "../DexBase/DexString.h"
 #include "../DexMath/DexVector4.h"
+#include "../DexBase/DexDVector.h"
 #include "DexModelLoader.h"
 
 #define dae_element_decalare_empty(name,_type)\
@@ -41,6 +42,7 @@ public:
 		ECE_library_controllers,
 		ECE_library_visual_scenes,
 		ECE_material,
+		ECE_mesh,
 		ECE_profile_COMMON,
 		ECE_phong,
 		ECE_reflective,
@@ -48,6 +50,7 @@ public:
 		ECE_scene,
 		ECE_shininess,
 		ECE_specular,
+		ECE_source,
 		ECE_technique,
 		ECE_transparent,
 		ECE_transparency,
@@ -93,6 +96,7 @@ public:
 	dae_element_decalare_empty(DaeLibraryVisualScenes, ECE_library_visual_scenes)
 	dae_element_decalare_empty(DaeProfileCommon, ECE_profile_COMMON)
 	dae_element_decalare_empty(DaePhong, ECE_phong)
+	dae_element_decalare_empty(DaeMesh, ECE_mesh)
 	class DaeImage :public DaeBase
 	{
 	public:
@@ -190,6 +194,28 @@ public:
 		DaeTransparency() :DaeBase(ECE_transparency){}
 		virtual ~DaeTransparency(){}
 	};
+	class DaeGeometriy :public DaeBase
+	{
+	public:
+		DString  id;
+		DString  name;
+		DaeGeometriy() :DaeBase(ECE_geometry){}
+		virtual ~DaeGeometriy(){}
+	};
+	class DaeSource :public DaeBase
+	{
+	public:
+		DString		id;
+		DString     floatArrarId;
+		int32		count;
+		int32		stride;
+		float32*	floatValues;
+		DaeSource() :DaeBase(ECE_source){ floatValues = nullptr; }
+		virtual ~DaeSource()
+		{
+			if (floatValues != nullptr)	delete[] floatValues;
+		}
+	};
 protected:
 
 	DaeBase* parse_COLLADA(TiXmlNode* pXmlNode);
@@ -203,8 +229,7 @@ protected:
 	DaeBase* parse_effect(TiXmlNode* pXmlNode, DaeLibraryEffects* father);
 	DaeBase* parse_library_geometries(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_geometry(TiXmlNode* pXmlNode, DaeLibraryGeometries* father);
-	DaeBase* parseMesh(TiXmlNode* pXmlNode);
-	DaeBase* parseSource(TiXmlNode* pXmlNode);
+	DaeBase* parse_source(TiXmlNode* pXmlNode, DaeMesh* father);
 	DaeBase* parse_library_controllers(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_controller(TiXmlNode* pXmlNode, DaeLibraryControllers* father);
 	DaeBase* parse_library_visual_scenes(TiXmlNode* pXmlNode, DaeCollada* father);
@@ -222,6 +247,10 @@ protected:
 	DaeBase* parse_reflectivity(TiXmlNode* pXmlNode, DaePhong* father);
 	DaeBase* parse_transparent(TiXmlNode* pXmlNode, DaePhong* father);
 	DaeBase* parse_transparency(TiXmlNode* pXmlNode, DaePhong* father);
+	DaeBase* parse_mesh(TiXmlNode* pXmlNode, DaeGeometriy* father);
+
+
+	void str_to_float_array(const char* str, float32** value);
 public:
 	virtual DexModelBase* LoadModel(const char* filename);
 };
