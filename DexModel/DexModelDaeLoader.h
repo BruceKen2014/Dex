@@ -45,6 +45,7 @@ public:
 		ECE_mesh,
 		ECE_profile_COMMON,
 		ECE_phong,
+		ECE_polylist,
 		ECE_reflective,
 		ECE_reflectivity,
 		ECE_scene,
@@ -52,11 +53,21 @@ public:
 		ECE_specular,
 		ECE_source,
 		ECE_technique,
+		ECE_triangle,
 		ECE_transparent,
 		ECE_transparency,
+		ECE_vertices,
 		ECE_visual_scene,
 
 		ECE_Total
+	};
+	enum ESemantic
+	{
+		ES_POSITION,
+		ES_VERTEX,
+		ES_NORMAL,
+		ES_TEXCOORD,
+		ES_UNKNOWN,
 	};
 	class DaeBase
 	{
@@ -194,13 +205,13 @@ public:
 		DaeTransparency() :DaeBase(ECE_transparency){}
 		virtual ~DaeTransparency(){}
 	};
-	class DaeGeometriy :public DaeBase
+	class DaeGeometry :public DaeBase
 	{
 	public:
 		DString  id;
 		DString  name;
-		DaeGeometriy() :DaeBase(ECE_geometry){}
-		virtual ~DaeGeometriy(){}
+		DaeGeometry() :DaeBase(ECE_geometry){}
+		virtual ~DaeGeometry(){}
 	};
 	class DaeSource :public DaeBase
 	{
@@ -215,6 +226,45 @@ public:
 		{
 			if (floatValues != nullptr)	delete[] floatValues;
 		}
+	};
+	class DaeVertices :public DaeBase
+	{
+	public:
+		DString  id;
+		DString  semantic;
+		DString  source;
+		DaeVertices() :DaeBase(ECE_vertices){}
+		virtual ~DaeVertices(){}
+	};
+	class DaeTriangle :public DaeBase
+	{
+	public:
+		struct stInput
+		{
+			ESemantic semantic;
+			DString   source;
+			uint32	  offset;
+			uint32	  set; //for TEXCOORD attribute:"set"
+			DString   flag0;
+		};
+	public:
+		int32   count;
+		DString material;
+		DVector<stInput> inputs;
+		int32*  pData;
+		DaeTriangle() :DaeBase(ECE_triangle){ pData = nullptr; }
+		virtual ~DaeTriangle() { if (pData != nullptr) delete[]pData; }
+	};
+	class DaePolylist :public DaeBase
+	{
+	public:
+		int32   count;
+		DString material;
+		DVector<DaeTriangle::stInput> inputs;
+		int32*  p_vcountData;
+		int32*  pData;
+		DaePolylist() :DaeBase(ECE_polylist){ p_vcountData = pData = nullptr; }
+		virtual ~DaePolylist() { if (pData != nullptr) delete[]pData; if (p_vcountData != nullptr) delete[]p_vcountData; }
 	};
 protected:
 
@@ -247,10 +297,13 @@ protected:
 	DaeBase* parse_reflectivity(TiXmlNode* pXmlNode, DaePhong* father);
 	DaeBase* parse_transparent(TiXmlNode* pXmlNode, DaePhong* father);
 	DaeBase* parse_transparency(TiXmlNode* pXmlNode, DaePhong* father);
-	DaeBase* parse_mesh(TiXmlNode* pXmlNode, DaeGeometriy* father);
-
+	DaeBase* parse_mesh(TiXmlNode* pXmlNode, DaeGeometry* father);
+	DaeBase* parse_vertices(TiXmlNode* pXmlNode, DaeMesh* father);
+	DaeBase* parse_triangle(TiXmlNode* pXmlNode, DaeMesh* father);
+	DaeBase* parse_polylist(TiXmlNode* pXmlNode, DaeMesh* father);
 
 	void str_to_float_array(const char* str, float32** value);
+	void str_to_int32_array(const char* str, int32** value);
 public:
 	virtual DexModelBase* LoadModel(const char* filename);
 };

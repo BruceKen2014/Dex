@@ -26,12 +26,15 @@ static const char* g_library_visual_scenes = "library_visual_scenes";
 static const char* g_material = "material";
 static const char* g_mesh = "mesh";
 static const char* g_profile_COMMON = "profile_COMMON";
+static const char* g_polylist = "polylist";
 static const char* g_param = "param";
 static const char* g_scene = "scene";
 static const char* g_source = "source";
 static const char* g_technique = "technique";
+static const char* g_triangles = "triangles";
 static const char* g_technique_common = "technique_common";
 static const char* g_visual_scene = "visual_scene";
+static const char* g_vertices = "vertices";
 
 
 #define IS_Element(name)   if (strcmp(pXmlElement->Value(), name) == 0)
@@ -443,7 +446,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_library_geometries(TiXmlNod
 DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_geometry(TiXmlNode* pXmlNode, DaeLibraryGeometries* father)
 {
 	DEX_ENSURE_P(pXmlNode);
-	DaeGeometriy* pGeometry = new DaeGeometriy;
+	DaeGeometry* pGeometry = new DaeGeometry;
 	pGeometry->father = father;
 	if (father->child == nullptr)
 		father->child = pGeometry;
@@ -1089,7 +1092,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_transparency(TiXmlNode* pXm
 	return pTransparency;
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_mesh(TiXmlNode* pXmlNode, DaeGeometriy* father)
+DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_mesh(TiXmlNode* pXmlNode, DaeGeometry* father)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeMesh* pMesh = new DaeMesh;
@@ -1105,12 +1108,14 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_mesh(TiXmlNode* pXmlNode, D
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element(g_source)
 			pNewDaeElement = parse_source(pXmlChildNode, pMesh);
+		else IS_Element(g_vertices)
+			pNewDaeElement = parse_vertices(pXmlChildNode, pMesh);
+		else IS_Element(g_triangles)
+			pNewDaeElement = parse_triangle(pXmlChildNode, pMesh);
+		else IS_Element(g_polylist)
+			pNewDaeElement = parse_polylist(pXmlChildNode, pMesh);
 		else
-		{
-			getLog()->BeginLog();
-			getLog()->Log(log_allert, "dae file unknown child:%s in mesh!", pXmlElement->Value());
-			getLog()->EndLog();
-		}
+			getLog()->LogLine(log_allert, "dae file unknown child:%s in mesh!", pXmlElement->Value());
 		if (pOldDaeElement != nullptr)
 		{
 			pOldDaeElement->sibling = pNewDaeElement;
@@ -1121,6 +1126,244 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_mesh(TiXmlNode* pXmlNode, D
 	return pMesh;
 }
 
+DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_vertices(TiXmlNode* pXmlNode, DaeMesh* father)
+{
+	DEX_ENSURE_P(pXmlNode);
+	DaeVertices* pVertices = new DaeVertices;
+	pVertices->father = father;
+	if (father->child == nullptr)
+		father->child = pVertices;
+	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
+	TiXmlElement* pXmlElement = pXmlNode->ToElement();
+	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
+	//解析id attribute
+	while (pXmlAttribute != nullptr)
+	{
+		IS_Attribute("id")
+		{
+			pVertices->id = pXmlAttribute->Value();
+		}
+		else
+		{	
+			getLog()->LogLine(log_allert, "dae file unknown attribute:%s in vertices!", pXmlElement->Value());
+		}
+		pXmlAttribute = pXmlAttribute->Next();
+	}
+	//解析Input
+	while (pXmlChildNode != nullptr)
+	{
+		pXmlElement = pXmlChildNode->ToElement();
+		IS_Element("input")
+		{
+			pXmlAttribute = pXmlElement->FirstAttribute();
+			while (pXmlAttribute != nullptr)
+			{
+				IS_Attribute("semantic")
+				{
+					pVertices->semantic = pXmlAttribute->Value();
+				}
+				else IS_Attribute("source")
+				{
+					pVertices->source = &(pXmlAttribute->Value()[1]);//跳过#
+				}
+				else
+					getLog()->LogLine(log_allert, "dae file unknown attribute:%s in vertices input!", pXmlElement->Value());
+				pXmlAttribute = pXmlAttribute->Next();
+			}
+		}
+		else
+			getLog()->LogLine(log_allert, "dae file unknown child:%s under vertices!", pXmlElement->Value());
+		pXmlChildNode = pXmlChildNode->NextSibling();
+	}
+	return pVertices;
+}
+
+DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_triangle(TiXmlNode* pXmlNode, DaeMesh* father)
+{
+	DEX_ENSURE_P(pXmlNode);
+	DaeTriangle* pTriangle = new DaeTriangle;
+	pTriangle->father = father;
+	if (father->child == nullptr)
+		father->child = pTriangle;
+	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
+	TiXmlElement* pXmlElement = pXmlNode->ToElement();
+	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
+	//解析attribute
+	while (pXmlAttribute != nullptr)
+	{
+		IS_Attribute("count")
+		{
+			pTriangle->count = atoi(pXmlAttribute->Value());
+		}
+		else IS_Attribute("material")
+		{
+			pTriangle->material = pXmlAttribute->Value();
+		}
+		else
+			getLog()->LogLine(log_allert, "dae file unknown attribute:%s in triangle!", pXmlElement->Value());
+		pXmlAttribute = pXmlAttribute->Next();
+	}
+	//解析input & p
+	uint8 input_count = 0;
+	while (pXmlChildNode != nullptr)
+	{
+		pXmlElement = pXmlChildNode->ToElement();
+		IS_Element("input")
+		{
+			DaeTriangle::stInput input;
+			pXmlAttribute = pXmlElement->FirstAttribute();
+			while (pXmlAttribute != nullptr)
+			{
+				IS_Attribute("semantic")
+				{
+					if (strcmp(pXmlAttribute->Value(), "VERTEX") == 0)
+						input.semantic = ES_VERTEX;
+					else if (strcmp(pXmlAttribute->Value(), "NORMAL") == 0)
+						input.semantic = ES_NORMAL;
+					else if (strcmp(pXmlAttribute->Value(), "TEXCOORD") == 0)
+						input.semantic = ES_TEXCOORD;
+					else
+					{
+						input.semantic = ES_UNKNOWN;
+						getLog()->LogLine(log_allert, "dae file unknown semantic:%s in triangle input!", pXmlElement->Value());
+					}
+				}
+				else IS_Attribute("source")
+					input.source = &(pXmlAttribute->Value()[1]);//跳过#
+				else IS_Attribute("offset")
+					input.offset = atoi(pXmlAttribute->Value());
+				else IS_Attribute("set")
+					input.set =   atoi(pXmlAttribute->Value());
+				else
+					getLog()->LogLine(log_allert, "dae file unknown attribute:%s in triangle input!", pXmlElement->Value());
+				pXmlAttribute = pXmlAttribute->Next();
+			}
+			pTriangle->inputs.push_back(input);
+			++input_count;
+		}
+		else IS_Element("p")
+		{
+			pTriangle->pData = new int32[input_count * pTriangle->count * 3];
+			const char* value = pXmlElement->GetText();
+			str_to_int32_array(value, &pTriangle->pData);
+		}
+		else
+			getLog()->LogLine(log_allert, "dae file unknown child:%s under triangle!", pXmlElement->Value());
+		pXmlChildNode = pXmlChildNode->NextSibling();
+	}
+	return pTriangle;
+}
+DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polylist(TiXmlNode* pXmlNode, DaeMesh* father)
+{
+/*目前只支持<vcount>里面参数为3或者4的polylist，即只支持3边形和4边形
+  4边分解为两个三边形
+  */
+	DEX_ENSURE_P(pXmlNode);
+	DaePolylist* pPolylist = new DaePolylist;
+	pPolylist->father = father;
+	if (father->child == nullptr)
+		father->child = pPolylist;
+	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
+	TiXmlElement* pXmlElement = pXmlNode->ToElement();
+	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
+	//解析attribute
+	while (pXmlAttribute != nullptr)
+	{
+		IS_Attribute("count")
+		{
+			pPolylist->count = atoi(pXmlAttribute->Value());
+		}
+		else IS_Attribute("material")
+		{
+			pPolylist->material = pXmlAttribute->Value();
+		}
+		else
+			getLog()->LogLine(log_allert, "dae file unknown attribute:%s in polylist!", pXmlElement->Value());
+		pXmlAttribute = pXmlAttribute->Next();
+	}
+	//解析input & vcount & p
+	uint32 p_pCount = 0;
+	uint8  p_input = 0;
+	while (pXmlChildNode != nullptr)
+	{
+		pXmlElement = pXmlChildNode->ToElement();
+		IS_Element("input")
+		{
+			DaeTriangle::stInput input;
+			pXmlAttribute = pXmlElement->FirstAttribute();
+			while (pXmlAttribute != nullptr)
+			{
+				IS_Attribute("semantic")
+				{
+					if (strcmp(pXmlAttribute->Value(), "VERTEX") == 0)
+						input.semantic = ES_VERTEX;
+					else if (strcmp(pXmlAttribute->Value(), "NORMAL") == 0)
+						input.semantic = ES_NORMAL;
+					else if (strcmp(pXmlAttribute->Value(), "TEXCOORD") == 0)
+						input.semantic = ES_TEXCOORD;
+					else
+					{
+						input.semantic = ES_UNKNOWN;
+						getLog()->LogLine(log_allert, "dae file unknown semantic:%s in polygon input!", pXmlElement->Value());
+					}
+				}
+				else IS_Attribute("source")
+					input.source = &(pXmlAttribute->Value()[1]);//跳过#
+				else IS_Attribute("offset")
+					input.offset = atoi(pXmlAttribute->Value());
+				else IS_Attribute("set")
+					input.set = atoi(pXmlAttribute->Value());
+				else
+					getLog()->LogLine(log_allert, "dae file unknown attribute:%s in polygon input!", pXmlElement->Value());
+				pXmlAttribute = pXmlAttribute->Next();
+			}
+			pPolylist->inputs.push_back(input);
+			++p_input;
+		}
+		else IS_Element("vcount")
+		{
+			pPolylist->p_vcountData = new int32[pPolylist->count];
+			//这里因为我们要记录总共的顶点数量所以就没有调用str_to_int32_array
+			int32** value = &pPolylist->p_vcountData;
+			const char* elementText = pXmlElement->GetText();
+			const char* pt = elementText;
+			char tempValue[32];
+			uint8 tempValueIndex = 0; //for tempValue
+			uint32 valueIndex = 0; //for value
+			while (pt != nullptr && *pt != '\0')
+			{
+				tempValue[tempValueIndex] = *pt;
+				if (*(++pt) == ' ')
+				{
+					++tempValueIndex;
+					tempValue[tempValueIndex] = '\0';
+					(*value)[valueIndex] = atoi(tempValue);
+					p_pCount += (*value)[valueIndex] * p_input;//一个多边形有几个顶点，一个顶点占几个input
+					if ((*value)[valueIndex] != 3 && (*value)[valueIndex] != 4)
+						getLog()->LogLine(log_allert, "dae polylist 有不支持的%d边形！", (*value)[valueIndex]);
+					tempValueIndex = 0;
+					++valueIndex;
+					++pt;
+				}
+				else
+					++tempValueIndex;
+			}
+			tempValue[tempValueIndex] = '\0';
+			(*value)[valueIndex] = atoi(tempValue);
+			p_pCount += (*value)[valueIndex] * p_input;
+		}
+		else IS_Element("p")
+		{
+			pPolylist->pData = new int32[p_pCount];
+			const char* value = pXmlElement->GetText();
+			str_to_int32_array(value, &pPolylist->pData);
+		}
+		else
+			getLog()->LogLine(log_allert, "dae file unknown child:%s under polylist!", pXmlElement->Value());
+		pXmlChildNode = pXmlChildNode->NextSibling();
+	}
+	return pPolylist;
+}
 void DexModelDaeLoader::str_to_float_array(const char* str, float32** value)
 {
 	const char* pt = str;
@@ -1147,6 +1390,33 @@ void DexModelDaeLoader::str_to_float_array(const char* str, float32** value)
 	tempValue[tempValueIndex] = '\0';
 	testVector.push_back(atof(tempValue));
 	(*value)[valueIndex] = atof(tempValue);
+}
+void DexModelDaeLoader::str_to_int32_array(const char* str, int32** value)
+{
+	const char* pt = str;
+	char tempValue[32];
+	uint8 tempValueIndex = 0; //for tempValue
+	uint32 valueIndex = 0; //for value
+	DVector<float32> testVector;
+	while (pt != nullptr && *pt != '\0')
+	{
+		tempValue[tempValueIndex] = *pt;
+		if (*(++pt) == ' ')
+		{
+			++tempValueIndex;
+			tempValue[tempValueIndex] = '\0';
+			testVector.push_back(atoi(tempValue));
+			(*value)[valueIndex] = atoi(tempValue);
+			tempValueIndex = 0;
+			++valueIndex;
+			++pt;
+		}
+		else
+			++tempValueIndex;
+	}
+	tempValue[tempValueIndex] = '\0';
+	testVector.push_back(atoi(tempValue));
+	(*value)[valueIndex] = atoi(tempValue);
 }
 DexModelBase* DexModelDaeLoader::LoadModel(const char* filename)
 {

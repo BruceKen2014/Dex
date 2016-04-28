@@ -80,6 +80,7 @@ public:
 	void SetLogFile(bool bLogFile);
 	void BeginLog();
 	void Log(DexLogType log_type, char* msg, ...);
+	void LogLine(DexLogType log_type, char* msg, ...);
 	void EndLog();
 };
 CDexLog* getLog();

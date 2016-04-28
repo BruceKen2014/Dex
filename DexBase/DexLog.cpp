@@ -189,6 +189,32 @@ void CDexLog::Log(DexLogType log_type, char* msg, ...)
 #endif
 
 }
+
+void CDexLog::LogLine(DexLogType log_type, char* msg, ...)
+{
+	BeginLog();
+#ifdef DEX_LOG
+	va_list v_p;
+	va_start(v_p, msg);
+	TCHAR szText[512];
+	wvsprintf(szText, msg, v_p);
+	va_end(v_p);
+
+	if (m_lastLogType != log_type)
+	{
+		m_lastLogType = log_type;
+		SetConsoleTextAttribute(m_stdHandle, m_consoleFontColor[log_type]);
+	}
+	m_logByte += strlen(szText);
+	if (log_type == log_ok)
+		LogOK(szText);
+	else if (log_type == log_allert)
+		LogAllert(szText);
+	else if (log_type == log_error)
+		LogError(szText);
+#endif
+	EndLog();
+}
 void CDexLog::EndLog()
 {
 #ifdef DEX_LOG
