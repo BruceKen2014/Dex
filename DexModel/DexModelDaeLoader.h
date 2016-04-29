@@ -4,6 +4,7 @@ DexEngine& dae model loader
 #ifndef _DEX_MODEL_LOADER_DAE_H
 #define _DEX_MODEL_LOADER_DAE_H
 #include "../DexBase/DexString.h"
+#include "../DexMath/DexMatrix.h"
 #include "../DexMath/DexVector4.h"
 #include "../DexBase/DexDVector.h"
 #include "DexModelLoader.h"
@@ -16,6 +17,7 @@ class name :public DaeBase\
 	virtual ~name(){}\
 };
 class TiXmlNode;
+class TiXmlElement;
 class DexModelDaeLoader :public IDexModelLoader
 {
 public:
@@ -27,6 +29,7 @@ public:
 	{
 		ECE_unknown,
 		ECE_COLLADA,
+		ECE_accessor,
 		ECE_asset,
 		ECE_ambient,
 		ECE_controller,
@@ -45,11 +48,13 @@ public:
 		ECE_mesh,
 		ECE_profile_COMMON,
 		ECE_phong,
+		ECE_polygons,
 		ECE_polylist,
 		ECE_reflective,
 		ECE_reflectivity,
 		ECE_scene,
 		ECE_shininess,
+		ECE_skin,
 		ECE_specular,
 		ECE_source,
 		ECE_technique,
@@ -67,6 +72,9 @@ public:
 		ES_VERTEX,
 		ES_NORMAL,
 		ES_TEXCOORD,
+		ES_JOINT,
+		ES_INV_BIND_MATRIX,
+		ES_WEIGHT,
 		ES_UNKNOWN,
 	};
 	class DaeBase
@@ -98,6 +106,14 @@ public:
 		DString  up_axis;
 		DaeAsset() :DaeBase(ECE_asset){}
 		virtual ~DaeAsset(){}
+	};
+	struct stDaeInput
+	{
+		ESemantic semantic;
+		DString   source;
+		uint32	  offset;
+		uint32	  set; //for TEXCOORD attribute:"set"
+		DString   flag0;
 	};
 	dae_element_decalare_empty(DaeLibraryImage, ECE_library_images)
 	dae_element_decalare_empty(DaeLibraryMaterials, ECE_library_meterials)
@@ -216,16 +232,28 @@ public:
 	class DaeSource :public DaeBase
 	{
 	public:
-		DString		id;
-		DString     floatArrarId;
-		int32		count;
-		int32		stride;
-		float32*	floatValues;
-		DaeSource() :DaeBase(ECE_source){ floatValues = nullptr; }
+		DString		sId;
+		DString     sFloatArrayId;
+		int32		iFloatArrayCount;
+		float32*	pFloatArrayValues;
+		DString		sNameArrayId;
+		DVector<DString>	vNamaArray;
+
+		
+		DaeSource() :DaeBase(ECE_source){ iFloatArrayCount = 0; pFloatArrayValues = nullptr; }
 		virtual ~DaeSource()
 		{
-			if (floatValues != nullptr)	delete[] floatValues;
+			if (pFloatArrayValues != nullptr)	delete[] pFloatArrayValues;
 		}
+	};
+	class DaeAccessor :public DaeBase
+	{
+	public:
+		DString sSource;
+		uint32  iCount;
+		uint32  iStride;
+		DaeAccessor() :DaeBase(ECE_accessor){}
+		virtual ~DaeAccessor(){}
 	};
 	class DaeVertices :public DaeBase
 	{
@@ -239,18 +267,9 @@ public:
 	class DaeTriangle :public DaeBase
 	{
 	public:
-		struct stInput
-		{
-			ESemantic semantic;
-			DString   source;
-			uint32	  offset;
-			uint32	  set; //for TEXCOORD attribute:"set"
-			DString   flag0;
-		};
-	public:
-		int32   count;
+		int32   iCount;
 		DString material;
-		DVector<stInput> inputs;
+		DVector<stDaeInput> vInputs;
 		int32*  pData;
 		DaeTriangle() :DaeBase(ECE_triangle){ pData = nullptr; }
 		virtual ~DaeTriangle() { if (pData != nullptr) delete[]pData; }
@@ -260,11 +279,47 @@ public:
 	public:
 		int32   count;
 		DString material;
-		DVector<DaeTriangle::stInput> inputs;
+		DVector<stDaeInput> inputs;
 		int32*  p_vcountData;
 		int32*  pData;
 		DaePolylist() :DaeBase(ECE_polylist){ p_vcountData = pData = nullptr; }
 		virtual ~DaePolylist() { if (pData != nullptr) delete[]pData; if (p_vcountData != nullptr) delete[]p_vcountData; }
+	};
+	class DaePolygons :public DaeBase
+	{
+	public:
+		struct stPData
+		{
+			uint32 count;//顶点个数
+			uint32 pData[32]; //最多支持8个input,4个顶点，所以是8*4=32个数据
+			stPData(){ count = 0; memset(pData, 0, sizeof(pData)); }
+		};
+		int32   count;
+		DString material;
+		DVector<stDaeInput> inputs;
+		stPData*  pData;
+		DaePolygons() :DaeBase(ECE_polygons){ pData = nullptr; }
+		virtual ~DaePolygons() { if (pData != nullptr) delete[]pData;}
+	};
+	class DaeController : public DaeBase
+	{
+	public:
+		DString sId;
+		DaeController() :DaeBase(ECE_controller){  }
+		virtual ~DaeController() { }
+	};
+	class DaeSkin : public DaeBase
+	{
+	public:
+		DString sSource;
+		DexMatrix4x4 mMatrix;
+		DVector<stDaeInput> vJointsInputs;
+		DVector<stDaeInput> vVertexWeightInputs;
+		uint32  iVertexWeightsCount;
+		uint32*  pVCountData;
+		uint32*  pData;
+		DaeSkin() :DaeBase(ECE_skin){  }
+		virtual ~DaeSkin() { }
 	};
 protected:
 
@@ -279,9 +334,11 @@ protected:
 	DaeBase* parse_effect(TiXmlNode* pXmlNode, DaeLibraryEffects* father);
 	DaeBase* parse_library_geometries(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_geometry(TiXmlNode* pXmlNode, DaeLibraryGeometries* father);
-	DaeBase* parse_source(TiXmlNode* pXmlNode, DaeMesh* father);
+	DaeBase* parse_source(TiXmlNode* pXmlNode, DaeBase* father);//source的father 可能是mesh和skin
+	DaeBase* parse_accessor(TiXmlNode* pXmlNode, DaeSource* father);
 	DaeBase* parse_library_controllers(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_controller(TiXmlNode* pXmlNode, DaeLibraryControllers* father);
+	DaeBase* parse_skin(TiXmlNode* pXmlNode, DaeController* father);
 	DaeBase* parse_library_visual_scenes(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_visual_scene(TiXmlNode* pXmlNode, DaeLibraryVisualScenes* father);
 	DaeBase* parse_scene(TiXmlNode* pXmlNode, DaeCollada* father);
@@ -301,7 +358,10 @@ protected:
 	DaeBase* parse_vertices(TiXmlNode* pXmlNode, DaeMesh* father);
 	DaeBase* parse_triangle(TiXmlNode* pXmlNode, DaeMesh* father);
 	DaeBase* parse_polylist(TiXmlNode* pXmlNode, DaeMesh* father);
+	DaeBase* parse_polygons(TiXmlNode* pXmlNode, DaeMesh* father);
 
+protected:
+	stDaeInput& parse_input(TiXmlElement* pXmlElement, stDaeInput& input);
 	void str_to_float_array(const char* str, float32** value);
 	void str_to_int32_array(const char* str, int32** value);
 public:
