@@ -1,0 +1,9 @@
+关于controller
+    在library_controllers里面，一个controller里面是一组骨骼数据，一般会包括骨骼名称、顶点权重，骨骼逆矩阵等，但是并不包括骨骼层级关系，骨骼层级关系在library_visual_scenes里面type为"JOINT"的node里面进行描述。
+关于visual_scene
+    visual_scene下面有node子节点，根据目前的理解来看，如果node的type为“NODE”，那么node指定的就是一个mesh；如果node的type为“JOINT”，那么NODE指定的就是一串关节，这些关节有层级关系，表明了一个骨架是如何构成的。
+    对于一个type为"NODE"的node节点即mesh来说，如果是一个静态模型，即没有绑定任何骨骼，那么node下面会有一个instance_geometry的节点，来引用library_geometries里面的一个geometry。如果是一个动态模型，即绑定了骨骼，那么node下面就没有instance_geometry
+	节点，而有一个instance_controller节点，该节点引用一个library_controllers里面的一个controller,而这个controller下面都有一个skin，skin的source引用了一个geometry,真正描述mesh信息在这个geometry里。一般情况下，一个类型为NODE的节点会引用一个
+	controller，因为每个NODE都需要骨骼信息，而一个controller描述着一组骨骼信息。
+    一个JOINT型的node，并不需要与controller一一对应，因JOINT本身描述的是骨骼层级关系，而多组骨骼可能有相同的层级关系。如一个JOINT?型的node点描述了joint1->joint2->joint3的层级关系，有两组controller，一是joint1、joint2、joint3，一是joint1、joint3，
+	两组controller都是可以用一套层级关系的。

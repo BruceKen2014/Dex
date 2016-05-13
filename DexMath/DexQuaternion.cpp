@@ -7,6 +7,14 @@ DexQuaternion::DexQuaternion()
 {
 	x = y = z = w = 0.0f;
 }
+DexQuaternion::DexQuaternion(float32* pValue)
+{
+	x = pValue[0]; 
+	y = pValue[1];
+	z = pValue[2];
+	w = pValue[3];
+}
+
 
 DexQuaternion::DexQuaternion(float32 _x, float32 _y, float32 _z, float32 _w)
 {

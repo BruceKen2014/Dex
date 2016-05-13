@@ -18,6 +18,7 @@ class name :public DaeBase\
 };
 class TiXmlNode;
 class TiXmlElement;
+class DexSkinMesh;
 class DexModelDaeLoader :public IDexModelLoader
 {
 public:
@@ -44,8 +45,11 @@ public:
 		ECE_library_geometries,
 		ECE_library_controllers,
 		ECE_library_visual_scenes,
+		ECE_instance_geometry,
+		ECE_instance_controller,
 		ECE_material,
 		ECE_mesh,
+		ECE_node,
 		ECE_profile_COMMON,
 		ECE_phong,
 		ECE_polygons,
@@ -68,14 +72,30 @@ public:
 	};
 	enum ESemantic
 	{
-		ES_POSITION,
 		ES_VERTEX,
+		ES_POSITION,
 		ES_NORMAL,
 		ES_TEXCOORD,
+		ES_TEXTANGENT,
+		ES_TEXBINORMAL,
+		ES_COLOR,
 		ES_JOINT,
 		ES_INV_BIND_MATRIX,
 		ES_WEIGHT,
 		ES_UNKNOWN,
+	};
+	enum EAccessorType
+	{
+		EAT_FLOAT,
+		EAT_NAME,
+		EAT_FLOAT4X4,
+		EAT_TOTAL
+	};
+	enum ENodeType
+	{
+		ENT_NODE,
+		ENT_JOINT,
+		ENT_TOTAL
 	};
 	class DaeBase
 	{
@@ -115,6 +135,11 @@ public:
 		uint32	  set; //for TEXCOORD attribute:"set"
 		DString   flag0;
 	};
+	struct stInstanceMaterial
+	{
+		DString sSymbol;
+		DString sTarget;
+	};
 	dae_element_decalare_empty(DaeLibraryImage, ECE_library_images)
 	dae_element_decalare_empty(DaeLibraryMaterials, ECE_library_meterials)
 	dae_element_decalare_empty(DaeLibraryEffects, ECE_library_effects)
@@ -136,7 +161,7 @@ public:
 	class DaeMaterial :public DaeBase
 	{
 	public:
-		DString  id;
+		DString  sId;
 		DString  name;
 		DString  instance_effect_url;
 		DaeMaterial() :DaeBase(ECE_material){}
@@ -224,8 +249,8 @@ public:
 	class DaeGeometry :public DaeBase
 	{
 	public:
-		DString  id;
-		DString  name;
+		DString  sId;
+		DString  sName;
 		DaeGeometry() :DaeBase(ECE_geometry){}
 		virtual ~DaeGeometry(){}
 	};
@@ -233,6 +258,7 @@ public:
 	{
 	public:
 		DString		sId;
+		DString     sName;
 		DString     sFloatArrayId;
 		int32		iFloatArrayCount;
 		float32*	pFloatArrayValues;
@@ -250,6 +276,7 @@ public:
 	{
 	public:
 		DString sSource;
+		EAccessorType EAT_type;
 		uint32  iCount;
 		uint32  iStride;
 		DaeAccessor() :DaeBase(ECE_accessor){}
@@ -259,10 +286,9 @@ public:
 	{
 	public:
 		DString  id;
-		DString  semantic;
-		DString  source;
+		DVector<stDaeInput> vInputs; //有些文件会把除了pos之外的normal、uv等input也放在vertices里面，所以要用向量装起来
 		DaeVertices() :DaeBase(ECE_vertices){}
-		virtual ~DaeVertices(){}
+		virtual ~DaeVertices(){ vInputs.swap(DVector<stDaeInput>()); }
 	};
 	class DaeTriangle :public DaeBase
 	{
@@ -316,14 +342,53 @@ public:
 		DVector<stDaeInput> vJointsInputs;
 		DVector<stDaeInput> vVertexWeightInputs;
 		uint32  iVertexWeightsCount;
-		uint32*  pVCountData;
-		uint32*  pData;
-		DaeSkin() :DaeBase(ECE_skin){  }
-		virtual ~DaeSkin() { }
+		int32*  pVCountData; //for vcount
+		int32*  pData;    //for v
+		DaeSkin() :DaeBase(ECE_skin){ pVCountData = pData = nullptr; }
+		virtual ~DaeSkin() {if (pVCountData != nullptr) delete[] pVCountData;
+		if (pData != nullptr) delete[] pData;
+		}
+	};
+	class DaeVisualScene : public DaeBase
+	{
+	public:
+		DString	sId;
+		DString sName;
+		DaeVisualScene() :DaeBase(ECE_visual_scene){}
+		virtual ~DaeVisualScene() {}
+	};
+	class DaeNode : public DaeBase
+	{
+	public:
+		DString	sId;
+		DString sName;
+		DString sSId;
+		ENodeType eNodeType;
+		DexMatrix4x4 mMatrix;
+		DaeNode() :DaeBase(ECE_node){}
+		virtual ~DaeNode() {}
+	};
+	class DaeInstanceGeometry : public DaeBase
+	{
+	public:
+		DString	sUrl;
+		DString sName;
+		DVector<stInstanceMaterial> vecMaterials;
+		DaeInstanceGeometry() :DaeBase(ECE_instance_geometry){}
+		virtual ~DaeInstanceGeometry() {}
+	};
+	class DaeInstanceController : public DaeBase
+	{
+	public:
+		DString	sUrl;
+		DVector<DString> vecSkeletons;
+		DVector<stInstanceMaterial> vecMaterials;
+		DaeInstanceController() :DaeBase(ECE_instance_controller){}
+		virtual ~DaeInstanceController() {}
 	};
 protected:
 
-	DaeBase* parse_COLLADA(TiXmlNode* pXmlNode);
+	DaeCollada* parse_COLLADA(TiXmlNode* pXmlNode);
 
 	DaeBase* parse_asset(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_library_images(TiXmlNode* pXmlNode, DaeCollada* father);
@@ -359,11 +424,30 @@ protected:
 	DaeBase* parse_triangle(TiXmlNode* pXmlNode, DaeMesh* father);
 	DaeBase* parse_polylist(TiXmlNode* pXmlNode, DaeMesh* father);
 	DaeBase* parse_polygons(TiXmlNode* pXmlNode, DaeMesh* father);
-
+	DaeBase* parse_node(TiXmlNode* pXmlNode, DaeBase* father);
+	DaeBase* parse_instance_geometry(TiXmlNode* pXmlNode, DaeNode* father);
+	DaeBase* parse_instance_controller(TiXmlNode* pXmlNode, DaeNode* father); 
 protected:
 	stDaeInput& parse_input(TiXmlElement* pXmlElement, stDaeInput& input);
+	stInstanceMaterial& parse_instance_material(TiXmlElement* pXmlElement, stInstanceMaterial& instanceMaterial);
 	void str_to_float_array(const char* str, float32** value);
 	void str_to_int32_array(const char* str, int32** value);
+protected:
+
+	DVector<DaeImage*>  m_vecImages;
+	DVector<DaeMaterial*> m_vecMaterials;
+	DVector<DaeEffect*> m_vecEffects;
+	DVector<DaeGeometry*> m_vecGeometries;
+	DVector<DaeController*> m_vecControllers;
+	DVector<DaeNode*>	m_vecJointsSystem;
+	DVector<DaeNode*>   m_vecMeshes;
+	void clear_vecInfo();
+protected:
+	DaeGeometry* find_geometry(DString sGeometryId);
+	DaeMaterial* find_material(DString sMaterialId);
+	DaeSource*   find_source(DaeGeometry* pGeometry, DString sId);
+	DaeVertices* find_verticles(DaeGeometry* pGeometry, DString sId);
+	DexSkinMesh* create_SkinMeshStatic(DaeNode* pStaticMeshNode);
 public:
 	virtual DexModelBase* LoadModel(const char* filename);
 };

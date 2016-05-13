@@ -117,6 +117,7 @@ public:
 	DexMatrix4x4T<T> Invert();   //变为自己的逆矩阵
 	DexMatrix4x4T<T> GetInvert() const; //得到本矩阵的逆矩阵
 	void			 Reset();
+	void			 Set(T* pValue); //一个16维数组
 
 	DexMatrix4x4T<T>&  operator= ( const DexMatrix4x4T<T>& matrix );
 	DexMatrix4x4T<T>&  operator= ( const D3DXMATRIX& matrix );
@@ -271,6 +272,11 @@ template<typename T>
 inline void DexMatrix4x4T<T>::Reset()
 {
 	memset(m, 0, sizeof(T)*16);
+}
+template<typename T>
+inline void DexMatrix4x4T<T>::Set(T* pValue)
+{
+	memcpy(m, pValue, sizeof(T) * 16);
 }
 template<typename T>
 inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::operator=( const DexMatrix4x4T &matrix )

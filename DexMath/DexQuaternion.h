@@ -28,6 +28,7 @@ public:
 	DexQuaternion();
 	DexQuaternion(const DexVector3& vec, float32 radian);
 	DexQuaternion(float32 _x, float32 _y, float32 _z, float32 _w);
+	DexQuaternion(float32 *pValue); //一个4维数组 前三个表明旋转轴 第四个表明旋转角度
 public:
 	DexQuaternion   Set(const DexVector3& vector, float32 radian);
 	DexQuaternion   Set(float32 pitch, float32 yaw, float32 roll);
