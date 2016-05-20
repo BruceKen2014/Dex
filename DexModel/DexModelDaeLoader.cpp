@@ -46,9 +46,25 @@ static const char* g_vertices = "vertices";
 #define IS_Element(name)   if (strcmp(pXmlElement->Value(), name) == 0)
 #define IS_Attribute(name)	if (strcmp(pXmlAttribute->Name(), name) == 0)
 #define VEC_ADD(vec,value)   vec.push_back(value)
+
+#define dae_element_imp_library(name,eType)\
+DexModelDaeLoader::name::name() :DaeBase(eType)\
+{\
+	\
+}\
+DexModelDaeLoader::name::~name()\
+{\
+	_SafeClearVector(vecData);\
+}
+dae_element_imp_library(DaeLibraryImage, ECE_library_images)
+dae_element_imp_library(DaeLibraryMaterials, ECE_library_meterials)
+dae_element_imp_library(DaeLibraryEffects, ECE_library_effects)
+dae_element_imp_library(DaeLibraryGeometries, ECE_library_geometries)
+dae_element_imp_library(DaeLibraryControllers, ECE_library_controllers)
+dae_element_imp_library(DaeLibraryVisualScenes, ECE_library_visual_scenes)
 DexModelDaeLoader::DaeBase::DaeBase(EColladaElement _type)
 {
-	type = _type;
+	eType = _type;
 	father = nullptr;
 	child = nullptr;
 	sibling = nullptr;
@@ -71,6 +87,94 @@ void DexModelDaeLoader::DaeBase::AddChild(DaeBase* _child)
 	_child->father = this;
 }
 
+DexModelDaeLoader::DaeEffectProfile::DaeEffectProfile() :DaeBase(ECE_effect_profile)
+{
+	pTechnique = nullptr;
+}
+
+DexModelDaeLoader::DaeEffectProfile::~DaeEffectProfile()
+{
+	_SafeDelete(pTechnique);
+	_SafeClearVector(vecNewParams);
+}
+
+DexModelDaeLoader::DaeSkin::DaeSkin() :DaeBase(ECE_skin)
+{
+	pVCountData = pData = nullptr;
+}
+
+DexModelDaeLoader::DaeSkin::~DaeSkin()
+{
+	_SafeDeleteArr(pVCountData);
+	_SafeDeleteArr(pData);
+	_SafeClearVector(vSources);
+}
+
+DexModelDaeLoader::DaeNode::DaeNode() :DaeBase(ECE_node)
+{
+	pInstanceMesh = nullptr;
+}
+
+DexModelDaeLoader::DaeNode::~DaeNode()
+{
+	_SafeDelete(pInstanceMesh);
+	_SafeClearVector(vNodeChildren);
+}
+
+DexModelDaeLoader::DaeVisualScene::DaeVisualScene() :DaeBase(ECE_visual_scene)
+{
+}
+
+DexModelDaeLoader::DaeVisualScene::~DaeVisualScene()
+{
+	_SafeClearVector(vJointsSystem);
+	_SafeClearVector(vMeshs);
+}
+
+DexModelDaeLoader::DaeMesh::DaeMesh() :DaeBase(ECE_mesh)
+{
+	pVerticles = nullptr;
+}
+
+DexModelDaeLoader::DaeMesh::~DaeMesh()
+{
+	_SafeDelete(pVerticles);
+	_SafeClearVector(vecSources);
+	_SafeClearVector(vecTriangles);
+	_SafeClearVector(vecPolygons);
+	_SafeClearVector(vecPolylists);
+}
+
+DexModelDaeLoader::DaeGeometry::DaeGeometry() :DaeBase(ECE_geometry)
+{
+	pMesh = nullptr;
+}
+
+DexModelDaeLoader::DaeGeometry::~DaeGeometry()
+{
+	_SafeDelete(pMesh);
+}
+
+DexModelDaeLoader::DaeCollada::DaeCollada() :DaeBase(ECE_COLLADA)
+{
+	pAsset = nullptr;
+	pLibraryImages = nullptr;
+	pLibraryMaterials = nullptr;
+	pLibraryEffects = nullptr;
+	pLibraryGeometries = nullptr;
+	pLibraryControllers = nullptr;
+	pLibraryVisualScenes = nullptr;
+}
+DexModelDaeLoader::DaeCollada::~DaeCollada()
+{
+	_SafeDelete(pAsset);
+	_SafeDelete(pLibraryImages);
+	_SafeDelete(pLibraryMaterials);
+	_SafeDelete(pLibraryEffects);
+	_SafeDelete(pLibraryGeometries);
+	_SafeDelete(pLibraryControllers);
+	_SafeDelete(pLibraryVisualScenes);
+}
 DexModelDaeLoader::DexModelDaeLoader()
 {
 
@@ -99,50 +203,29 @@ DexModelDaeLoader::DaeCollada* DexModelDaeLoader::parse_COLLADA(TiXmlNode* pXmlN
 	}
 
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
-		if (pXmlChildNode->Type() != TiXmlNode::TINYXML_ELEMENT)
+		pXmlElement = pXmlChildNode->ToElement();
+		IS_Element(g_asset)
+			parse_asset(pXmlChildNode, pCollada);
+		else IS_Element(g_library_images)	
+			parse_library_images(pXmlChildNode, pCollada);
+		else IS_Element(g_library_materials)
+			parse_library_materials(pXmlChildNode, pCollada);
+		else IS_Element(g_library_effects)
+			parse_library_effects(pXmlChildNode, pCollada);
+		else IS_Element(g_library_geometries)
+			parse_library_geometries(pXmlChildNode, pCollada);
+		else IS_Element(g_library_controllers)
+			parse_library_controllers(pXmlChildNode, pCollada);
+		else IS_Element(g_library_visual_scenes)
+			parse_library_visual_scenes(pXmlChildNode, pCollada);
+		else IS_Element(g_scene)
 		{
-			getLog()->BeginLog();
-			getLog()->Log(log_allert, "dae file unknown child in COLLADA!");
-			getLog()->EndLog();
 		}
 		else
-		{
-			pXmlElement = pXmlChildNode->ToElement();
-			IS_Element(g_asset)
-				pNewDaeElement = parse_asset(pXmlChildNode, pCollada);
-			else IS_Element(g_library_images)
-				pNewDaeElement = parse_library_images(pXmlChildNode, pCollada);
-			else IS_Element(g_library_materials)
-				pNewDaeElement = parse_library_materials(pXmlChildNode, pCollada);
-			else IS_Element(g_library_effects)
-				pNewDaeElement = parse_library_effects(pXmlChildNode, pCollada);
-			else IS_Element(g_library_geometries)
-				pNewDaeElement = parse_library_geometries(pXmlChildNode, pCollada);
-			else IS_Element(g_library_controllers)
-				pNewDaeElement = parse_library_controllers(pXmlChildNode, pCollada);
-			else IS_Element(g_library_visual_scenes)
-				pNewDaeElement = parse_library_visual_scenes(pXmlChildNode, pCollada);
-			else IS_Element(g_scene)
-			{
-				//pNewDaeElement = parse_scene(pXmlChildNode, pCollada);
-				pXmlChildNode = pXmlChildNode->NextSibling();
-				continue;
-			}
-			else
-			{
-				getLog()->LogLine(log_allert, "dae file unknown child %s in COLLADA!", pXmlElement->Value());
-				pXmlChildNode = pXmlChildNode->NextSibling();
-				continue;
-			}
-			if (pOldDaeElement != nullptr)
-				pOldDaeElement->sibling = pNewDaeElement;
-			pOldDaeElement = pNewDaeElement;
-			pXmlChildNode = pXmlChildNode->NextSibling();
-		}
+			getLog()->LogLine(log_allert, "dae file unknown child %s in COLLADA!", pXmlElement->Value());
+		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pCollada;
 }
@@ -151,9 +234,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_asset(TiXmlNode* pXmlNode, 
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeAsset* pAsset = new DaeAsset;
-	pAsset->father = father;
-	if (father->child == nullptr)
-		father->child = pAsset;
+	father->pAsset = pAsset;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
 	while (pXmlChildNode != nullptr)
@@ -164,7 +245,14 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_asset(TiXmlNode* pXmlNode, 
 		else IS_Element("modified")
 			pAsset->modified = DString(pXmlElement->GetText());
 		else IS_Element("up_axis")
-			pAsset->up_axis = DString(pXmlElement->GetText());
+		{
+			if (strcmp(pXmlElement->GetText(), "Z_UP") == 0)
+				pAsset->eAxisUp = EAU_Z;
+			else if (strcmp(pXmlElement->GetText(), "Y_UP") == 0)
+				pAsset->eAxisUp = EAU_Y;
+			else if (strcmp(pXmlElement->GetText(), "X_UP") == 0)
+				pAsset->eAxisUp = EAU_X;
+		}
 		else
 			getLog()->LogLine(log_allert, "dae file unknown child %s in asset!", pXmlElement->Value());
 		pXmlChildNode = pXmlChildNode->NextSibling();
@@ -176,27 +264,16 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_library_images(TiXmlNode* p
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeLibraryImage* pLibraryImages = new DaeLibraryImage;
-	pLibraryImages->father = father;
-	if (father->child == nullptr)
-		father->child = pLibraryImages;
+	father->pLibraryImages = pLibraryImages;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element(g_image)
-			pNewDaeElement = parse_image(pXmlChildNode, pLibraryImages);
+			parse_image(pXmlChildNode, pLibraryImages);
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child in library_images!");
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pLibraryImages;
@@ -205,43 +282,31 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_image(TiXmlNode* pXmlNode, 
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeImage* pImage = new DaeImage;
-	pImage->father = father;
-	if (father->child == nullptr)
-		father->child = pImage;
+	father->vecData.push_back(pImage);
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	//先解析image的attribute
 	while (pXmlAttribute != nullptr)
 	{
 		IS_Attribute("id")
-			pImage->id = DString(pXmlAttribute->Value());
+			pImage->sId = DString(pXmlAttribute->Value());
 		else IS_Attribute("name")
-			pImage->name = DString(pXmlAttribute->Value());
+			pImage->sName = DString(pXmlAttribute->Value());
 		else
 			getLog()->LogLine(log_allert, "dae file unknown attribute:%s in image!", pXmlAttribute->Name());
 		pXmlAttribute = pXmlAttribute->Next();
 	}
 	//再解析下一个节点<init_from>
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		TiXmlElement* pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("init_from")
 			pImage->init_from = DString(pXmlChildNode->ToElement()->GetText());
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown element:%s in image!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	} 
-	VEC_ADD(m_vecImages, pImage);
 	return pImage;
 }
 
@@ -249,27 +314,16 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_library_materials(TiXmlNode
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeLibraryMaterials* pLibraryMaterials = new DaeLibraryMaterials;
-	pLibraryMaterials->father = father;
-	if (father->child == nullptr)
-		father->child = pLibraryMaterials;
+	father->pLibraryMaterials = pLibraryMaterials;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element(g_material)
-			pNewDaeElement = parse_material(pXmlChildNode, pLibraryMaterials);
+			parse_material(pXmlChildNode, pLibraryMaterials);
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in library_materials!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pLibraryMaterials;
@@ -279,9 +333,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_material(TiXmlNode* pXmlNod
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeMaterial* pMaterial = new DaeMaterial;
-	pMaterial->father = father;
-	if (father->child == nullptr)
-		father->child = pMaterial;
+	father->vecData.push_back(pMaterial);
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	//先解析material的attribute
@@ -319,34 +371,22 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_material(TiXmlNode* pXmlNod
 		}
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
-	VEC_ADD(m_vecMaterials, pMaterial);
 	return pMaterial;
 }
 DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_library_effects(TiXmlNode* pXmlNode, DaeCollada* father)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeLibraryEffects* pLibraryEffects = new DaeLibraryEffects;
-	pLibraryEffects->father = father;
-	if (father->child == nullptr)
-		father->child = pLibraryEffects;
+	father->pLibraryEffects = pLibraryEffects;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element(g_effect)
-			pNewDaeElement = parse_effect(pXmlChildNode, pLibraryEffects);
+			parse_effect(pXmlChildNode, pLibraryEffects);
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in library_effects!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pLibraryEffects;
@@ -355,74 +395,52 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_effect(TiXmlNode* pXmlNode,
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeEffect* pEffect = new DaeEffect;
-	pEffect->father = father;
-	if (father->child == nullptr)
-		father->child = pEffect;
+	father->vecData.push_back(pEffect);
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	//先解析effect的attribute
 	while (pXmlAttribute != nullptr)
 	{
 		IS_Attribute("id")
-			pEffect->id = DString(pXmlAttribute->Value());
+			pEffect->sId = DString(pXmlAttribute->Value());
 		else IS_Attribute("name")
-			pEffect->name = DString(pXmlAttribute->Value());
+			pEffect->sName = DString(pXmlAttribute->Value());
 		else
 			getLog()->LogLine(log_allert, "dae file unknown attribute:%s in effect!", pXmlAttribute->Name());
 		pXmlAttribute = pXmlAttribute->Next();
 	}
 	//再解析下一个节点<profile_COMMON>
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	while (pXmlChildNode != nullptr)
 	{
 		TiXmlElement* pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("profile_COMMON")
-			pNewDaeElement = parse_profile_Common(pXmlChildNode, pEffect);
+		{
+			if (pEffect->pProfile != nullptr)
+				getLog()->LogLine(log_allert, "dae file find multi profile:%s under effect!", pXmlElement->Value());
+			else
+				pEffect->pProfile = parse_effect_profile(pXmlChildNode);
+		}
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown element:%s under effect!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-		{
-			pOldDaeElement->sibling = pNewDaeElement;
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
-	VEC_ADD(m_vecEffects, pEffect);
 	return pEffect;
 }
 DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_library_geometries(TiXmlNode* pXmlNode, DaeCollada* father)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeLibraryGeometries* pLibraryGeometries = new DaeLibraryGeometries;
-	pLibraryGeometries->father = father;
-	if (father->child == nullptr)
-		father->child = pLibraryGeometries;
+	father->pLibraryGeometries = pLibraryGeometries;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element(g_geometry)
-			pNewDaeElement = parse_geometry(pXmlChildNode, pLibraryGeometries);
+			parse_geometry(pXmlChildNode, pLibraryGeometries);
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in library_geometries!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pLibraryGeometries;
@@ -431,9 +449,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_geometry(TiXmlNode* pXmlNod
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeGeometry* pGeometry = new DaeGeometry;
-	pGeometry->father = father;
-	if (father->child == nullptr)
-		father->child = pGeometry;
+	father->vecData.push_back(pGeometry);
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	//先解析geometry的attribute
@@ -467,17 +483,13 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_geometry(TiXmlNode* pXmlNod
 		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
-	VEC_ADD(m_vecGeometries, pGeometry);
 	return pGeometry;
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_source(TiXmlNode* pXmlNode, DaeBase* father)
+DexModelDaeLoader::DaeSource* DexModelDaeLoader::parse_source(TiXmlNode* pXmlNode)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeSource* pSource = new DaeSource;
-	pSource->father = father;
-	if (father->child == nullptr)
-		father->child = pSource;
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	//先解析source的attribute
@@ -634,27 +646,16 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_library_controllers(TiXmlNo
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeLibraryControllers* pLibraryControllers = new DaeLibraryControllers;
-	pLibraryControllers->father = father;
-	if (father->child == nullptr)
-		father->child = pLibraryControllers;
+	father->pLibraryControllers = pLibraryControllers;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element(g_controller)
-			pNewDaeElement = parse_controller(pXmlChildNode, pLibraryControllers);
+			parse_controller(pXmlChildNode, pLibraryControllers);
 		else
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in library_controllers!", pXmlElement->Value());
-		if (pOldDaeElement != nullptr)
-		{
-			pOldDaeElement->sibling = pNewDaeElement;
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pLibraryControllers;
@@ -663,9 +664,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_controller(TiXmlNode* pXmlN
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeController* pController = new DaeController;
-	pController->father = father;
-	if (father->child == nullptr)
-		father->child = pController;
+	father->vecData.push_back(pController);
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	//解析controller的attribute
@@ -702,7 +701,6 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_controller(TiXmlNode* pXmlN
 		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
-	VEC_ADD(m_vecControllers, pController);
 	return pController;
 }
 
@@ -736,11 +734,9 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 			str_to_float_array(pXmlElement->GetText(), &values);
 			pSkin->mMatrix = DexMatrix4x4(values);
 			delete[] values;
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
 		}
 		else IS_Element("source")
-			pNewDaeElement = parse_source(pXmlChildNode, pSkin);
+			pSkin->vSources.push_back(parse_source(pXmlChildNode));
 		else IS_Element("joints")
 		{
 			TiXmlNode* pInputNode = pXmlChildNode->FirstChild();
@@ -753,8 +749,6 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 				pSkin->vJointsInputs.push_back(input);
 				pInputNode = pInputNode->NextSibling();
 			}
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
 		}
 		else IS_Element("vertex_weights")
 		{
@@ -808,18 +802,9 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 				}
 				pXmlVertexChildNode = pXmlVertexChildNode->NextSibling();
 			}
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
 		}
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in skin!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pSkin;
@@ -829,27 +814,16 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_library_visual_scenes(TiXml
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeLibraryVisualScenes* pLibraryVisualScenes = new DaeLibraryVisualScenes;
-	pLibraryVisualScenes->father = father;
-	if (father->child == nullptr)
-		father->child = pLibraryVisualScenes;
+	father->pLibraryVisualScenes = pLibraryVisualScenes;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element(g_visual_scene)
-			pNewDaeElement = parse_visual_scene(pXmlChildNode, pLibraryVisualScenes);
+			parse_visual_scene(pXmlChildNode, pLibraryVisualScenes);
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in library_visual_scenes!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pLibraryVisualScenes;
@@ -858,9 +832,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_visual_scene(TiXmlNode* pXm
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeVisualScene* pVisualScene = new DaeVisualScene;
-	pVisualScene->father = father;
-	if (father->child == nullptr)
-		father->child = pVisualScene;
+	father->vecData.push_back(pVisualScene);
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	while (pXmlAttribute != nullptr)
@@ -874,34 +846,26 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_visual_scene(TiXmlNode* pXm
 		pXmlAttribute = pXmlAttribute->Next();
 	}
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("node")
-			pNewDaeElement = parse_node(pXmlChildNode, pVisualScene);
+		{
+			DaeNode* pNode = parse_node(pXmlChildNode);
+			if (pNode->eNodeType == ENT_JOINT)
+				pVisualScene->vJointsSystem.push_back(pNode);
+			else if (pNode->eNodeType == ENT_NODE)
+			{
+				if(pNode->pInstanceMesh != nullptr)
+					pVisualScene->vMeshs.push_back(pNode);
+			}
+		}
 		else IS_Element("extra")
-		{
 			getLog()->LogLine(log_ok, "dae file skip extra under visual_scene.", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in visual_scene!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
-		DaeNode* pNode = ((DaeNode*)pNewDaeElement);
-		if (pNode->eNodeType == ENT_JOINT)
-			VEC_ADD(m_vecJointsSystem, pNode);
-		else if (pNode->eNodeType == ENT_NODE)
-			VEC_ADD(m_vecMeshes, pNode);
+
 	}
 	return pVisualScene;
 }
@@ -911,25 +875,58 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_scene(TiXmlNode* pXmlNode, 
 	return nullptr;
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_profile_Common(TiXmlNode* pXmlNode, DaeEffect* father)
+DexModelDaeLoader::DaeEffectProfile* DexModelDaeLoader::parse_effect_profile(TiXmlNode* pXmlNode)
 {
 	DEX_ENSURE_P(pXmlNode);
-	DaeProfileCommon* pProfileCommon = new DaeProfileCommon;
-	pProfileCommon->father = father;
-	if (father->child == nullptr)
-		father->child = pProfileCommon;
+	DaeEffectProfile* pEffectProfile = new DaeEffectProfile;
+	DaeNewParam* pNewParam = nullptr; 
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
+	while (pXmlChildNode != nullptr)
+	{
+		pXmlElement = pXmlChildNode->ToElement();
+		IS_Element("technique")
+			pEffectProfile->pTechnique = parse_technique(pXmlChildNode);
+		else IS_Element("newparam")
+		{
+			pNewParam = parse_newparam(pXmlChildNode);
+			pEffectProfile->vecNewParams.push_back(pNewParam);
+		}
+		else
+			getLog()->LogLine(log_allert, "dae file unknown child:%s in profile_COMMON!", pXmlElement->Value());
+		pXmlChildNode = pXmlChildNode->NextSibling();
+	}
+	return pEffectProfile;
+}
+
+DexModelDaeLoader::DaeNewParam* DexModelDaeLoader::parse_newparam(TiXmlNode* pXmlNode)
+{
+	DEX_ENSURE_P(pXmlNode);
+	DaeNewParam* pNewParam = nullptr;
+	TiXmlElement* pXmlElement = pXmlNode->ToElement();
+	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
+	const char* pId = nullptr;
+	while (pXmlAttribute != nullptr)
+	{
+		IS_Attribute("sid")
+			pId = pXmlAttribute->Value();
+		else
+			getLog()->LogLine(log_allert, "dae file unknown attribute:%s in newparam!", pXmlAttribute->Name());
+		pXmlAttribute = pXmlAttribute->Next();
+	}
+	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	DaeBase* pOldDaeElement = nullptr;
 	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
-		IS_Element("technique")
-			pNewDaeElement = parse_technique(pXmlChildNode, pProfileCommon);
+		IS_Element("sampler2D")
+			pNewParam = parse_newparam_sampler2D(pXmlChildNode);
+		else IS_Element("surface")
+			pNewParam = parse_newparam_surface(pXmlChildNode);
 		else
 		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in profile_COMMON!", pXmlElement->Value());
+			getLog()->LogLine(log_allert, "dae file unknown child:%s under newparam!", pXmlElement->Value());
 			pXmlChildNode = pXmlChildNode->NextSibling();
 			continue;
 		}
@@ -938,62 +935,108 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_profile_Common(TiXmlNode* p
 		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
-	return pProfileCommon;
+	if (pNewParam != nullptr)
+		pNewParam->sId = pId;
+	return pNewParam;
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_phong(TiXmlNode* pXmlNode, DaeTechnique* father)
+DexModelDaeLoader::DaeNewParam* DexModelDaeLoader::parse_newparam_surface(TiXmlNode* pXmlNode)
+{
+	DEX_ENSURE_P(pXmlNode);
+	DaeNewParamSurface* pSurface = new DaeNewParamSurface;
+	TiXmlElement* pXmlElement = pXmlNode->ToElement();
+	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
+	while (pXmlAttribute != nullptr)
+	{
+		IS_Attribute("type")
+			pSurface->sSurfaceType = pXmlAttribute->Value();
+		else
+			getLog()->LogLine(log_allert, "dae file unknown attribute:%s in newparam surface!", pXmlAttribute->Name());
+		pXmlAttribute = pXmlAttribute->Next();
+	}
+	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
+	while (pXmlChildNode != nullptr)
+	{
+		pXmlElement = pXmlChildNode->ToElement();
+		IS_Element("init_from")
+			pSurface->sInitFrom = pXmlElement->GetText();
+		else IS_Element("format")
+			pSurface->sFormat = pXmlElement->GetText();
+		else
+			getLog()->LogLine(log_allert, "dae file unknown child:%s under newparam surface!", pXmlElement->Value());
+		pXmlChildNode = pXmlChildNode->NextSibling();
+	}
+	return pSurface;
+}
+
+DexModelDaeLoader::DaeNewParam* DexModelDaeLoader::parse_newparam_sampler2D(TiXmlNode* pXmlNode)
+{
+	DEX_ENSURE_P(pXmlNode);
+	DaeNewParamSampler2D* pSampler2D = new DaeNewParamSampler2D;
+	TiXmlElement* pXmlElement = pXmlNode->ToElement();
+	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
+	while (pXmlChildNode != nullptr)
+	{
+		pXmlElement = pXmlChildNode->ToElement();
+		IS_Element("source")
+			pSampler2D->sSource = pXmlElement->GetText();
+		else IS_Element("wrap_s")
+			pSampler2D->sWrapS = pXmlElement->GetText();
+		else IS_Element("wrap_t")
+			pSampler2D->sWrapT = pXmlElement->GetText();
+		else IS_Element("minfilter")
+			pSampler2D->sMinFilter = pXmlElement->GetText();
+		else IS_Element("magfilter")
+			pSampler2D->sMagFilter = pXmlElement->GetText();
+		else IS_Element("mipfilter")
+			pSampler2D->sMipFilter = pXmlElement->GetText();
+		else
+			getLog()->LogLine(log_allert, "dae file unknown child:%s under newparam sampler2D!", pXmlElement->Value());
+		pXmlChildNode = pXmlChildNode->NextSibling();
+	}
+	return pSampler2D;
+}
+
+DexModelDaeLoader::DaePhong* DexModelDaeLoader::parse_phong(TiXmlNode* pXmlNode)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaePhong* pPhong = new DaePhong;
-	pPhong->father = father;
-	if (father->child == nullptr)
-		father->child = pPhong;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("emission")
-			pNewDaeElement = parse_emission(pXmlChildNode, pPhong);
+			parse_emission(pXmlChildNode, pPhong->colorEmission);
 		else IS_Element("ambient")
-			pNewDaeElement = parse_ambient(pXmlChildNode, pPhong);
+			parse_ambient(pXmlChildNode, pPhong->colorAmbient);
 		else IS_Element("diffuse")
-			pNewDaeElement = parse_diffuse(pXmlChildNode, pPhong);
+			pPhong->pDiffuse = parse_diffuse(pXmlChildNode, pPhong);
 		else IS_Element("specular")
-			pNewDaeElement = parse_specular(pXmlChildNode, pPhong);
+			parse_specular(pXmlChildNode, pPhong->colorSpecular);
 		else IS_Element("shininess")
-			pNewDaeElement = parse_shininess(pXmlChildNode, pPhong);
+			parse_shininess(pXmlChildNode, pPhong->fShininess);
 		else IS_Element("reflective")
-			pNewDaeElement = parse_reflective(pXmlChildNode, pPhong);
+			parse_reflective(pXmlChildNode, pPhong->colorReflective);
 		else IS_Element("reflectivity")
-			pNewDaeElement = parse_reflectivity(pXmlChildNode, pPhong);
+			parse_reflectivity(pXmlChildNode, pPhong->fReflectivity);
 		else IS_Element("transparent")
-			pNewDaeElement = parse_transparent(pXmlChildNode, pPhong);
+			parse_transparent(pXmlChildNode, pPhong->colorTransparent);
 		else IS_Element("transparency")
-			pNewDaeElement = parse_transparency(pXmlChildNode, pPhong);
+			parse_transparency(pXmlChildNode, pPhong->fTransparency);
+		else IS_Element("index_of_refraction")
+			parse_index_of_refraction(pXmlChildNode, pPhong->fIndexOfRefraction);
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in phong!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pPhong;
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_technique(TiXmlNode* pXmlNode, DaeProfileCommon* father)
+DexModelDaeLoader::DaeTechnique* DexModelDaeLoader::parse_technique(TiXmlNode* pXmlNode)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeTechnique* pTechnique = new DaeTechnique;
-	pTechnique->father = father;
-	if (father->child == nullptr)
-		father->child = pTechnique;
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	//先解析technique的attribute
@@ -1006,38 +1049,29 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_technique(TiXmlNode* pXmlNo
 		pXmlAttribute = pXmlAttribute->Next();
 	}
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("phong")
-			pNewDaeElement = parse_phong(pXmlChildNode, pTechnique);
+			pTechnique->pPhong = parse_phong(pXmlChildNode);
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in technique!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pTechnique;
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_emission(TiXmlNode* pXmlNode, DaePhong* father)
+void DexModelDaeLoader::parse_color(TiXmlNode* pXmlNode, DexColor& color)
 {
-	DEX_ENSURE_P(pXmlNode);
-	DaeEmission* pEmission = new DaeEmission;
-	pEmission->father = father;
-	if (father->child == nullptr)
-		father->child = pEmission;
+	/*针对形如以下的color element
+	<emission>
+		<color> 0 0 0 1 </color>
+	</emission>
+	*/
+	DEX_ENSURE(pXmlNode);
+	TiXmlElement* pXmlNodeElement = pXmlNode->ToElement();
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
@@ -1046,74 +1080,32 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_emission(TiXmlNode* pXmlNod
 			const char* colorValue = pXmlElement->GetText();
 			DVector<DString> out_str;
 			SplitStr(colorValue, ' ', out_str);
-			pEmission->color.m[0] = atof(out_str[0].c_str());
-			pEmission->color.m[1] = atof(out_str[1].c_str());
-			pEmission->color.m[2] = atof(out_str[2].c_str());
-			pEmission->color.m[3] = atof(out_str[3].c_str());
+			color.r = atof(out_str[0].c_str()) * 255;
+			color.g = atof(out_str[1].c_str()) * 255;
+			color.b = atof(out_str[2].c_str()) * 255;
+			color.a = atof(out_str[3].c_str()) * 255;
 		}
 		else
-		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in emission!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
+			getLog()->LogLine(log_allert, "dae file unknown child:%s in %s!", pXmlElement->Value(), pXmlNodeElement->Value());
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
-	return pEmission;
 }
-
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_ambient(TiXmlNode* pXmlNode, DaePhong* father)
+void DexModelDaeLoader::parse_emission(TiXmlNode* pXmlNode, DexColor& color)
 {
-	DEX_ENSURE_P(pXmlNode);
-	DaeAmbient* pAmbient = new DaeAmbient;
-	pAmbient->father = father;
-	if (father->child == nullptr)
-		father->child = pAmbient;
-	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
-	while (pXmlChildNode != nullptr)
-	{
-		pXmlElement = pXmlChildNode->ToElement();
-		IS_Element("color")
-		{
-			const char* colorValue = pXmlElement->GetText();
-			DVector<DString> out_str;
-			SplitStr(colorValue, ' ', out_str);
-			pAmbient->color.m[0] = atof(out_str[0].c_str());
-			pAmbient->color.m[1] = atof(out_str[1].c_str());
-			pAmbient->color.m[2] = atof(out_str[2].c_str());
-			pAmbient->color.m[3] = atof(out_str[3].c_str());
-		}
-		else
-		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in ambient!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
-		pXmlChildNode = pXmlChildNode->NextSibling();
-	}
-	return pAmbient;
+	parse_color(pXmlNode, color);
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_diffuse(TiXmlNode* pXmlNode, DaePhong* father)
+void DexModelDaeLoader::parse_ambient(TiXmlNode* pXmlNode, DexColor& color)
+{
+	parse_color(pXmlNode, color);
+}
+
+DexModelDaeLoader::DaeDiffuse* DexModelDaeLoader::parse_diffuse(TiXmlNode* pXmlNode, DaePhong* father)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeDiffuse* pDiffuse = new DaeDiffuse;
-	pDiffuse->father = father;
-	if (father->child == nullptr)
-		father->child = pDiffuse;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
@@ -1123,274 +1115,120 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_diffuse(TiXmlNode* pXmlNode
 			while (pXmlAttribute != nullptr)
 			{
 				IS_Attribute("texture")
-					pDiffuse->texture = pXmlAttribute->Value();
+					pDiffuse->sTexture = pXmlAttribute->Value();
 				else IS_Attribute("texcoord")
-					pDiffuse->texture = pXmlAttribute->Value();
+					pDiffuse->sTexcoord = pXmlAttribute->Value();
 				else
 					getLog()->LogLine(log_allert, "dae file unknown attribute:%s in texture!", pXmlElement->Value());
 				pXmlAttribute = pXmlAttribute->Next();
 			}
 		}
-		else
+		else IS_Element("color")
 		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in diffuse!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
+			if (pDiffuse->sTexture == "")
+			{//只对于没有贴图的有效
+				const char* colorValue = pXmlElement->GetText();
+				DVector<DString> out_str;
+				SplitStr(colorValue, ' ', out_str);
+				pDiffuse->color.r = atof(out_str[0].c_str()) * 255;
+				pDiffuse->color.g = atof(out_str[1].c_str()) * 255;
+				pDiffuse->color.b = atof(out_str[2].c_str()) * 255;
+				pDiffuse->color.a = atof(out_str[3].c_str()) * 255;
+			}
+
 		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
+		else
+			getLog()->LogLine(log_allert, "dae file unknown child:%s in diffuse!", pXmlElement->Value());
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pDiffuse;
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_specular(TiXmlNode* pXmlNode, DaePhong* father)
+void DexModelDaeLoader::parse_specular(TiXmlNode* pXmlNode, DexColor& color)
 {
-	DEX_ENSURE_P(pXmlNode);
-	DaeSpecular* pSpecular = new DaeSpecular;
-	pSpecular->father = father;
-	if (father->child == nullptr)
-		father->child = pSpecular;
-	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
-	while (pXmlChildNode != nullptr)
-	{
-		pXmlElement = pXmlChildNode->ToElement();
-		IS_Element("color")
-		{
-			const char* colorValue = pXmlElement->GetText();
-			DVector<DString> out_str;
-			SplitStr(colorValue, ' ', out_str);
-			pSpecular->color.m[0] = atof(out_str[0].c_str());
-			pSpecular->color.m[1] = atof(out_str[1].c_str());
-			pSpecular->color.m[2] = atof(out_str[2].c_str());
-			pSpecular->color.m[3] = atof(out_str[3].c_str());
-		}
-		else
-		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in specular!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
-		pXmlChildNode = pXmlChildNode->NextSibling();
-	}
-	return pSpecular;
+	parse_color(pXmlNode, color);
 }
-
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_shininess(TiXmlNode* pXmlNode, DaePhong* father)
+void DexModelDaeLoader::parse_float(TiXmlNode* pXmlNode, float32& fValue)
 {
-	DEX_ENSURE_P(pXmlNode);
-	DaeShininess* pShininess = new DaeShininess;
-	pShininess->father = father;
-	if (father->child == nullptr)
-		father->child = pShininess;
+	/*针对形如以下的float element
+	<shininess>
+		<float sid="shininess">10</float>
+	</shininess>
+	*/
+	DEX_ENSURE(pXmlNode);
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
+	TiXmlElement* pXmlNodeElement = pXmlNode->ToElement();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("float")
 		{
 			const char* value = pXmlElement->GetText();
-			pShininess->shininess = atof(value);
+			fValue = atof(value);
 		}
 		else
-		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in shininess!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
+			getLog()->LogLine(log_allert, "dae file unknown child:%s in %s!", pXmlElement->Value(), pXmlNodeElement->Value());
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
-	return pShininess;
+}
+void DexModelDaeLoader::parse_shininess(TiXmlNode* pXmlNode, float32& fShininess)
+{
+	parse_float(pXmlNode, fShininess);
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_reflective(TiXmlNode* pXmlNode, DaePhong* father)
+void DexModelDaeLoader::parse_reflective(TiXmlNode* pXmlNode, DexColor& color)
 {
-	DEX_ENSURE_P(pXmlNode);
-	DaeReflective* pReflective = new DaeReflective;
-	pReflective->father = father;
-	if (father->child == nullptr)
-		father->child = pReflective;
-	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
-	while (pXmlChildNode != nullptr)
-	{
-		pXmlElement = pXmlChildNode->ToElement();
-		IS_Element("color")
-		{
-			const char* colorValue = pXmlElement->GetText();
-			DVector<DString> out_str;
-			SplitStr(colorValue, ' ', out_str);
-			pReflective->color.m[0] = atof(out_str[0].c_str());
-			pReflective->color.m[1] = atof(out_str[1].c_str());
-			pReflective->color.m[2] = atof(out_str[2].c_str());
-			pReflective->color.m[3] = atof(out_str[3].c_str());
-		}
-		else
-		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in reflective!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
-		pXmlChildNode = pXmlChildNode->NextSibling();
-	}
-	return pReflective;
+	parse_color(pXmlNode, color);
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_reflectivity(TiXmlNode* pXmlNode, DaePhong* father)
+void DexModelDaeLoader::parse_reflectivity(TiXmlNode* pXmlNode, float32& fValue)
 {
-	DEX_ENSURE_P(pXmlNode);
-	DaeReflectivity* pReflectivity = new DaeReflectivity;
-	pReflectivity->father = father;
-	if (father->child == nullptr)
-		father->child = pReflectivity;
-	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
-	while (pXmlChildNode != nullptr)
-	{
-		pXmlElement = pXmlChildNode->ToElement();
-		IS_Element("float")
-		{
-			const char* value = pXmlElement->GetText();
-			pReflectivity->reflectivity = atof(value);
-		}
-		else
-		{
-			getLog()->LogLine (log_allert, "dae file unknown child:%s in reflectivity!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
-		pXmlChildNode = pXmlChildNode->NextSibling();
-	}
-	return pReflectivity;
+	parse_float(pXmlNode, fValue);
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_transparent(TiXmlNode* pXmlNode, DaePhong* father)
+void DexModelDaeLoader::parse_transparent(TiXmlNode* pXmlNode, DexColor& color)
 {
-	DEX_ENSURE_P(pXmlNode);
-	DaeTransparent* pTransparent = new DaeTransparent;
-	pTransparent->father = father;
-	if (father->child == nullptr)
-		father->child = pTransparent;
-	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
-	while (pXmlChildNode != nullptr)
-	{
-		pXmlElement = pXmlChildNode->ToElement();
-		IS_Element("color")
-		{
-			const char* colorValue = pXmlElement->GetText();
-			DVector<DString> out_str;
-			SplitStr(colorValue, ' ', out_str);
-			pTransparent->color.m[0] = atof(out_str[0].c_str());
-			pTransparent->color.m[1] = atof(out_str[1].c_str());
-			pTransparent->color.m[2] = atof(out_str[2].c_str());
-			pTransparent->color.m[3] = atof(out_str[3].c_str());
-		}
-		else
-		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in transparent!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
-		pXmlChildNode = pXmlChildNode->NextSibling();
-	}
-	return pTransparent;
+	parse_color(pXmlNode, color);
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_transparency(TiXmlNode* pXmlNode, DaePhong* father)
+void DexModelDaeLoader::parse_transparency(TiXmlNode* pXmlNode, float32& fValue)
 {
-	DEX_ENSURE_P(pXmlNode);
-	DaeTransparency* pTransparency = new DaeTransparency;
-	pTransparency->father = father;
-	if (father->child == nullptr)
-		father->child = pTransparency;
-	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
-	while (pXmlChildNode != nullptr)
-	{
-		pXmlElement = pXmlChildNode->ToElement();
-		IS_Element("float")
-		{
-			const char* value = pXmlElement->GetText();
-			pTransparency->transparency = atof(value);
-		}
-		else
-		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in transparency!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
-		pXmlChildNode = pXmlChildNode->NextSibling();
-	}
-	return pTransparency;
+	parse_float(pXmlNode, fValue);
+}
+
+void DexModelDaeLoader::parse_index_of_refraction(TiXmlNode* pXmlNode, float32& fValue)
+{
+	parse_float(pXmlNode, fValue);
 }
 
 DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_mesh(TiXmlNode* pXmlNode, DaeGeometry* father)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeMesh* pMesh = new DaeMesh;
-	pMesh->father = father;
-	if (father->child == nullptr)
-		father->child = pMesh;
+	if (father->pMesh != nullptr)
+	{
+		getLog()->LogLine(log_allert, "dae file find multy mesh under geometry!");
+		delete father->pMesh;
+	}
+	father->pMesh = pMesh;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = nullptr;
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element(g_source)
-			pNewDaeElement = parse_source(pXmlChildNode, pMesh);
+			pMesh->vecSources.push_back(parse_source(pXmlChildNode));
 		else IS_Element(g_vertices)
-			pNewDaeElement = parse_vertices(pXmlChildNode, pMesh);
+			parse_vertices(pXmlChildNode, pMesh);
 		else IS_Element(g_triangles)
-			pNewDaeElement = parse_triangle(pXmlChildNode, pMesh);
+			parse_triangle(pXmlChildNode, pMesh);
 		else IS_Element(g_polylist)
-			pNewDaeElement = parse_polylist(pXmlChildNode, pMesh);
+			parse_polylist(pXmlChildNode, pMesh);
 		else IS_Element(g_polygons)
-			pNewDaeElement = parse_polygons(pXmlChildNode, pMesh);
+			parse_polygons(pXmlChildNode, pMesh);
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in mesh!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pMesh;
@@ -1400,9 +1238,12 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_vertices(TiXmlNode* pXmlNod
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeVertices* pVertices = new DaeVertices;
-	pVertices->father = father;
-	if (father->child == nullptr)
-		father->child = pVertices;
+	if (father->pVerticles != nullptr)
+	{
+		getLog()->LogLine(log_allert, "dae file find multy verticles in mesh!");
+		delete father->pVerticles;
+	}
+	father->pVerticles = pVertices;
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
@@ -1435,10 +1276,8 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_vertices(TiXmlNode* pXmlNod
 DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_triangle(TiXmlNode* pXmlNode, DaeMesh* father)
 {
 	DEX_ENSURE_P(pXmlNode);
-	DaeTriangle* pTriangle = new DaeTriangle;
-	pTriangle->father = father;
-	if (father->child == nullptr)
-		father->child = pTriangle;
+	DaeTriangles* pTriangle = new DaeTriangles;
+	father->vecTriangles.push_back(pTriangle);
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
@@ -1454,7 +1293,9 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_triangle(TiXmlNode* pXmlNod
 		pXmlAttribute = pXmlAttribute->Next();
 	}
 	//解析input & p
-	uint8 input_count = 0;
+	uint8 real_input_counts = 0;
+	uint8 triangle_input_count = 0;
+	uint8 vertex_index = 0;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
@@ -1464,24 +1305,30 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_triangle(TiXmlNode* pXmlNod
 			parse_input(pXmlElement, input);
 			if (input.semantic == ES_VERTEX)
 			{//如果是一个VERTEX，则这个input不算，到vertices中去找具体的input
-				DaeVertices* pVertices = find_verticles((DaeGeometry*)pTriangle->father->father, input.source); //->mesh->geometry
+				DaeVertices* pVertices = father->pVerticles;
 				int32 iVerticesInputSize = pVertices->vInputs.size();
 				for (size_t i = 0; i < iVerticesInputSize; ++i)
 					pTriangle->vInputs.push_back(pVertices->vInputs[i]);
-				input_count += iVerticesInputSize;
+				real_input_counts += iVerticesInputSize;
+				vertex_index = triangle_input_count;
+				++triangle_input_count;
+
 			}
 			else
 			{
 				pTriangle->vInputs.push_back(input);
-				++input_count;
+				++real_input_counts;
+				++triangle_input_count;
 			}
-
 		}
 		else IS_Element("p")
 		{
-			pTriangle->pData = new int32[input_count * pTriangle->iCount * 3];
+			pTriangle->pData = new int32[real_input_counts * pTriangle->iCount * 3];
 			const char* value = pXmlElement->GetText();
-			str_to_int32_array(value, &pTriangle->pData);
+			uint8 flag = 1;
+			if (father->pVerticles != nullptr)
+				flag = father->pVerticles->vInputs.size();
+			str_to_int32_array(value, &pTriangle->pData, triangle_input_count, vertex_index, flag);
 		}
 		else
 			getLog()->LogLine(log_allert, "dae file unknown child:%s under triangle!", pXmlElement->Value());
@@ -1496,9 +1343,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polylist(TiXmlNode* pXmlNod
   */
 	DEX_ENSURE_P(pXmlNode);
 	DaePolylist* pPolylist = new DaePolylist;
-	pPolylist->father = father;
-	if (father->child == nullptr)
-		father->child = pPolylist;
+	father->vecPolylists.push_back(pPolylist);
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
@@ -1515,7 +1360,9 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polylist(TiXmlNode* pXmlNod
 	}
 	//解析input & vcount & p
 	uint32 p_pCount = 0;
-	uint8  p_input = 0;
+	uint8  real_input_counts = 0;
+	uint8  polylist_input_count = 0;
+	uint8  vertex_index = 0;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
@@ -1523,8 +1370,22 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polylist(TiXmlNode* pXmlNod
 		{
 			stDaeInput input;
 			parse_input(pXmlElement, input);
-			pPolylist->inputs.push_back(input);
-			++p_input;
+			if (input.semantic == ES_VERTEX)
+			{//如果是一个VERTEX，则这个input不算，到vertices中去找具体的input
+				DaeVertices* pVertices = father->pVerticles;
+				int32 iVerticesInputSize = pVertices->vInputs.size();
+				for (size_t i = 0; i < iVerticesInputSize; ++i)
+					pPolylist->vInputs.push_back(pVertices->vInputs[i]);
+				real_input_counts += iVerticesInputSize;
+				vertex_index = polylist_input_count;
+				++polylist_input_count;
+			}
+			else
+			{
+				pPolylist->vInputs.push_back(input);
+				++real_input_counts;
+				++polylist_input_count;
+			}
 		}
 		else IS_Element("vcount")
 		{
@@ -1542,7 +1403,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polylist(TiXmlNode* pXmlNod
 					++tempValueIndex;
 					tempValue[tempValueIndex] = '\0';
 					pPolylist->p_vcountData[valueIndex] = atoi(tempValue);
-					p_pCount += pPolylist->p_vcountData[valueIndex] * p_input;//一个多边形有几个顶点，一个顶点占几个input
+					p_pCount += pPolylist->p_vcountData[valueIndex] * real_input_counts;//一个多边形有几个顶点，一个顶点占几个input
 					if (pPolylist->p_vcountData[valueIndex] != 3 && pPolylist->p_vcountData[valueIndex] != 4)
 						getLog()->LogLine(log_allert, "dae polylist 有不支持的%d边形！", pPolylist->p_vcountData[valueIndex]);
 					tempValueIndex = 0;
@@ -1554,13 +1415,16 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polylist(TiXmlNode* pXmlNod
 			}
 			tempValue[tempValueIndex] = '\0';
 			pPolylist->p_vcountData[valueIndex] = atoi(tempValue);
-			p_pCount += pPolylist->p_vcountData[valueIndex] * p_input;
+			p_pCount += pPolylist->p_vcountData[valueIndex] * real_input_counts;
 		}
 		else IS_Element("p")
 		{
 			pPolylist->pData = new int32[p_pCount];
 			const char* value = pXmlElement->GetText();
-			str_to_int32_array(value, &pPolylist->pData);
+			uint8 flag = 1;
+			if (father->pVerticles != nullptr)
+				flag = father->pVerticles->vInputs.size();
+			str_to_int32_array(value, &pPolylist->pData, polylist_input_count,vertex_index, flag);
 		}
 		else
 			getLog()->LogLine(log_allert, "dae file unknown child:%s under polylist!", pXmlElement->Value());
@@ -1575,9 +1439,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polygons(TiXmlNode* pXmlNod
 	*/
 	DEX_ENSURE_P(pXmlNode);
 	DaePolygons* pPolygons = new DaePolygons;
-	pPolygons->father = father;
-	if (father->child == nullptr)
-		father->child = pPolygons;
+	father->vecPolygons.push_back(pPolygons);
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
@@ -1648,13 +1510,10 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polygons(TiXmlNode* pXmlNod
 	}
 	return pPolygons;
 }
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode, DaeBase* father)
+DexModelDaeLoader::DaeNode* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeNode* pNode = new DaeNode;
-	pNode->father = father;
-	if (father->child == nullptr)
-		father->child = pNode;
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	while (pXmlAttribute != nullptr)
@@ -1687,7 +1546,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode, D
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("node")
-			pNewDaeElement = parse_node(pXmlChildNode, pNode);
+			pNode->vNodeChildren.push_back(parse_node(pXmlChildNode));
 		else IS_Element("translate")
 		{
 			str_to_float_array(pXmlElement->GetText(),&pFloatValue);
@@ -1716,31 +1575,35 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode, D
 			pNode->mMatrix.Set(pFloatValue);
 		}
 		else IS_Element("instance_geometry")
-			pNewDaeElement = parse_instance_geometry(pXmlChildNode, pNode);
-		else IS_Element("instance_controller")
-			pNewDaeElement = parse_instance_controller(pXmlChildNode, pNode);
-		else
 		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s in node!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
+			if (pNode->pInstanceMesh != nullptr)
+			{
+				getLog()->LogLine(log_allert, "dae file find multy instancemesh child under node!");
+				delete pNode->pInstanceMesh;
+			}
+			pNode->pInstanceMesh = parse_instance_geometry(pXmlChildNode);
 		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
+		else IS_Element("instance_controller")
+		{
+			if (pNode->pInstanceMesh != nullptr)
+			{
+				getLog()->LogLine(log_allert, "dae file find multy instancemesh child under node!");
+				delete pNode->pInstanceMesh;
+			}
+			pNode->pInstanceMesh = parse_instance_controller(pXmlChildNode);
+		}
+		else
+			getLog()->LogLine(log_allert, "dae file unknown child:%s in node!", pXmlElement->Value());
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	delete[]pFloatValue;
 	return pNode;
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_instance_geometry(TiXmlNode* pXmlNode, DaeNode* father)
+DexModelDaeLoader::DaeInstanceGeometry* DexModelDaeLoader::parse_instance_geometry(TiXmlNode* pXmlNode)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeInstanceGeometry* pInstanceGeometry = new DaeInstanceGeometry;
-	pInstanceGeometry->father = father;
-	if (father->child == nullptr)
-		father->child = pInstanceGeometry;
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	while (pXmlAttribute != nullptr)
@@ -1766,7 +1629,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_instance_geometry(TiXmlNode
 			pXmlElement = pXmlTechniqueCommonChildNode->ToElement();
 			IS_Element("technique_common")
 			{
-				TiXmlNode* pXmlInstanceMaterialChildNode = pXmlChildNode->FirstChild();//应该是instance_material
+				TiXmlNode* pXmlInstanceMaterialChildNode = pXmlTechniqueCommonChildNode->FirstChild();//应该是instance_material
 				while (pXmlInstanceMaterialChildNode != nullptr)
 				{
 					pXmlElement = pXmlInstanceMaterialChildNode->ToElement();
@@ -1803,13 +1666,10 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_instance_geometry(TiXmlNode
 	return pInstanceGeometry;
 }
 
-DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_instance_controller(TiXmlNode* pXmlNode, DaeNode* father)
+DexModelDaeLoader::DaeInstanceController* DexModelDaeLoader::parse_instance_controller(TiXmlNode* pXmlNode)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeInstanceController* pInstanceController = new DaeInstanceController;
-	pInstanceController->father = father;
-	if (father->child == nullptr)
-		father->child = pInstanceController;
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	while (pXmlAttribute != nullptr)
@@ -1867,6 +1727,8 @@ DexModelDaeLoader::stDaeInput& DexModelDaeLoader::parse_input(TiXmlElement* pXml
 		{
 			if (strcmp(pXmlAttribute->Value(), "VERTEX") == 0)
 				input.semantic = ES_VERTEX;
+			else if (strcmp(pXmlAttribute->Value(), "POSITION") == 0)
+				input.semantic = ES_POSITION;
 			else if (strcmp(pXmlAttribute->Value(), "NORMAL") == 0)
 				input.semantic = ES_NORMAL;
 			else if (strcmp(pXmlAttribute->Value(), "TEXCOORD") == 0)
@@ -1939,12 +1801,13 @@ void DexModelDaeLoader::str_to_float_array(const char* str, float32** value)
 	testVector.push_back(atof(tempValue));
 	(*value)[valueIndex] = atof(tempValue);
 }
-void DexModelDaeLoader::str_to_int32_array(const char* str, int32** value)
+void DexModelDaeLoader::str_to_int32_array(const char* str, int32** value, uint8 cycle, uint8 index, uint8 flag)
 {
 	const char* pt = str;
 	char tempValue[32];
 	uint8 tempValueIndex = 0; //for tempValue
 	uint32 valueIndex = 0; //for value
+	uint32 iCycleIndex = 0;
 	while (pt != nullptr && *pt != '\0')
 	{
 		tempValue[tempValueIndex] = *pt;
@@ -1952,125 +1815,127 @@ void DexModelDaeLoader::str_to_int32_array(const char* str, int32** value)
 		{
 			++tempValueIndex;
 			tempValue[tempValueIndex] = '\0';
-			(*value)[valueIndex] = atoi(tempValue);
+			(*value)[valueIndex++] = atoi(tempValue);
 			tempValueIndex = 0;
-			++valueIndex;
 			++pt;
+			if (iCycleIndex == index)
+				for (int i = 0; i < flag - 1; ++i)
+					(*value)[valueIndex++] = atoi(tempValue);
+			//iCycleIndex = ++iCycleIndex == cycle ? 0 : iCycleIndex;
+			if (++iCycleIndex == cycle)
+				iCycleIndex = 0;
 		}
 		else
 			++tempValueIndex;
 	}
 	tempValue[tempValueIndex] = '\0';
-	(*value)[valueIndex] = atoi(tempValue);
+	(*value)[valueIndex++] = atoi(tempValue);
+	if (iCycleIndex == index)
+		for (int i = 0; i < flag - 1; ++i)
+			(*value)[valueIndex++] = atoi(tempValue);
 }
 
-void DexModelDaeLoader::clear_vecInfo()
+void DexModelDaeLoader::TransVector3ByAxis(DexVector3& vec3)
 {
-	m_vecImages.swap(DVector<DaeImage*>());
-	m_vecMaterials.swap(DVector<DaeMaterial*>());
-	m_vecEffects.swap(DVector<DaeEffect*>());
-	m_vecGeometries.swap(DVector<DaeGeometry*>());
-	m_vecControllers.swap(DVector<DaeController*>());
-	m_vecJointsSystem.swap(DVector<DaeNode*>());
-	m_vecMeshes.swap(DVector<DaeNode*>());
+	DEX_ENSURE(m_pCollada != nullptr && m_pCollada->pAsset != nullptr);
+	float32 fTemp = 0.0f;
+	switch (m_pCollada->pAsset->eAxisUp)
+	{
+	case EAU_X://TODO
+		break;
+	case EAU_Y:
+		//默认Y向上 不作转换
+		break;
+	case EAU_Z:
+		fTemp = vec3.y;
+		vec3.y = vec3.z;
+		vec3.z = fTemp;
+		break;
+	default:
+		break;
+	}
 }
 
-DexModelDaeLoader::DaeGeometry* DexModelDaeLoader::find_geometry(DString sGeometryId)
+DexModelDaeLoader::DaeImage* DexModelDaeLoader::find_image(DString sImageId)
 {
-	for (size_t i = 0; i < m_vecGeometries.size(); ++i)
-		if (m_vecGeometries[i]->sId == sGeometryId)
-			return m_vecGeometries[i];
+	DEX_ENSURE_P(m_pCollada != nullptr && m_pCollada->pLibraryImages != nullptr);
+	for (size_t i = 0; i < m_pCollada->pLibraryImages->vecData.size(); ++i)
+		if (m_pCollada->pLibraryImages->vecData[i]->sId == sImageId)
+			return m_pCollada->pLibraryImages->vecData[i];
 	return nullptr;
 }
 DexModelDaeLoader::DaeMaterial* DexModelDaeLoader::find_material(DString sMaterialId)
 {
-	for (size_t i = 0; i < m_vecMaterials.size(); ++i)
-		if (m_vecMaterials[i]->sId == sMaterialId)
-			return m_vecMaterials[i];
+	DEX_ENSURE_P(m_pCollada != nullptr && m_pCollada->pLibraryMaterials != nullptr);
+	for (size_t i = 0; i < m_pCollada->pLibraryMaterials->vecData.size(); ++i)
+		if (m_pCollada->pLibraryMaterials->vecData[i]->sId == sMaterialId)
+			return m_pCollada->pLibraryMaterials->vecData[i];
 	return nullptr;
 }
-DexModelDaeLoader::DaeSource* DexModelDaeLoader::find_source(DaeGeometry* pGeometry, DString sId)
-{//目前默认geometry下面只有一个mesh，所有具体数据都在这个mesh里面
-	DaeBase* pMesh = pGeometry->child;
-	DaeBase* pRet = pMesh->child;
-	while (pRet != nullptr)
-	{
-		if (pRet->type == ECE_source)
-		{
-			DaeSource* pSource = (DaeSource*)pRet;
-			if (pSource->sId == sId)
-				return pSource;
-		}
-		pRet = pRet->sibling;
-	}
-	return nullptr;
-}
-DexModelDaeLoader::DaeVertices* DexModelDaeLoader::find_verticles(DaeGeometry* pGeometry, DString sId)
+DexModelDaeLoader::DaeEffect* DexModelDaeLoader::find_effect(DString sEffectId)
 {
-	DaeBase* pMesh = pGeometry->child;
-	DaeBase* pRet = pMesh->child;
-	while (pRet != nullptr)
-	{
-		if (pRet->type == ECE_vertices)
-		{//目前认定mesh下面只有一个vertices，所以不用比较sId，直接返回
-			return (DaeVertices*)pRet;
-		}
-		pRet = pRet->sibling;
-	}
+	DEX_ENSURE_P(m_pCollada != nullptr && m_pCollada->pLibraryEffects != nullptr);
+	for (size_t i = 0; i < m_pCollada->pLibraryEffects->vecData.size(); ++i)
+		if (m_pCollada->pLibraryEffects->vecData[i]->sId == sEffectId)
+			return m_pCollada->pLibraryEffects->vecData[i];
 	return nullptr;
 }
+DexModelDaeLoader::DaeGeometry* DexModelDaeLoader::find_geometry(DString sGeometryId)
+{
+	DEX_ENSURE_P(m_pCollada != nullptr && m_pCollada->pLibraryGeometries != nullptr);
+	for (size_t i = 0; i < m_pCollada->pLibraryGeometries->vecData.size(); ++i)
+		if (m_pCollada->pLibraryGeometries->vecData[i]->sId == sGeometryId)
+			return m_pCollada->pLibraryGeometries->vecData[i];
+	return nullptr;
+}
+DexModelDaeLoader::DaeSource* DexModelDaeLoader::find_source(DVector<DaeSource*>& vData, DString sId)
+{
+	for (size_t i = 0; i < vData.size(); ++i)
+		if (vData[i]->sId == sId)
+			return vData[i];
+	return nullptr;
+}
+
 DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 {
 	DexSkinMesh* pDexSkinMesh = new DexSkinMesh();
 	DexSkinMesh::DexMesh* pDexMesh = NULL;
-	DaeInstanceGeometry* pInstanceGeometry = (DaeInstanceGeometry*)pStaticMeshNode->child;
+	DaeInstanceGeometry* pInstanceGeometry = (DaeInstanceGeometry*)pStaticMeshNode->pInstanceMesh;
 	//DaeInstanceGeometry中指明的materials就是这个skinmesh需要用到的所有material
 	//处理materials
-	DexMaterial dexMaterial;
-	for (size_t i = 0; i < pInstanceGeometry->vecMaterials.size(); ++i)
-	{
-		for (size_t j = 0; j < m_vecMaterials.size(); ++j)
-		{
-			if (m_vecMaterials[j]->sId == pInstanceGeometry->vecMaterials[i].sSymbol)
-			{
-				//寻找meterial对应的instance_effect
-				for (size_t k = 0; k < m_vecEffects.size(); ++k)
-				{
-					if (m_vecEffects[i]->id == m_vecMaterials[j]->instance_effect_url)
-					{//找到url对应的instance_effect
-
-					}
-				}
-			}
-		}
-	}
+	DVector<DString> vMaterials;
+	DVector<DString> vImages;
+	deal_with_material_texture(pInstanceGeometry->vecMaterials, pDexSkinMesh, vMaterials, vImages);
 	DaeGeometry* pGeometry = find_geometry(pInstanceGeometry->sUrl);
 	if (pGeometry != nullptr)
 	{
+		DaeMesh* pMesh = pGeometry->pMesh;
 		stIndex index;
 		DexSkinMesh::stMeshVertex newVertex;
-		DaeMaterial* pMaterial;
 		DaeSource* pSourcePos = nullptr;
 		DaeSource* pSourceNormal = nullptr;
 		DaeSource* pSourceUv = nullptr;
 		DaeSource* pSourceTangent = nullptr; //暂时不支持
 		DaeSource* pSourceBinormal = nullptr; //暂时不支持
-		DaeSource* pSourceColor = nullptr; 
-
-		DaeBase* pDaeElement = pGeometry->child;
-		while (pDaeElement != nullptr)
+		DaeSource* pSourceColor = nullptr;
+		DMap<stIndex, int32> mapVertexInfo;
+		if (pMesh != nullptr)
 		{
-			switch (pDaeElement->type)
+			for (size_t iTriangleIndex = 0; iTriangleIndex < pMesh->vecTriangles.size(); ++iTriangleIndex)
 			{
-			case ECE_triangle:
-			{
-				DMap<stIndex, int32> mapVertexInfo;
-				DaeTriangle* pTriangle = (DaeTriangle*)pDaeElement;
+				mapVertexInfo.clear();
+				DaeTriangles* pTriangle = pMesh->vecTriangles[iTriangleIndex];
 				int32 iInputSize = pTriangle->vInputs.size();
 				pDexMesh = pDexSkinMesh->AddMesh(pTriangle->material.c_str());//暂时用meterial的名字来命名
 				//处理material
-				pMaterial = find_material(pTriangle->material);
-
+				for (size_t i = 0; i < vMaterials.size(); ++i)
+				{
+					if (vMaterials[i] == pTriangle->material)
+					{
+						pDexMesh->m_iMaterialId = i;
+						pDexMesh->m_iTextureId = i;
+					}
+				}
 				//对应pos normal uv 等source
 				for (size_t i = 0; i < pTriangle->vInputs.size(); ++i)
 				{
@@ -2078,87 +1943,272 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 					switch (pInput->semantic)
 					{
 					case ES_POSITION:
-						pSourcePos = find_source(pGeometry, pInput->source);
+						pSourcePos = find_source(pMesh->vecSources, pInput->source);
 						break;
 					case ES_NORMAL:
-						pSourceNormal = find_source(pGeometry, pInput->source);
+						pSourceNormal = find_source(pMesh->vecSources, pInput->source);
 						break;
 					case ES_TEXCOORD:
-						pSourceUv = find_source(pGeometry, pInput->source);
+						pSourceUv = find_source(pMesh->vecSources, pInput->source);
 						break;
 					case ES_TEXTANGENT:
-						pSourceTangent = find_source(pGeometry, pInput->source);
+						pSourceTangent = find_source(pMesh->vecSources, pInput->source);
 						break;
 					case ES_TEXBINORMAL:
-						pSourceBinormal = find_source(pGeometry, pInput->source);
+						pSourceBinormal = find_source(pMesh->vecSources, pInput->source);
 						break;
 					case ES_COLOR:
-						pSourceColor = find_source(pGeometry, pInput->source);
+						pSourceColor = find_source(pMesh->vecSources, pInput->source);
 						break;
 					default:
 						break;
 					}
 				}
-				for (int32 i = 0; i < pTriangle->iCount;)
-				{//一次性读取iInputSize个数据
-					//默认input顺序是VERTEX NORMAL TEXCOORD TEXTANGENT TEXBINORMAL COLOR
-					if (iInputSize > 0 )
-						index.m_iPosIndex = pTriangle->pData[i++];
-					if (iInputSize > 1)
-						index.m_iNormalIndex = pTriangle->pData[i++];
-					if (iInputSize > 2)
-						index.m_iUvIndex = pTriangle->pData[i++];
-					if (iInputSize > 3)
-						i++;//tangent
-					if (iInputSize > 4)
-						i++;//binormal
-					if (iInputSize > 5)
-						index.m_iColorIndex = pTriangle->pData[i++];
-					map<stIndex, int32>::iterator ite = mapVertexInfo.find(index);
-					if (ite != mapVertexInfo.end())
-						pDexMesh->AddVertexIndice(ite->second);
-					else
-					{
-						newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex*3]);//从该索引处取3个浮点数放进pos中
-						newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
-						newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
+				uint32 iValueIndex = 0;
+				for (int32 i = 0; i < pTriangle->iCount; ++i)
+				{//一次性读取3个顶点
+					for (int32 j = 0; j < 3; ++j)
+					{//每个顶点占据iInputSize个数据
+						//默认input顺序是VERTEX NORMAL TEXCOORD TEXTANGENT TEXBINORMAL COLOR
+						if (iInputSize > 0)
+							index.m_iPosIndex = pTriangle->pData[iValueIndex++];
+						if (iInputSize > 1)
+							index.m_iNormalIndex = pTriangle->pData[iValueIndex++];
+						if (iInputSize > 2)
+							index.m_iUvIndex = pTriangle->pData[iValueIndex++];
+						if (iInputSize > 3)
+							iValueIndex++;//tangent
+						if (iInputSize > 4)
+							iValueIndex++;//binormal
 						if (iInputSize > 5)
-						{//有color
-							uint8 r = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 0] * 255;
-							uint8 g = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 1] * 255;
-							uint8 b = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 2] * 255;
-							uint8 a = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 3] * 255;
-							newVertex.color.Set(r,g,b,a);
+							index.m_iColorIndex = pTriangle->pData[iValueIndex++];
+						map<stIndex, int32>::iterator ite = mapVertexInfo.find(index);
+						if (ite != mapVertexInfo.end())
+							pDexMesh->AddVertexIndice(ite->second);
+						else
+						{
+							newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
+							newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
+							TransVector3ByAxis(newVertex.pos);
+							TransVector3ByAxis(newVertex.normal);
+							//newVertex.uv.x = 1.0f - newVertex.uv.x;
+							//newVertex.uv.y = 1.0f - newVertex.uv.y;
+
+							newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
+							if (iInputSize > 5)
+							{//有color
+								uint8 r = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 0] * 255;
+								uint8 g = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 1] * 255;
+								uint8 b = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 2] * 255;
+								uint8 a = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 3] * 255;
+								newVertex.color.Set(r, g, b, a);
+							}
+							mapVertexInfo.insert(std::make_pair(index, pDexMesh->m_vecVertexsBuffer.size()));
+							pDexMesh->AddVertexIndice(pDexMesh->m_vecVertexsBuffer.size());
+							pDexMesh->m_vecVertexsBuffer.push_back(newVertex);
 						}
-						mapVertexInfo.insert(std::make_pair(index, pDexMesh->m_vecVertexsBuffer.size()));
-						pDexMesh->AddVertexIndice(pDexMesh->m_vecVertexsBuffer.size());
-						pDexMesh->m_vecVertexsBuffer.push_back(newVertex);
+					}
+
+				}
+			}
+			//polygons todo
+			//polylist
+			for (size_t iPolylistIndex = 0; iPolylistIndex < pMesh->vecPolylists.size(); ++iPolylistIndex)
+			{
+				mapVertexInfo.clear();
+				DaePolylist* pPolylist = pMesh->vecPolylists[iPolylistIndex];
+				int32 iInputSize = pPolylist->vInputs.size();
+				pDexMesh = pDexSkinMesh->AddMesh(pPolylist->material.c_str());//暂时用meterial的名字来命名
+				//处理material
+				for (size_t i = 0; i < vMaterials.size(); ++i)
+				{
+					if (vMaterials[i] == pPolylist->material)
+					{
+						pDexMesh->m_iMaterialId = i;
+						pDexMesh->m_iTextureId = i;
 					}
 				}
+				//对应pos normal uv 等source
+				for (size_t i = 0; i < pPolylist->vInputs.size(); ++i)
+				{
+					stDaeInput* pInput = &pPolylist->vInputs[i];
+					switch (pInput->semantic)
+					{
+					case ES_POSITION:
+						pSourcePos = find_source(pMesh->vecSources, pInput->source);
+						break;
+					case ES_NORMAL:
+						pSourceNormal = find_source(pMesh->vecSources, pInput->source);
+						break;
+					case ES_TEXCOORD:
+						pSourceUv = find_source(pMesh->vecSources, pInput->source);
+						break;
+					case ES_TEXTANGENT:
+						pSourceTangent = find_source(pMesh->vecSources, pInput->source);
+						break;
+					case ES_TEXBINORMAL:
+						pSourceBinormal = find_source(pMesh->vecSources, pInput->source);
+						break;
+					case ES_COLOR:
+						pSourceColor = find_source(pMesh->vecSources, pInput->source);
+						break;
+					default:
+						break;
+					}
+				}
+				int iPos = 0;
+				for (int32 i = 0; i < pPolylist->count; ++i)
+				{//一次性读取iInputSize个数据
+					//默认input顺序是VERTEX NORMAL TEXCOORD TEXTANGENT TEXBINORMAL COLOR
+					int iVCount = pPolylist->p_vcountData[i];
+					if (iVCount == 3)
+					{//三角形
+						for (int32 j = 0; j < 3; ++j)
+						{
+							if (iInputSize > 0)
+								index.m_iPosIndex = pPolylist->pData[iPos++];
+							if (iInputSize > 1)
+								index.m_iNormalIndex = pPolylist->pData[iPos++];
+							if (iInputSize > 2)
+								index.m_iUvIndex = pPolylist->pData[iPos++];
+							if (iInputSize > 3)
+								iPos++;//tangent
+							if (iInputSize > 4)
+								iPos++;//binormal
+							if (iInputSize > 5)
+								index.m_iColorIndex = pPolylist->pData[iPos++];
+							map<stIndex, int32>::iterator ite = mapVertexInfo.find(index);
+							if (ite != mapVertexInfo.end())
+								pDexMesh->AddVertexIndice(ite->second);
+							else
+							{
+								newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
+								newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
+								TransVector3ByAxis(newVertex.pos);
+								TransVector3ByAxis(newVertex.normal);
 
+								newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
+								newVertex.uv.x = 1.0f - newVertex.uv.x;
+								newVertex.uv.y = 1.0f - newVertex.uv.y;
+								if (iInputSize > 5)
+								{//有color
+									uint8 r = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 0] * 255;
+									uint8 g = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 1] * 255;
+									uint8 b = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 2] * 255;
+									uint8 a = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 3] * 255;
+									newVertex.color.Set(r, g, b, a);
+								}
+								mapVertexInfo.insert(std::make_pair(index, pDexMesh->m_vecVertexsBuffer.size()));
+								pDexMesh->AddVertexIndice(pDexMesh->m_vecVertexsBuffer.size());
+								pDexMesh->m_vecVertexsBuffer.push_back(newVertex);
+							}
+						}
+
+					}
+					else if (iVCount == 4)
+					{//四边形
+						int todo = 0; //
+					}
+				}
 			}
-			case ECE_polygons:
-			case ECE_polylist:
-				break;
-			default:
-				break;
-			}
-			pDaeElement = pDaeElement->sibling;
 		}
 	}
 	else
 		getLog()->LogLine(log_allert, "can not find instance_geometry url %s", pInstanceGeometry->sUrl.c_str());
 	return pDexSkinMesh;
 }
+
+DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
+{
+	DEX_ENSURE_P(pAniMeshNode);
+	DexSkinMesh* pDexSkinMesh = new DexSkinMesh();
+	DexSkinMesh::DexMesh* pDexMesh = NULL;
+	DaeInstanceController* pInstanceController = (DaeInstanceController*)pAniMeshNode->pInstanceMesh;
+	//DaeInstanceController中指明的materials就是这个skinmesh需要用到的所有material
+	//处理materials
+	DVector<DString> vMaterials;
+	DVector<DString> vImages;
+	deal_with_material_texture(pInstanceController->vecMaterials, pDexSkinMesh, vMaterials, vImages);
+
+
+	return nullptr;
+}
+
+void DexModelDaeLoader::deal_with_material_texture(DVector<stInstanceMaterial>& vec, DexSkinMesh* pSkinMesh, DVector<DString>& vec2, DVector<DString>& vec3)
+{
+	DexMaterial dexMaterial;
+	for (size_t i = 0; i < vec.size(); ++i)
+	{
+		DaeMaterial* pMaterial = find_material(vec[i].sTarget);
+		if (pMaterial != nullptr)
+		{
+			DaeEffect* pEffect = find_effect(pMaterial->instance_effect_url);
+			if (pEffect != nullptr && pEffect->pProfile != nullptr)
+			{
+				DaeEffectProfile* pEffectProfile = pEffect->pProfile;
+				DaeTechnique* pTechnique = pEffectProfile->pTechnique;
+				if (pTechnique != nullptr && pTechnique->pPhong != nullptr)
+				{
+					DaePhong* pPhong = pEffectProfile->pTechnique->pPhong;
+					dexMaterial.emissive = pPhong->colorEmission;
+					dexMaterial.diffuse = pPhong->pDiffuse->color;
+					dexMaterial.ambient = pPhong->colorAmbient;
+					dexMaterial.specular = pPhong->colorSpecular;
+					dexMaterial.power = pPhong->fShininess;
+					DaeImage* pImage = find_image(pEffectProfile, pPhong->pDiffuse->sTexture);
+					vec2.push_back(vec[i].sSymbol);
+					vec3.push_back(pPhong->pDiffuse->sTexcoord);
+					pSkinMesh->AddMaterial(dexMaterial);
+					pSkinMesh->AddTexture(pImage->init_from.c_str());
+				}
+			}
+		}
+	}
+}
+DexModelDaeLoader::DaeImage* DexModelDaeLoader::find_image(DaeEffectProfile* pEffectProfile, DString sTexture)
+{
+	DEX_ENSURE_P(pEffectProfile != nullptr);
+	DaeImage* pImage = nullptr;
+	DaeNewParamSampler2D* pNewParamSampler2D = nullptr;
+	DaeNewParamSurface* pNewParamSurface = nullptr;
+	//先从profile里面寻找是否有sample2D
+	for (size_t i = 0; i < pEffectProfile->vecNewParams.size(); ++i)
+	{
+		if (pEffectProfile->vecNewParams[i]->eType == ECE_newparam_sampler2D)
+		{
+			pNewParamSampler2D = (DaeNewParamSampler2D*) pEffectProfile->vecNewParams[i];
+			if (pNewParamSampler2D->sId == sTexture)
+			{//找到sTexture对应的sampler2D，寻找Surface
+				for (size_t j = 0; j < pEffectProfile->vecNewParams.size(); ++j)
+				{
+					if (pEffectProfile->vecNewParams[j]->eType == ECE_newparam_surface)
+					{//找到surface ,再去library image寻找
+						pNewParamSurface = (DaeNewParamSurface*)pEffectProfile->vecNewParams[j];
+						pImage = find_image(pNewParamSurface->sInitFrom);
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+	if (pImage == nullptr)
+		//sTexture所指的不在sampler2D,中，则直接去library images寻找
+		pImage = find_image(sTexture);
+	return pImage;
+}
+
 DexModelBase* DexModelDaeLoader::LoadModel(const char* filename)
 {
 	//一个JOINT类型的node是一个骨骼系统，一个NODE类型的node是一个模型
 	//静态模型下面有instance_geometry,动态模型下面有instance_controller
 	//无论instance_geometry还是instantce_controller都会引用一个geometry,一个geometry就是一个skinmesh的mesh数据
 	//geometry里面有多组triangles或者polylist等，每一组都对应一个材质，也就是DexMesh
+	getLog()->LogLine(log_ok, "load dae model %s...\n", filename);
+	int64 Time = getTime()->GetTotalMillSeconds();
 	TiXmlDocument Xml(filename);
 	Xml.LoadFile();
-	
+	DexSkinMesh* pSkinMesh = nullptr;
 	TiXmlNode* pXmlNode = Xml.FirstChild();
 	if (pXmlNode->Type() == TiXmlNode::TINYXML_DECLARATION)
 	{
@@ -2175,29 +2225,31 @@ DexModelBase* DexModelDaeLoader::LoadModel(const char* filename)
 			return nullptr;
 		}
 		DexCheckMemLeak::getDexMemoryLeakCheck()->BeginCheck();
-		DaeCollada* pCollada = parse_COLLADA(pXmlNode);
+		m_pCollada = parse_COLLADA(pXmlNode);
 
 
 		DaeNode* pNode = nullptr;
 		DaeInstanceGeometry* pInstanceGeometry = nullptr;
 		DaeInstanceController* pInstanceController = nullptr;
-		for (size_t i = 0; i < m_vecMeshes.size(); ++i)
+		for (size_t i = 0; i < m_pCollada->pLibraryVisualScenes->vecData[0]->vMeshs.size(); ++i)
 		{
-			pNode = m_vecMeshes[i];
-			if (pNode->child != nullptr)
+			pNode = m_pCollada->pLibraryVisualScenes->vecData[0]->vMeshs[i];
+			if (pNode != nullptr)
 			{
-				if (pNode->child->type == ECE_instance_geometry)
+				if (pNode->pInstanceMesh->eType == ECE_instance_geometry)
 				{//静态模型
-					pInstanceGeometry = (DaeInstanceGeometry*) pNode->child;
+					pInstanceGeometry = (DaeInstanceGeometry*) pNode->pInstanceMesh;
+					pSkinMesh = create_SkinMeshStatic(pNode);
 				}
 			}
 		}
 
 
-		delete pCollada;
-		clear_vecInfo();
+		delete m_pCollada;
 		DexCheckMemLeak::getDexMemoryLeakCheck()->EndCheck();
 	}
-	return nullptr;
+	Time = getTime()->GetTotalMillSeconds() - Time;
+	getLog()->LogLine(log_ok, "load dae model %s ok, use time %d ms\n", filename, Time);
+	return pSkinMesh;
 }
 //#undef IS_NODE

@@ -2,7 +2,11 @@
 #ifndef _DEX_COLOR_H
 #define _DEX_COLOR_H
 //#include <d3d9types.h>
-
+/*
+conversion from 'float' to 'unsigned char', possible loss of data
+conversion from 'double' to 'unsigned char', possible loss of data
+*/
+#pragma warning(disable:4244) 
 typedef struct _DexColor
 {
 	unsigned char b;
@@ -59,32 +63,32 @@ typedef struct _DexColor
 	}
 	_DexColor operator + (const _DexColor& color) const  
 	{
-		float _r = r + color.r;
-		_r = _r > 1.0f ? 1.0f : _r;
-		float _g = g + color.g;
-		_g = _g > 1.0f ? 1.0f : _g;
-		float _b = b + color.b;
-		_b = _b > 1.0f ? 1.0f : _b;
-		float _a = a + color.a;
-		_a = _a > 1.0f ? 1.0f : _a;
+		unsigned char _r = r + color.r;
+		_r = _r > 255 ? 255 : _r;
+		unsigned char _g = g + color.g;
+		_g = _g > 255 ? 255 : _g;
+		unsigned char _b = b + color.b;
+		_b = _b > 255 ? 255 : _b;
+		unsigned char _a = a + color.a;
+		_a = _a > 255 ? 255 : _a;
 		return _DexColor(_r, _g, _b, _a);
 	}
 	_DexColor operator - (const _DexColor& color) const  
 	{
-		float _r = r - color.r;
-		_r = _r < 0.0f ? 0.0f : _r;
-		float _g = g - color.g;
-		_g = _g < 0.0f ? 0.0f : _g;
-		float _b = b - color.b;
-		_b = _b < 0.0f ? 0.0f : _b;
-		float _a = a - color.a;
-		_a = _a < 0.0f ? 0.0f : _a;
+		unsigned char _r = r - color.r;
+		_r = _r < 0 ? 0 : _r;
+		unsigned char _g = g - color.g;
+		_g = _g < 0 ? 0 : _g;
+		unsigned char _b = b - color.b;
+		_b = _b < 0 ? 0 : _b;
+		unsigned char _a = a - color.a;
+		_a = _a < 0 ? 0 : _a;
 		return _DexColor(_r, _g, _b, _a);
 	}
 	_DexColor operator * (const _DexColor& color) const  
 	{
-		return _DexColor(r / 255.0f * color.r / 255.0f, g / 255.0f * color.g / 255.0f,
-			b / 255.0f * color.b / 255.0f, a / 255.0f * color.a / 255.0f);
+		return _DexColor(r / 255.0f * color.r, g / 255.0f * color.g,
+			b / 255.0f * color.b, a / 255.0f * color.a);
 	}
 	bool operator == (const _DexColor& color) const 
 	{

@@ -317,7 +317,7 @@ m_eMeshType(SkinMeshModelType_UnKnown)
 	m_pRootJoint = NULL;
 	m_bHaveAnimation = false;
 	m_bAnimate = false;
-	m_iLightFlag = true;
+	m_iLightFlag = 0;
 
 	m_pRootJoint = new Joint;
 	m_pRootJoint->m_pFather = NULL;

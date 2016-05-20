@@ -161,7 +161,9 @@ void DexShaderHlslSkinMesh::Render()
 			}
 			if (skinMesh->m_vecMeshs[i]->m_iTextureId != -1)
 			{
-				pFxEffect->SetTexture(m_handleTex0, skinMesh->m_vecTextures[skinMesh->m_vecMeshs[i]->m_iTextureId]->GetTexPt());
+				if (skinMesh->m_vecMeshs[i]->m_iTextureId < skinMesh->m_vecTextures.size() &&
+					skinMesh->m_vecTextures[skinMesh->m_vecMeshs[i]->m_iTextureId] != nullptr)
+					pFxEffect->SetTexture(m_handleTex0, skinMesh->m_vecTextures[skinMesh->m_vecMeshs[i]->m_iTextureId]->GetTexPt());
 			}
 			else
 			{

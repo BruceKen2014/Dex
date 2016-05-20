@@ -248,7 +248,9 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
-	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/Old Book/Book.dae");
+	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/mickey/Mickey_Mouse2.dae");
+	daeModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_POINT | DEXRENDER_LIGHT_AMBIENT);
+	//daeModel->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
 	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/obj/RYU.obj");
 	objModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
 	//objModel->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
@@ -357,6 +359,10 @@ bool PalGameStateBattleMain::ApplyRes()
 	world_matrix.Identity();
 	world_matrix.Scale(1000.0f, 1000.0f, 1000.0f);
 	objModel->SetSceneNodeMatrix(world_matrix);
+	world_matrix.Identity();
+	world_matrix.Scale(10.0f, 10.0f, 10.0f);
+	world_matrix.Translate(-50.0f, 0.0f, 50.0f);
+	daeModel->SetSceneNodeMatrix(world_matrix);
 	InitVertexShader();
 	InitPixelShader();
 	m_bApply = true;
@@ -492,6 +498,7 @@ bool PalGameStateBattleMain::Update(int delta)
 	}
 	ms3d->Update(delta/2);
 	objModel->Update(delta);
+	daeModel->Update(delta); 
 	UpdateVertexShader(delta);
 	UpdatePixelShader(delta);
 	//testMesh->Update(delta/4);
@@ -519,17 +526,36 @@ void PalGameStateBattleMain::Render()
 	DexGameEngine::getEngine()->RenderCoorLines();
 	stDexPointLight pointLight1(DexVector4(1.0f, 1.0f, 1.0f, 1.0f), DexVector4(DexGameEngine::getEngine()->getCamera()->GetPosition(), 1.0f),
 		DexVector4(500.0f, 0.0f, 0.0f, 0.0f));
-	stDexPointLight pointLight2(DexVector4(0.0f, 1.0f, 0.0f, 1.0f), DexVector4(0.0f, 0.0f, -100.0f, 1.0f),
+	stDexPointLight pointLight2(DexVector4(0.0f, 1.0f, 0.0f, 1.0f), DexVector4(0.0f, 0.0f, -200.0f, 1.0f),
 		DexVector4(1000.0f, 0.0f, 0.0f, 0.0f));
 	stDexDirectionLight dirLight(DexVector4(1.0f, 1.0f, 1.0f, 2.0f), DexVector4(0.0f, -1.0f, 0.0f, 1.0f));
+	
+	DexMatrix4x4 matrix;
+	static float rotate = 0.0f;
+	rotate += 0.01f;
+	matrix.RotateY(rotate);
+	matrix.Translate(-50.0f, 0.0f, 50.0f);
+	ms3d->SetSceneNodeMatrix(matrix);
 	ms3d->ClearPointLight();
 	ms3d->SetDirectionLight(dirLight);
 	ms3d->AddPointLight(pointLight1);
 	ms3d->AddPointLight(pointLight2);
 	ms3d->Render();
-	static float rotate = 0.0f;
-	rotate += 0.01f;
-	DexMatrix4x4 matrix;
+
+
+	matrix.Identity();
+	matrix.Scale(10.0f, 10.0f, 10.0f);
+	matrix.RotateY(rotate);
+	matrix.Translate(0.0f, 0.0f, 0.0f);
+	daeModel->SetSceneNodeMatrix(matrix);
+	daeModel->ClearPointLight();
+	daeModel->SetDirectionLight(dirLight);
+	daeModel->AddPointLight(pointLight1);
+	daeModel->AddPointLight(pointLight2);
+	daeModel->Render();
+
+	
+	matrix.Identity();
 	matrix.Scale(100.0f, 100.0f, 100.0f);
 	matrix.RotateY(rotate);
 	matrix.Translate(200.0f, 0.0f, 200.0f);

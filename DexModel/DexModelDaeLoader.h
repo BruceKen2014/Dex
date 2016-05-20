@@ -8,13 +8,15 @@ DexEngine& dae model loader
 #include "../DexMath/DexVector4.h"
 #include "../DexBase/DexDVector.h"
 #include "DexModelLoader.h"
+#include "../DexBase/DexColor.h"
 
-#define dae_element_decalare_empty(name,_type)\
+#define dae_element_decalare_library(name,eType,member)\
 class name :public DaeBase\
 	{\
 	public:\
-	name() :DaeBase(_type){}\
-	virtual ~name(){}\
+	DVector<member*> vecData;\
+	name();\
+	virtual ~name();\
 };
 class TiXmlNode;
 class TiXmlElement;
@@ -36,6 +38,7 @@ public:
 		ECE_controller,
 		ECE_diffuse,
 		ECE_effect,
+		ECE_effect_profile,
 		ECE_emission,
 		ECE_geometry,
 		ECE_images,
@@ -49,8 +52,10 @@ public:
 		ECE_instance_controller,
 		ECE_material,
 		ECE_mesh,
+		ECE_newparam,
+		ECE_newparam_sampler2D,
+		ECE_newparam_surface,
 		ECE_node,
-		ECE_profile_COMMON,
 		ECE_phong,
 		ECE_polygons,
 		ECE_polylist,
@@ -69,6 +74,12 @@ public:
 		ECE_visual_scene,
 
 		ECE_Total
+	};
+	enum EAxisUp
+	{
+		EAU_X,
+		EAU_Y,
+		EAU_Z,
 	};
 	enum ESemantic
 	{
@@ -103,28 +114,19 @@ public:
 		DaeBase* father;
 		DaeBase* child;
 		DaeBase* sibling;
-		EColladaElement type;
+		EColladaElement eType;
 	public:
 		DaeBase(EColladaElement _type);
 		virtual ~DaeBase();
 		void AddChild(DaeBase* _child);
-	};
-
-	class DaeCollada :public DaeBase
-	{
-	public:
-		DString  version;
-		DString  xmlns;
-		DaeCollada() :DaeBase(ECE_COLLADA){}
-		virtual ~DaeCollada(){}
 	};
 	class DaeAsset :public DaeBase
 	{
 	public:
 		DString  created;
 		DString  modified;
-		DString  up_axis;
-		DaeAsset() :DaeBase(ECE_asset){}
+		EAxisUp  eAxisUp;
+		DaeAsset() :DaeBase(ECE_asset){ eAxisUp = EAU_Y; }
 		virtual ~DaeAsset(){}
 	};
 	struct stDaeInput
@@ -140,24 +142,16 @@ public:
 		DString sSymbol;
 		DString sTarget;
 	};
-	dae_element_decalare_empty(DaeLibraryImage, ECE_library_images)
-	dae_element_decalare_empty(DaeLibraryMaterials, ECE_library_meterials)
-	dae_element_decalare_empty(DaeLibraryEffects, ECE_library_effects)
-	dae_element_decalare_empty(DaeLibraryGeometries, ECE_library_geometries)
-	dae_element_decalare_empty(DaeLibraryControllers, ECE_library_controllers)
-	dae_element_decalare_empty(DaeLibraryVisualScenes, ECE_library_visual_scenes)
-	dae_element_decalare_empty(DaeProfileCommon, ECE_profile_COMMON)
-	dae_element_decalare_empty(DaePhong, ECE_phong)
-	dae_element_decalare_empty(DaeMesh, ECE_mesh)
 	class DaeImage :public DaeBase
 	{
 	public:
-		DString  id;
-		DString  name;
+		DString  sId;
+		DString  sName;
 		DString  init_from;
 		DaeImage() :DaeBase(ECE_images){}
 		virtual ~DaeImage(){}
 	};
+
 	class DaeMaterial :public DaeBase
 	{
 	public:
@@ -167,92 +161,86 @@ public:
 		DaeMaterial() :DaeBase(ECE_material){}
 		virtual ~DaeMaterial(){}
 	};
-	class DaeEffect :public DaeBase
+	class DaeNewParam : public DaeBase
 	{
 	public:
-		DString  id;
-		DString  name;
-		DaeEffect() :DaeBase(ECE_effect){}
-		virtual ~DaeEffect(){}
+		DString sId;
+	public:
+		DaeNewParam() :DaeBase(ECE_newparam){}
+		virtual ~DaeNewParam(){}
+	};
+	class DaeNewParamSurface : public DaeNewParam
+	{
+	public:
+		DString sSurfaceType;
+		DString sInitFrom;
+		DString sFormat;
+	public:
+		DaeNewParamSurface(){ eType = ECE_newparam_surface;}
+		virtual ~DaeNewParamSurface(){}
+	};
+	class DaeNewParamSampler2D : public DaeNewParam
+	{
+	public:
+		DString sSource;
+		DString sWrapS;
+		DString sWrapT;
+		DString sMinFilter;
+		DString sMagFilter;
+		DString sMipFilter;
+	public:
+		DaeNewParamSampler2D(){ eType = ECE_newparam_sampler2D; }
+		virtual ~DaeNewParamSampler2D(){}
+	};
+	class DaeDiffuse :public DaeBase
+	{
+	public:
+		DString  sTexture;
+		DString  sTexcoord;
+		DexColor color;
+		DaeDiffuse() :DaeBase(ECE_diffuse){}
+		virtual ~DaeDiffuse(){}
+	};
+	class DaePhong :public DaeBase
+	{
+	public:
+		DexColor  colorEmission;
+		DexColor  colorAmbient;
+		DexColor  colorSpecular;
+		DexColor  colorTransparent;
+		DexColor  colorReflective;
+		DaeDiffuse*  pDiffuse;
+		float32   fReflectivity;
+		float32	  fShininess;
+		float32   fTransparency;
+		float32   fIndexOfRefraction;
+		DaePhong() :DaeBase(ECE_phong){ pDiffuse = nullptr; fReflectivity = fShininess = fTransparency = fIndexOfRefraction = 0.0f; }
+		virtual ~DaePhong(){ if (pDiffuse != nullptr) delete pDiffuse; }
 	};
 	class DaeTechnique :public DaeBase
 	{
 	public:
 		DString  sid;
-		DaeTechnique() :DaeBase(ECE_technique){}
-		virtual ~DaeTechnique(){}
+		DaePhong* pPhong;
+		DaeTechnique() :DaeBase(ECE_technique){ pPhong = nullptr; }
+		virtual ~DaeTechnique(){ if (pPhong != nullptr) delete pPhong; }
 	};
-	class DaeEmission :public DaeBase
+	class DaeEffectProfile :public DaeBase
 	{
 	public:
-		DexVector4  color;
-		DaeEmission() :DaeBase(ECE_emission){}
-		virtual ~DaeEmission(){}
+		DVector<DaeNewParam*> vecNewParams;
+		DaeTechnique*         pTechnique;
+		DaeEffectProfile();
+		virtual ~DaeEffectProfile();
 	};
-	class DaeAmbient :public DaeBase
-	{
-	public:
-		DexVector4  color;
-		DaeAmbient() :DaeBase(ECE_ambient){}
-		virtual ~DaeAmbient(){}
-	};
-	class DaeDiffuse :public DaeBase
-	{
-	public:
-		DString  texture;
-		DString  texcoord;
-		DaeDiffuse() :DaeBase(ECE_diffuse){}
-		virtual ~DaeDiffuse(){}
-	};
-	class DaeSpecular :public DaeBase
-	{
-	public:
-		DexVector4  color;
-		DaeSpecular() :DaeBase(ECE_specular){}
-		virtual ~DaeSpecular(){}
-	};
-	class DaeReflective :public DaeBase
-	{
-	public:
-		DexVector4  color;
-		DaeReflective() :DaeBase(ECE_reflective){}
-		virtual ~DaeReflective(){}
-	};
-	class DaeTransparent :public DaeBase
-	{
-	public:
-		DexVector4  color;
-		DaeTransparent() :DaeBase(ECE_transparent){}
-		virtual ~DaeTransparent(){}
-	};
-	class DaeShininess :public DaeBase
-	{
-	public:
-		float  shininess;
-		DaeShininess() :DaeBase(ECE_shininess){}
-		virtual ~DaeShininess(){}
-	};
-	class DaeReflectivity :public DaeBase
-	{
-	public:
-		float  reflectivity;
-		DaeReflectivity() :DaeBase(ECE_shininess){}
-		virtual ~DaeReflectivity(){}
-	};
-	class DaeTransparency :public DaeBase
-	{
-	public:
-		float  transparency;
-		DaeTransparency() :DaeBase(ECE_transparency){}
-		virtual ~DaeTransparency(){}
-	};
-	class DaeGeometry :public DaeBase
+	class DaeEffect :public DaeBase
 	{
 	public:
 		DString  sId;
 		DString  sName;
-		DaeGeometry() :DaeBase(ECE_geometry){}
-		virtual ~DaeGeometry(){}
+		DaeEffectProfile* pProfile;
+		DaeEffect() :DaeBase(ECE_effect){ pProfile = nullptr; }
+		virtual ~DaeEffect(){ if (pProfile != nullptr) delete pProfile; }
 	};
 	class DaeSource :public DaeBase
 	{
@@ -290,22 +278,22 @@ public:
 		DaeVertices() :DaeBase(ECE_vertices){}
 		virtual ~DaeVertices(){ vInputs.swap(DVector<stDaeInput>()); }
 	};
-	class DaeTriangle :public DaeBase
+	class DaeTriangles :public DaeBase
 	{
 	public:
 		int32   iCount;
 		DString material;
 		DVector<stDaeInput> vInputs;
 		int32*  pData;
-		DaeTriangle() :DaeBase(ECE_triangle){ pData = nullptr; }
-		virtual ~DaeTriangle() { if (pData != nullptr) delete[]pData; }
+		DaeTriangles() :DaeBase(ECE_triangle){ pData = nullptr; }
+		virtual ~DaeTriangles() { if (pData != nullptr) delete[]pData; }
 	};
 	class DaePolylist :public DaeBase
 	{
 	public:
 		int32   count;
 		DString material;
-		DVector<stDaeInput> inputs;
+		DVector<stDaeInput> vInputs;
 		int32*  p_vcountData;
 		int32*  pData;
 		DaePolylist() :DaeBase(ECE_polylist){ p_vcountData = pData = nullptr; }
@@ -344,18 +332,9 @@ public:
 		uint32  iVertexWeightsCount;
 		int32*  pVCountData; //for vcount
 		int32*  pData;    //for v
-		DaeSkin() :DaeBase(ECE_skin){ pVCountData = pData = nullptr; }
-		virtual ~DaeSkin() {if (pVCountData != nullptr) delete[] pVCountData;
-		if (pData != nullptr) delete[] pData;
-		}
-	};
-	class DaeVisualScene : public DaeBase
-	{
-	public:
-		DString	sId;
-		DString sName;
-		DaeVisualScene() :DaeBase(ECE_visual_scene){}
-		virtual ~DaeVisualScene() {}
+		DVector<DaeSource*> vSources;
+		DaeSkin();
+		virtual ~DaeSkin();
 	};
 	class DaeNode : public DaeBase
 	{
@@ -365,8 +344,20 @@ public:
 		DString sSId;
 		ENodeType eNodeType;
 		DexMatrix4x4 mMatrix;
-		DaeNode() :DaeBase(ECE_node){}
-		virtual ~DaeNode() {}
+		DVector<DaeNode*> vNodeChildren;
+		DaeBase* pInstanceMesh; //instancegeometry or instancecontroller
+		DaeNode();
+		virtual ~DaeNode();
+	};
+	class DaeVisualScene : public DaeBase
+	{
+	public:
+		DString	sId;
+		DString sName;
+		DVector<DaeNode*> vJointsSystem;
+		DVector<DaeNode*> vMeshs;
+		DaeVisualScene();
+		virtual ~DaeVisualScene();
 	};
 	class DaeInstanceGeometry : public DaeBase
 	{
@@ -386,6 +377,47 @@ public:
 		DaeInstanceController() :DaeBase(ECE_instance_controller){}
 		virtual ~DaeInstanceController() {}
 	};
+	class DaeMesh : public DaeBase
+	{
+	public:
+		DaeVertices*        pVerticles;
+		DVector<DaeSource*> vecSources;
+		DVector<DaeTriangles*> vecTriangles;
+		DVector<DaePolygons*> vecPolygons;
+		DVector<DaePolylist*> vecPolylists;
+		DaeMesh();
+		virtual ~DaeMesh();
+	};
+	class DaeGeometry :public DaeBase
+	{
+	public:
+		DString  sId;
+		DString  sName;
+		DaeMesh* pMesh;
+		DaeGeometry();
+		virtual ~DaeGeometry();
+	};
+	dae_element_decalare_library(DaeLibraryImage, ECE_library_images, DaeImage)
+	dae_element_decalare_library(DaeLibraryMaterials, ECE_library_meterials, DaeMaterial)
+	dae_element_decalare_library(DaeLibraryEffects, ECE_library_effects, DaeEffect)
+	dae_element_decalare_library(DaeLibraryGeometries, ECE_library_geometries, DaeGeometry)
+	dae_element_decalare_library(DaeLibraryControllers, ECE_library_controllers, DaeController)
+	dae_element_decalare_library(DaeLibraryVisualScenes, ECE_library_visual_scenes, DaeVisualScene)
+	class DaeCollada :public DaeBase
+	{
+	public:
+		DString  version;
+		DString  xmlns;
+		DaeAsset* pAsset;
+		DaeLibraryImage* pLibraryImages;
+		DaeLibraryMaterials* pLibraryMaterials;
+		DaeLibraryEffects* pLibraryEffects;
+		DaeLibraryGeometries* pLibraryGeometries;
+		DaeLibraryControllers* pLibraryControllers;
+		DaeLibraryVisualScenes* pLibraryVisualScenes;
+		DaeCollada();
+		virtual ~DaeCollada();
+	};
 protected:
 
 	DaeCollada* parse_COLLADA(TiXmlNode* pXmlNode);
@@ -399,7 +431,7 @@ protected:
 	DaeBase* parse_effect(TiXmlNode* pXmlNode, DaeLibraryEffects* father);
 	DaeBase* parse_library_geometries(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_geometry(TiXmlNode* pXmlNode, DaeLibraryGeometries* father);
-	DaeBase* parse_source(TiXmlNode* pXmlNode, DaeBase* father);//source的father 可能是mesh和skin
+	DaeSource* parse_source(TiXmlNode* pXmlNode);
 	DaeBase* parse_accessor(TiXmlNode* pXmlNode, DaeSource* father);
 	DaeBase* parse_library_controllers(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_controller(TiXmlNode* pXmlNode, DaeLibraryControllers* father);
@@ -407,47 +439,59 @@ protected:
 	DaeBase* parse_library_visual_scenes(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_visual_scene(TiXmlNode* pXmlNode, DaeLibraryVisualScenes* father);
 	DaeBase* parse_scene(TiXmlNode* pXmlNode, DaeCollada* father);
-	DaeBase* parse_profile_Common(TiXmlNode* pXmlNode, DaeEffect* father);
-	DaeBase* parse_phong(TiXmlNode* pXmlNode, DaeTechnique* father);
-	DaeBase* parse_technique(TiXmlNode* pXmlNode, DaeProfileCommon* father);
-	DaeBase* parse_emission(TiXmlNode* pXmlNode, DaePhong* father);
-	DaeBase* parse_ambient(TiXmlNode* pXmlNode, DaePhong* father);
-	DaeBase* parse_diffuse(TiXmlNode* pXmlNode, DaePhong* father);
-	DaeBase* parse_specular(TiXmlNode* pXmlNode, DaePhong* father);
-	DaeBase* parse_shininess(TiXmlNode* pXmlNode, DaePhong* father);
-	DaeBase* parse_reflective(TiXmlNode* pXmlNode, DaePhong* father);
-	DaeBase* parse_reflectivity(TiXmlNode* pXmlNode, DaePhong* father);
-	DaeBase* parse_transparent(TiXmlNode* pXmlNode, DaePhong* father);
-	DaeBase* parse_transparency(TiXmlNode* pXmlNode, DaePhong* father);
+	DaeEffectProfile* parse_effect_profile(TiXmlNode* pXmlNode);
+	DaeNewParam* parse_newparam(TiXmlNode* pXmlNode);
+	DaeNewParam* parse_newparam_surface(TiXmlNode* pXmlNode);
+	DaeNewParam* parse_newparam_sampler2D(TiXmlNode* pXmlNode);
+	DaePhong* parse_phong(TiXmlNode* pXmlNode);
+	DaeTechnique* parse_technique(TiXmlNode* pXmlNode);
+	void	 parse_color(TiXmlNode* pXmlNode, DexColor& color);
+	void	 parse_emission(TiXmlNode* pXmlNode, DexColor& color);
+	void	 parse_ambient(TiXmlNode* pXmlNode, DexColor& color);
+	DaeDiffuse* parse_diffuse(TiXmlNode* pXmlNode, DaePhong* father);
+	void	 parse_specular(TiXmlNode* pXmlNode, DexColor& color);
+	void	 parse_float(TiXmlNode* pXmlNode, float32& fValue);
+	void	 parse_shininess(TiXmlNode* pXmlNode, float32& fShininess);
+	void	 parse_reflective(TiXmlNode* pXmlNode, DexColor& color);
+	void	 parse_reflectivity(TiXmlNode* pXmlNode, float32& fValue);
+	void	 parse_transparent(TiXmlNode* pXmlNode, DexColor& color);
+	void	 parse_transparency(TiXmlNode* pXmlNode, float32& fValue);
+	void	 parse_index_of_refraction(TiXmlNode* pXmlNode, float32& fValue);
 	DaeBase* parse_mesh(TiXmlNode* pXmlNode, DaeGeometry* father);
 	DaeBase* parse_vertices(TiXmlNode* pXmlNode, DaeMesh* father);
 	DaeBase* parse_triangle(TiXmlNode* pXmlNode, DaeMesh* father);
 	DaeBase* parse_polylist(TiXmlNode* pXmlNode, DaeMesh* father);
 	DaeBase* parse_polygons(TiXmlNode* pXmlNode, DaeMesh* father);
-	DaeBase* parse_node(TiXmlNode* pXmlNode, DaeBase* father);
-	DaeBase* parse_instance_geometry(TiXmlNode* pXmlNode, DaeNode* father);
-	DaeBase* parse_instance_controller(TiXmlNode* pXmlNode, DaeNode* father); 
+	DaeNode* parse_node(TiXmlNode* pXmlNode);
+	DaeInstanceGeometry* parse_instance_geometry(TiXmlNode* pXmlNode);
+	DaeInstanceController* parse_instance_controller(TiXmlNode* pXmlNode); 
 protected:
 	stDaeInput& parse_input(TiXmlElement* pXmlElement, stDaeInput& input);
 	stInstanceMaterial& parse_instance_material(TiXmlElement* pXmlElement, stInstanceMaterial& instanceMaterial);
 	void str_to_float_array(const char* str, float32** value);
-	void str_to_int32_array(const char* str, int32** value);
-protected:
 
-	DVector<DaeImage*>  m_vecImages;
-	DVector<DaeMaterial*> m_vecMaterials;
-	DVector<DaeEffect*> m_vecEffects;
-	DVector<DaeGeometry*> m_vecGeometries;
-	DVector<DaeController*> m_vecControllers;
-	DVector<DaeNode*>	m_vecJointsSystem;
-	DVector<DaeNode*>   m_vecMeshes;
-	void clear_vecInfo();
+	/*把str里面的参数读进value中，每cycle个数据一个循环，并对一个循环中的第index个数据当flag个有效数据
+	str_to_int32_array("1 2 3 4 5 6 7 8 9", value, 3, 0, 2);
+	则 value = {1,1,2,3,4,4,5,6,7,7,8,9};
+	*/
+	void str_to_int32_array(const char* str, int32** value, uint8 cycle = 3,uint8 index = 0, uint8 flag = 1);
+	void TransVector3ByAxis(DexVector3& vec3); //根据坐标系对坐标法线等进行转换
 protected:
-	DaeGeometry* find_geometry(DString sGeometryId);
+	DaeCollada* m_pCollada;
+protected:
+	DaeImage*	 find_image(DString sImageId);
 	DaeMaterial* find_material(DString sMaterialId);
-	DaeSource*   find_source(DaeGeometry* pGeometry, DString sId);
-	DaeVertices* find_verticles(DaeGeometry* pGeometry, DString sId);
+	DaeEffect*   find_effect(DString sEffectId);
+	DaeGeometry* find_geometry(DString sGeometryId);
+	DaeSource*   find_source(DVector<DaeSource*>& vData, DString sId);
+	DaeImage*    find_image(DaeEffectProfile* pEffectProfile, DString sTexture);
+
 	DexSkinMesh* create_SkinMeshStatic(DaeNode* pStaticMeshNode);
+	DexSkinMesh* create_SkinMeshAni(DaeNode* pAniMeshNode);
+
+	//将vec里面所有的meterial和texture数据读进mesh中，并且将名字保存到vec2(material) 和 vec3(image)
+	void		 deal_with_material_texture(DVector<stInstanceMaterial>& vec, DexSkinMesh* pSkinMesh, DVector<DString>& vec2, DVector<DString>& vec3);
+	
 public:
 	virtual DexModelBase* LoadModel(const char* filename);
 };
