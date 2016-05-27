@@ -10,7 +10,7 @@ DexEngine& dae model loader
 #include "DexModelLoader.h"
 #include "../DexBase/DexColor.h"
 
-#define dae_element_decalare_library(name,eType,member)\
+#define dae_element_decalare_library(name,member)\
 class name :public DaeBase\
 	{\
 	public:\
@@ -33,6 +33,7 @@ public:
 		ECE_unknown,
 		ECE_COLLADA,
 		ECE_accessor,
+		ECE_animation,
 		ECE_asset,
 		ECE_ambient,
 		ECE_controller,
@@ -42,6 +43,7 @@ public:
 		ECE_emission,
 		ECE_geometry,
 		ECE_images,
+		ECE_library_animations,
 		ECE_library_images,
 		ECE_library_meterials,
 		ECE_library_effects,
@@ -93,6 +95,9 @@ public:
 		ES_JOINT,
 		ES_INV_BIND_MATRIX,
 		ES_WEIGHT,
+		ES_INPUT, //for animation sampler
+		ES_OUTPUT,
+		ES_INTERPOLATION,
 		ES_UNKNOWN,
 	};
 	enum EAccessorType
@@ -104,6 +109,7 @@ public:
 	};
 	enum ENodeType
 	{
+		ENT_UNKNOWN,
 		ENT_NODE,
 		ENT_JOINT,
 		ENT_TOTAL
@@ -315,26 +321,35 @@ public:
 		DaePolygons() :DaeBase(ECE_polygons){ pData = nullptr; }
 		virtual ~DaePolygons() { if (pData != nullptr) delete[]pData;}
 	};
-	class DaeController : public DaeBase
-	{
-	public:
-		DString sId;
-		DaeController() :DaeBase(ECE_controller){  }
-		virtual ~DaeController() { }
-	};
 	class DaeSkin : public DaeBase
 	{
 	public:
+		struct stJointData
+		{
+			uint32 count;
+			uint32 index; //数据流中的起始index
+		};
 		DString sSource;
 		DexMatrix4x4 mMatrix;
 		DVector<stDaeInput> vJointsInputs;
 		DVector<stDaeInput> vVertexWeightInputs;
-		uint32  iVertexWeightsCount;
-		int32*  pVCountData; //for vcount
+		uint32  iVertexWeightsCount; //一定是和geometry里面的顶点数量是一样的
+		stJointData*  pVCountData; //for vcount
 		int32*  pData;    //for v
 		DVector<DaeSource*> vSources;
+		DaeSource*  pJointInvMatrix;
+		DaeSource*	pJointsName; //point to vSources. no need release
+		DaeSource*  pJointsWeight;//point to vSources. no need release
 		DaeSkin();
 		virtual ~DaeSkin();
+	};
+	class DaeController : public DaeBase
+	{
+	public:
+		DString sId;
+		DaeSkin* pSkin;
+		DaeController() :DaeBase(ECE_controller){ pSkin = nullptr; }
+		virtual ~DaeController() { if (pSkin != nullptr) delete pSkin; }
 	};
 	class DaeNode : public DaeBase
 	{
@@ -358,6 +373,21 @@ public:
 		DVector<DaeNode*> vMeshs;
 		DaeVisualScene();
 		virtual ~DaeVisualScene();
+	};
+	class DaeAnimation : public DaeBase
+	{
+	public:
+		DString sId;
+		DString sName;
+		DVector<DaeSource*> vSources;
+		DaeSource* pInput; //input is time
+		DaeSource* pOutput; //output is matrix
+		//DaeSource* pInterolation;// 目前并不用这个差值参数，现在关键帧之间全是线性插值
+		DVector<stDaeInput> vSamplerInputs;
+		DString sChannelSource;
+		DString sChannelTarget;
+		DaeAnimation();
+		virtual ~DaeAnimation();
 	};
 	class DaeInstanceGeometry : public DaeBase
 	{
@@ -397,12 +427,13 @@ public:
 		DaeGeometry();
 		virtual ~DaeGeometry();
 	};
-	dae_element_decalare_library(DaeLibraryImage, ECE_library_images, DaeImage)
-	dae_element_decalare_library(DaeLibraryMaterials, ECE_library_meterials, DaeMaterial)
-	dae_element_decalare_library(DaeLibraryEffects, ECE_library_effects, DaeEffect)
-	dae_element_decalare_library(DaeLibraryGeometries, ECE_library_geometries, DaeGeometry)
-	dae_element_decalare_library(DaeLibraryControllers, ECE_library_controllers, DaeController)
-	dae_element_decalare_library(DaeLibraryVisualScenes, ECE_library_visual_scenes, DaeVisualScene)
+	dae_element_decalare_library(DaeLibraryImage, DaeImage)
+	dae_element_decalare_library(DaeLibraryMaterials, DaeMaterial)
+	dae_element_decalare_library(DaeLibraryEffects, DaeEffect)
+	dae_element_decalare_library(DaeLibraryGeometries, DaeGeometry)
+	dae_element_decalare_library(DaeLibraryControllers, DaeController)
+	dae_element_decalare_library(DaeLibraryVisualScenes, DaeVisualScene)
+	dae_element_decalare_library(DaeLibraryAnimations, DaeAnimation)
 	class DaeCollada :public DaeBase
 	{
 	public:
@@ -415,6 +446,7 @@ public:
 		DaeLibraryGeometries* pLibraryGeometries;
 		DaeLibraryControllers* pLibraryControllers;
 		DaeLibraryVisualScenes* pLibraryVisualScenes;
+		DaeLibraryAnimations*   pLibraryAnimations;
 		DaeCollada();
 		virtual ~DaeCollada();
 	};
@@ -439,6 +471,8 @@ protected:
 	DaeBase* parse_library_visual_scenes(TiXmlNode* pXmlNode, DaeCollada* father);
 	DaeBase* parse_visual_scene(TiXmlNode* pXmlNode, DaeLibraryVisualScenes* father);
 	DaeBase* parse_scene(TiXmlNode* pXmlNode, DaeCollada* father);
+	DaeBase* parse_library_animations(TiXmlNode* pXmlNode, DaeCollada* father);
+	DaeBase* parse_animation(TiXmlNode* pXmlNode, DaeLibraryAnimations* father);
 	DaeEffectProfile* parse_effect_profile(TiXmlNode* pXmlNode);
 	DaeNewParam* parse_newparam(TiXmlNode* pXmlNode);
 	DaeNewParam* parse_newparam_surface(TiXmlNode* pXmlNode);
@@ -478,17 +512,27 @@ protected:
 	void TransVector3ByAxis(DexVector3& vec3); //根据坐标系对坐标法线等进行转换
 protected:
 	DaeCollada* m_pCollada;
+	uint32		m_iJointCount;
 protected:
 	DaeImage*	 find_image(DString sImageId);
 	DaeMaterial* find_material(DString sMaterialId);
 	DaeEffect*   find_effect(DString sEffectId);
 	DaeGeometry* find_geometry(DString sGeometryId);
+	DaeController* find_controller(DString sControllerId);
 	DaeSource*   find_source(DVector<DaeSource*>& vData, DString sId);
 	DaeImage*    find_image(DaeEffectProfile* pEffectProfile, DString sTexture);
+	
+	//根据instance_controller 里面的skeleton去visual_scene里面寻找骨骼节点
+	DaeNode*     find_joint(DString jointId);
+		DaeNode*     find_joint(DaeNode* pNode, DString jointId);//用于在上面的find_joint中进行递归
+
 
 	DexSkinMesh* create_SkinMeshStatic(DaeNode* pStaticMeshNode);
 	DexSkinMesh* create_SkinMeshAni(DaeNode* pAniMeshNode);
 
+	//将pNode以及其所有的子节点关节都添加到pSkinMesh中
+	//如果pFatherNode为null,则把pNode添加到根节点中
+	void		 add_joints(DexSkinMesh* pSkinMesh, DaeNode* pNode, DaeNode* pFatherNode = nullptr);
 	//将vec里面所有的meterial和texture数据读进mesh中，并且将名字保存到vec2(material) 和 vec3(image)
 	void		 deal_with_material_texture(DVector<stInstanceMaterial>& vec, DexSkinMesh* pSkinMesh, DVector<DString>& vec2, DVector<DString>& vec3);
 	

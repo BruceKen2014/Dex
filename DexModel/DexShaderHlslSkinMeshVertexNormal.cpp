@@ -53,13 +53,13 @@ DexShaderHlslSkinMeshVertexNormal::~DexShaderHlslSkinMeshVertexNormal()
 {
 }
 
-const int JointNumber = 40;
+
 void DexShaderHlslSkinMeshVertexNormal::Render()
 {
 	DEX_ENSURE(m_pTarget != nullptr && m_pTarget->getType() == DexSkinMesh::getClassType());
 	DexSkinMesh* skinMesh = (DexSkinMesh*)m_pTarget;
 	pFxEffect->SetMatrix(WVPMatrixHandle, &skinMesh->matWVP);
-	pFxEffect->SetMatrixArray(JointMatrixHandle, skinMesh->jointsMatrix, JointNumber);
+	pFxEffect->SetMatrixArray(JointMatrixHandle, skinMesh->jointsMatrix, DexSkinMesh::sGetMaxJointCount());
 
 	DexGameEngine::getEngine()->setDexVertexDecl(m_pDeclaration);
 	pFxEffect->SetTechnique(TechHandle);

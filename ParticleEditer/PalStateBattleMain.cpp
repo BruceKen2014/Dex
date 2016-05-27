@@ -248,9 +248,15 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
-	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/mickey/Mickey_Mouse2.dae");
+
+	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/Old Book/Book.dae");
+	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/mickey/Mickey_Mouse.dae");
+	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/ArmyPilot/ArmyPilot2.dae");
+	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/mws/c1004.xml");
+	daeModel->SetJointScale(0.01f);
 	daeModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_POINT | DEXRENDER_LIGHT_AMBIENT);
-	//daeModel->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
+	daeModel->SetRenderFlag(//SKINMESH_RENDER_JOINT | SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
+		SKINMESH_RENDER_MESH );
 	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/obj/RYU.obj");
 	objModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
 	//objModel->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
@@ -362,7 +368,7 @@ bool PalGameStateBattleMain::ApplyRes()
 	world_matrix.Identity();
 	world_matrix.Scale(10.0f, 10.0f, 10.0f);
 	world_matrix.Translate(-50.0f, 0.0f, 50.0f);
-	daeModel->SetSceneNodeMatrix(world_matrix);
+	//daeModel->SetSceneNodeMatrix(world_matrix);
 	InitVertexShader();
 	InitPixelShader();
 	m_bApply = true;
@@ -544,8 +550,8 @@ void PalGameStateBattleMain::Render()
 
 
 	matrix.Identity();
-	matrix.Scale(10.0f, 10.0f, 10.0f);
-	matrix.RotateY(rotate);
+	matrix.Scale(20.0f, 20.0f, 20.0f);
+	//matrix.RotateY(rotate);
 	matrix.Translate(0.0f, 0.0f, 0.0f);
 	daeModel->SetSceneNodeMatrix(matrix);
 	daeModel->ClearPointLight();

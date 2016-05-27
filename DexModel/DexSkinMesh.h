@@ -10,6 +10,7 @@
 #include "../DexBase/DexMaterial.h"
 #include "../DexBase/DexVertex.h"
 #include "../DexBase/DexDVector.h"
+#include "../DexBase/DexString.h"
 #include "../DexMath/DexVector2.h"
 #include "../DexMath/DexVector3.h"
 #include "../DexMath/DexQuaternion.h"
@@ -213,6 +214,8 @@ protected:
 	DexColor	 m_ambientColor;
 	DVector<stDexPointLight>  m_vecPointLight;
 	stDexDirectionLight m_directionLight;
+	float32		m_fJointScale; //骨骼缩放，用于调试渲染骨骼
+	void Init();
 	void InitShader();
 public:
 	void SetAmbientColor(const DexColor& color);
@@ -222,7 +225,9 @@ public:
 public:
 	DexSkinMesh();
 	DexSkinMesh(int16 maxAniTime);
-	~DexSkinMesh();
+	virtual ~DexSkinMesh();
+public:
+	static uint16 sGetMaxJointCount();
 public:
 //skin mesh
 	//改变这个skinmesh的矩阵
@@ -268,6 +273,7 @@ public:
 	//这里传入的是在父节点中的相对矩阵，传入要计算根据此计算mesh空间矩阵
 	Joint* AddJoint(string name, string father_name, const DexMatrix4x4& father_matrix);
 	Joint* FindJoint(string name);
+	uint32 FindJointIndex(DString name);
 //joint frame by id
 	bool AddJointKeyFrame(int32 jointid, int32 time, const DexMatrix4x4& matrix);
 	bool AddJointKeyFrame(int32 jointid, int32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, float32 radian);
@@ -309,6 +315,7 @@ public:
 //render flag
 	bool GetRenderFlag(int16 flag);
 	void SetRenderFlag(int16 flag);
+	void SetJointScale(float32 fScale);
 protected:
 //joint key frame
 	bool AddJointKeyFrame(Joint* joint, int32 time, const DexMatrix4x4& matrix);

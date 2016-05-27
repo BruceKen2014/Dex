@@ -206,20 +206,20 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::GetTranspose()	const
 	//		ret.m_m[line][col] = m_m[col][line];
 	//	}
 	//}
-	ret.m_m[0][1] = m_m[1][0]; ret.m_m[0][2] = m_m[2][0]; ret.m_m[0][3] = m_m[3][0];
-	ret.m_m[1][0] = m_m[0][1]; ret.m_m[1][2] = m_m[2][1]; ret.m_m[1][3] = m_m[3][1];
-	ret.m_m[2][0] = m_m[0][2]; ret.m_m[2][1] = m_m[1][2]; ret.m_m[2][3] = m_m[3][2];
-	ret.m_m[3][0] = m_m[0][3]; ret.m_m[3][1] = m_m[1][3]; ret.m_m[3][2] = m_m[2][3];
+	ret.m_m[0][0] = m_m[0][0]; ret.m_m[0][1] = m_m[1][0]; ret.m_m[0][2] = m_m[2][0]; ret.m_m[0][3] = m_m[3][0];
+	ret.m_m[1][0] = m_m[0][1]; ret.m_m[1][1] = m_m[1][1]; ret.m_m[1][2] = m_m[2][1]; ret.m_m[1][3] = m_m[3][1];
+	ret.m_m[2][0] = m_m[0][2]; ret.m_m[2][1] = m_m[1][2]; ret.m_m[2][2] = m_m[2][2]; ret.m_m[2][3] = m_m[3][2];
+	ret.m_m[3][0] = m_m[0][3]; ret.m_m[3][1] = m_m[1][3]; ret.m_m[3][2] = m_m[2][3]; ret.m_m[3][3] = m_m[3][3];
 	return ret;
 }
 template<typename T>
 inline DexMatrix4x4T<T> DexMatrix4x4T<T>::MakeTranspose()
 {
 	DexMatrix4x4T<T> ret;
-	ret.m_m[0][1] = m_m[1][0]; ret.m_m[0][2] = m_m[2][0]; ret.m_m[0][3] = m_m[3][0];
-	ret.m_m[1][0] = m_m[0][1]; ret.m_m[1][2] = m_m[2][1]; ret.m_m[1][3] = m_m[3][1];
-	ret.m_m[2][0] = m_m[0][2]; ret.m_m[2][1] = m_m[1][2]; ret.m_m[2][3] = m_m[3][2];
-	ret.m_m[3][0] = m_m[0][3]; ret.m_m[3][1] = m_m[1][3]; ret.m_m[3][2] = m_m[2][3];
+	ret.m_m[0][0] = m_m[0][0]; ret.m_m[0][1] = m_m[1][0]; ret.m_m[0][2] = m_m[2][0]; ret.m_m[0][3] = m_m[3][0];
+	ret.m_m[1][0] = m_m[0][1]; ret.m_m[1][1] = m_m[1][1]; ret.m_m[1][2] = m_m[2][1]; ret.m_m[1][3] = m_m[3][1];
+	ret.m_m[2][0] = m_m[0][2]; ret.m_m[2][1] = m_m[1][2]; ret.m_m[2][2] = m_m[2][2]; ret.m_m[2][3] = m_m[3][2];
+	ret.m_m[3][0] = m_m[0][3]; ret.m_m[3][1] = m_m[1][3]; ret.m_m[3][2] = m_m[2][3]; ret.m_m[3][3] = m_m[3][3];
 	*this = ret;
 	return ret;
 }

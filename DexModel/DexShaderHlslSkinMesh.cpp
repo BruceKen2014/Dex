@@ -62,13 +62,12 @@ DexShaderHlslSkinMesh::~DexShaderHlslSkinMesh()
 {
 }
 
-const int JointNumber = 40;
 void DexShaderHlslSkinMesh::Render()
 {
 	DEX_ENSURE(m_pTarget != nullptr && m_pTarget->getType() == DexSkinMesh::getClassType());
 	DexSkinMesh* skinMesh = (DexSkinMesh*)m_pTarget;
 	pFxEffect->SetMatrix(m_handleWVPMatrix, &skinMesh->matWVP);
-	pFxEffect->SetMatrixArray(m_handleJointMatrix, skinMesh->jointsMatrix, JointNumber);
+	pFxEffect->SetMatrixArray(m_handleJointMatrix, skinMesh->jointsMatrix, DexSkinMesh::sGetMaxJointCount());
 	m_iPointLightCount = skinMesh->m_vecPointLight.size();
 	m_iLightFlag = skinMesh->m_iLightFlag;
 	if (m_iPointLightCount != 0)

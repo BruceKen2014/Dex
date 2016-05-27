@@ -8,7 +8,7 @@
 #include "../state/DexGameEngine.h"
 #include "../DexMath/DexMath2.h"
 #include "DexSkinMesh.h"
-const int JointNumber = 40;
+
 DexSkinMesh::Joint::Joint() :m_bAnimate(true)
 {
 	id = 0;
@@ -306,17 +306,31 @@ void DexSkinMesh::DexMesh::AddVertexIndice(const int32& index)
 	m_vecIndices.push_back(index);
 }
 
-DexSkinMesh::DexSkinMesh() :m_iRenderFlag(0), m_eAniType(SkinMeshAnimateType_Loop),
-m_fAnimateRatio(1.0f),
-m_eMeshType(SkinMeshModelType_UnKnown)
+DexSkinMesh::DexSkinMesh()
 {
+	Init();
+}
+DexSkinMesh::DexSkinMesh(int16 maxAniTime)
+
+{
+	Init();
+	m_iAnimateEndTime = maxAniTime;
+	m_iAnimateMaxTime = maxAniTime;
+}
+
+void DexSkinMesh::Init()
+{
+	m_iRenderFlag = 0;
+	m_fAnimateRatio = 1.0f;
+	m_eAniType = SkinMeshAnimateType_Loop;
+	m_eMeshType = SkinMeshModelType_UnKnown;
 	m_iAnimateStartTime = 0;
 	m_iAnimateNowTime = 0;
 	m_iAnimateEndTime = 0;
 	m_iAnimateMaxTime = 0;
 	m_pRootJoint = NULL;
-	m_bHaveAnimation = false;
-	m_bAnimate = false;
+	m_bHaveAnimation = true;
+	m_bAnimate = true;
 	m_iLightFlag = 0;
 
 	m_pRootJoint = new Joint;
@@ -327,36 +341,17 @@ m_eMeshType(SkinMeshModelType_UnKnown)
 	m_pRootJoint->meshMatrix.Identity();
 	m_pRootJoint->localMeshMatrixInvert.Identity();
 	m_pRootJoint->world_matrix.Identity();
-
 	m_vecJoints.push_back(m_pRootJoint);
 	SetRenderFlag(SKINMESH_RENDER_MESH);
-	jointsMatrix = new D3DXMATRIX[JointNumber];
+	jointsMatrix = new D3DXMATRIX[sGetMaxJointCount()];
+	m_fJointScale = 1.0f;
 	InitShader();
-}
-DexSkinMesh::DexSkinMesh(int16 maxAniTime) :m_iRenderFlag(0), m_eAniType(SkinMeshAnimateType_Loop), m_fAnimateRatio(1.0f),
-m_eMeshType(SkinMeshModelType_UnKnown)
-{
-	m_iAnimateStartTime = 0;
-	m_iAnimateNowTime = 0;
-	m_iAnimateEndTime = maxAniTime;
-	m_iAnimateMaxTime = maxAniTime;
-	m_pRootJoint = NULL;
-	m_bHaveAnimation = true;
-	m_bAnimate = true;
 
-	m_pRootJoint = new Joint;
-	m_pRootJoint->m_pFather = NULL;
-	m_pRootJoint->id = _SKIN_MESH_ROOT_JOINT_ID;
-	m_pRootJoint->frame_matrix.Identity();
-	m_vecJoints.push_back(m_pRootJoint);
-	SetRenderFlag(SKINMESH_RENDER_MESH);
-	jointsMatrix = new D3DXMATRIX[JointNumber];
-	InitShader();
 }
 void DexSkinMesh::InitShader()
 {
 	D3DXMatrixIdentity(&matWVP);
-	memset(jointsMatrix, 0, sizeof(D3DXMATRIX)* JointNumber);
+	memset(jointsMatrix, 0, sizeof(D3DXMATRIX)* sGetMaxJointCount());
 	m_pShaderForMesh = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMesh::getClassType());
 	m_pShaderForVertexToJoint = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMeshVertexToJoint::getClassType());
 	m_pShaderForVertexNormal = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMeshVertexNormal::getClassType());
@@ -396,6 +391,10 @@ DexSkinMesh::~DexSkinMesh()
 	m_vecTextures.clear();
 }
 
+uint16 DexSkinMesh::sGetMaxJointCount()
+{
+	return 60;
+}
 void DexSkinMesh::SetSceneNodeMatrix(const DexMatrix4x4& matrix)
 {
 	bindMatrix = matrix;
@@ -536,7 +535,7 @@ bool DexSkinMesh::Update(int32 delta)
 	DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_VIEW, &matView);
 	DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_PROJECTION, &matProj);
 	matWVP = matWorld * matView * matProj;
-	memset(jointsMatrix, 0, sizeof(D3DXMATRIX)* JointNumber);
+	memset(jointsMatrix, 0, sizeof(D3DXMATRIX)* sGetMaxJointCount());
 	for (size_t i = 0; i < m_vecJoints.size(); ++i)
 	{
 		jointsMatrix[i] = *(D3DXMATRIX*)&(m_vecJoints[i]->localMeshMatrixInvert) * (*(D3DXMATRIX*)&(m_vecJoints[i]->world_matrix));
@@ -549,7 +548,10 @@ bool DexSkinMesh::Render()
 #ifdef _DEBUG
 	if (GetRenderFlag(SKINMESH_RENDER_JOINT))
 	{
-		m_pRootJoint->Render();
+		DexMatrix4x4 jointScaleMatrix;
+		jointScaleMatrix.Scale(DexVector3(m_fJointScale, m_fJointScale, m_fJointScale));
+		for (size_t i = 0; i < m_vecJoints.size(); ++i)
+			DexGameEngine::getEngine()->RenderCube(jointScaleMatrix * m_vecJoints[i]->world_matrix);
 	}
 	if (GetRenderFlag(SKINMESH_RENDER_JOINT2JOINT))
 	{
@@ -770,12 +772,13 @@ DexSkinMesh::Joint* DexSkinMesh::AddJoint(string name, string father_name, const
 	Joint* joint = new Joint;
 	joint->str_name = name;
 	joint->id = m_vecJoints.size();
-	joint->frame_matrix = father_matrix;
+	Joint* father = NULL;
 	for (size_t i = 0; i < m_vecJoints.size(); ++i)
 	{
 		if (m_vecJoints[i]->str_name == father_name)
 		{
 			m_vecJoints[i]->AddChild(joint);
+			father = m_vecJoints[i];
 			ret = true;
 			break;
 		}
@@ -784,7 +787,12 @@ DexSkinMesh::Joint* DexSkinMesh::AddJoint(string name, string father_name, const
 	if (!ret)
 	{//没有找到已经存在的joint,添加到root_joint中去
 		m_pRootJoint->AddChild(joint);
+		father = m_pRootJoint;
 	}
+	joint->meshMatrix = father_matrix * father->meshMatrix;
+	joint->localMeshMatrixInvert = joint->meshMatrix.GetInvert();
+	joint->frame_matrix = father_matrix;//设置默认第一帧的矩阵
+	joint->world_matrix = joint->meshMatrix;
 	return joint;
 }
 
@@ -796,6 +804,20 @@ DexSkinMesh::Joint* DexSkinMesh::FindJoint(string name)
 		if (m_vecJoints[i] != NULL && m_vecJoints[i]->str_name == name)
 		{
 			ret = m_vecJoints[i];
+			break;
+		}
+	}
+	return ret;
+}
+
+uint32 DexSkinMesh::FindJointIndex(DString name)
+{
+	uint32 ret = -1;
+	for (size_t i = 0; i < m_vecJoints.size(); ++i)
+	{
+		if (m_vecJoints[i] != NULL && m_vecJoints[i]->str_name == name)
+		{
+			ret = i;
 			break;
 		}
 	}
@@ -1152,6 +1174,11 @@ void DexSkinMesh::SetRenderFlag(int16 flag)
 			m_vecMeshs[i]->DestroyVertexToJointlBuffer();
 		}
 	}
+}
+
+void DexSkinMesh::SetJointScale(float32 fScale)
+{
+	m_fJointScale = fScale;
 }
 
 bool DexSkinMesh::FindVertex(const DexVector3& pos)

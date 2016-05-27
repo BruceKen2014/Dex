@@ -27,6 +27,7 @@ static const char* g_library_geometries  = "library_geometries";
 static const char* g_library_images		 = "library_images";
 static const char* g_library_materials	 = "library_materials";
 static const char* g_library_visual_scenes = "library_visual_scenes";
+static const char* g_library_animations = "library_animations";
 static const char* g_material = "material";
 static const char* g_mesh = "mesh";
 static const char* g_Name_array = "Name_array";
@@ -62,6 +63,7 @@ dae_element_imp_library(DaeLibraryEffects, ECE_library_effects)
 dae_element_imp_library(DaeLibraryGeometries, ECE_library_geometries)
 dae_element_imp_library(DaeLibraryControllers, ECE_library_controllers)
 dae_element_imp_library(DaeLibraryVisualScenes, ECE_library_visual_scenes)
+dae_element_imp_library(DaeLibraryAnimations, ECE_library_animations)
 DexModelDaeLoader::DaeBase::DaeBase(EColladaElement _type)
 {
 	eType = _type;
@@ -100,7 +102,10 @@ DexModelDaeLoader::DaeEffectProfile::~DaeEffectProfile()
 
 DexModelDaeLoader::DaeSkin::DaeSkin() :DaeBase(ECE_skin)
 {
-	pVCountData = pData = nullptr;
+	pVCountData = nullptr;
+	pData = nullptr;
+	pJointsName = nullptr;
+	pJointsWeight = nullptr;
 }
 
 DexModelDaeLoader::DaeSkin::~DaeSkin()
@@ -129,6 +134,18 @@ DexModelDaeLoader::DaeVisualScene::~DaeVisualScene()
 {
 	_SafeClearVector(vJointsSystem);
 	_SafeClearVector(vMeshs);
+}
+
+DexModelDaeLoader::DaeAnimation::DaeAnimation() :DaeBase(ECE_animation)
+{
+	pInput = nullptr;
+	pOutput = nullptr;
+}
+
+DexModelDaeLoader::DaeAnimation::~DaeAnimation()
+{
+	_SafeClearVector(vSources);
+	vSamplerInputs.clear();
 }
 
 DexModelDaeLoader::DaeMesh::DaeMesh() :DaeBase(ECE_mesh)
@@ -164,6 +181,7 @@ DexModelDaeLoader::DaeCollada::DaeCollada() :DaeBase(ECE_COLLADA)
 	pLibraryGeometries = nullptr;
 	pLibraryControllers = nullptr;
 	pLibraryVisualScenes = nullptr;
+	pLibraryAnimations = nullptr;
 }
 DexModelDaeLoader::DaeCollada::~DaeCollada()
 {
@@ -174,6 +192,7 @@ DexModelDaeLoader::DaeCollada::~DaeCollada()
 	_SafeDelete(pLibraryGeometries);
 	_SafeDelete(pLibraryControllers);
 	_SafeDelete(pLibraryVisualScenes);
+	_SafeDelete(pLibraryAnimations);
 }
 DexModelDaeLoader::DexModelDaeLoader()
 {
@@ -219,7 +238,13 @@ DexModelDaeLoader::DaeCollada* DexModelDaeLoader::parse_COLLADA(TiXmlNode* pXmlN
 		else IS_Element(g_library_controllers)
 			parse_library_controllers(pXmlChildNode, pCollada);
 		else IS_Element(g_library_visual_scenes)
+		{
 			parse_library_visual_scenes(pXmlChildNode, pCollada);
+		}
+		else IS_Element(g_library_animations)
+		{
+			parse_library_animations(pXmlChildNode, pCollada);
+		}
 		else IS_Element(g_scene)
 		{
 		}
@@ -677,28 +702,15 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_controller(TiXmlNode* pXmlN
 		pXmlAttribute = pXmlAttribute->Next();
 	}
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("skin")
-			pNewDaeElement = parse_skin(pXmlChildNode, pController);
+			parse_skin(pXmlChildNode, pController);
 		else IS_Element("extra")
-		{
 			getLog()->LogLine(log_ok, "dae file skip extra under controller.", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
 		else
-		{
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in controller!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pController;
@@ -708,9 +720,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeSkin* pSkin = new DaeSkin;
-	pSkin->father = father;
-	if (father->child == nullptr)
-		father->child = pSkin;
+	father->pSkin = pSkin;
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	//解析skin的attribute
@@ -746,6 +756,15 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 				pXmlElement = pInputNode->ToElement();
 				stDaeInput input;
 				parse_input(pXmlElement, input);
+				if (input.semantic == ES_INV_BIND_MATRIX)
+					for (size_t j = 0; j < pSkin->vSources.size(); ++j)
+					{
+						if (pSkin->vSources[j]->sId == input.source)
+						{
+							pSkin->pJointInvMatrix = pSkin->vSources[j];
+							break;
+						}
+					}
 				pSkin->vJointsInputs.push_back(input);
 				pInputNode = pInputNode->NextSibling();
 			}
@@ -764,12 +783,30 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 				{
 					stDaeInput input;
 					parse_input(pXmlElement, input);
+					if (input.semantic == ES_JOINT)
+						for (size_t j = 0; j < pSkin->vSources.size(); ++j)
+						{
+							if (pSkin->vSources[j]->sId == input.source)
+							{
+								pSkin->pJointsName = pSkin->vSources[j];
+								break;
+							}
+						}
+					else if (input.semantic == ES_WEIGHT)
+						for (size_t j = 0; j < pSkin->vSources.size(); ++j)
+						{
+							if (pSkin->vSources[j]->sId == input.source)
+							{
+								pSkin->pJointsWeight = pSkin->vSources[j];
+								break;
+							}
+						}
 					pSkin->vVertexWeightInputs.push_back(input);
 				}
 				else IS_Element("vcount")
 				{
 					_SafeDeleteArr(pSkin->pVCountData);
-					pSkin->pVCountData = new int32[pSkin->iVertexWeightsCount];
+					pSkin->pVCountData = new DaeSkin::stJointData[pSkin->iVertexWeightsCount];
 					//我们要统计v里面的数据个数，所以并不直接调用str_to_int32_array
 					const char* pt = pXmlElement->GetText();
 					char tempValue[32];
@@ -782,8 +819,9 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 						{
 							++tempValueIndex;
 							tempValue[tempValueIndex] = '\0';
-							pSkin->pVCountData[valueIndex] = atoi(tempValue);
-							i_VCount += pSkin->pVCountData[valueIndex] * pSkin->vVertexWeightInputs.size();
+							pSkin->pVCountData[valueIndex].count = atoi(tempValue);
+							pSkin->pVCountData[valueIndex].index = i_VCount;
+							i_VCount += pSkin->pVCountData[valueIndex].count * pSkin->vVertexWeightInputs.size();
 							tempValueIndex = 0;
 							++valueIndex;
 							++pt;
@@ -792,8 +830,9 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 							++tempValueIndex;
 					}
 					tempValue[tempValueIndex] = '\0';
-					pSkin->pVCountData[valueIndex] = atoi(tempValue);
-					i_VCount += pSkin->pVCountData[valueIndex] * pSkin->vVertexWeightInputs.size();
+					pSkin->pVCountData[valueIndex].count = atoi(tempValue);
+					pSkin->pVCountData[valueIndex].index = i_VCount;
+					i_VCount += pSkin->pVCountData[valueIndex].count * pSkin->vVertexWeightInputs.size();
 				}
 				else IS_Element("v")
 				{
@@ -856,16 +895,19 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_visual_scene(TiXmlNode* pXm
 				pVisualScene->vJointsSystem.push_back(pNode);
 			else if (pNode->eNodeType == ENT_NODE)
 			{
-				if(pNode->pInstanceMesh != nullptr)
-					pVisualScene->vMeshs.push_back(pNode);
+				pVisualScene->vMeshs.push_back(pNode);
 			}
+			else
+			{
+				delete pNode;
+			}
+				
 		}
 		else IS_Element("extra")
 			getLog()->LogLine(log_ok, "dae file skip extra under visual_scene.", pXmlElement->Value());
 		else
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in visual_scene!", pXmlElement->Value());
 		pXmlChildNode = pXmlChildNode->NextSibling();
-
 	}
 	return pVisualScene;
 }
@@ -873,6 +915,93 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_visual_scene(TiXmlNode* pXm
 DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_scene(TiXmlNode* pXmlNode, DaeCollada* father)
 {
 	return nullptr;
+}
+
+DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_library_animations(TiXmlNode* pXmlNode, DaeCollada* father)
+{
+	DEX_ENSURE_P(pXmlNode);
+	DaeLibraryAnimations* pLibraryAnimations = new DaeLibraryAnimations;
+	father->pLibraryAnimations = pLibraryAnimations;
+	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
+	TiXmlElement* pXmlElement = nullptr;
+	while (pXmlChildNode != nullptr)
+	{
+		pXmlElement = pXmlChildNode->ToElement();
+		IS_Element("animation")
+			parse_animation(pXmlChildNode, pLibraryAnimations);
+		else
+			getLog()->LogLine(log_allert, "dae file unknown child:%s under library_animations!", pXmlElement->Value());
+		pXmlChildNode = pXmlChildNode->NextSibling();
+	}
+	return pLibraryAnimations;
+}
+
+DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_animation(TiXmlNode* pXmlNode, DaeLibraryAnimations* father)
+{
+	DEX_ENSURE_P(pXmlNode);
+	DaeAnimation* pAnimation = new DaeAnimation;
+	father->vecData.push_back(pAnimation);
+	TiXmlElement* pXmlElement = pXmlNode->ToElement();
+	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
+	while (pXmlAttribute != nullptr)
+	{
+		IS_Attribute("id")
+			pAnimation->sId = pXmlAttribute->Value();
+		else IS_Attribute("name")
+			pAnimation->sName = pXmlAttribute->Value();
+		else
+			getLog()->LogLine(log_allert, "dae file unknown attribute:%s under animation!", pXmlAttribute->Name());
+		pXmlAttribute = pXmlAttribute->Next();
+	}
+	//根据目前的dae格式来看，每一个animation具体的数据都在更下一级的animation里面，所以要再下一级
+	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();//child animation
+	if (pXmlChildNode != nullptr)
+	{//if is nullptr,means this joint has no key frame
+		pXmlChildNode = pXmlChildNode->FirstChild();
+		while (pXmlChildNode != nullptr)
+		{
+			pXmlElement = pXmlChildNode->ToElement();
+			IS_Element("source")
+				pAnimation->vSources.push_back(parse_source(pXmlChildNode));
+			else IS_Element("sampler")
+			{
+				TiXmlNode* pXmlInputNode = pXmlChildNode->FirstChild();
+				while (pXmlInputNode != nullptr)
+				{
+					stDaeInput input;
+					parse_input(pXmlInputNode->ToElement(), input);
+					pAnimation->vSamplerInputs.push_back(input);
+					if (input.semantic == ES_INPUT)
+						for (size_t i = 0; i < pAnimation->vSources.size(); ++i)
+						{
+							if (input.source == pAnimation->vSources[i]->sId)
+							{
+								pAnimation->pInput = pAnimation->vSources[i];
+								break;
+							}
+						}
+					else if (input.semantic == ES_OUTPUT)
+						for (size_t i = 0; i < pAnimation->vSources.size(); ++i)
+						{
+							if (input.source == pAnimation->vSources[i]->sId)
+							{
+								pAnimation->pOutput = pAnimation->vSources[i];
+								break;
+							}
+						}
+					pXmlInputNode = pXmlInputNode->NextSibling();
+				}
+			}
+			else IS_Element("channel")
+			{//dont deal temporarily
+			}
+			else
+				getLog()->LogLine(log_allert, "dae file unknown child:%s under animation!", pXmlElement->Value());
+				pXmlChildNode = pXmlChildNode->NextSibling();
+			}
+	}
+	
+	return pAnimation;
 }
 
 DexModelDaeLoader::DaeEffectProfile* DexModelDaeLoader::parse_effect_profile(TiXmlNode* pXmlNode)
@@ -1514,6 +1643,7 @@ DexModelDaeLoader::DaeNode* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode)
 {
 	DEX_ENSURE_P(pXmlNode);
 	DaeNode* pNode = new DaeNode;
+	pNode->eNodeType = ENT_UNKNOWN;
 	TiXmlElement* pXmlElement = pXmlNode->ToElement();
 	TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
 	while (pXmlAttribute != nullptr)
@@ -1573,9 +1703,11 @@ DexModelDaeLoader::DaeNode* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode)
 		{
 			str_to_float_array(pXmlElement->GetText(), &pFloatValue);
 			pNode->mMatrix.Set(pFloatValue);
+			pNode->mMatrix.MakeTranspose(); //如果node下面只有matrix的话，matrix好像必须要转置一下？
 		}
 		else IS_Element("instance_geometry")
 		{
+			pNode->eNodeType = ENT_NODE;
 			if (pNode->pInstanceMesh != nullptr)
 			{
 				getLog()->LogLine(log_allert, "dae file find multy instancemesh child under node!");
@@ -1585,12 +1717,16 @@ DexModelDaeLoader::DaeNode* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode)
 		}
 		else IS_Element("instance_controller")
 		{
+			pNode->eNodeType = ENT_NODE;
 			if (pNode->pInstanceMesh != nullptr)
 			{
 				getLog()->LogLine(log_allert, "dae file find multy instancemesh child under node!");
 				delete pNode->pInstanceMesh;
 			}
 			pNode->pInstanceMesh = parse_instance_controller(pXmlChildNode);
+		}
+		else IS_Element("extra")
+		{
 		}
 		else
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in node!", pXmlElement->Value());
@@ -1733,12 +1869,24 @@ DexModelDaeLoader::stDaeInput& DexModelDaeLoader::parse_input(TiXmlElement* pXml
 				input.semantic = ES_NORMAL;
 			else if (strcmp(pXmlAttribute->Value(), "TEXCOORD") == 0)
 				input.semantic = ES_TEXCOORD;
+			else if (strcmp(pXmlAttribute->Value(), "TEXTANGENT") == 0)
+				input.semantic = ES_TEXTANGENT;
+			else if (strcmp(pXmlAttribute->Value(), "TEXBINORMAL") == 0)
+				input.semantic = ES_TEXBINORMAL;
+			else if (strcmp(pXmlAttribute->Value(), "COLOR") == 0)
+				input.semantic = ES_COLOR;
 			else if (strcmp(pXmlAttribute->Value(), "JOINT") == 0)
 				input.semantic = ES_JOINT;
 			else if (strcmp(pXmlAttribute->Value(), "WEIGHT") == 0)
 				input.semantic = ES_WEIGHT;
 			else if (strcmp(pXmlAttribute->Value(), "INV_BIND_MATRIX") == 0)
 				input.semantic = ES_INV_BIND_MATRIX;
+			else if (strcmp(pXmlAttribute->Value(), "INPUT") == 0)
+				input.semantic = ES_INPUT;
+			else if (strcmp(pXmlAttribute->Value(), "OUTPUT") == 0)
+				input.semantic = ES_OUTPUT;
+			else if (strcmp(pXmlAttribute->Value(), "INTERPOLATION") == 0)
+				input.semantic = ES_INTERPOLATION;
 			else
 			{
 				input.semantic = ES_UNKNOWN;
@@ -1888,6 +2036,14 @@ DexModelDaeLoader::DaeGeometry* DexModelDaeLoader::find_geometry(DString sGeomet
 			return m_pCollada->pLibraryGeometries->vecData[i];
 	return nullptr;
 }
+DexModelDaeLoader::DaeController* DexModelDaeLoader::find_controller(DString sControllerId)
+{
+	DEX_ENSURE_P(m_pCollada != nullptr && m_pCollada->pLibraryControllers != nullptr);
+	for (size_t i = 0; i < m_pCollada->pLibraryControllers->vecData.size(); ++i)
+		if (m_pCollada->pLibraryControllers->vecData[i]->sId == sControllerId)
+			return m_pCollada->pLibraryControllers->vecData[i];
+	return nullptr;
+}
 DexModelDaeLoader::DaeSource* DexModelDaeLoader::find_source(DVector<DaeSource*>& vData, DString sId)
 {
 	for (size_t i = 0; i < vData.size(); ++i)
@@ -1895,7 +2051,34 @@ DexModelDaeLoader::DaeSource* DexModelDaeLoader::find_source(DVector<DaeSource*>
 			return vData[i];
 	return nullptr;
 }
-
+DexModelDaeLoader::DaeNode* DexModelDaeLoader::find_joint(DString jointId)
+{
+	DEX_ENSURE_P(m_pCollada != nullptr && m_pCollada->pLibraryVisualScenes != nullptr);
+	DEX_ENSURE_P(m_pCollada->pLibraryVisualScenes->vecData.size() == 1);
+	DaeVisualScene* pVisualScene = m_pCollada->pLibraryVisualScenes->vecData[0];
+	DEX_ENSURE_P(pVisualScene != nullptr);
+	DaeNode* pRet = nullptr;
+	for (size_t i = 0; i < pVisualScene->vJointsSystem.size(); ++i)
+	{
+		pRet = find_joint(pVisualScene->vJointsSystem[i], jointId);
+		if (pRet != nullptr)
+			break;
+	}
+	return pRet;
+}
+DexModelDaeLoader::DaeNode* DexModelDaeLoader::find_joint(DaeNode* pNode, DString jointId)
+{
+	if (pNode->sId == jointId)
+		return pNode;
+	DaeNode* pRet = nullptr;
+	for (size_t i = 0; i < pNode->vNodeChildren.size(); ++i)
+	{
+		pRet = find_joint(pNode->vNodeChildren[i], jointId);
+		if (pRet != nullptr)
+			break;
+	}
+	return pRet;
+}
 DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 {
 	DexSkinMesh* pDexSkinMesh = new DexSkinMesh();
@@ -1911,7 +2094,6 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 	{
 		DaeMesh* pMesh = pGeometry->pMesh;
 		stIndex index;
-		DexSkinMesh::stMeshVertex newVertex;
 		DaeSource* pSourcePos = nullptr;
 		DaeSource* pSourceNormal = nullptr;
 		DaeSource* pSourceUv = nullptr;
@@ -1987,6 +2169,7 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 							pDexMesh->AddVertexIndice(ite->second);
 						else
 						{
+							DexSkinMesh::stMeshVertex newVertex;
 							newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
 							newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
 							TransVector3ByAxis(newVertex.pos);
@@ -2082,14 +2265,16 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 								pDexMesh->AddVertexIndice(ite->second);
 							else
 							{
+								DexSkinMesh::stMeshVertex newVertex;
 								newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
 								newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
 								TransVector3ByAxis(newVertex.pos);
 								TransVector3ByAxis(newVertex.normal);
 
 								newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
-								newVertex.uv.x = 1.0f - newVertex.uv.x;
-								newVertex.uv.y = 1.0f - newVertex.uv.y;
+								newVertex.uv.y = 1 - newVertex.uv.y;
+								//newVertex.uv.x = 1.0f - newVertex.uv.x;
+								//newVertex.uv.y = 1.0f - newVertex.uv.y;
 								if (iInputSize > 5)
 								{//有color
 									uint8 r = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 0] * 255;
@@ -2121,7 +2306,7 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 {
 	DEX_ENSURE_P(pAniMeshNode);
-	DexSkinMesh* pDexSkinMesh = new DexSkinMesh();
+	DexSkinMesh* pDexSkinMesh = new DexSkinMesh(1000);
 	DexSkinMesh::DexMesh* pDexMesh = NULL;
 	DaeInstanceController* pInstanceController = (DaeInstanceController*)pAniMeshNode->pInstanceMesh;
 	//DaeInstanceController中指明的materials就是这个skinmesh需要用到的所有material
@@ -2130,8 +2315,350 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 	DVector<DString> vImages;
 	deal_with_material_texture(pInstanceController->vecMaterials, pDexSkinMesh, vMaterials, vImages);
 
+	DaeNode* pNode = nullptr;
+	
+	//joint node里面只指定了父子关系，相对矩阵并无用处，真正的节点矩阵要由skin 里面的inv_bind_matrix得到
+	if (pInstanceController->vecSkeletons.size() == 0)
+	{//not have skeletons,then find joint node
+		//must only have one joint node,bind model to this joint
+		pNode = m_pCollada->pLibraryVisualScenes->vecData[0]->vJointsSystem[0];
+		add_joints(pDexSkinMesh, pNode, nullptr);
+	}
+	else
+	{
+		for (size_t i = 0; i < pInstanceController->vecSkeletons.size(); ++i)
+		{
+			pNode = find_joint(pInstanceController->vecSkeletons[i]);
+			if (pNode != nullptr)
+				add_joints(pDexSkinMesh, pNode, nullptr);
+		}
+	}
 
-	return nullptr;
+	DaeController* pController = find_controller(pInstanceController->sUrl);
+	if (pController != nullptr && pController->pSkin)
+	{
+		/*
+		controller skin中的inv_bind_matrix指的是节点在模型里面的世界矩阵的逆矩阵（行矩阵）
+		要正确得到一个节点的矩阵，将inv_bind_matrix转置，得到空间逆矩阵，再求逆，得到的就是模型空间矩阵(注意，这里不是相对于父节点的相对矩阵，而是实实在在的空间矩阵,与node里面的相对矩阵不一样)
+		要得到相对于父节点的相对矩阵的话，以这个空间矩阵乘以父节点的空间逆矩阵
+		*/
+		//下一步需要对ff dae作特殊处理，因为ff dae里面controller里面的bone名字不是id 而是sid..
+		//可以加一个map<sid, id>通过sid找到id
+		for (size_t i = 0; i < pController->pSkin->pJointInvMatrix->iFloatArrayCount / 16; ++i)
+		{
+			DexMatrix4x4 invMatrix(&pController->pSkin->pJointInvMatrix->pFloatArrayValues[i*16]);
+			invMatrix.MakeTranspose();
+			DexMatrix4x4 worldMatrix = invMatrix.GetInvert();
+			DexSkinMesh::Joint* pJoint = pDexSkinMesh->FindJoint(pController->pSkin->pJointsName->vNamaArray[i]);
+			
+			if (pJoint != nullptr)
+			{
+				pJoint->meshMatrix = worldMatrix;
+				pJoint->localMeshMatrixInvert = invMatrix;
+				pJoint->frame_matrix = worldMatrix * pJoint->m_pFather->localMeshMatrixInvert;
+				pJoint->world_matrix = worldMatrix;
+			}
+		}
+		
+		//读取joint动作
+		if (m_pCollada->pLibraryAnimations != nullptr)
+		{
+			int16 iMaxAniTime = 0;
+			DaeAnimation* pAnimation = nullptr;//一个animation对应一个joint
+			DexSkinMesh::Joint* pJoint = nullptr;
+			DexMatrix4x4 frameMatrix;
+			int32 iFrameTime = 0;
+			for (size_t i = 0; i < m_pCollada->pLibraryAnimations->vecData.size(); ++i)
+			{
+				pAnimation = m_pCollada->pLibraryAnimations->vecData[i];
+				if (pAnimation->pInput != nullptr)
+				{
+					pJoint = pDexSkinMesh->FindJoint(pAnimation->sName);
+					if (pJoint != nullptr)
+					{
+						for (int32 iFrame = 0; iFrame < pAnimation->pInput->iFloatArrayCount; ++iFrame)
+						{
+							iFrameTime = pAnimation->pInput->pFloatArrayValues[iFrame] * 1000;//从s转为ms
+							frameMatrix.Set(&pAnimation->pOutput->pFloatArrayValues[iFrame*16]);
+							frameMatrix.MakeTranspose();
+							pJoint->AddKeyFrame(iFrameTime, frameMatrix);
+							if (iFrameTime > iMaxAniTime)
+								iMaxAniTime = iFrameTime;
+						}
+					}
+				}
+			}
+			pDexSkinMesh->SetMaxAniTime(iMaxAniTime);
+		}
+		DaeGeometry* pGeometry = find_geometry(pController->pSkin->sSource);
+		if (pGeometry != nullptr)
+		{
+			DaeMesh* pMesh = pGeometry->pMesh;
+			
+			DaeSource* pSourcePos = nullptr;
+			DaeSource* pSourceNormal = nullptr;
+			DaeSource* pSourceUv = nullptr;
+			DaeSource* pSourceTangent = nullptr; //暂时不支持
+			DaeSource* pSourceBinormal = nullptr; //暂时不支持
+			DaeSource* pSourceColor = nullptr;
+			DMap<stIndex, int32> mapVertexInfo;
+			if (pMesh != nullptr)
+			{
+				for (size_t iTriangleIndex = 0; iTriangleIndex < pMesh->vecTriangles.size(); ++iTriangleIndex)
+				{
+					mapVertexInfo.clear();
+					DaeTriangles* pTriangle = pMesh->vecTriangles[iTriangleIndex];
+					int32 iInputSize = pTriangle->vInputs.size();
+					pDexMesh = pDexSkinMesh->AddMesh(pTriangle->material.c_str());//暂时用meterial的名字来命名
+					//处理material
+					for (size_t i = 0; i < vMaterials.size(); ++i)
+					{
+						if (vMaterials[i] == pTriangle->material)
+						{
+							pDexMesh->m_iMaterialId = i;
+							pDexMesh->m_iTextureId = i;
+						}
+					}
+					//对应pos normal uv 等source
+					for (size_t i = 0; i < pTriangle->vInputs.size(); ++i)
+					{
+						stDaeInput* pInput = &pTriangle->vInputs[i];
+						switch (pInput->semantic)
+						{
+						case ES_POSITION:
+							pSourcePos = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_NORMAL:
+							pSourceNormal = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_TEXCOORD:
+							pSourceUv = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_TEXTANGENT:
+							pSourceTangent = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_TEXBINORMAL:
+							pSourceBinormal = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_COLOR:
+							pSourceColor = find_source(pMesh->vecSources, pInput->source);
+							break;
+						default:
+							break;
+						}
+					}
+					uint32 iValueIndex = 0;
+					uint32 iVertexWeightInputSize = pController->pSkin->vVertexWeightInputs.size();
+					for (int32 i = 0; i < pTriangle->iCount; ++i)
+					{//一次性读取3个顶点
+						for (int32 j = 0; j < 3; ++j)
+						{//每个顶点占据iInputSize个数据
+							//默认input顺序是VERTEX NORMAL TEXCOORD TEXTANGENT TEXBINORMAL COLOR
+							stIndex index;
+							if (pSourcePos != nullptr)
+								index.m_iPosIndex = pTriangle->pData[iValueIndex++];
+							if (pSourceNormal != nullptr)
+								index.m_iNormalIndex = pTriangle->pData[iValueIndex++];
+							if (pSourceUv != nullptr)
+								index.m_iUvIndex = pTriangle->pData[iValueIndex++];
+							if (pSourceTangent != nullptr)
+								iValueIndex++;//tangent
+							if (pSourceBinormal != nullptr)
+								iValueIndex++;//binormal
+							if (pSourceColor != nullptr)
+								index.m_iColorIndex = pTriangle->pData[iValueIndex++];
+							map<stIndex, int32>::iterator ite = mapVertexInfo.find(index);
+							if (ite != mapVertexInfo.end())
+								pDexMesh->AddVertexIndice(ite->second);
+							else
+							{
+								DexSkinMesh::stMeshVertex newVertex;
+								if (pSourcePos != nullptr)
+									newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
+								if (pSourceNormal != nullptr)
+									newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
+								TransVector3ByAxis(newVertex.pos);
+								//newVertex.pos.x *= -1; //从maya中导出来的x 方向相反
+								TransVector3ByAxis(newVertex.normal);
+								if (pSourceUv != nullptr)
+									newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
+								if (iVertexWeightInputSize == 2)
+								{//默认vertex weight 里面是joint 的index 和 weight
+									//geometry里有多少个顶点，skin vertex weight 就有多少count，
+									uint32 iJointCount = pController->pSkin->pVCountData[index.m_iPosIndex].count; //该顶点受影响的关节点数量
+									uint32 iJointDataIndex = pController->pSkin->pVCountData[index.m_iPosIndex].index;
+
+									for (uint32 joint = 0; joint < iJointCount; ++joint)
+									{
+										//默认是index在前 weight在后
+										uint32 iNameIndex = pController->pSkin->pData[iVertexWeightInputSize * joint + iJointDataIndex];
+										if (iNameIndex < DexSkinMesh::sGetMaxJointCount())
+										{
+											uint32 iWeightIndex = pController->pSkin->pData[iVertexWeightInputSize * joint + iJointDataIndex + 1];
+											DString JointName = pController->pSkin->pJointsName->vNamaArray[iNameIndex];
+											uint32 iJointIndex = pDexSkinMesh->FindJointIndex(JointName);
+											float  fJointWeight = pController->pSkin->pJointsWeight->pFloatArrayValues[iWeightIndex];
+											if (iJointIndex != -1)
+											{
+												newVertex.JointIndex[joint] = iJointIndex;
+												newVertex.JointWeights[joint] = fJointWeight;
+											}
+										}
+										else
+										{//not support more than 60 joint,if more than 60, then just bind to root joint
+											memset(newVertex.JointIndex, 0, sizeof(newVertex.JointIndex));
+											memset(newVertex.JointWeights, 0, sizeof(newVertex.JointWeights));
+											newVertex.JointWeights[0] = 1.0f;
+											break;
+										}
+									}
+								}
+								else
+								{
+									getLog()->LogLine(log_allert, "dae file unknown skin vertex weight input count! %d", pController->pSkin->vVertexWeightInputs.size());
+								}
+								//一些导出工具对于uv坐标是从左到右为x ,从下到上为y，而引擎使用的dx，使用的是从左到右为x，从上到下为y
+								//如果y方向不一致，就要进行转换
+								newVertex.uv.y = 1 - newVertex.uv.y; 
+								if (pSourceColor != nullptr)
+								{//有color
+									uint8 r = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 0] * 255;
+									uint8 g = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 1] * 255;
+									uint8 b = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 2] * 255;
+									uint8 a = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 3] * 255;
+									newVertex.color.Set(r, g, b, a);
+								}
+								mapVertexInfo.insert(std::make_pair(index, pDexMesh->m_vecVertexsBuffer.size()));
+								pDexMesh->AddVertexIndice(pDexMesh->m_vecVertexsBuffer.size());
+								pDexMesh->m_vecVertexsBuffer.push_back(newVertex);
+							}
+						}
+
+					}
+				}
+				//polygons todo
+				//polylist
+				for (size_t iPolylistIndex = 0; iPolylistIndex < pMesh->vecPolylists.size(); ++iPolylistIndex)
+				{
+					mapVertexInfo.clear();
+					DaePolylist* pPolylist = pMesh->vecPolylists[iPolylistIndex];
+					int32 iInputSize = pPolylist->vInputs.size();
+					pDexMesh = pDexSkinMesh->AddMesh(pPolylist->material.c_str());//暂时用meterial的名字来命名
+					//处理material
+					for (size_t i = 0; i < vMaterials.size(); ++i)
+					{
+						if (vMaterials[i] == pPolylist->material)
+						{
+							pDexMesh->m_iMaterialId = i;
+							pDexMesh->m_iTextureId = i;
+						}
+					}
+					//对应pos normal uv 等source
+					for (size_t i = 0; i < pPolylist->vInputs.size(); ++i)
+					{
+						stDaeInput* pInput = &pPolylist->vInputs[i];
+						switch (pInput->semantic)
+						{
+						case ES_POSITION:
+							pSourcePos = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_NORMAL:
+							pSourceNormal = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_TEXCOORD:
+							pSourceUv = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_TEXTANGENT:
+							pSourceTangent = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_TEXBINORMAL:
+							pSourceBinormal = find_source(pMesh->vecSources, pInput->source);
+							break;
+						case ES_COLOR:
+							pSourceColor = find_source(pMesh->vecSources, pInput->source);
+							break;
+						default:
+							break;
+						}
+					}
+					int iPos = 0;
+					for (int32 i = 0; i < pPolylist->count; ++i)
+					{//一次性读取iInputSize个数据
+						//默认input顺序是VERTEX NORMAL TEXCOORD TEXTANGENT TEXBINORMAL COLOR
+						int iVCount = pPolylist->p_vcountData[i];
+						if (iVCount == 3)
+						{//三角形
+							for (int32 j = 0; j < 3; ++j)
+							{
+								stIndex index;
+								if (pSourcePos != nullptr)
+									index.m_iPosIndex = pPolylist->pData[iPos++];
+								if (pSourceNormal != nullptr)
+									index.m_iNormalIndex = pPolylist->pData[iPos++];
+								if (pSourceUv != nullptr)
+									index.m_iUvIndex = pPolylist->pData[iPos++];
+								if (pSourceTangent != nullptr)
+									iPos++;//tangent
+								if (pSourceBinormal != nullptr)
+									iPos++;//binormal
+								if (pSourceColor != nullptr)
+									index.m_iColorIndex = pPolylist->pData[iPos++];
+
+								map<stIndex, int32>::iterator ite = mapVertexInfo.find(index);
+								if (ite != mapVertexInfo.end())
+									pDexMesh->AddVertexIndice(ite->second);
+								else
+								{
+									DexSkinMesh::stMeshVertex newVertex;
+									if (pSourcePos != nullptr)
+										newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
+									if (pSourceNormal != nullptr)
+										newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
+									TransVector3ByAxis(newVertex.pos);
+									TransVector3ByAxis(newVertex.normal);
+									if (pSourceUv != nullptr)
+										newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
+									//一些导出工具对于uv坐标是从左到右为x ,从下到上为y，而引擎使用的dx，使用的是从左到右为x，从上到下为y
+									//如果y方向不一致，就要进行转换
+									newVertex.uv.y = 1 - newVertex.uv.y;
+									if (pSourceColor != nullptr)
+									{//有color
+										uint8 r = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 0] * 255;
+										uint8 g = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 1] * 255;
+										uint8 b = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 2] * 255;
+										uint8 a = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 3] * 255;
+										newVertex.color.Set(r, g, b, a);
+									}
+									mapVertexInfo.insert(std::make_pair(index, pDexMesh->m_vecVertexsBuffer.size()));
+									pDexMesh->AddVertexIndice(pDexMesh->m_vecVertexsBuffer.size());
+									pDexMesh->m_vecVertexsBuffer.push_back(newVertex);
+								}
+							}
+
+						}
+						else if (iVCount == 4)
+						{//四边形
+							int todo = 0; //
+						}
+					}
+				}
+			}
+		}
+	}
+	return pDexSkinMesh;
+}
+
+void DexModelDaeLoader::add_joints(DexSkinMesh* pSkinMesh, DaeNode* pNode, DaeNode* pFatherNode)
+{
+	DEX_ENSURE(pSkinMesh != nullptr && pNode != nullptr);
+	if (m_iJointCount >= DexSkinMesh::sGetMaxJointCount())
+		return;
+	++m_iJointCount;
+	DString fatherName = pFatherNode == nullptr ? "" : pFatherNode->sId;
+	DexSkinMesh::Joint* pJoint =  pSkinMesh->AddJoint(pNode->sId, fatherName, pNode->mMatrix);
+	for (size_t i = 0; i < pNode->vNodeChildren.size(); ++i)
+		if (pNode->vNodeChildren[i] != nullptr)
+			add_joints(pSkinMesh, pNode->vNodeChildren[i], pNode);
 }
 
 void DexModelDaeLoader::deal_with_material_texture(DVector<stInstanceMaterial>& vec, DexSkinMesh* pSkinMesh, DVector<DString>& vec2, DVector<DString>& vec3)
@@ -2159,7 +2686,8 @@ void DexModelDaeLoader::deal_with_material_texture(DVector<stInstanceMaterial>& 
 					vec2.push_back(vec[i].sSymbol);
 					vec3.push_back(pPhong->pDiffuse->sTexcoord);
 					pSkinMesh->AddMaterial(dexMaterial);
-					pSkinMesh->AddTexture(pImage->init_from.c_str());
+					if (pImage != nullptr)
+						pSkinMesh->AddTexture(pImage->init_from.c_str());
 				}
 			}
 		}
@@ -2226,30 +2754,42 @@ DexModelBase* DexModelDaeLoader::LoadModel(const char* filename)
 		}
 		DexCheckMemLeak::getDexMemoryLeakCheck()->BeginCheck();
 		m_pCollada = parse_COLLADA(pXmlNode);
+		m_iJointCount = 1;
 
-
-		DaeNode* pNode = nullptr;
-		DaeInstanceGeometry* pInstanceGeometry = nullptr;
-		DaeInstanceController* pInstanceController = nullptr;
-		for (size_t i = 0; i < m_pCollada->pLibraryVisualScenes->vecData[0]->vMeshs.size(); ++i)
+		if (1)
 		{
-			pNode = m_pCollada->pLibraryVisualScenes->vecData[0]->vMeshs[i];
-			if (pNode != nullptr)
+			DaeNode* pNode = nullptr;
+			DaeInstanceGeometry* pInstanceGeometry = nullptr;
+			DaeInstanceController* pInstanceController = nullptr;
+			for (size_t i = 0; i < m_pCollada->pLibraryVisualScenes->vecData[0]->vMeshs.size(); ++i)
 			{
-				if (pNode->pInstanceMesh->eType == ECE_instance_geometry)
-				{//静态模型
-					pInstanceGeometry = (DaeInstanceGeometry*) pNode->pInstanceMesh;
-					pSkinMesh = create_SkinMeshStatic(pNode);
+				pNode = m_pCollada->pLibraryVisualScenes->vecData[0]->vMeshs[i];
+				if (pNode != nullptr)
+				{
+					if (pNode->pInstanceMesh->eType == ECE_instance_geometry)
+					{//静态模型
+						pInstanceGeometry = (DaeInstanceGeometry*)pNode->pInstanceMesh;
+						pSkinMesh = create_SkinMeshStatic(pNode);
+					}
+					else if (pNode->pInstanceMesh->eType == ECE_instance_controller)
+					{//带有骨骼的模型
+						pInstanceController = (DaeInstanceController*)pNode->pInstanceMesh;
+						pSkinMesh = create_SkinMeshAni(pNode);
+					}
 				}
 			}
 		}
 
 
+
 		delete m_pCollada;
 		DexCheckMemLeak::getDexMemoryLeakCheck()->EndCheck();
 	}
+	if (pSkinMesh == nullptr)
+		getLog()->LogLine(log_error, "load dae model can not find mesh !");
 	Time = getTime()->GetTotalMillSeconds() - Time;
-	getLog()->LogLine(log_ok, "load dae model %s ok, use time %d ms\n", filename, Time);
+	getLog()->LogLine(log_ok, "load dae model %s ok, use time %d ms", filename, Time);
+
 	return pSkinMesh;
 }
 //#undef IS_NODE
