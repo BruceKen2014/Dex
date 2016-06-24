@@ -18,7 +18,7 @@ public:
 	DexMaterial()
 	{
 		diffuse = DEXCOLOR_WHITE;
-		ambient = DEXCOLOR_BLACK;
+		ambient = DEXCOLOR_WHITE;
 		specular = DEXCOLOR_BLACK;
 		emissive = DEXCOLOR_BLACK;
 	};

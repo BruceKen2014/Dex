@@ -4,6 +4,7 @@
 
 #include "../DexBase/typedefine.h"
 #include "../DexBase/DexDVector.h"
+#include "../DexBase/DexString.h"
 #include "../DexBase/DexMem.h"
 #include "../DexBase/DexPrimitive.h"
 #include "../DexBase/DexMaterial.h"
@@ -19,6 +20,7 @@ class DexGameState;
 class DexGlobal;
 class CDexTex;
 class DexModelBase;
+class DexSkinMesh;
 class IDexModelLoader;
 class IDexVertexDecl;
 class IDexRender;
@@ -259,8 +261,11 @@ public:
 	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize);
 	//for shader，不需要设置FVF
 	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize);
-	DexModelBase* CreateModel(const char* filename);
+	DexModelBase* CreateModel(const char* filename, int flag=0);
+	bool ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, const char* filename);
+	bool ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename);
 	
+	void CreateFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename);
 	void LookAtLH(const DexVector3 *pEye, const DexVector3 *pAt, const DexVector3 *pUp);
 	
 	//輔助調試函數

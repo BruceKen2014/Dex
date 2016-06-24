@@ -144,9 +144,18 @@ public:
 	DexVector3		  GetPosition() const;
 	//void MulVec4(CVector4* vec);
 
-	DexMatrix4x4T<T> RotateX(float32 radian);
-	DexMatrix4x4T<T> RotateY(float32 radian);
-	DexMatrix4x4T<T> RotateZ(float32 radian);
+	DexMatrix4x4T<T>& RotateX(float32 radian);
+	DexMatrix4x4T<T>& RotateY(float32 radian);
+	DexMatrix4x4T<T>& RotateZ(float32 radian);
+	DexMatrix4x4T<T>& Rotate(const DexVector3& axis, float32 radian);//围绕axis轴旋转radian弧度
+	DexMatrix4x4T<T>& ConvertHandMatrix();//convert between left and right hand coordinate
+	
+
+public:
+	//让pos点围绕rotatePoint点以rotateAxis轴进行旋转 radian弧度
+	static DexVector3& Rotate(DexVector3& pos, const DexVector3& rotatePoint, const DexVector3& rotateAxis, float32 radian);
+	static DexVector3& TransformNormal(DexVector3& normal, const DexMatrix4x4T<T>& matrix);
+	static DexVector3& TransformCoord(DexVector3& point, const DexMatrix4x4T<T>& matrix);
 };
 template<typename T>
 inline DexMatrix4x4T<T>::DexMatrix4x4T()
@@ -611,7 +620,7 @@ inline DexVector3 DexMatrix4x4T<T>::GetPosition()	const
 //{
 //}
 template<typename T>
-inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateX(float radian)
+inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateX(float radian)
 {
 	//float32 old_12 = _12;
 	//float32 old_13 = _13;
@@ -645,7 +654,7 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateX(float radian)
 	return *this;
 }
 template<typename T>
-inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateY(float32 radian)
+inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateY(float32 radian)
 {
 	//float32 old_11 = _11;
 	//float32 old_13 = _13;
@@ -680,7 +689,7 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateY(float32 radian)
 }
 
 template<typename T>
-inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateZ(float32 radian)
+inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateZ(float32 radian)
 {
 	//float32 old_11 = _11;
 	//float32 old_12 = _12;
@@ -713,6 +722,26 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::RotateZ(float32 radian)
 	*this = *this * temp;
 	return *this;
 }
+template<typename T>
+inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::Rotate(const DexVector3& axis, float32 radian)
+{
+	DexQuaternion quatenion(axis, radian);
+	*this = *this * quatenion.GetMatrix();
+	return *this;
+}
+template<typename T>
+inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::ConvertHandMatrix()
+{
+	m_m[0][2] = -m_m[0][2];
+	m_m[1][2] = -m_m[1][2];
+
+	m_m[2][0] = -m_m[2][0];
+	m_m[2][1] = -m_m[2][1];
+	m_m[2][3] = -m_m[2][3];
+
+	m_m[3][2] = -m_m[3][2];
+	return *this;
+}
 template<typename T1, typename T>
 DexMatrix4x4T<T> operator* (T1 _value, const DexMatrix4x4T<T>& matrix)
 {
@@ -743,6 +772,37 @@ DexVector3T<T1> operator* (const DexVector3T<T1>& vector, const DexMatrix4x4T<T>
 	ret.y = (T1)(vector.x * matrix._12 + vector.y * matrix._22 + vector.z * matrix._32 + 1 * matrix._42);
 	ret.z = (T1)(vector.x * matrix._13 + vector.y * matrix._23 + vector.z * matrix._33 + 1 * matrix._43);
 	return ret;
+}
+template<typename T>
+DexVector3& DexMatrix4x4T<T>::Rotate(DexVector3& pos, const DexVector3& rotatePoint, const DexVector3& rotateAxis, float32 radian)
+{
+	DexMatrix4x4T matrix;
+	DexVector3 tempPos = pos - rotatePoint;
+	matrix.Translate(tempPos);
+	matrix.Rotate(rotateAxis, radian);
+	matrix.Translate(rotatePoint);
+	pos = matrix.GetPosition();
+	return pos;
+}
+
+template<typename T> 
+DexVector3& DexMatrix4x4T<T>::TransformNormal(DexVector3& normal, const DexMatrix4x4T<T>& matrix)
+{
+	DexVector3 temp = normal;
+	normal.x = temp.x * matrix._11 + temp.y * matrix._21 + temp.z * matrix._31;
+	normal.y = temp.x * matrix._12 + temp.y * matrix._22 + temp.z * matrix._32;
+	normal.z = temp.x * matrix._13 + temp.y * matrix._23 + temp.z * matrix._33;
+	return normal;
+}
+
+template<typename T>
+DexVector3& DexMatrix4x4T<T>::TransformCoord(DexVector3& point, const DexMatrix4x4T<T>& matrix)
+{
+	DexVector3 temp = point;
+	point.x = temp.x * matrix._11 + temp.y * matrix._21 + temp.z * matrix._31 + 1 * matrix._41;
+	point.y = temp.x * matrix._12 + temp.y * matrix._22 + temp.z * matrix._32 + 1 * matrix._42;
+	point.z = temp.x * matrix._13 + temp.y * matrix._23 + temp.z * matrix._33 + 1 * matrix._43;
+	return point;
 }
 typedef DexMatrix4x4T<float32>  DexMatrix4x4;
 

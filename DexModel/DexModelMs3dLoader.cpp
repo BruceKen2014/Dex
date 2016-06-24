@@ -110,7 +110,7 @@ DexModelMs3dLoader::~DexModelMs3dLoader()
 
 }
 
-DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename)
+DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 {
 	getLog()->BeginLog();
 	int64 Time = getTime()->GetTotalMillSeconds();

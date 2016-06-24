@@ -4,4 +4,5 @@
 #include <map>
 
 #define DMap  std::map
+
 #endif

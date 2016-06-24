@@ -5,6 +5,7 @@
 #include "state/DexGameState.h"
 #include "DexBase/DexLight.h"
 #include "PalTypeDefine.h"
+#include "../DexBase/DexDVector.h"
 
 class PalPlayer;
 
@@ -53,6 +54,7 @@ protected:
 	DexSkinMesh* objModel;
 	DexSkinMesh* daeModel;
 	DexSkinMesh* testMesh;
+	DVector<DexSkinMesh*> vecFFMap;
 	DexLight light;
 	void* test_primitive_vertex;
 	void* test_primitive_indice;

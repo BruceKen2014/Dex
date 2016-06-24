@@ -7,9 +7,9 @@
 #include "../xml/tinystr.h"
 #include "../xml/tinyxml.h"
 #include "../DexMath/DexQuaternion.h"
+#include "DexSkinMeshFF.h"
 #include "../DexBase/DexMemoryLeakCheck.h"
-#include "DexSkinMesh.h"
-#include "../DexBase/DexDMap.h"
+
 
 
 
@@ -226,23 +226,43 @@ DexModelDaeLoader::DaeCollada* DexModelDaeLoader::parse_COLLADA(TiXmlNode* pXmlN
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element(g_asset)
+		{
+			getLog()->LogLine(log_ok, "parse asset...");
 			parse_asset(pXmlChildNode, pCollada);
+		}
 		else IS_Element(g_library_images)	
+		{
+			getLog()->LogLine(log_ok, "parse library images...");
 			parse_library_images(pXmlChildNode, pCollada);
+		}
 		else IS_Element(g_library_materials)
+		{
+			getLog()->LogLine(log_ok, "parse library materials...");
 			parse_library_materials(pXmlChildNode, pCollada);
+		}
 		else IS_Element(g_library_effects)
+		{
+			getLog()->LogLine(log_ok, "parse library effect...");
 			parse_library_effects(pXmlChildNode, pCollada);
+		}
 		else IS_Element(g_library_geometries)
+		{
+			getLog()->LogLine(log_ok, "parse library geometries...");
 			parse_library_geometries(pXmlChildNode, pCollada);
+		}
 		else IS_Element(g_library_controllers)
+		{
+			getLog()->LogLine(log_ok, "parse library controllers...");
 			parse_library_controllers(pXmlChildNode, pCollada);
+		}
 		else IS_Element(g_library_visual_scenes)
 		{
+			getLog()->LogLine(log_ok, "parse library scenes...");
 			parse_library_visual_scenes(pXmlChildNode, pCollada);
 		}
 		else IS_Element(g_library_animations)
 		{
+			getLog()->LogLine(log_ok, "parse library animations...");
 			parse_library_animations(pXmlChildNode, pCollada);
 		}
 		else IS_Element(g_scene)
@@ -266,9 +286,35 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_asset(TiXmlNode* pXmlNode, 
 	{
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("created")
-			pAsset->created = DString(pXmlElement->GetText());
+			pAsset->created = pXmlElement->GetText();
 		else IS_Element("modified")
-			pAsset->modified = DString(pXmlElement->GetText());
+			pAsset->modified = pXmlElement->GetText();
+		else IS_Element("contributor")
+		{
+			TiXmlNode* pXmlContributorChildNode = pXmlChildNode->FirstChild();
+			while(pXmlContributorChildNode != nullptr)
+			{
+				pXmlElement = pXmlContributorChildNode->ToElement();
+				IS_Element("author")
+				{
+					if (pXmlElement->GetText() != nullptr)
+						pAsset->sAuthor = DString();
+				}
+				pXmlContributorChildNode = pXmlContributorChildNode->NextSibling();
+			}
+		}
+		else IS_Element("unit")
+		{
+			TiXmlAttribute* pXmlAttribute = pXmlElement->FirstAttribute();
+			while (pXmlAttribute != nullptr)
+			{
+				IS_Attribute("meter")
+					pAsset->fUnit = atof(pXmlAttribute->Value());
+				else IS_Attribute("name")
+					pAsset->sUnitName = pXmlAttribute->Value();
+				pXmlAttribute = pXmlAttribute->Next();
+			}
+		}
 		else IS_Element("up_axis")
 		{
 			if (strcmp(pXmlElement->GetText(), "Z_UP") == 0)
@@ -446,6 +492,13 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_effect(TiXmlNode* pXmlNode,
 			else
 				pEffect->pProfile = parse_effect_profile(pXmlChildNode);
 		}
+		else IS_Element("profile_HLSL")
+		{
+			if (pEffect->pProfile != nullptr)
+				getLog()->LogLine(log_allert, "dae file find multi profile:%s under effect!", pXmlElement->Value());
+			else
+				pEffect->pProfile = parse_effect_profile(pXmlChildNode);
+		}
 		else
 			getLog()->LogLine(log_allert, "dae file unknown element:%s under effect!", pXmlElement->Value());
 		pXmlChildNode = pXmlChildNode->NextSibling();
@@ -553,7 +606,7 @@ DexModelDaeLoader::DaeSource* DexModelDaeLoader::parse_source(TiXmlNode* pXmlNod
 			//读取float_array的value
 			const char* strFloatValue = pXmlElement->GetText();
 			pSource->pFloatArrayValues = new float32[pSource->iFloatArrayCount];
-			str_to_float_array(strFloatValue, &pSource->pFloatArrayValues);
+			str_to_float_array(strFloatValue, pSource->pFloatArrayValues);
 			pXmlChildNode = pXmlChildNode->NextSibling();
 			continue;
 		}
@@ -741,7 +794,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 		IS_Element("bind_shape_matrix")
 		{
 			float32* values = new float32[16];
-			str_to_float_array(pXmlElement->GetText(), &values);
+			str_to_float_array(pXmlElement->GetText(), values);
 			pSkin->mMatrix = DexMatrix4x4(values);
 			delete[] values;
 		}
@@ -1019,7 +1072,8 @@ DexModelDaeLoader::DaeEffectProfile* DexModelDaeLoader::parse_effect_profile(TiX
 		else IS_Element("newparam")
 		{
 			pNewParam = parse_newparam(pXmlChildNode);
-			pEffectProfile->vecNewParams.push_back(pNewParam);
+			if (pNewParam != nullptr)
+				pEffectProfile->vecNewParams.push_back(pNewParam);
 		}
 		else
 			getLog()->LogLine(log_allert, "dae file unknown child:%s in profile_COMMON!", pXmlElement->Value());
@@ -1044,8 +1098,6 @@ DexModelDaeLoader::DaeNewParam* DexModelDaeLoader::parse_newparam(TiXmlNode* pXm
 		pXmlAttribute = pXmlAttribute->Next();
 	}
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
-	DaeBase* pOldDaeElement = nullptr;
-	DaeBase* pNewDaeElement = nullptr;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
@@ -1054,14 +1106,7 @@ DexModelDaeLoader::DaeNewParam* DexModelDaeLoader::parse_newparam(TiXmlNode* pXm
 		else IS_Element("surface")
 			pNewParam = parse_newparam_surface(pXmlChildNode);
 		else
-		{
-			getLog()->LogLine(log_allert, "dae file unknown child:%s under newparam!", pXmlElement->Value());
-			pXmlChildNode = pXmlChildNode->NextSibling();
-			continue;
-		}
-		if (pOldDaeElement != nullptr)
-			pOldDaeElement->sibling = pNewDaeElement;
-		pOldDaeElement = pNewDaeElement;
+		{ }
 		pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	if (pNewParam != nullptr)
@@ -1649,15 +1694,53 @@ DexModelDaeLoader::DaeNode* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode)
 	while (pXmlAttribute != nullptr)
 	{
 		IS_Attribute("id")
-			pNode->sId = pXmlAttribute->Value();
+		{
+			if (m_bFFXIIModel)
+			{//ffxii的dae 会有一个层级前缀，这是转换过程加上去的，原始的数据并没有这个前缀，.act用的也是原始名称
+				uint16 index = 0;
+				const char* pData = pXmlAttribute->Value();
+				while (1)
+				{
+					if (pData[index++] == '_')
+					{
+						break;
+					}
+				}
+				pNode->sId = &(pXmlAttribute->Value()[index]);
+			}
+			else
+				pNode->sId = pXmlAttribute->Value();
+		}
 		else IS_Attribute("name")
-			pNode->sName = pXmlAttribute->Value();
+		{
+			if (m_bFFXIIModel)
+			{//ffxii的dae 会有一个层级前缀，这是转换过程加上去的，原始的数据并没有这个前缀，.act用的也是原始名称
+				uint16 index = 0;
+				const char* pData = pXmlAttribute->Value();
+				while (1)
+				{
+					if (pData[index++] == '_')
+					{
+						break;
+					}
+				}
+				pNode->sName = &(pXmlAttribute->Value()[index]);
+			}
+			else
+				pNode->sName = pXmlAttribute->Value();
+		}
 		else IS_Attribute("sid")
 			pNode->sSId = pXmlAttribute->Value();
 		else IS_Attribute("type")
 		{
 			if (strcmp(pXmlAttribute->Value(), "JOINT") == 0)
+			{
 				pNode->eNodeType = ENT_JOINT;
+				if (pNode->sId != "")
+				{
+					m_MapJointName[pNode->sSId] = pNode->sId;
+				}
+			}
 			else if (strcmp(pXmlAttribute->Value(), "NODE") == 0)
 				pNode->eNodeType = ENT_NODE;
 			else 
@@ -1679,29 +1762,27 @@ DexModelDaeLoader::DaeNode* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode)
 			pNode->vNodeChildren.push_back(parse_node(pXmlChildNode));
 		else IS_Element("translate")
 		{
-			str_to_float_array(pXmlElement->GetText(),&pFloatValue);
+			str_to_float_array(pXmlElement->GetText(),pFloatValue);
 			pNode->mMatrix.Translate(DexVector3(pFloatValue));
 		}
 		else IS_Element("rotate")
 		{
-			str_to_float_array(pXmlElement->GetText(), &pFloatValue);
-			DexQuaternion quaternion(pFloatValue);
+			str_to_float_array(pXmlElement->GetText(), pFloatValue);
+			DexQuaternion quaternion;
+			quaternion.Set(DexVector3(pFloatValue), pFloatValue[3]);
 			tempMatrix = quaternion.GetMatrix();
-			pNode->mMatrix *= tempMatrix;
+			//因为这些rotate都是在自身local坐标系进行旋转的，所以不能后操作，要先乘
+			//先乘就相当于物体在原点先rotate再translate
+			pNode->mMatrix = tempMatrix *pNode->mMatrix;
 		}
 		else IS_Element("scale")
 		{
-			str_to_float_array(pXmlElement->GetText(), &pFloatValue);
-			pNode->mMatrix.Scale(DexVector3(pFloatValue));
-		}
-		else IS_Element("scale")
-		{
-			str_to_float_array(pXmlElement->GetText(), &pFloatValue);
+			str_to_float_array(pXmlElement->GetText(), pFloatValue);
 			pNode->mMatrix.Scale(DexVector3(pFloatValue));
 		}
 		else IS_Element("matrix")
 		{
-			str_to_float_array(pXmlElement->GetText(), &pFloatValue);
+			str_to_float_array(pXmlElement->GetText(), pFloatValue);
 			pNode->mMatrix.Set(pFloatValue);
 			pNode->mMatrix.MakeTranspose(); //如果node下面只有matrix的话，matrix好像必须要转置一下？
 		}
@@ -1922,7 +2003,7 @@ DexModelDaeLoader::stInstanceMaterial& DexModelDaeLoader::parse_instance_materia
 	return instanceMaterial;
 }
 
-void DexModelDaeLoader::str_to_float_array(const char* str, float32** value)
+void DexModelDaeLoader::str_to_float_array(const char* str, float32* value, char splitChar)
 {
 	const char* pt = str;
 	char tempValue[32];
@@ -1932,12 +2013,12 @@ void DexModelDaeLoader::str_to_float_array(const char* str, float32** value)
 	while (pt != nullptr && *pt != '\0')
 	{
 		tempValue[tempValueIndex] = *pt;
-		if (*(++pt) == ' ')
+		if (*(++pt) == splitChar)
 		{
 			++tempValueIndex;
 			tempValue[tempValueIndex] = '\0';
 			testVector.push_back(atof(tempValue));
-			(*value)[valueIndex] = atof(tempValue);
+			value[valueIndex] = atof(tempValue);
 			tempValueIndex = 0;
 			++valueIndex;
 			++pt;
@@ -1947,7 +2028,7 @@ void DexModelDaeLoader::str_to_float_array(const char* str, float32** value)
 	}
 	tempValue[tempValueIndex] = '\0';
 	testVector.push_back(atof(tempValue));
-	(*value)[valueIndex] = atof(tempValue);
+	value[valueIndex] = atof(tempValue);
 }
 void DexModelDaeLoader::str_to_int32_array(const char* str, int32** value, uint8 cycle, uint8 index, uint8 flag)
 {
@@ -2306,7 +2387,11 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 {
 	DEX_ENSURE_P(pAniMeshNode);
-	DexSkinMesh* pDexSkinMesh = new DexSkinMesh(1000);
+	DexSkinMesh* pDexSkinMesh = nullptr;
+	if (m_bFFXIIModel)
+		pDexSkinMesh = new DexSkinMeshFF();
+	else
+		pDexSkinMesh = new DexSkinMesh();
 	DexSkinMesh::DexMesh* pDexMesh = NULL;
 	DaeInstanceController* pInstanceController = (DaeInstanceController*)pAniMeshNode->pInstanceMesh;
 	//DaeInstanceController中指明的materials就是这个skinmesh需要用到的所有material
@@ -2317,22 +2402,6 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 
 	DaeNode* pNode = nullptr;
 	
-	//joint node里面只指定了父子关系，相对矩阵并无用处，真正的节点矩阵要由skin 里面的inv_bind_matrix得到
-	if (pInstanceController->vecSkeletons.size() == 0)
-	{//not have skeletons,then find joint node
-		//must only have one joint node,bind model to this joint
-		pNode = m_pCollada->pLibraryVisualScenes->vecData[0]->vJointsSystem[0];
-		add_joints(pDexSkinMesh, pNode, nullptr);
-	}
-	else
-	{
-		for (size_t i = 0; i < pInstanceController->vecSkeletons.size(); ++i)
-		{
-			pNode = find_joint(pInstanceController->vecSkeletons[i]);
-			if (pNode != nullptr)
-				add_joints(pDexSkinMesh, pNode, nullptr);
-		}
-	}
 
 	DaeController* pController = find_controller(pInstanceController->sUrl);
 	if (pController != nullptr && pController->pSkin)
@@ -2342,24 +2411,29 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 		要正确得到一个节点的矩阵，将inv_bind_matrix转置，得到空间逆矩阵，再求逆，得到的就是模型空间矩阵(注意，这里不是相对于父节点的相对矩阵，而是实实在在的空间矩阵,与node里面的相对矩阵不一样)
 		要得到相对于父节点的相对矩阵的话，以这个空间矩阵乘以父节点的空间逆矩阵
 		*/
-		//下一步需要对ff dae作特殊处理，因为ff dae里面controller里面的bone名字不是id 而是sid..
-		//可以加一个map<sid, id>通过sid找到id
+
 		for (size_t i = 0; i < pController->pSkin->pJointInvMatrix->iFloatArrayCount / 16; ++i)
 		{
 			DexMatrix4x4 invMatrix(&pController->pSkin->pJointInvMatrix->pFloatArrayValues[i*16]);
 			invMatrix.MakeTranspose();
-			DexMatrix4x4 worldMatrix = invMatrix.GetInvert();
-			DexSkinMesh::Joint* pJoint = pDexSkinMesh->FindJoint(pController->pSkin->pJointsName->vNamaArray[i]);
-			
-			if (pJoint != nullptr)
+			m_MapJointMatrix[pController->pSkin->pJointsName->vNamaArray[i]] = invMatrix;
+		}
+		//joint node里面只指定了父子关系，相对矩阵并无用处，真正的节点矩阵要由skin 里面的inv_bind_matrix得到
+		if (pInstanceController->vecSkeletons.size() != 1)
+		{//not have skeletons,then find joint node
+			//must only have one joint node,bind model to this joint
+			pNode = m_pCollada->pLibraryVisualScenes->vecData[0]->vJointsSystem[0];
+			add_joints(pDexSkinMesh, pNode, nullptr);
+		}
+		else
+		{
+			for (size_t i = 0; i < pInstanceController->vecSkeletons.size(); ++i)
 			{
-				pJoint->meshMatrix = worldMatrix;
-				pJoint->localMeshMatrixInvert = invMatrix;
-				pJoint->frame_matrix = worldMatrix * pJoint->m_pFather->localMeshMatrixInvert;
-				pJoint->world_matrix = worldMatrix;
+				pNode = find_joint(pInstanceController->vecSkeletons[i]);
+				if (pNode != nullptr)
+					add_joints(pDexSkinMesh, pNode, nullptr);
 			}
 		}
-		
 		//读取joint动作
 		if (m_pCollada->pLibraryAnimations != nullptr)
 		{
@@ -2417,6 +2491,7 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 						{
 							pDexMesh->m_iMaterialId = i;
 							pDexMesh->m_iTextureId = i;
+							break;
 						}
 					}
 					//对应pos normal uv 等source
@@ -2478,8 +2553,12 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 								if (pSourceNormal != nullptr)
 									newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
 								TransVector3ByAxis(newVertex.pos);
-								//newVertex.pos.x *= -1; //从maya中导出来的x 方向相反
 								TransVector3ByAxis(newVertex.normal);
+								if (m_bFFXIIModel)
+								{//右手坐标系转为左手坐标系
+									newVertex.pos.z *= -1; 
+									newVertex.normal.z *= -1;
+								}
 								if (pSourceUv != nullptr)
 									newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
 								if (iVertexWeightInputSize == 2)
@@ -2496,8 +2575,14 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 										{
 											uint32 iWeightIndex = pController->pSkin->pData[iVertexWeightInputSize * joint + iJointDataIndex + 1];
 											DString JointName = pController->pSkin->pJointsName->vNamaArray[iNameIndex];
-											uint32 iJointIndex = pDexSkinMesh->FindJointIndex(JointName);
+											int32 iJointIndex = pDexSkinMesh->FindJointIndex(JointName);
 											float  fJointWeight = pController->pSkin->pJointsWeight->pFloatArrayValues[iWeightIndex];
+											if (iJointIndex == -1)
+											{
+												DMap<DString, DString>::iterator ite = m_MapJointName.find(JointName);
+												if (ite != m_MapJointName.end())
+													iJointIndex = pDexSkinMesh->FindJointIndex(ite->second);
+											}
 											if (iJointIndex != -1)
 											{
 												newVertex.JointIndex[joint] = iJointIndex;
@@ -2656,6 +2741,26 @@ void DexModelDaeLoader::add_joints(DexSkinMesh* pSkinMesh, DaeNode* pNode, DaeNo
 	++m_iJointCount;
 	DString fatherName = pFatherNode == nullptr ? "" : pFatherNode->sId;
 	DexSkinMesh::Joint* pJoint =  pSkinMesh->AddJoint(pNode->sId, fatherName, pNode->mMatrix);
+	DMap<DString, DString>::iterator ite = m_MapJointName.find(pNode->sSId);
+	if (ite != m_MapJointName.end())
+	{
+		DMap<DString, DexMatrix4x4>::iterator ite2 = m_MapJointMatrix.find(ite->first);
+		if (ite2 != m_MapJointMatrix.end())
+		{
+			pJoint->meshMatrix = ite2->second.GetInvert();
+			if (m_bFFXIIModel)
+			{//右手坐标系转为左手坐标系
+				pJoint->meshMatrix.ConvertHandMatrix();
+				pJoint->localMeshMatrixInvert = pJoint->meshMatrix.GetInvert();
+			}
+			else
+			{
+				pJoint->localMeshMatrixInvert =  ite2->second;
+			}
+			pJoint->frame_matrix = pJoint->meshMatrix * pJoint->m_pFather->localMeshMatrixInvert;
+			pJoint->world_matrix = pJoint->meshMatrix;
+		}
+	}
 	for (size_t i = 0; i < pNode->vNodeChildren.size(); ++i)
 		if (pNode->vNodeChildren[i] != nullptr)
 			add_joints(pSkinMesh, pNode->vNodeChildren[i], pNode);
@@ -2688,6 +2793,37 @@ void DexModelDaeLoader::deal_with_material_texture(DVector<stInstanceMaterial>& 
 					pSkinMesh->AddMaterial(dexMaterial);
 					if (pImage != nullptr)
 						pSkinMesh->AddTexture(pImage->init_from.c_str());
+				}
+				else
+				{//如果找不到technique或者technique里面没有phone，则直接找pEffectProfile里面的newparam，看有没有sampler
+					bool bBreak = false;
+					for (size_t j = 0; j < pEffectProfile->vecNewParams.size(); ++j)
+					{
+						DaeNewParamSampler2D* pNewParamSampler2D = (DaeNewParamSampler2D*)pEffectProfile->vecNewParams[j];
+						if (pNewParamSampler2D != nullptr &&pNewParamSampler2D->eType == ECE_newparam_sampler2D)
+						{//目前默认只有一个sampler2d
+							for (size_t k = 0; k < pEffectProfile->vecNewParams.size(); ++k)
+							{
+								if (pEffectProfile->vecNewParams[k]->eType == ECE_newparam_surface)
+								{//找到surface ,再去library image寻找
+									DaeNewParamSurface* pNewParamSurface = (DaeNewParamSurface*)pEffectProfile->vecNewParams[k];
+									DaeImage* pImage = find_image(pNewParamSurface->sInitFrom);
+									vec2.push_back(vec[i].sSymbol);
+									
+									pSkinMesh->AddMaterial(dexMaterial);
+									if (pImage != nullptr)
+									{
+										vec3.push_back(pImage->init_from);
+										pSkinMesh->AddTexture(pImage->init_from.c_str());
+									}
+									bBreak = true;
+									break;
+								}
+							}
+						}
+						if (bBreak)
+							break;
+					}
 				}
 			}
 		}
@@ -2726,7 +2862,7 @@ DexModelDaeLoader::DaeImage* DexModelDaeLoader::find_image(DaeEffectProfile* pEf
 	return pImage;
 }
 
-DexModelBase* DexModelDaeLoader::LoadModel(const char* filename)
+DexModelBase* DexModelDaeLoader::LoadModel(const char* filename, int32 flag)
 {
 	//一个JOINT类型的node是一个骨骼系统，一个NODE类型的node是一个模型
 	//静态模型下面有instance_geometry,动态模型下面有instance_controller
@@ -2738,7 +2874,11 @@ DexModelBase* DexModelDaeLoader::LoadModel(const char* filename)
 	Xml.LoadFile();
 	DexSkinMesh* pSkinMesh = nullptr;
 	TiXmlNode* pXmlNode = Xml.FirstChild();
-	if (pXmlNode->Type() == TiXmlNode::TINYXML_DECLARATION)
+	if (Xml.Error())
+	{
+		getLog()->LogLine(log_error, "open dae model error!:%s", Xml.ErrorDesc());
+	}
+	else if (pXmlNode->Type() == TiXmlNode::TINYXML_DECLARATION)
 	{
 		pXmlNode = pXmlNode->NextSibling();
 		if (pXmlNode->Type() != TiXmlNode::TINYXML_ELEMENT)
@@ -2755,7 +2895,7 @@ DexModelBase* DexModelDaeLoader::LoadModel(const char* filename)
 		DexCheckMemLeak::getDexMemoryLeakCheck()->BeginCheck();
 		m_pCollada = parse_COLLADA(pXmlNode);
 		m_iJointCount = 1;
-
+		m_bFFXIIModel = flag == 1;
 		if (1)
 		{
 			DaeNode* pNode = nullptr;
@@ -2783,13 +2923,287 @@ DexModelBase* DexModelDaeLoader::LoadModel(const char* filename)
 
 
 		delete m_pCollada;
+		m_MapJointName.clear();
+		m_MapJointMatrix.clear();
 		DexCheckMemLeak::getDexMemoryLeakCheck()->EndCheck();
 	}
 	if (pSkinMesh == nullptr)
 		getLog()->LogLine(log_error, "load dae model can not find mesh !");
-	Time = getTime()->GetTotalMillSeconds() - Time;
-	getLog()->LogLine(log_ok, "load dae model %s ok, use time %d ms", filename, Time);
+	else
+	{
+		Time = getTime()->GetTotalMillSeconds() - Time;
+		getLog()->LogLine(log_ok, "load dae model %s ok, use time %d ms", filename, Time);
+	}
 
 	return pSkinMesh;
 }
+
+
+void DexModelDaeLoader::LoadFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename)
+{
+	getLog()->LogLine(log_ok, "load ff map %s...\n", filename);
+	int64 Time = getTime()->GetTotalMillSeconds();
+	TiXmlDocument Xml(filename);
+	Xml.LoadFile();
+	DexSkinMesh* pSkinMesh = nullptr;
+	TiXmlNode* pXmlNode = Xml.FirstChild();
+	if (Xml.Error())
+	{
+		getLog()->LogLine(log_error, "open dae model error!:%s", Xml.ErrorDesc());
+	}
+	else if (pXmlNode->Type() == TiXmlNode::TINYXML_DECLARATION)
+	{
+		pXmlNode = pXmlNode->NextSibling();
+		if (pXmlNode->Type() != TiXmlNode::TINYXML_ELEMENT)
+		{
+			getLog()->LogLine(log_error, "dae file format error !");
+			return ;
+		}
+		TiXmlElement* pXmlElement = pXmlNode->ToElement();
+		if (strcmp(pXmlElement->Value(), g_COLLADA) != 0)
+		{
+			getLog()->LogLine(log_error, "dae file not find COLLADA element!");
+			return ;
+		}
+		DexCheckMemLeak::getDexMemoryLeakCheck()->BeginCheck();
+		m_pCollada = parse_COLLADA(pXmlNode);
+		m_iJointCount = 1;
+		m_bFFXIIModel = 1;
+		if (1)
+		{
+			DaeNode* pNode = nullptr;
+			DaeInstanceGeometry* pInstanceGeometry = nullptr;
+			DaeInstanceController* pInstanceController = nullptr;
+			for (size_t i = 0; i < m_pCollada->pLibraryVisualScenes->vecData[0]->vMeshs.size(); ++i)
+			{
+				pNode = m_pCollada->pLibraryVisualScenes->vecData[0]->vMeshs[i];
+				if (pNode != nullptr)
+				{
+					if (pNode->pInstanceMesh->eType == ECE_instance_geometry)
+					{//静态模型
+						pInstanceGeometry = (DaeInstanceGeometry*)pNode->pInstanceMesh;
+						pSkinMesh = create_SkinMeshStatic(pNode);
+					}
+					else if (pNode->pInstanceMesh->eType == ECE_instance_controller)
+					{//带有骨骼的模型
+						pInstanceController = (DaeInstanceController*)pNode->pInstanceMesh;
+						pSkinMesh = create_SkinMeshAni(pNode);
+					}
+					vecSkinMesh.push_back(pSkinMesh);
+				}
+			}
+		}
+		delete m_pCollada;
+		m_MapJointName.clear();
+		m_MapJointMatrix.clear();
+		DexCheckMemLeak::getDexMemoryLeakCheck()->EndCheck();
+	}
+	if (pSkinMesh == nullptr)
+		getLog()->LogLine(log_error, "load dae model can not find mesh !");
+	else
+	{
+		Time = getTime()->GetTotalMillSeconds() - Time;
+		getLog()->LogLine(log_ok, "load dae model %s ok, use time %d ms", filename, Time);
+	}
+}
+bool DexModelDaeLoader::ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename)
+{
+	DEX_ENSURE_B(pDexSkinMesh != nullptr && pDexSkinMesh->getType() == DexSkinMeshFF::getClassType());
+
+	DexSkinMeshFF* pSkinMeshFF = (DexSkinMeshFF*)pDexSkinMesh;
+	FILE* pFile = fopen(filename.c_str(), "rb");
+	if (pFile == NULL)
+	{
+		getLog()->LogLine(log_error, "		load %s failed!", filename.c_str());
+		return false;
+	}
+
+	DexSkinMesh::Joint* pFatherJoint = nullptr;
+	DexSkinMesh::Joint* pJoint = nullptr;
+	const int16  iMaxLineByte = 256;
+	const int16  iMaxJointNameByte = 64;
+	char tempData[iMaxLineByte];
+	char jointName[iMaxJointNameByte];
+	DVector<DString> values;
+	
+	bool bReadSkeletonInfo = false;
+	while (!feof(pFile))
+	{
+		fgets(tempData, iMaxLineByte, pFile);
+		if (bReadSkeletonInfo)
+		{
+			if (tempData[0] == '\r' || tempData[0] == '\n')
+				break;
+			values.clear();
+			SplitStr(tempData, ',', values);
+			if (values.size() > 3)
+			{
+				if (values[2] == " \"null_skeleton\"" || values[2] == " \"joint\""
+					|| values[2] == " \"chain\"" || values[2] == " \"effector\"")
+				{
+					int32 index = atoi(values[1].c_str());
+					DexVector3 translate;
+					translate.x = atof(values[3].c_str()) / 60.0f;
+					translate.y = atof(values[4].c_str()) / 60.0f;
+					translate.z = atof(values[5].c_str()) / 60.0f;
+					DexQuaternion quatenion;
+					DexMatrix4x4 matrix;
+					DexMatrix4x4 tempMatrix;
+					quatenion.Set(DexVector3(1, 0, 0), -_getRadian(atof(values[6].c_str())));
+					matrix = matrix * quatenion.GetMatrix();
+					quatenion.Set(DexVector3(0, 1, 0), -_getRadian(atof(values[7].c_str())));
+					matrix = matrix * quatenion.GetMatrix();
+					quatenion.Set(DexVector3(0, 0, 1), -_getRadian(atof(values[8].c_str())));
+					matrix = matrix * quatenion.GetMatrix();
+					matrix.Translate(translate);
+					matrix.ConvertHandMatrix();
+					DexSkinMesh::Joint* OldJoint = pSkinMeshFF->FindMwsJoint(index);
+					if (OldJoint != nullptr)
+						pFatherJoint = OldJoint->m_pFather;
+					int32 iTempIndex = 0;
+					const char* ptr = values[0].c_str();
+					for (;;)
+					{
+						++ptr; //skip the first "
+						char cValue = *ptr;
+						if (cValue == '"')
+						{
+							jointName[iTempIndex++] = 0;
+							break;
+						}
+						else
+						{
+							jointName[iTempIndex++] = cValue;
+						}
+					}
+					pJoint = pSkinMeshFF->AddMwsJoint(jointName, index, pFatherJoint, matrix);
+					pFatherJoint = pJoint;
+				}
+			}
+
+		}
+		else if (tempData[0] == '[' && tempData[1] == 'T'&& tempData[5] == ']')
+		{ //"[TREE]"
+			bReadSkeletonInfo = true;
+		}
+	}
+	fclose(pFile);
+	return true;
+}
+
+bool DexModelDaeLoader::ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, DString sFileName)
+{
+	DEX_ENSURE_B(pDexSkinMesh != nullptr && pDexSkinMesh->getType() == DexSkinMeshFF::getClassType());
+	DexSkinMeshFF* pSkinMeshFF = (DexSkinMeshFF*)pDexSkinMesh;
+	//将之前的动画信息清除
+	for (size_t i = 0; i < pSkinMeshFF->m_vecMwsJoints.size(); ++i)
+		pSkinMeshFF->m_vecMwsJoints[i]->m_vecKeyFrames.clear();
+
+	FILE* pFile = fopen(sFileName.c_str(), "rb");
+	if (pFile == NULL)
+	{
+		getLog()->LogLine(log_error, "		load %s failed!", sFileName.c_str());
+		return false;
+	}
+
+	DexSkinMesh::Joint* pJoint = nullptr;
+	const int16  iMaxLineByte = 256;
+	const int16  iMaxJointNameByte = 64;
+	const int16  iFps = 1000/30; //每秒60帧
+	int16        iFrames = 0;//该动画有多少帧
+	char tempData[iMaxLineByte];
+	char jointName[iMaxJointNameByte];
+	DexVector3 oldTranslate;
+	DexVector3 oldRotation;
+	DVector<DString> values;
+	while (!feof(pFile))
+	{
+		fgets(tempData, iMaxLineByte, pFile);
+		if (pJoint != nullptr)
+		{
+			values.clear();
+			SplitStr(tempData, ',', values);
+			if (tempData[0] == '\r' || tempData[0] == '\n')
+			{
+				pJoint = nullptr;
+				continue;
+			}
+			DexMatrix4x4 matrix;
+			DexQuaternion quatenion;
+
+			DexVector3 translate;
+			if (values[1].length() == 1)
+				translate.x = oldTranslate.x;
+			else
+				translate.x = atof(values[1].c_str()) / 60.0f;
+			if (values[2].length() == 1)
+				translate.y = oldTranslate.y;
+			else
+				translate.y = atof(values[2].c_str()) / 60.0f;
+			if (values[3].length() == 1)
+				translate.z = oldTranslate.z;
+			else
+				translate.z = atof(values[3].c_str()) / 60.0f;
+
+			DexVector3 rotation;
+			if (values[4].length() == 1)
+				rotation.x = oldRotation.x;
+			else
+				rotation.x = -_getRadian(atof(values[4].c_str()));
+			if (values[5].length() == 1)
+				rotation.y = oldRotation.y;
+			else
+				rotation.y = -_getRadian(atof(values[5].c_str()));
+			if (values[6].length() == 1)
+				rotation.z = oldRotation.z;
+			else
+				rotation.z = -_getRadian(atof(values[6].c_str()));
+
+			quatenion.Set(DexVector3(1, 0, 0), rotation.x);
+			matrix = matrix * quatenion.GetMatrix();
+			quatenion.Set(DexVector3(0, 1, 0), rotation.y);
+			matrix = matrix * quatenion.GetMatrix();
+			quatenion.Set(DexVector3(0, 0, 1), rotation.z);
+			matrix = matrix * quatenion.GetMatrix();
+
+			matrix.Translate(translate);
+			matrix.ConvertHandMatrix();
+
+			pJoint->AddKeyFrame((atoi(values[0].c_str()) - 1) * iFps, matrix);
+			oldTranslate = translate;
+			oldRotation = rotation;
+		}
+		else
+		{
+			switch (tempData[0])
+			{
+			case '[':
+				for (int16 i = 1; i < iMaxJointNameByte; ++i)
+				{
+					if (tempData[i] == ']')
+					{
+						jointName[i - 1] = 0;
+						break;
+					}
+					else
+						jointName[i - 1] = tempData[i];
+				}
+				//if (strcmp(jointName, "n_hara") == 0)
+				pJoint = pSkinMeshFF->FindMwsJoint(jointName);
+				break;
+			case '$':
+				//like $timeLength=300
+				iFrames = atoi(&tempData[12]);
+				break;
+			default:
+				break;
+			}
+		}
+
+	}
+	pDexSkinMesh->SetMaxAniTime((iFrames-1) * iFps);
+	fclose(pFile);
+	return true;
+}
+
 //#undef IS_NODE

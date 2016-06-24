@@ -64,7 +64,7 @@ DexShaderHlslSkinMesh::~DexShaderHlslSkinMesh()
 
 void DexShaderHlslSkinMesh::Render()
 {
-	DEX_ENSURE(m_pTarget != nullptr && m_pTarget->getType() == DexSkinMesh::getClassType());
+	DEX_ENSURE(m_pTarget != nullptr);
 	DexSkinMesh* skinMesh = (DexSkinMesh*)m_pTarget;
 	pFxEffect->SetMatrix(m_handleWVPMatrix, &skinMesh->matWVP);
 	pFxEffect->SetMatrixArray(m_handleJointMatrix, skinMesh->jointsMatrix, DexSkinMesh::sGetMaxJointCount());
@@ -77,10 +77,12 @@ void DexShaderHlslSkinMesh::Render()
 	m_colorAmbient.y = skinMesh->m_ambientColor.g / 255.0f;
 	m_colorAmbient.z = skinMesh->m_ambientColor.b / 255.0f;
 	m_colorAmbient.w = skinMesh->m_ambientColor.a / 255.0f;
-	//得找一下如何在shader中开启alphablend
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	DexGameEngine::getEngine()->GetDevice()->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	/*
+	在shader中开启alphablend
+	AlphaBlendEnable = true;
+	SrcBlend = SrcAlpha;
+	DestBlend = InvSrcAlpha;
+	*/
 	//这些属于固定管线的设置可以在shader中设置，所以这里不需要设置
 	//D3DXMatrixIdentity(&DexGameEngine::getEngine()->g_worldMatrix);
 	//DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &DexGameEngine::getEngine()->g_worldMatrix);

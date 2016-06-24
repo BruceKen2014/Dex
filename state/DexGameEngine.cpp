@@ -509,7 +509,7 @@ void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, i
 	g_D3DDevice->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
 }
 
-DexModelBase* DexGameEngine::CreateModel(const char* filename)
+DexModelBase* DexGameEngine::CreateModel(const char* filename, int flag)
 {
 	DexModelBase* ret = NULL;
 	int32 length = strlen(filename);
@@ -520,30 +520,45 @@ DexModelBase* DexGameEngine::CreateModel(const char* filename)
 		&& filename[length - 1] == 'd')
 	{//ms3d file
 		//load as DexSkinMesh
-		ret = ms3dLoader->LoadModel(filename);
+		ret = ms3dLoader->LoadModel(filename,flag);
 	}
 	else if (length > 3
 		&& filename[length - 3] == 'o'
 		&& filename[length - 2] == 'b'
 		&& filename[length - 1] == 'j')
 	{
-		ret = objLoader->LoadModel(filename);
+		ret = objLoader->LoadModel(filename, flag);
 	}
 	else if (length > 3
 		&& filename[length - 3] == 'd'
 		&& filename[length - 2] == 'a'
 		&& filename[length - 1] == 'e')
 	{
-		ret = daeLoader->LoadModel(filename);
+		ret = daeLoader->LoadModel(filename, flag);
 	}
 	else if (length > 3
 		&& filename[length - 3] == 'x'
 		&& filename[length - 2] == 'm'
 		&& filename[length - 1] == 'l')
 	{
-		ret = daeLoader->LoadModel(filename);
+		ret = daeLoader->LoadModel(filename, flag);
 	}
 	return ret;
+}
+
+bool DexGameEngine::ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, const char* filename)
+{
+	return ((DexModelDaeLoader*)daeLoader)->ReadActInfoFxii(pDexSkinMesh, filename);
+}
+
+bool DexGameEngine::ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename)
+{
+	return ((DexModelDaeLoader*)daeLoader)->ReadFFSkeletonInfo(pDexSkinMesh, filename);
+}
+
+void DexGameEngine::CreateFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename)
+{
+	((DexModelDaeLoader*)daeLoader)->LoadFFMap(vecSkinMesh, filename);
 }
 
 bool DexGameEngine::AddState(DexGameState* state)
@@ -636,6 +651,7 @@ void DexGameEngine::Update()
 {
 	//计算帧数，和state没有关系，故在此计算
 	UpdateFps();
+	updateViewMatrix();
 	static int64 lastTickTime = 0;
 	if(lastTickTime == 0)
 		lastTickTime = g_iCurrentTime;

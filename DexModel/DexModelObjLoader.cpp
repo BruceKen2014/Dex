@@ -19,7 +19,7 @@ DexModelObjLoader::~DexModelObjLoader()
 
 }
 
-DexModelBase* DexModelObjLoader::LoadModel(const char* filename)
+DexModelBase* DexModelObjLoader::LoadModel(const char* filename, int32 flag)
 {
 	getLog()->BeginLog();
 	int64 Time = getTime()->GetTotalMillSeconds();

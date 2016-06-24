@@ -74,8 +74,15 @@ void DexSkinMesh::Joint::ComputeWorldMatrix(int32 time)
 				float time2;
 				DexMatrix4x4 matrix1;
 				DexMatrix4x4 matrix2;
+				bool  bJustEqual = false;
 				for (size_t i = 0; i < m_vecKeyFrames.size(); ++i)
 				{
+					if (time == m_vecKeyFrames[i].time)
+					{
+						matrix1 = m_vecKeyFrames[i].matrix;
+						bJustEqual = true;
+						break;
+					}
 					if (time > m_vecKeyFrames[i].time)
 					{
 						time1 = m_vecKeyFrames[i].time;
@@ -89,7 +96,10 @@ void DexSkinMesh::Joint::ComputeWorldMatrix(int32 time)
 						break;
 					}
 				}
-				frame_matrix = matrix1 + (matrix2 - matrix1) * ((float32)(time - time1)) / ((float32)(time2 - time1));
+				if (bJustEqual)
+					frame_matrix = matrix1;
+				else
+					frame_matrix = matrix1 + (matrix2 - matrix1) * ((float32)(time - time1)) / ((float32)(time2 - time1));
 			}
 		}
 	}
@@ -342,7 +352,7 @@ void DexSkinMesh::Init()
 	m_pRootJoint->localMeshMatrixInvert.Identity();
 	m_pRootJoint->world_matrix.Identity();
 	m_vecJoints.push_back(m_pRootJoint);
-	SetRenderFlag(SKINMESH_RENDER_MESH);
+	//SetRenderFlag(SKINMESH_RENDER_MESH);
 	jointsMatrix = new D3DXMATRIX[sGetMaxJointCount()];
 	m_fJointScale = 1.0f;
 	InitShader();
@@ -1006,28 +1016,18 @@ bool DexSkinMesh::UpdateOneTime(int32 delta)
 
 bool DexSkinMesh::UpdateLoop(int32 delta)
 {
-	if (m_iAnimateNowTime > m_iAnimateEndTime)
-	{
-		m_iAnimateNowTime = m_iAnimateEndTime;
-	}
 	if (m_pRootJoint != NULL)
-	{
 		m_pRootJoint->Update(m_iAnimateNowTime);
-	}
-	if (m_iAnimateNowTime >= m_iAnimateEndTime)
-	{
-		m_iAnimateNowTime = m_iAnimateStartTime;
-	}
 	m_iAnimateNowTime += delta;
+	if (m_iAnimateNowTime > m_iAnimateEndTime)
+		m_iAnimateNowTime = m_iAnimateStartTime;
 	return true;
 }
 
 bool DexSkinMesh::UpdateOneTimeBack(int32 delta)
 {
 	if (m_pRootJoint != NULL)
-	{
 		m_pRootJoint->Update(m_iAnimateNowTime);
-	}
 	if (m_iAnimateNowTime < m_iAnimateStartTime)
 		return false;
 	m_iAnimateNowTime -= delta;
@@ -1036,19 +1036,11 @@ bool DexSkinMesh::UpdateOneTimeBack(int32 delta)
 
 bool DexSkinMesh::UpdateLoopBack(int32 delta)
 {
-	if (m_iAnimateNowTime < m_iAnimateStartTime)
-	{
-		m_iAnimateNowTime = m_iAnimateStartTime;
-	}
 	if (m_pRootJoint != NULL)
-	{
 		m_pRootJoint->Update(m_iAnimateNowTime);
-	}
-	if (m_iAnimateNowTime <= m_iAnimateStartTime)
-	{
-		m_iAnimateNowTime = m_iAnimateEndTime;
-	}
 	m_iAnimateNowTime -= delta;
+	if (m_iAnimateNowTime < m_iAnimateStartTime)
+		m_iAnimateNowTime = m_iAnimateEndTime;
 	return true;
 }
 
@@ -1070,11 +1062,25 @@ bool DexSkinMesh::AddTexture(CDexTex* tex)
 
 bool DexSkinMesh::AddTexture(const char* filename)
 {
-	CDexTex* tex = new CDexTex();
-	if (!tex->LoadTex(filename))
+	CDexTex* tex = nullptr;
+	for (size_t i = 0; i < m_vecTextures.size(); ++i)
 	{
-		tex->ReduceRef();
-		return false;
+		if (m_vecTextures[i] != nullptr &&
+			m_vecTextures[i]->Name() == filename)
+		{
+			tex = m_vecTextures[i];
+			tex->AddRef();
+			break;
+		}
+	}
+	if (tex == nullptr)
+	{
+		tex = new CDexTex();
+		if (!tex->LoadTex(filename))
+		{
+			tex->ReduceRef();
+			return false;
+		}
 	}
 	m_vecTextures.push_back(tex);
 	return true;

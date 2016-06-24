@@ -2,7 +2,7 @@
 #ifndef _DEX_MODEL_LOADER_H
 #define _DEX_MODEL_LOADER_H
 
-
+#include "../DexBase/DexType.h"
 class DexModelBase;
 class IDexModelLoader
 {
@@ -49,6 +49,6 @@ public:
 	virtual ~IDexModelLoader(){};
 
 public:
-	virtual DexModelBase* LoadModel(const char* filename) = 0;
+	virtual DexModelBase* LoadModel(const char* filename, int32 flag) = 0;
 };
 #endif

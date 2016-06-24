@@ -168,6 +168,8 @@ public:
 	BOOL LeftButtonUp();
 	BOOL RightButtonUp();
   	BOOL MiddleButtonUp();
+	int  MouseDeltaX();
+	int  MouseDeltaY();
 public:
 	void RegisterMouseListener(CListener* listener)
 	{

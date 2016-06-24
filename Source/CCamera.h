@@ -46,6 +46,9 @@ public:
 	float       m_nearDistance;	//最近距离
 	float       m_farDistance;	//最远距离
 
+	//maya操作类型的camera参数离视点的远近来确定移动量
+	float       m_fMayaFlag;//根据camera
+
 protected:
 	CFrustum    m_frustum;
 
@@ -76,6 +79,7 @@ public:
 	DexVector3 GetUpVector()       { return m_up; };
 	DexVector3 GetRight()          { return m_right; };
 	DexVector3 GetFocusPoint()     { return m_focusPoint; };
+	DexVector3 GetHeadDir();  //取得摄像机头顶方向
 	
 	float       GetFocusDis();
 

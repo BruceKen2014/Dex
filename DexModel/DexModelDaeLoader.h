@@ -4,6 +4,7 @@ DexEngine& dae model loader
 #ifndef _DEX_MODEL_LOADER_DAE_H
 #define _DEX_MODEL_LOADER_DAE_H
 #include "../DexBase/DexString.h"
+#include "../DexBase/DexDMap.h"
 #include "../DexMath/DexMatrix.h"
 #include "../DexMath/DexVector4.h"
 #include "../DexBase/DexDVector.h"
@@ -129,10 +130,14 @@ public:
 	class DaeAsset :public DaeBase
 	{
 	public:
+		DString  sAuthor;
 		DString  created;
 		DString  modified;
+		DString  sUnitName;
+		float32  fUnit;
+		
 		EAxisUp  eAxisUp;
-		DaeAsset() :DaeBase(ECE_asset){ eAxisUp = EAU_Y; }
+		DaeAsset() :DaeBase(ECE_asset){ eAxisUp = EAU_Y; fUnit = 1.0f; }
 		virtual ~DaeAsset(){}
 	};
 	struct stDaeInput
@@ -502,7 +507,7 @@ protected:
 protected:
 	stDaeInput& parse_input(TiXmlElement* pXmlElement, stDaeInput& input);
 	stInstanceMaterial& parse_instance_material(TiXmlElement* pXmlElement, stInstanceMaterial& instanceMaterial);
-	void str_to_float_array(const char* str, float32** value);
+	void str_to_float_array(const char* str, float32* value, char splitChar=' ');
 
 	/*把str里面的参数读进value中，每cycle个数据一个循环，并对一个循环中的第index个数据当flag个有效数据
 	str_to_int32_array("1 2 3 4 5 6 7 8 9", value, 3, 0, 2);
@@ -512,7 +517,11 @@ protected:
 	void TransVector3ByAxis(DexVector3& vec3); //根据坐标系对坐标法线等进行转换
 protected:
 	DaeCollada* m_pCollada;
+	bool		m_bFFXIIModel;
 	uint32		m_iJointCount;
+	//for ffxii model
+	DMap<DString, DString> m_MapJointName; 
+	DMap<DString, DexMatrix4x4> m_MapJointMatrix;
 protected:
 	DaeImage*	 find_image(DString sImageId);
 	DaeMaterial* find_material(DString sMaterialId);
@@ -537,7 +546,12 @@ protected:
 	void		 deal_with_material_texture(DVector<stInstanceMaterial>& vec, DexSkinMesh* pSkinMesh, DVector<DString>& vec2, DVector<DString>& vec3);
 	
 public:
-	virtual DexModelBase* LoadModel(const char* filename);
+	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
+
+	void LoadFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename);
+	bool ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename);//mws file
+
+	bool ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, DString sFileName);
 };
 
 #endif 

@@ -31,7 +31,7 @@ public:
 	virtual ~DexModelObjLoader();
 
 public:
-	virtual DexModelBase* LoadModel(const char* filename);
+	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
 private:
 	bool readMaterial(const char* filename, DVector<ObjMaterial>& vecMaterial);
 	void getToken(int8*& pBuffer, int8* pOut, int8* pEnd);

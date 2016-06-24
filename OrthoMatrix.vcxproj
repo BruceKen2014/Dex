@@ -30,7 +30,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <CLRSupport>true</CLRSupport>
     <PlatformToolset>v120</PlatformToolset>
@@ -190,11 +190,13 @@
     <ClInclude Include="DexModel\DexModelDaeLoader.h" />
     <ClInclude Include="DexModel\DexModelLoader.h" />
     <ClInclude Include="DexModel\DexModelMs3dLoader.h" />
+    <ClInclude Include="DexModel\DexModelMwsLoader.h" />
     <ClInclude Include="DexModel\DexModelObjLoader.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMesh.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexNormal.h" />
     <ClInclude Include="DexModel\DexSkinMesh.h" />
+    <ClInclude Include="DexModel\DexSkinMeshFF.h" />
     <ClInclude Include="Pal3Wai\CBloodFlag.h" />
     <ClInclude Include="Pal3Wai\CDexQuad.h" />
     <ClInclude Include="Pal3Wai\CEnemy.h" />
@@ -214,6 +216,7 @@
     <ClInclude Include="Pal3Wai\CTestSprite.h" />
     <CustomBuildStep Include="Pal3Wai\DemoEx.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">true</ExcludedFromBuild>
     </CustomBuildStep>
     <ClInclude Include="Pal3Wai\PalDefine.h" />
     <ClInclude Include="Pal3Wai\PalScriptFun.h" />
@@ -320,11 +323,13 @@
     <ClCompile Include="DexModel\DexModelBase.cpp" />
     <ClCompile Include="DexModel\DexModelDaeLoader.cpp" />
     <ClCompile Include="DexModel\DexModelMs3dLoader.cpp" />
+    <ClCompile Include="DexModel\DexModelMwsLoader.cpp" />
     <ClCompile Include="DexModel\DexModelObjLoader.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMesh.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexNormal.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.cpp" />
     <ClCompile Include="DexModel\DexSkinMesh.cpp" />
+    <ClCompile Include="DexModel\DexSkinMeshFF.cpp" />
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp" />
     <ClCompile Include="Pal3Wai\CDexQuad.cpp" />
     <ClCompile Include="Pal3Wai\CEnemy.cpp" />
@@ -345,6 +350,7 @@
     <ClCompile Include="Pal3Wai\CTestSprite.cpp" />
     <ClCompile Include="Pal3Wai\DemoEx.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Pal3Wai\PalScriptFun.cpp" />
     <ClCompile Include="DexBase\CDelegate.cpp" />

@@ -556,6 +556,21 @@ BOOL CInputSystem::MiddleButtonUp()
 	return m_mouse->MiddleButtonUp();
 }
 
+int CInputSystem::MouseDeltaX()
+{
+	int iDeltaX = 0;
+	if (m_mouse != nullptr)
+		iDeltaX = m_mouse->getDeltaX();
+	return iDeltaX;
+}
+int CInputSystem::MouseDeltaY()
+{
+	int iDeltaY = 0;
+	if (m_mouse != nullptr)
+		iDeltaY = m_mouse->getDeltaY();
+	return iDeltaY;
+}
+
 bool CInputSystem::WheelFront()
 {
 	if(m_mouse == NULL)

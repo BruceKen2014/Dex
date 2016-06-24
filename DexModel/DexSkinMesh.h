@@ -72,6 +72,7 @@ class DexSkinMesh: public DexModelBase
 	Dex_DeclareClass(DexSkinMesh, 0)
 	friend class DexModelMs3dLoader;
 	friend class DexModelObjLoader;
+	friend class DexModelDaeLoader;
 	friend class DexShaderHlslSkinMesh;
 	friend class DexShaderHlslSkinMeshVertexToJoint;
 	friend class DexShaderHlslSkinMeshVertexNormal;
@@ -151,7 +152,7 @@ class DexSkinMesh: public DexModelBase
 		DVector<stMeshVertex> m_vecDebugVertexToJointBuffer;
 	public:
 		DexMesh();
-		~DexMesh();
+		virtual ~DexMesh();
 	public:
 		void   DestroyLineIndices();
 		int32* CreateLineIndices();

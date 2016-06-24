@@ -13,7 +13,7 @@ public:
 	virtual ~DexModelMs3dLoader();
 
 public:
-	virtual DexModelBase* LoadModel(const char* filename);
+	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
 };
 
 #endif 

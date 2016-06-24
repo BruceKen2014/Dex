@@ -248,15 +248,26 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
-
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/Old Book/Book.dae");
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/mickey/Mickey_Mouse.dae");
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/ArmyPilot/ArmyPilot2.dae");
-	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/mws/c1004.xml");
+	
+	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/mws/c1004.xml",1);
+	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/c1004/mws/c1004.mws");
+	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/c1004/mws/run.act");
+	
+	/*
+	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/m1014/mws/m1014.dae", 1);
+	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/m1014/mws/m1014.mws");
+	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/m1014/mws/idle0.act");
+	*/
+	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/weapon/mws/w0002.xml", 1);
 	daeModel->SetJointScale(0.01f);
-	daeModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_POINT | DEXRENDER_LIGHT_AMBIENT);
-	daeModel->SetRenderFlag(//SKINMESH_RENDER_JOINT | SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
+	//daeModel->SetAnimateType(SkinMeshAnimateType_Loop_Back);
+	daeModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT| DEXRENDER_LIGHT_POINT);
+	daeModel->SetRenderFlag(SKINMESH_RENDER_JOINT |SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
 		SKINMESH_RENDER_MESH );
+	daeModel->SetAmbientColor(DexColor(200, 200, 200));
 	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/obj/RYU.obj");
 	objModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
 	//objModel->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
@@ -550,7 +561,7 @@ void PalGameStateBattleMain::Render()
 
 
 	matrix.Identity();
-	matrix.Scale(20.0f, 20.0f, 20.0f);
+	matrix.Scale(30.0f, 30.0f, 30.0f);
 	//matrix.RotateY(rotate);
 	matrix.Translate(0.0f, 0.0f, 0.0f);
 	daeModel->SetSceneNodeMatrix(matrix);
@@ -574,7 +585,7 @@ void PalGameStateBattleMain::Render()
 	objModel->Render();
 	//RenderVertexShader();
 	//RenderPixelShader();
-	testMesh->Render();
+	//testMesh->Render();
 	//DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 	//getGlobal()->g_pJingtian->Render();
 	get2DDrawer()->BeginDraw2D();
@@ -662,11 +673,13 @@ void PalGameStateBattleMain::EndRender()
 }
 void PalGameStateBattleMain::MouseWheelFront()
 {
-	DexGameEngine::getEngine()->RotateCameraByFocus(0.2f);
+	//camera update self
+	//DexGameEngine::getEngine()->RotateCameraByFocus(0.2f);
 }
 void PalGameStateBattleMain::MouseWheelBack()
 {
-	DexGameEngine::getEngine()->RotateCameraByFocus(-0.2f);
+	//camera update self
+	//DexGameEngine::getEngine()->RotateCameraByFocus(-0.2f);
 }
 void PalGameStateBattleMain::MouseMove(int xPos, int yPos)
 {
@@ -687,7 +700,7 @@ void PalGameStateBattleMain::MouseLDown(int xPos, int yPos)
 	D3DXVECTOR3 set_vector = crossPoint - collide_center;
 	set_vector.y = 0;
 	panda->setDirection(set_vector);
-	DexGameEngine::getEngine()->MoveCamera(DexVector3(set_vector.x, set_vector.y, set_vector.z),4.0f, true);
+	//DexGameEngine::getEngine()->MoveCamera(DexVector3(set_vector.x, set_vector.y, set_vector.z),4.0f, true);
 	panda->Move(set_vector, 4.0f);
 }
 void PalGameStateBattleMain::MouseLUp(int xPos, int yPos)
@@ -707,21 +720,25 @@ void PalGameStateBattleMain::KeyDown()
 {
 	m_pBattleMainMachine->KeyDown();
 	float vel = 4.0f;	
-	if(CInputSystem::GetInputSingleton().KeyDown(DIK_S))
-	{	
-		DexGameEngine::getEngine()->MoveCamera(CCamera::DIR_VIEW, vel);
-	}	
-	if(CInputSystem::GetInputSingleton().KeyDown(DIK_W))
-	{	
-		DexGameEngine::getEngine()->MoveCamera(CCamera::DIR_VIEW, -vel);
-	}
-	if(CInputSystem::GetInputSingleton().KeyDown(DIK_SPACE))
-	{
-		DexGameEngine::getEngine()->MoveCamera(CCamera::DIR_UP,5);
-	}
-	if(CInputSystem::GetInputSingleton().KeyDown(DIK_LCONTROL))
-	{
-		DexGameEngine::getEngine()->MoveCamera(CCamera::DIR_UP,-5);
+	if (0)
+	{//camera update self
+		if (CInputSystem::GetInputSingleton().KeyDown(DIK_S))
+		{
+			DexGameEngine::getEngine()->MoveCamera(CCamera::DIR_VIEW, vel);
+		}
+		if (CInputSystem::GetInputSingleton().KeyDown(DIK_W))
+		{
+			DexGameEngine::getEngine()->MoveCamera(CCamera::DIR_VIEW, -vel);
+		}
+		if (CInputSystem::GetInputSingleton().KeyDown(DIK_SPACE))
+		{
+			DexGameEngine::getEngine()->MoveCamera(CCamera::DIR_UP, 5);
+		}
+		if (CInputSystem::GetInputSingleton().KeyDown(DIK_LCONTROL))
+		{
+			DexGameEngine::getEngine()->MoveCamera(CCamera::DIR_UP, -5);
+		}
+
 	}
 	if (CInputSystem::GetInputSingleton().KeyUp(DIK_LCONTROL))
 	{
