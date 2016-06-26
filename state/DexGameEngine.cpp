@@ -18,8 +18,10 @@
 #include "../DexModel/DexModelMs3dLoader.h"
 #include "../DexModel/DexModelObjLoader.h"
 #include "../DexModel/DexModelDaeLoader.h"
+#include "../DexModel/DexModelMwsLoader.h"
 #include "../DexModel/DexSkinMesh.h"
 #include "../Source/CTexture.h"
+
 
 DexGameEngine* DexGameEngine::g_pGameEngine = NULL;
 CRITICAL_SECTION  g_cs;
@@ -67,6 +69,7 @@ DexGameEngine::~DexGameEngine()
 	m_pBufferFontTextureSurface->Release();
 	m_pBufferFontTexture->Release();
 	m_pBackSurface->Release();
+	_SafeClearVector(vecModelLoader);
 }
 DWORD WINAPI LoadThread(LPVOID lpParam)
 {
@@ -215,9 +218,11 @@ bool DexGameEngine::Initialize()
 	CInputSystem::GetInputSingleton();
 	CDexObjectFactroy::getObjectFactory();
 	CDexScene::RegisterLuaFunction(L);
-	ms3dLoader = new DexModelMs3dLoader;
-	objLoader = new DexModelObjLoader;
-	daeLoader = new DexModelDaeLoader;
+	vecModelLoader.push_back(new DexModelMs3dLoader);
+	vecModelLoader.push_back(new DexModelObjLoader);
+	vecModelLoader.push_back(new DexModelDaeLoader);
+	vecModelLoader.push_back(new DexModelMwsLoader);
+
 	m_pRender = new DexRenderDirectX9();
 	m_pRender->InitShader();
 	GetDevice()->CreateTexture(512,512,1,D3DUSAGE_RENDERTARGET,D3DFMT_A8R8G8B8, 
@@ -512,54 +517,42 @@ void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, i
 DexModelBase* DexGameEngine::CreateModel(const char* filename, int flag)
 {
 	DexModelBase* ret = NULL;
-	int32 length = strlen(filename);
-	if (length > 4  
-		&& filename[length - 4] == 'm'
-		&& filename[length - 3] == 's'
-		&& filename[length - 2] == '3'
-		&& filename[length - 1] == 'd')
-	{//ms3d file
-		//load as DexSkinMesh
-		ret = ms3dLoader->LoadModel(filename,flag);
-	}
-	else if (length > 3
-		&& filename[length - 3] == 'o'
-		&& filename[length - 2] == 'b'
-		&& filename[length - 1] == 'j')
+	const char* suffix = dexstrchr(filename, '.');
+	for (uint32 i = 0; i < vecModelLoader.size(); ++i)
 	{
-		ret = objLoader->LoadModel(filename, flag);
-	}
-	else if (length > 3
-		&& filename[length - 3] == 'd'
-		&& filename[length - 2] == 'a'
-		&& filename[length - 1] == 'e')
-	{
-		ret = daeLoader->LoadModel(filename, flag);
-	}
-	else if (length > 3
-		&& filename[length - 3] == 'x'
-		&& filename[length - 2] == 'm'
-		&& filename[length - 1] == 'l')
-	{
-		ret = daeLoader->LoadModel(filename, flag);
+		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(suffix))
+		{
+			ret = vecModelLoader[i]->LoadModel(filename, flag);
+			break;
+		}
 	}
 	return ret;
 }
 
 bool DexGameEngine::ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, const char* filename)
 {
-	return ((DexModelDaeLoader*)daeLoader)->ReadActInfoFxii(pDexSkinMesh, filename);
+	for (uint32 i = 0; i < vecModelLoader.size(); ++i)
+	{
+		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(".dae"))
+		{
+			return ((DexModelDaeLoader*)vecModelLoader[i])->ReadActInfoFxii(pDexSkinMesh, filename);
+		}
+	}
+	return false;
 }
 
 bool DexGameEngine::ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename)
 {
-	return ((DexModelDaeLoader*)daeLoader)->ReadFFSkeletonInfo(pDexSkinMesh, filename);
+	for (uint32 i = 0; i < vecModelLoader.size(); ++i)
+	{
+		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(".dae"))
+		{
+			return ((DexModelDaeLoader*)vecModelLoader[i])->ReadFFSkeletonInfo(pDexSkinMesh, filename);
+		}
+	}
+	return false;
 }
 
-void DexGameEngine::CreateFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename)
-{
-	((DexModelDaeLoader*)daeLoader)->LoadFFMap(vecSkinMesh, filename);
-}
 
 bool DexGameEngine::AddState(DexGameState* state)
 {

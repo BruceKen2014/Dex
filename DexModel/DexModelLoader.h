@@ -49,6 +49,7 @@ public:
 	virtual ~IDexModelLoader(){};
 
 public:
+	virtual bool		  SupportType(const char* fileType) = 0;
 	virtual DexModelBase* LoadModel(const char* filename, int32 flag) = 0;
 };
 #endif

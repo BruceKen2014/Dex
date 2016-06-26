@@ -55,8 +55,8 @@ private:
 	//texture
 	typedef struct _stMwsTexture :public _stMwsToken
 	{
-		DString sName;
-		_stMwsTexture(){};
+		char sName[64];
+		_stMwsTexture(){ memset(sName, 0, sizeof(sName)); };
 		virtual ~_stMwsTexture(){};
 	}stMwsTexture;
 	//material
@@ -179,6 +179,9 @@ protected:
 	stMwsTree*		pTreeData;
 
 protected:
+	int getNextInt(const char*& ptr, char splitChar[2]);
+	float getNextFloat(const char*& ptr, char splitChar[2]);
+protected:
 	void freeModelData();
 	void ReadVertex(const char* data, stMwsVertex& vertex);
 	void ReadNormal(const char* data, stMwsNormal& normal);
@@ -189,11 +192,14 @@ protected:
 	void ReadFace(const char* data, stMwsFace& face);
 	void ReadGroup(const char* data, stMwsGroup& group);
 	void ReadTree(const char* data, stMwsTree& tree);
+
+
 public:
 	DexModelMwsLoader();
 	virtual ~DexModelMwsLoader();
 
 public:
+	virtual bool		  SupportType(const char* fileType);
 	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
 };
 

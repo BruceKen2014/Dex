@@ -546,6 +546,7 @@ protected:
 	void		 deal_with_material_texture(DVector<stInstanceMaterial>& vec, DexSkinMesh* pSkinMesh, DVector<DString>& vec2, DVector<DString>& vec3);
 	
 public:
+	virtual bool		  SupportType(const char* fileType);
 	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
 
 	void LoadFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename);

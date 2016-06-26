@@ -130,9 +130,7 @@ private:
 	LPD3DXMESH  g_cube;   //辅助立方体 将这个立方体渲染出来 方便查看Node位置
 	LPD3DXMESH  g_sphere;
 	string         g_nextStateName;
-	IDexModelLoader* ms3dLoader;
-	IDexModelLoader* objLoader;
-	IDexModelLoader* daeLoader;
+	DVector<IDexModelLoader*> vecModelLoader;
 
 	IDexRender*      m_pRender;
 	//light data
@@ -265,7 +263,6 @@ public:
 	bool ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, const char* filename);
 	bool ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename);
 	
-	void CreateFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename);
 	void LookAtLH(const DexVector3 *pEye, const DexVector3 *pAt, const DexVector3 *pUp);
 	
 	//輔助調試函數

@@ -19,6 +19,10 @@ DexModelObjLoader::~DexModelObjLoader()
 
 }
 
+bool DexModelObjLoader::SupportType(const char* fileType)
+{
+	return dexstricmp(fileType, ".obj") == 0;
+}
 DexModelBase* DexModelObjLoader::LoadModel(const char* filename, int32 flag)
 {
 	getLog()->BeginLog();

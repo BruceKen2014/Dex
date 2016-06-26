@@ -4,4 +4,8 @@
 #include <string>
 
 typedef std::string DString;
+
+#define dexstrcmp		strcmp
+#define dexstricmp		stricmp
+#define dexstrchr		strchr
 #endif

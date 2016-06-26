@@ -110,6 +110,10 @@ DexModelMs3dLoader::~DexModelMs3dLoader()
 
 }
 
+bool DexModelMs3dLoader::SupportType(const char* fileType)
+{
+	return dexstricmp(fileType, ".ms3d") == 0;
+}
 DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 {
 	getLog()->BeginLog();

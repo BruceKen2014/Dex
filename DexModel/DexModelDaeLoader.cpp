@@ -2862,6 +2862,11 @@ DexModelDaeLoader::DaeImage* DexModelDaeLoader::find_image(DaeEffectProfile* pEf
 	return pImage;
 }
 
+bool DexModelDaeLoader::SupportType(const char* fileType)
+{
+	return dexstricmp(fileType, ".dae") == 0 || dexstricmp(fileType, ".xml") == 0;
+}
+
 DexModelBase* DexModelDaeLoader::LoadModel(const char* filename, int32 flag)
 {
 	//一个JOINT类型的node是一个骨骼系统，一个NODE类型的node是一个模型
@@ -2893,9 +2898,10 @@ DexModelBase* DexModelDaeLoader::LoadModel(const char* filename, int32 flag)
 			return nullptr;
 		}
 		DexCheckMemLeak::getDexMemoryLeakCheck()->BeginCheck();
-		m_pCollada = parse_COLLADA(pXmlNode);
 		m_iJointCount = 1;
 		m_bFFXIIModel = flag == 1;
+		m_pCollada = parse_COLLADA(pXmlNode);
+
 		if (1)
 		{
 			DaeNode* pNode = nullptr;

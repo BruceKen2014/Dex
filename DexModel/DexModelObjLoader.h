@@ -31,6 +31,7 @@ public:
 	virtual ~DexModelObjLoader();
 
 public:
+	virtual bool SupportType(const char* fileType);
 	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
 private:
 	bool readMaterial(const char* filename, DVector<ObjMaterial>& vecMaterial);

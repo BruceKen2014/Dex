@@ -56,38 +56,69 @@ void DexModelMwsLoader::freeModelData()
 	_SafeDeleteArr(pTreeData);
 }
 
-void DexModelMwsLoader::ReadVertex(const char* data, stMwsVertex& vertex)
+int DexModelMwsLoader::getNextInt(const char*& ptr, char splitChar[2])
 {
 	char tempData[32];
 	uint16 iIndex = 0;
-	memset(tempData,0, sizeof(tempData));
+	while (*ptr != splitChar[0] && *ptr != splitChar[1])
+		tempData[iIndex++] = *ptr++;
+	tempData[iIndex] = '\0';
+	return atoi(tempData);
+}
+
+float DexModelMwsLoader::getNextFloat(const char*& ptr, char splitChar[2])
+{
+	char tempData[32];
+	uint16 iIndex = 0;
+	while (*ptr != splitChar[0] && *ptr != splitChar[1])
+		tempData[iIndex++] = *ptr++;
+	ptr++;//skip split char
+	tempData[iIndex] = '\0';
+	return atof(tempData);
+}
+
+void DexModelMwsLoader::ReadVertex(const char* data, stMwsVertex& vertex)
+{
+	char splitChar[2] = { ',', ';' };
 	const char* ptr = data;
-	while (*ptr++ != ',')
-		tempData[iIndex++] = *ptr;
-	tempData[iIndex] = '\0';
-	vertex.pos.x = atoi(tempData);
-	iIndex = 0;
-	ptr++;//skip ','
-	while (*ptr++ != ',')
-		tempData[iIndex++] = *ptr;
-	tempData[iIndex] = '\0';
-	vertex.pos.y = atoi(tempData);
-	iIndex = 0;
-	ptr++;//skip ','
-	while (*ptr++ != ';') //this is ';' here
-		tempData[iIndex++] = *ptr;
-	tempData[iIndex] = '\0';
-	vertex.pos.z = atoi(tempData);
+	vertex.pos.x = getNextFloat(ptr, splitChar);
+	vertex.pos.y = getNextFloat(ptr, splitChar);
+	vertex.pos.z = getNextFloat(ptr, splitChar);
 }
 void DexModelMwsLoader::ReadNormal(const char* data, stMwsNormal& normal)
 {
+	char splitChar[2] = { ',', '\r' };
+	const char* ptr = data;
+	normal.normal.x = getNextFloat(ptr, splitChar);
+	normal.normal.y = getNextFloat(ptr, splitChar);
+	splitChar[0] = '\n';
+	normal.normal.z = getNextFloat(ptr, splitChar);
 }	
 void DexModelMwsLoader::ReadUv(const char* data, stMwsUv& uv)
-{}
+{
+	char splitChar[2] = { ',', '\r' };
+	const char* ptr = data;
+	uv.uv.x = getNextFloat(ptr, splitChar);
+	splitChar[0] = '\n';
+	uv.uv.y = getNextFloat(ptr, splitChar);
+}
 void DexModelMwsLoader::ReadColor(const char* data, stMwsColor& color)
-{}
+{
+	char splitChar[2] = { ',', '\r' };
+	const char* ptr = data;
+	color.color.x = getNextFloat(ptr, splitChar);
+	color.color.y = getNextFloat(ptr, splitChar);
+	color.color.z = getNextFloat(ptr, splitChar);
+	splitChar[0] = '\n';
+	color.color.w = getNextFloat(ptr, splitChar);
+}
 void DexModelMwsLoader::ReadTexture(const char* data, stMwsTexture& texture)
-{}
+{
+	uint16 nameSize = strlen(data) - 4 - 1;//tm2" and the first "
+	memcpy(texture.sName, &data[1], nameSize);
+	strcat(texture.sName, "tga\0");
+	//memcpy(&texture.sName[nameSize], "tga\0", 5);
+}
 void DexModelMwsLoader::ReadMaterial(const char* data, stMwsMaterial& material)
 {}
 void DexModelMwsLoader::ReadFace(const char* data, stMwsFace& face)
@@ -97,6 +128,10 @@ void DexModelMwsLoader::ReadGroup(const char* data, stMwsGroup& group)
 void DexModelMwsLoader::ReadTree(const char* data, stMwsTree& tree)
 {}
 
+bool DexModelMwsLoader::SupportType(const char* fileType)
+{
+	return dexstricmp(fileType, ".mws") == 0;
+}
 DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, int32 flag)
 {
 	FILE* pFile = fopen(filename, "rb");
@@ -118,7 +153,7 @@ DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, int32 flag)
 		{
 		case '@':
 			pTempData = (char*)&(tempLineData[4]);
-			iVertexCount = atoi(pTempData);
+			iMwsVersion = atoi(pTempData);
 			break;
 		case '[':
 			switch (tempLineData[1])
@@ -156,13 +191,13 @@ DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, int32 flag)
 				//[POLYGON]¡¢[FF12ATTRIBUTE]
 				break;
 			}
-			break;
+			continue;
 		case '\r':
 		case '\n':
-			break;
+			continue;
 		case '\"':
 			bReadingCount = true;
-			break;
+			continue;
 		default:
 			break;
 		}
@@ -217,31 +252,31 @@ DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, int32 flag)
 			switch (iReadingType)
 			{
 			case ReadingVertex:
-				ReadVertex(tempLineData, pVertexData[iDataIndex]);
+				ReadVertex(tempLineData, pVertexData[iDataIndex++]);
 				break;
 			case ReadingNormal:
-				ReadNormal(tempLineData, pNormalData[iDataIndex]);
+				ReadNormal(tempLineData, pNormalData[iDataIndex++]);
 				break;
 			case ReadingUV:
-				ReadUv(tempLineData, pUvData[iDataIndex]);
+				ReadUv(tempLineData, pUvData[iDataIndex++]);
 				break;
 			case ReadingColor:
-				ReadColor(tempLineData, pColorData[iDataIndex]);
+				ReadColor(tempLineData, pColorData[iDataIndex++]);
 				break;
 			case ReadingTexture:
-				ReadTexture(tempLineData, pTextureData[iDataIndex]);
+				ReadTexture(tempLineData, pTextureData[iDataIndex++]);
 				break;
 			case ReadingMaterial:
-				ReadMaterial(tempLineData, pMaterialData[iDataIndex]);
+				ReadMaterial(tempLineData, pMaterialData[iDataIndex++]);
 				break;
 			case ReadingGroup:
-				ReadGroup(tempLineData, pGroupData[iDataIndex]);
+				ReadGroup(tempLineData, pGroupData[iDataIndex++]);
 				break;
 			case ReadingTree:
-				ReadTree(tempLineData, pTreeData[iDataIndex]);
+				ReadTree(tempLineData, pTreeData[iDataIndex++]);
 				break;
 			case ReadingFace:
-				ReadFace(tempLineData, pFaceData[iDataIndex]);
+				ReadFace(tempLineData, pFaceData[iDataIndex++]);
 				break;
 			default:
 				break;

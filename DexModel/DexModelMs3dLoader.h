@@ -13,6 +13,7 @@ public:
 	virtual ~DexModelMs3dLoader();
 
 public:
+	virtual bool SupportType(const char* fileType);
 	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
 };
 

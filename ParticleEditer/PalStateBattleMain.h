@@ -54,6 +54,7 @@ protected:
 	DexSkinMesh* objModel;
 	DexSkinMesh* daeModel;
 	DexSkinMesh* testMesh;
+	DexSkinMesh* mwsModel;
 	DVector<DexSkinMesh*> vecFFMap;
 	DexLight light;
 	void* test_primitive_vertex;
