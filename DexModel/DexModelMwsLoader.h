@@ -7,14 +7,13 @@ DexEngine& mws model loader
 #include "../DexMath/DexVector2.h"
 #include "../DexMath/DexVector3.h"
 #include "../DexMath/DexVector4.h"
+#include "../DexMath/DexMatrix.h"
 #include "../DexBase/DexString.h"
 #include "../DexBase/DexMaterial.h"
 
 #include "DexModelLoader.h"
 
-
-
-
+class DexSkinMesh;
 class DexModelMwsLoader :public IDexModelLoader
 {
 private:
@@ -27,28 +26,28 @@ private:
 	//vertex
 	typedef struct _stMwsVertex :public _stMwsToken
 	{
-		DexVector3 pos;
+		float64 pos[3];
 		_stMwsVertex(){};
 		virtual ~_stMwsVertex(){};
 	}stMwsVertex;
 	//normal
 	typedef struct _stMwsNormal :public _stMwsToken
 	{
-		DexVector3 normal;
+		float64 normal[3];
 		_stMwsNormal(){};
 		virtual ~_stMwsNormal(){};
 	}stMwsNormal;
 	//uv
 	typedef struct _stMwsUv :public _stMwsToken
 	{
-		DexVector2 uv;
+		float64 uv[2];
 		_stMwsUv(){};
 		virtual ~_stMwsUv(){};
 	}stMwsUv;
 	//color
 	typedef struct _stMwsColor :public _stMwsToken
 	{
-		DexVector4 color;
+		float64 color[4];
 		_stMwsColor(){};
 		virtual ~_stMwsColor(){};
 	}stMwsColor;
@@ -88,10 +87,7 @@ private:
 			double specularColor[4];
 			double specularIntensity;
 			double color[4];
-			DexMaterial& getDexMaterial(DexMaterial& material)
-			{
-				return material;
-			}
+			DexMaterial& getDexMaterial(DexMaterial& material);
 		}stMaterialLayerData;
 		DString sName;
 		uint16  iNumLayers;
@@ -106,10 +102,11 @@ private:
 		uint16 iVertices;
 		uint16* pVertexIndex;
 		uint16* pNormalIndex;
+		uint16* pColorIndex;
 		uint16* pUvIndex;
 		uint16* pMaterialIndex;
-		_stMwsFace(){ pVertexIndex = pNormalIndex = pUvIndex = pMaterialIndex = nullptr; }
-		virtual ~_stMwsFace() { delete[] pVertexIndex; delete[] pNormalIndex; delete[] pUvIndex; delete[] pMaterialIndex; }
+		_stMwsFace(){ pVertexIndex = pNormalIndex = pColorIndex = pUvIndex = pMaterialIndex = nullptr; }
+		virtual ~_stMwsFace() { delete[] pVertexIndex; delete[] pNormalIndex; delete[] pColorIndex; delete[] pUvIndex; delete[] pMaterialIndex; }
 	}stMwsFace;
 	//group
 	typedef struct _stMwsGroup : public _stMwsToken
@@ -149,12 +146,21 @@ private:
 		};
 		DString sName;
 		int16   iParentIndex;
-		DexVector3 translation;
-		DexVector3 rotation;
-		DexVector3 scale;
 		TreeType eTreeType;
-		_stMwsTree() {}
-		virtual ~_stMwsTree() {}
+		double translation[3];
+		double rotation[3];
+		double scale[3];
+
+		uint16 iGroupIndex;
+		uint16 iNumLods;
+		double lodThresold[4];
+		_stMwsTree* pFather;
+		DVector<_stMwsTree*> children;
+		DexMatrix4x4 matrix;
+		_stMwsTree() { pFather = nullptr; iGroupIndex = 0; iNumLods = 0; }
+		virtual ~_stMwsTree() { children.clear(); pFather = nullptr; }
+		void buildMatrix();
+		bool isShape();
 	}stMwsTree;
 protected:
 	uint32 iMwsVersion;
@@ -177,12 +183,20 @@ protected:
 	stMwsFace*		pFaceData;
 	stMwsGroup*		pGroupData;
 	stMwsTree*		pTreeData;
-
+	stMwsTree*      pRootTree;
 protected:
-	int getNextInt(const char*& ptr, char splitChar[2]);
-	float getNextFloat(const char*& ptr, char splitChar[2]);
+	int getNextInt(const char*& ptr, char splitChar[3]);
+	bool getNextBool(const char*& ptr, char splitChar[3]);
+	float64 getNextDouble(const char*& ptr, char splitChar[3]);
+	float getNextFloat(const char*& ptr, char splitChar[3]);
+	void getNextString(const char*& ptr, DString& str);
+	void getNextString(const char*& ptr, char* str);
 protected:
+	bool readModelData(const char* filename);
 	void freeModelData();
+	void buildTree();
+	void AddMesh(stMwsTree* pTree, DexSkinMesh* pSkinMesh);
+
 	void ReadVertex(const char* data, stMwsVertex& vertex);
 	void ReadNormal(const char* data, stMwsNormal& normal);
 	void ReadUv(const char* data, stMwsUv& uv);

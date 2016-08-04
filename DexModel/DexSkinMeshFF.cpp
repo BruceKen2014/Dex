@@ -50,6 +50,8 @@ DexSkinMesh::Joint* DexSkinMeshFF::AddMwsJoint(DString name, int32 index, DexSki
 	
 	stFFJoint ffJoint;
 	ffJoint.pDaeJoint = FindJoint(name);
+	if (ffJoint.pDaeJoint != nullptr)
+		ffJoint.pDaeJoint->localMeshMatrixInvert = pJoint->localMeshMatrixInvert;
 	ffJoint.pMwsJoint = pJoint;
 	m_mapJoints[name] = ffJoint;
 

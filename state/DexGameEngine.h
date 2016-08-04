@@ -24,60 +24,12 @@ class DexSkinMesh;
 class IDexModelLoader;
 class IDexVertexDecl;
 class IDexRender;
-// typedef enum
-// {
-// 	DEXRS_ZENABLE					,   //是否开启Z buff
-// 	DEXRS_ZWRITEENABLE              ,   //是否开启深度写入
-// 	DEXRS_ALPHATESTENABLE           ,   //是否开启alpha测试
-// 	DEXRS_SRCBLEND                  ,   
-// 	DEXRS_DESTBLEND                 ,   
-// 	DEXRS_CULLMODE                  ,   // CULL mode 
-// 	DEXRS_ALPHABLENDENABLE          ,   //是否开启alpha混合
-// 	//DEXRS_FOGENABLE                 ,   //是否开启雾效
-// 	//DEXRS_FOGCOLOR                  ,   // fog color 
-// 	//DEXRS_FOGTABLEMODE              ,   // fog mode
-// 	//DEXRS_FOGSTART                  ,   // fog start (for both vertex and pixel fog) 
-// 	//DEXRS_FOGEND                    ,   // Fog end      
-// 	//DEXRS_FOGDENSITY                ,   // Fog density  
-// 	//DEXRS_RANGEFOGENABLE            ,   // Enables range-based fog
-// 	//DEXRS_FOGVERTEXMODE             ,   // fog mode
-// 	
-// 	DEXRS_STENCILENABLE             ,   // BOOL enable/disable stenciling 
-// 	DEXRS_LIGHTING                  ,   // light
-// 	DEXRS_AMBIENT                   ,   //ambient color
-// 	DEXRS_POINTSIZE                 ,   /* float point size */
-// 	DEXRS_POINTSIZE_MIN             ,   /* float point size min threshold */
-// 	DEXRS_POINTSPRITEENABLE         ,   /* BOOL point texture coord control */
-// 	DEXRS_POINTSCALEENABLE          ,   /* BOOL point size scale enable */
-// 	DEXRS_POINTSCALE_A              ,   /* float point attenuation A value */
-// 	DEXRS_POINTSCALE_B              ,   /* float point attenuation B value */
-// 	DEXRS_POINTSCALE_C              ,   /* float point attenuation C value */
-// 	DEXRS_POINTSIZE_MAX             ,   /* float point size max threshold */
-// 	DEXRS_INDEXEDVERTEXBLENDENABLE  ,   //顶点颜色混合
-// 	DEXRS_BLENDOP                   ,   //BLENDOP setting
-// }Dex_RenderState;
-// 
-// typedef enum _DEXBLEND {
-// 	DEXBLEND_ZERO               = 1,
-// 	DEXBLEND_ONE                = 2,
-// 	DEXBLEND_SRCCOLOR           = 3,
-// 	DEXBLEND_INVSRCCOLOR        = 4,
-// 	DEXBLEND_SRCALPHA           = 5,
-// 	DEXBLEND_INVSRCALPHA        = 6,
-// 	DEXBLEND_DESTALPHA          = 7,
-// 	DEXBLEND_INVDESTALPHA       = 8,
-// 	DEXBLEND_DESTCOLOR          = 9,
-// 	DEXBLEND_INVDESTCOLOR       = 10,
-// 	DEXBLEND_SRCALPHASAT        = 11,
-// 	DEXBLEND_BOTHSRCALPHA       = 12,
-// 	DEXBLEND_BOTHINVSRCALPHA    = 13,
-// 	DEXBLEND_FORCE_DWORD        = 0x7fffffff, /* force 32-bit size enum */
-// } DEXBLEND;
+class IDexDevice;
 class DexGameEngine
 {
 private:
 	static DexGameEngine*    g_pGameEngine;
-
+	IDexDevice*				 g_pDevice;
 	HWND			  g_hWnd;
 	HINSTANCE		  g_hInstance;
 	WNDPROC  g_msgPro; //外界传入为了初始化窗口调用
@@ -136,6 +88,7 @@ private:
 	//light data
 	DVector<DexLight> g_vecLight;
 	DexColor		 g_ambientColor;
+	DexColor		 g_clearColor;
 	float			 g_pointLightData[100];
 	float			 g_DirLightData[100];
 	int				 g_lightDataSize;
@@ -176,9 +129,11 @@ public:
 		}
 	}
 public:
-	HWND GetHwnd()		{ return g_hWnd;}
-	void SetHInstance(HINSTANCE instance)	  { g_hInstance = instance;}
-	HINSTANCE GetHInstance()				  { return g_hInstance;}
+	IDexDevice* CreateDevice(DString deviceType);
+	IDexDevice* GetDDevice();
+	HWND GetHwnd();
+	void SetHInstance(HINSTANCE instance);
+	HINSTANCE GetHInstance();
 	void SetWindowSize(int width, int height) { g_iWindowWidth = width; g_iWinddowHeight = height;}
 	void SetWIndowPos(int posX, int posY)     { g_iWindowPosX = posX; g_iWindowPosY = posY;}
 	void SetFullScreen(bool fullscreen)       { g_bFullscreen = fullscreen;}	  
@@ -191,7 +146,7 @@ public:
 	DexGameState* GetCurrState();
 	void SetLoadingState(DexGameState* pLoadingState);
 	
-	bool Initialize();
+	bool Initialize(int flag=0);
 	
 	int  getFps()		{ return g_iFps;}
 

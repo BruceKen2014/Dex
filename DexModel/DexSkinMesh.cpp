@@ -357,6 +357,8 @@ void DexSkinMesh::Init()
 	m_fJointScale = 1.0f;
 	InitShader();
 
+	iHideMeshIndex = -1;
+
 }
 void DexSkinMesh::InitShader()
 {
@@ -611,6 +613,25 @@ DexSkinMesh::DexMesh* DexSkinMesh::FindMesh(const char*  meshName)
 	return ret;
 }
 
+DexSkinMesh::DexMesh* DexSkinMesh::FindMesh(uint8 iMaterialIndex, bool bAdd)
+{
+	DexMesh* pRet = nullptr;
+	for (size_t i = 0; i < m_vecMeshs.size(); ++i)
+	{
+		if (m_vecMeshs[i] != nullptr && m_vecMeshs[i]->m_iMaterialId == iMaterialIndex)
+		{
+			pRet = m_vecMeshs[i];
+			break;
+		}
+	}
+	if (pRet == nullptr && bAdd)
+	{
+		pRet = new DexMesh;
+		pRet->id = iMaterialIndex;
+		m_vecMeshs.push_back(pRet);
+	}
+	return pRet;
+}
 DexSkinMesh::DexMesh* DexSkinMesh::AddMesh(int8 meshId)
 {
 	DexMesh* mesh = FindMesh(meshId);

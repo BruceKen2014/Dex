@@ -444,6 +444,21 @@
     <ClInclude Include="DexModel\DexModelMwsLoader.h">
       <Filter>DexModel</Filter>
     </ClInclude>
+    <ClInclude Include="DexBase\IDexDevice.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexDeviceDirectx9.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexCompiler.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexDeviceOpenGLWindows.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\IDexDeviceWindows.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
@@ -793,6 +808,18 @@
     </ClCompile>
     <ClCompile Include="DexModel\DexModelMwsLoader.cpp">
       <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexDeviceDirectx9.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\IDexDevice.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexDeviceOpenGLWindows.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\IDexDeviceWindows.cpp">
+      <Filter>DexBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

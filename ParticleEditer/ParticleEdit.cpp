@@ -11,6 +11,7 @@
 #include "resource.h"
 #include "ParticleEditState.h"
 #include "PalStateBattleMain.h"
+#include "PalOpenglTestScene.h"
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -45,27 +46,40 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevhInst, LPSTR cmdLine, int show
 	DexGameEngine::getEngine()->SetIcon(IDI_ICON1);
 	DexGameEngine::getEngine()->SetMsgPro(MsgProc);
 	DexGameEngine::getEngine()->SetFullScreen(false);
-	DexGameEngine::getEngine()->Initialize();
-	CDexUiTexFactory::AddFilePath("res/");
-	CDexUiTexFactory::AddFilePath("res/button/");
-	getUiSrcMgrSingleton()->createUiTexFactory(ui_src_state_interface, "ini/ui_tex1.ini");
-	getUiSrcMgrSingleton()->setCurrState(ui_src_state_interface);
-	getWidgetFactory()->loadWidgetsFromXml("ini/ui.xml");
-	DexGameEngine::getEngine()->SetLoadingState(new CLoadingState);
+	
 
+	int testDevice = 1; 
+	DexGameEngine::getEngine()->Initialize(testDevice);
+	if (testDevice == 0)
+	{//dx9
+		CDexUiTexFactory::AddFilePath("res/");
+		CDexUiTexFactory::AddFilePath("res/button/");
+		getUiSrcMgrSingleton()->createUiTexFactory(ui_src_state_interface, "ini/ui_tex1.ini");
+		getUiSrcMgrSingleton()->setCurrState(ui_src_state_interface);
+		getWidgetFactory()->loadWidgetsFromXml("ini/ui.xml");
+		DexGameEngine::getEngine()->SetLoadingState(new CLoadingState);
 
-	//DEXENGINE_INITGLOBAL(DexGlobalPal2);
-	ParticalEditState* pStateMain = new ParticalEditState();
-	PalGameStateBattleMain* pStateBattle = new PalGameStateBattleMain;
-	DexGameEngine::getEngine()->AddState(pStateMain);
-	DexGameEngine::getEngine()->AddState(pStateBattle);
+		//DEXENGINE_INITGLOBAL(DexGlobalPal2);
+		ParticalEditState* pStateMain = new ParticalEditState();
+		PalGameStateBattleMain* pStateBattle = new PalGameStateBattleMain;
+		DexGameEngine::getEngine()->AddState(pStateMain);
+		DexGameEngine::getEngine()->AddState(pStateBattle);
 
-	//DexGameEngine::getEngine()->SetLoading(ParticalEditState::getClassType());
-	DexGameEngine::getEngine()->SetLoading(PalGameStateBattleMain::getClassType());
+		//DexGameEngine::getEngine()->SetLoading(ParticalEditState::getClassType());
+		DexGameEngine::getEngine()->SetLoading(PalGameStateBattleMain::getClassType());
 
-	//DexGameEngine::getEngine()->SetCurrState(pStateBattle->GetStateId());
+		//DexGameEngine::getEngine()->SetCurrState(pStateBattle->GetStateId());
+	}
+	else
+	{//opengl
+		PalOpenGLTestScene* pOpenGLScene = new PalOpenGLTestScene;
+		DexGameEngine::getEngine()->AddState(pOpenGLScene);
+		DexGameEngine::getEngine()->SetCurrState(PalOpenGLTestScene::getClassType());
+	}
+
 	DexGameEngine::getEngine()->Run();
 	DexGameEngine::getEngine()->ShutDownEngine();
 	DexCheckMemLeak::getDexMemoryLeakCheck()->CheckMemoryLeakEnd();
+
 	return 0;
 }

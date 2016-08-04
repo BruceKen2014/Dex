@@ -13,6 +13,7 @@
 #include "../DexBase/DexObjectFactory.h"
 #include "../DexBase/DexVertexDeclDx9.h"
 #include "../DexBase/DexRenderDirectx9.h"
+#include "../DexBase/DexDeviceDirectx9.h"
 #include "../DexMath/Dex_To_Dx.h"
 
 #include "../DexModel/DexModelMs3dLoader.h"
@@ -21,8 +22,10 @@
 #include "../DexModel/DexModelMwsLoader.h"
 #include "../DexModel/DexSkinMesh.h"
 #include "../Source/CTexture.h"
+#include "../DexBase/DexDeviceOpenGLWindows.h"
 
-
+/*目前的DexGameEngine特指windows engine，如果日后要在别的平台上开发，需要将engine抽象为基类
+实现windows派生类，然后再实现对应平台的派生类*/
 DexGameEngine* DexGameEngine::g_pGameEngine = NULL;
 CRITICAL_SECTION  g_cs;
 DexGameEngine::DexGameEngine()
@@ -32,6 +35,7 @@ DexGameEngine::DexGameEngine()
 	g_iWindowPosY = 100;
 	g_iWindowWidth = 800;
 	g_iWinddowHeight = 600;
+	g_pDevice = DexNull;
 	g_D3D = NULL;
 	g_D3DDevice = NULL;
 	g_cube = NULL;
@@ -43,6 +47,9 @@ DexGameEngine::DexGameEngine()
 	m_bRenderNodeCube = true;
 	m_bRenderActionRouteLine = true;
 	m_bRenderPieceEffectRoute = true;
+	m_pBufferFontTextureSurface = DexNull; 
+	m_pBufferFontTexture = DexNull;
+	m_pBackSurface = DexNull;
 	m_bLoading = false;
 	g_iFps = 0;
 	g_iCounter = 0;
@@ -65,10 +72,10 @@ DexGameEngine::DexGameEngine()
 }
 DexGameEngine::~DexGameEngine()
 {
-	UnregisterClass(g_strWindowClass.c_str(), g_hInstance);
-	m_pBufferFontTextureSurface->Release();
-	m_pBufferFontTexture->Release();
-	m_pBackSurface->Release();
+	_SafeDelete(g_pDevice);
+	_SafeRelease(m_pBufferFontTextureSurface);
+	_SafeRelease(m_pBufferFontTexture);
+	_SafeRelease(m_pBackSurface);
 	_SafeClearVector(vecModelLoader);
 }
 DWORD WINAPI LoadThread(LPVOID lpParam)
@@ -91,9 +98,43 @@ DWORD WINAPI LoadThread(LPVOID lpParam)
 void DexGameEngine::SetLoading(string state_name)
 {
 	m_bLoading = true;
+	g_pCurrState = g_pLoadingState;
 	g_nextStateName = state_name;
 }
 
+IDexDevice* DexGameEngine::CreateDevice(DString deviceType)
+{
+	if (deviceType == DexDeviceDirectx9::getClassType())
+	{
+		g_pDevice = new DexDeviceDirectx9();
+	}
+	else if (deviceType == DexDeviceOpenGLWindows::getClassType())
+	{
+#ifdef _DEX_PLATFORM_WINDOWS
+		g_pDevice = new DexDeviceOpenGLWindows();
+#endif
+	}
+	if (g_pDevice != DexNull)
+		g_pDevice->InitDevice(g_bFullscreen, g_iWindowWidth, g_iWinddowHeight, (void*)g_msgPro, NULL);
+	return g_pDevice;
+}
+
+IDexDevice* DexGameEngine::GetDDevice()
+{
+	return g_pDevice;
+}
+HWND DexGameEngine::GetHwnd()
+{
+	return ((IDexDeviceWindows*)g_pDevice)->GetHwnd();
+}
+void DexGameEngine::SetHInstance(HINSTANCE instance)
+{
+	g_hInstance = GetModuleHandle(NULL);
+}
+HINSTANCE DexGameEngine::GetHInstance()
+{
+	return ((IDexDeviceWindows*)g_pDevice)->GetHInstance();
+}
 bool DexGameEngine::GetLoading()
 {
 	return m_bLoading;
@@ -119,116 +160,48 @@ void DexGameEngine::SetLoadingState(DexGameState* pLoadingState)
 
 }
 
-bool DexGameEngine::Initialize()
+bool DexGameEngine::Initialize(int flag)
 {	
-	WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, g_msgPro, 0L, 0L,
-		GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
-		"Pal", NULL };
-	wc.hIcon = LoadIcon(g_hInstance,MAKEINTRESOURCE(g_iIconRes));
-	RegisterClassEx(&wc);
-
-	// Create the application's window
-	DWORD style;
-	if(g_bFullscreen)
-		style = WS_POPUP; //popup会创造一个无边框的窗口 在全屏要这样做 否则鼠标坐标会有变差
-	else
-		style = WS_OVERLAPPEDWINDOW;
-	g_hWnd = CreateWindow(g_strWindowClass.c_str(), g_strWindowName.c_str(), style ,
-		g_iWindowPosX, g_iWindowPosY, g_iWindowWidth, g_iWinddowHeight, GetDesktopWindow(),
-		NULL, wc.hInstance, NULL);
-
-	ShowWindow(g_hWnd, SW_SHOWDEFAULT);
-	UpdateWindow(g_hWnd);	
-
-
 /*	getLog()->EnableFontFrontHighLight();
 	getLog()->EnableBackColor(true);*/
 	getLog()->SetConsoleScreenSize(256, 1000);	   
 	srand(unsigned(time(0)));
-
-	D3DDISPLAYMODE displayMode;
-
-	// Create the D3D object.
-	g_D3D = Direct3DCreate9(D3D_SDK_VERSION);
-	if(g_D3D == NULL) 
-		return false;
-
-	// Get the desktop display mode.
-	if(FAILED(g_D3D->GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &displayMode)))
-		return false;
-
-	// Set up the structure used to create the D3DDevice
-	D3DPRESENT_PARAMETERS d3dpp;
-	ZeroMemory(&d3dpp, sizeof(d3dpp));
-
-
-	D3DMULTISAMPLE_TYPE multiType = D3DMULTISAMPLE_NONE;
-
-	if(g_D3D->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT,
-		D3DDEVTYPE_HAL, displayMode.Format, !g_bFullscreen,
-		D3DMULTISAMPLE_8_SAMPLES,
-		NULL) == D3D_OK) 
-		multiType = D3DMULTISAMPLE_8_SAMPLES;
-
-	if(g_bFullscreen)
-	{
-		d3dpp.Windowed = FALSE;
-		d3dpp.BackBufferWidth = g_iWindowWidth;
-		d3dpp.BackBufferHeight = g_iWinddowHeight;
-		//d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
-		d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-	}
-	else
-		d3dpp.Windowed = TRUE;
-	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-	d3dpp.BackBufferFormat = displayMode.Format;
-	d3dpp.BackBufferCount = 1;
-	d3dpp.EnableAutoDepthStencil = TRUE;
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D24S8;
-
-	d3dpp.MultiSampleType = multiType;
-	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
-	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
-
-	// Create the D3DDevice
-	getLog()->BeginLog();
-	if(FAILED(g_D3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, g_hWnd,
-		D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &d3dpp, &g_D3DDevice)))
-	{
-
-		getLog()->Log(log_ok, "D3D CreateDevice失败！");
-		getLog()->EndLog();
-		return false;
-	}
-	getLog()->Log(log_ok, "D3D CreateDevice成功！");
-	getLog()->EndLog();
-
-	D3DXCreateBox(g_D3DDevice, 1, 1, 1, &g_cube, NULL);
-	D3DXCreateSphere(g_D3DDevice, 1, 10, 10, &g_sphere, NULL);
-	InitVertexBuff();
-
 	L = lua_open();	   //创建接口指针
 	luaopen_base(L);   //加载基本库
 	luaL_openlibs(L);  //加载扩展库
-
-	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
-	SetWorldAmbient(getD3DColor(DexColor(0.0f, 0.0f, 0.0f))); 
 	g_camera = new CCamera;
-	SetProjectArgus(45.0f, ((float)g_iWindowWidth)/((float)g_iWinddowHeight), 1.0f, 10000.0f);
-	CInputSystem::GetInputSingleton();
-	CDexObjectFactroy::getObjectFactory();
-	CDexScene::RegisterLuaFunction(L);
-	vecModelLoader.push_back(new DexModelMs3dLoader);
-	vecModelLoader.push_back(new DexModelObjLoader);
-	vecModelLoader.push_back(new DexModelDaeLoader);
-	vecModelLoader.push_back(new DexModelMwsLoader);
+	g_camera->SetCamera(DexVector3(0.0f, 0.0f, -10.0f), DexVector3(0.0f, 0.0f, 0.0f), DexVector3(0.0f, 1.0f, 0.0f));
+	if (flag == 0)
+	{
+		CreateDevice(DexDeviceDirectx9::getClassType());
+		g_D3DDevice = ((DexDeviceDirectx9*)g_pDevice)->GetD3D9Device();
 
-	m_pRender = new DexRenderDirectX9();
-	m_pRender->InitShader();
-	GetDevice()->CreateTexture(512,512,1,D3DUSAGE_RENDERTARGET,D3DFMT_A8R8G8B8, 
-		D3DPOOL_DEFAULT, & m_pBufferFontTexture, NULL);
-	m_pBufferFontTexture->GetSurfaceLevel(0, &m_pBufferFontTextureSurface);
-	GetDevice()->GetRenderTarget(0, &DexGameEngine::getEngine()->m_pBackSurface);
+		D3DXCreateBox(g_D3DDevice, 1, 1, 1, &g_cube, NULL);
+		D3DXCreateSphere(g_D3DDevice, 1, 10, 10, &g_sphere, NULL);
+		InitVertexBuff();
+
+		SetWorldAmbient(getD3DColor(DexColor(0.0f, 0.0f, 0.0f)));
+		SetProjectArgus(45.0f, ((float)g_iWindowWidth) / ((float)g_iWinddowHeight), 1.0f, 10000.0f);
+		CInputSystem::GetInputSingleton();
+		CDexObjectFactroy::getObjectFactory();
+		CDexScene::RegisterLuaFunction(L);
+		vecModelLoader.push_back(new DexModelMs3dLoader);
+		vecModelLoader.push_back(new DexModelObjLoader);
+		vecModelLoader.push_back(new DexModelDaeLoader);
+		vecModelLoader.push_back(new DexModelMwsLoader);
+
+		m_pRender = new DexRenderDirectX9();
+		m_pRender->InitShader();
+		GetDevice()->CreateTexture(512, 512, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8,
+			D3DPOOL_DEFAULT, &m_pBufferFontTexture, NULL);
+		m_pBufferFontTexture->GetSurfaceLevel(0, &m_pBufferFontTextureSurface);
+		GetDevice()->GetRenderTarget(0, &DexGameEngine::getEngine()->m_pBackSurface);
+	}
+	else
+	{
+		CreateDevice(DexDeviceOpenGLWindows::getClassType());
+	}
+	g_pDevice->SetRenderState(DEXRENDERSTATE_LIGHTING, FALSE);
 	return true;
 }
 
@@ -240,26 +213,26 @@ void DexGameEngine::RenderCoorLines()
 	g_D3DDevice->SetTexture(0, NULL);
 	g_D3DDevice->SetFVF(D3DFVF_XYZ| D3DFVF_DIFFUSE);
 	D3DXMatrixTranslation(&g_transMatrix, 0, 0, 0);
-	g_D3DDevice->SetTransform( D3DTS_WORLD, &g_transMatrix);
+	g_pDevice->SetTransform(DEXTRANSFORMSTATETYPE_WORLD, (DexMatrix4x4*)&g_transMatrix);
 
 	//X轴 绿色
 	g_pVertexList0[0].m_color = getD3DColor(DEXCOLOR_GREEN);
 	g_pVertexList0[1].m_color = getD3DColor(DEXCOLOR_GREEN);
 	g_pVertexList0[0].m_pos = D3DXVECTOR3(0, 0, 0);  
 	g_pVertexList0[1].m_pos = D3DXVECTOR3(500, 0, 0);  
-	g_D3DDevice->DrawPrimitiveUP( D3DPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
+	g_pDevice->DrawPrimitiveUp(DexPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
 	//Y轴 蓝色
 	g_pVertexList0[0].m_color = getD3DColor(DEXCOLOR_BLUE);
 	g_pVertexList0[1].m_color = getD3DColor(DEXCOLOR_BLUE);
 	g_pVertexList0[0].m_pos = D3DXVECTOR3(0, 0, 0);   
 	g_pVertexList0[1].m_pos = D3DXVECTOR3(0, 500, 0);  
-	g_D3DDevice->DrawPrimitiveUP( D3DPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
+	g_pDevice->DrawPrimitiveUp(DexPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
 	//Z轴 红色
 	g_pVertexList0[0].m_color = getD3DColor(DEXCOLOR_RED);
 	g_pVertexList0[1].m_color = getD3DColor(DEXCOLOR_RED);
 	g_pVertexList0[0].m_pos = D3DXVECTOR3(0, 0, 0);   
 	g_pVertexList0[1].m_pos = D3DXVECTOR3(0, 0, 500);   
-	g_D3DDevice->DrawPrimitiveUP( D3DPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
+	g_pDevice->DrawPrimitiveUp(DexPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
 
 	g_pVertexList0[0].m_color = getD3DColor(DEXCOLOR_YELLOW);
 	g_pVertexList0[1].m_color = getD3DColor(DEXCOLOR_YELLOW);
@@ -269,10 +242,10 @@ void DexGameEngine::RenderCoorLines()
 	{
 		g_pVertexList0[0].m_pos = D3DXVECTOR3(-50, 0, -50 + i* z_length);   //z
 		g_pVertexList0[1].m_pos = D3DXVECTOR3( 50, 0, -50 + i* z_length);   //z
-		g_D3DDevice->DrawPrimitiveUP( D3DPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
+		g_pDevice->DrawPrimitiveUp(DexPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
 		g_pVertexList0[0].m_pos = D3DXVECTOR3(-50 + i* x_length, 0, -50);   //x
 		g_pVertexList0[1].m_pos = D3DXVECTOR3(-50 + i* x_length, 0,  50);   //x
-		g_D3DDevice->DrawPrimitiveUP( D3DPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
+		g_pDevice->DrawPrimitiveUp(DexPT_LINELIST, 1, g_pVertexList0, sizeof(stVertex0));
 	}
 }
 
@@ -298,9 +271,8 @@ void DexGameEngine::RenderCube(const DexVector3& pos, const DexVector3& scale)
 	D3DXMatrixTranslation(&g_transMatrix, pos.x, pos.y, pos.z);
 	D3DXMatrixMultiply(&g_worldMatrix, &g_worldMatrix, &g_transMatrix);
 	
-	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);
-	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);
-	g_D3DDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
+
+
 	g_D3DDevice->SetTexture(0, NULL);
 	//g_D3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 	g_D3DDevice->SetTransform( D3DTS_WORLD, &g_worldMatrix);
@@ -316,17 +288,14 @@ void DexGameEngine::RenderCube(const DexVector3& pos, const DexVector3& scale)
 void DexGameEngine::RenderCube(const D3DXMATRIX& matrix)
 {
 	DEX_ENSURE(g_cube);
-	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);
-	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);
-	g_D3DDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
 	g_D3DDevice->SetTexture(0, NULL);
 	//g_D3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	g_D3DDevice->SetTransform( D3DTS_WORLD, &matrix);
+	g_pDevice->SetTransform(DEXTRANSFORMSTATETYPE_WORLD, (DexMatrix4x4*)&matrix);
 	g_D3DDevice->SetMaterial(&g_material);
 	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 	g_cube->DrawSubset(0);
 	D3DXMatrixIdentity(&g_worldMatrix);
-	g_D3DDevice->SetTransform( D3DTS_WORLD, &g_worldMatrix);
+	g_pDevice->SetTransform(DEXTRANSFORMSTATETYPE_WORLD, (DexMatrix4x4*)&g_worldMatrix);
 	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,FALSE);
 	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
@@ -334,17 +303,14 @@ void DexGameEngine::RenderCube(const D3DXMATRIX& matrix)
 void DexGameEngine::RenderCube(const DexMatrix4x4& matrix)
 {
 	DEX_ENSURE(g_cube);
-	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	g_D3DDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 	g_D3DDevice->SetTexture(0, NULL);
 	//g_D3DDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
-	g_D3DDevice->SetTransform(D3DTS_WORLD, (const D3DXMATRIX*)(&matrix));
+	g_pDevice->SetTransform(DEXTRANSFORMSTATETYPE_WORLD, &matrix);
 	g_D3DDevice->SetMaterial(&g_material);
 	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, TRUE);
 	g_cube->DrawSubset(0);
 	D3DXMatrixIdentity(&g_worldMatrix);
-	g_D3DDevice->SetTransform(D3DTS_WORLD, &g_worldMatrix);
+	g_pDevice->SetTransform(DEXTRANSFORMSTATETYPE_WORLD, (DexMatrix4x4*)&g_worldMatrix);
 	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 	g_D3DDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
@@ -364,9 +330,6 @@ void DexGameEngine::RenderSphere(const DexVector3& pos, float scale /* = 1.0f */
 	D3DXMatrixTranslation(&g_transMatrix, pos.x, pos.y, pos.z);
 	D3DXMatrixMultiply(&g_worldMatrix, &g_worldMatrix, &g_transMatrix);
 
-	g_D3DDevice->SetRenderState(D3DRS_ALPHABLENDENABLE,TRUE);
-	g_D3DDevice->SetRenderState(D3DRS_SRCBLEND,D3DBLEND_SRCALPHA);
-	g_D3DDevice->SetRenderState(D3DRS_DESTBLEND,D3DBLEND_INVSRCALPHA);
 	g_D3DDevice->SetTexture(0, NULL);
 	g_D3DDevice->SetTransform( D3DTS_WORLD, &g_worldMatrix);
 	g_D3DDevice->SetMaterial(&g_material);
@@ -401,8 +364,8 @@ void DexGameEngine::Render3DLine(const DexVector3& p0, const DexVector3& p1, con
 	D3DXMatrixIdentity(&g_worldMatrix);
 	DexGameEngine::getEngine()->GetDevice()->SetFVF(FVF_XYZ_DIFF_TEX1);
 	DexGameEngine::getEngine()->GetDevice()->SetTexture(0, NULL);
-	DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &g_worldMatrix);
-	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
+	g_pDevice->SetTransform(DEXTRANSFORMSTATETYPE_WORLD, (DexMatrix4x4*)&g_worldMatrix);
+	g_pDevice->DrawPrimitiveUp(DexPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
 }
 void DexGameEngine::Render3DLine(const DexVector3& p, const DexVector3& vec, const DexColor& color1, float length, const DexColor& color2)
 {
@@ -415,7 +378,7 @@ void DexGameEngine::Render3DLine(const DexVector3& p, const DexVector3& vec, con
 	D3DXMatrixIdentity(&g_worldMatrix);
 	DexGameEngine::getEngine()->GetDevice()->SetFVF(FVF_XYZ_DIFF_TEX1);
 	DexGameEngine::getEngine()->GetDevice()->SetTexture(0, NULL);
-	DexGameEngine::getEngine()->GetDevice()->SetTransform(D3DTS_WORLD, &g_worldMatrix);
+	g_pDevice->SetTransform(DEXTRANSFORMSTATETYPE_WORLD, (DexMatrix4x4*)&g_worldMatrix);
 	DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_LINELIST, 1, g_pVertexList1, sizeof(stVertex1));
 }
 
@@ -650,8 +613,9 @@ void DexGameEngine::Update()
 		lastTickTime = g_iCurrentTime;
 	int delta = g_iCurrentTime - lastTickTime;
 	lastTickTime = g_iCurrentTime;
-
-	CInputSystem::GetInputSingleton().Update(g_hWnd);
+	
+	
+	CInputSystem::GetInputSingleton().Update(GetHwnd());
 	g_iMouseX = (int)CInputSystem::GetInputSingleton().GetMouseXPos();
 	g_iMouseY = (int)CInputSystem::GetInputSingleton().GetMouseYPos(); 
 
@@ -684,7 +648,9 @@ void DexGameEngine::Update()
 	{
 		g_pCurrState->MouseRUp(g_iMouseX, g_iMouseY);
 	}
+	
 	getCamera()->Update(delta);
+	
 	g_pCurrState->KeyUp();
 	g_pCurrState->KeyDown();
 	g_pCurrState->Update(delta);
@@ -700,9 +666,14 @@ void DexGameEngine::Render()
 		m_bLoading = false;
 	}
 	DEX_ENSURE(g_pCurrState);
+	g_pDevice->BeginScene();
+
+	g_pDevice->Clear(DEXCLEAR_TARGET | DEXCLEAR_ZBUFFER, DexColor(125,125,125), 1.0, 0);
 	g_pCurrState->BeginRender();
 	g_pCurrState->Render();
 	g_pCurrState->EndRender();
+
+	g_pDevice->EndScene();
 }
 
 void DexGameEngine::SetRenderMode(DexRenderMode mode)
@@ -939,7 +910,7 @@ void DexGameEngine::SetProjectArgus(float fov, float aspect, float near_distance
 	g_camera->SetProject(fov, aspect, near_distance, far_distance);
 	D3DXMatrixPerspectiveFovLH(&g_projection, fov,
 		aspect, near_distance, far_distance);
-	g_D3DDevice->SetTransform(D3DTS_PROJECTION, &g_projection);
+	g_pDevice->SetTransform(DEXTRANSFORMSTATETYPE_PROJECTION, (DexMatrix4x4*)&g_projection);
 }
 
 void DexGameEngine::LookAtLH(const DexVector3 *pEye, const DexVector3 *pAt, const DexVector3 *pUp)
@@ -1072,11 +1043,10 @@ DexGUI::DexPoint  DexGameEngine::GetXY(const D3DXVECTOR3& world_point)
 }
 void DexGameEngine::updateViewMatrix()
 {
-	D3DXVECTOR3 pos(g_camera->GetPosition().x, g_camera->GetPosition().y, g_camera->GetPosition().z);
-	D3DXVECTOR3 focus(g_camera->GetFocusPoint().x, g_camera->GetFocusPoint().y, g_camera->GetFocusPoint().z);
-	D3DXVECTOR3 up(g_camera->GetUpVector().x, g_camera->GetUpVector().y, g_camera->GetUpVector().z);
-	D3DXMatrixLookAtLH(&g_ViewMatrix, &pos, &focus, &up);
-	g_D3DDevice->SetTransform(D3DTS_VIEW, &g_ViewMatrix);
+	DexVector3 eye = g_camera->GetPosition();
+	DexVector3 lootAt = g_camera->GetFocusPoint();
+	DexVector3 upDir = g_camera->GetUpVector();
+	g_pDevice->LookAt(eye, lootAt, upDir);
 }
 
 void DexGameEngine::setDexVertexDecl(IDexVertexDecl* decl)

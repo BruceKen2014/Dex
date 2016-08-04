@@ -87,6 +87,9 @@
     <ClCompile Include="PalPanel_SelectSkill.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="PalOpenglTestScene.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PalTalkSystem.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="PalPanel_SelectSkill.h">
       <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PalOpenglTestScene.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

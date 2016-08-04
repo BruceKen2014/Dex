@@ -247,16 +247,28 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetTexName("b23.png");
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
-	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
+	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event); 
+	mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/ald0100_sky.mws");
+	//mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/alc1002_kabe.mws");
+	mwsModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
+	mwsModel->SetRenderFlag(//SKINMESH_RENDER_JOINT | SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
+		SKINMESH_RENDER_MESH);
+	mwsModel->SetAmbientColor(DexColor(255, 255, 255));
+	//mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/mws/c1004.mws");
 	
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/Old Book/Book.dae");
-	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/mickey/Mickey_Mouse.dae",0);
+	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/mickey/Mickey_Mouse.dae",0);
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/ArmyPilot/ArmyPilot2.dae");
 	/*
+	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/f0011/mws/hc1004_01.xml",1);
+	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/f0011/mws/f0011.mws");
+	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/f0011/mws/f0011_a.act");
+	*/
+	
 	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/mws/c1004.xml",1);
 	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/c1004/mws/c1004.mws");
-	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/c1004/mws/run.act");
-	*/
+	//DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/c1004/mws/walk.act");
+	
 	/*
 	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/m1014/mws/m1014.dae", 1);
 	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/m1014/mws/m1014.mws");
@@ -270,7 +282,7 @@ bool PalGameStateBattleMain::ApplyRes()
 		SKINMESH_RENDER_MESH );
 	daeModel->SetAmbientColor(DexColor(200, 200, 200));
 	
-	mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/alc1002_door.mws");
+	
 	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/obj/RYU.obj");
 	objModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
 	//objModel->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
@@ -519,6 +531,7 @@ bool PalGameStateBattleMain::Update(int delta)
 	}
 	ms3d->Update(delta/2);
 	objModel->Update(delta);
+	mwsModel->Update(delta);
 	daeModel->Update(delta); 
 	UpdateVertexShader(delta);
 	UpdatePixelShader(delta);
@@ -537,7 +550,6 @@ void PalGameStateBattleMain::BeginRender()
 	//D3DXSaveTextureToFile("11.jpg",D3DXIFF_JPG,m_testTexture,NULL);
 	DexGameEngine::getEngine()->GetDevice()->SetRenderTarget(0, DexGameEngine::getEngine()->m_pBackSurface);
 	DexGameEngine::getEngine()->GetDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, getD3DColor(m_pScene->getClearColor()), 1.0f, 0);
-	DexGameEngine::getEngine()->GetDevice()->BeginScene();
 
 }
 void PalGameStateBattleMain::Render()
@@ -563,23 +575,11 @@ void PalGameStateBattleMain::Render()
 	ms3d->AddPointLight(pointLight2);
 	ms3d->Render();
 
-
-	matrix.Identity();
-	matrix.Scale(30.0f, 30.0f, 30.0f);
-	//matrix.RotateY(rotate);
-	matrix.Translate(0.0f, 0.0f, 0.0f);
-	daeModel->SetSceneNodeMatrix(matrix);
-	daeModel->ClearPointLight();
-	daeModel->SetDirectionLight(dirLight);
-	daeModel->AddPointLight(pointLight1);
-	daeModel->AddPointLight(pointLight2);
-	daeModel->Render();
-
 	
 	matrix.Identity();
 	matrix.Scale(100.0f, 100.0f, 100.0f);
 	matrix.RotateY(rotate);
-	matrix.Translate(200.0f, 0.0f, 200.0f);
+	matrix.Translate(200.0f, 0.0f, 200.0f); 
 	
 	objModel->SetSceneNodeMatrix(matrix);
 	objModel->ClearPointLight();
@@ -594,6 +594,36 @@ void PalGameStateBattleMain::Render()
 	testMesh->AddPointLight(pointLight1);
 	testMesh->AddPointLight(pointLight2);
 	testMesh->Render();
+
+	
+	matrix.Identity();
+	matrix.Scale(10.0f, 10.0f, 10.0f);
+	//matrix.RotateY(rotate/50);
+	//matrix.Translate(1.0f, 0.0f, 0.0f);
+	FILE* pFile = fopen("model/dae/test.txt", "rb");
+	const int16  iMaxLineByte = 2048;
+	char tempLineData[iMaxLineByte];
+	fgets(tempLineData, iMaxLineByte, pFile);
+	daeModel->iHideMeshIndex = atoi(tempLineData);
+	fclose(pFile);
+	mwsModel->SetSceneNodeMatrix(matrix);
+	mwsModel->ClearPointLight();
+	mwsModel->AddPointLight(pointLight1);
+	mwsModel->AddPointLight(pointLight2);
+	mwsModel->SetDirectionLight(dirLight);
+	mwsModel->Render();
+
+	matrix.Identity();
+	matrix.Scale(1.0f, 1.0f, 1.0f);
+	//matrix.RotateY(rotate);
+	matrix.Translate(10.0f, 0.0f, 0.0f);
+	daeModel->SetSceneNodeMatrix(matrix);
+	daeModel->ClearPointLight();
+	daeModel->SetDirectionLight(dirLight);
+	pointLight1.rangeAtte.x = 100;
+	daeModel->AddPointLight(pointLight1);
+	daeModel->AddPointLight(pointLight2);
+	daeModel->Render();
 	//DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 	//getGlobal()->g_pJingtian->Render();
 	get2DDrawer()->BeginDraw2D();
@@ -676,8 +706,6 @@ void PalGameStateBattleMain::DrawPlayerBlood()
 }
 void PalGameStateBattleMain::EndRender()
 {
-	DexGameEngine::getEngine()->GetDevice()->EndScene();
-	DexGameEngine::getEngine()->GetDevice()->Present(NULL, NULL, NULL, NULL);
 }
 void PalGameStateBattleMain::MouseWheelFront()
 {

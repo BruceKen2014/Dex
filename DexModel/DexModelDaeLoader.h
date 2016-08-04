@@ -260,7 +260,7 @@ public:
 		DString     sName;
 		DString     sFloatArrayId;
 		int32		iFloatArrayCount;
-		float32*	pFloatArrayValues;
+		float64*	pFloatArrayValues;
 		DString		sNameArrayId;
 		DVector<DString>	vNamaArray;
 
@@ -507,7 +507,7 @@ protected:
 protected:
 	stDaeInput& parse_input(TiXmlElement* pXmlElement, stDaeInput& input);
 	stInstanceMaterial& parse_instance_material(TiXmlElement* pXmlElement, stInstanceMaterial& instanceMaterial);
-	void str_to_float_array(const char* str, float32* value, char splitChar=' ');
+	void str_to_float64_array(const char* str, float64* value, char splitChar=' ');
 
 	/*把str里面的参数读进value中，每cycle个数据一个循环，并对一个循环中的第index个数据当flag个有效数据
 	str_to_int32_array("1 2 3 4 5 6 7 8 9", value, 3, 0, 2);

@@ -110,9 +110,12 @@ void DexShaderHlslSkinMesh::Render()
 	pFxEffect->SetTechnique(m_handleTech);
 	uint32 pass = 0;
 	pFxEffect->Begin(&pass, 0);
+	//for (int i = skinMesh->m_vecMeshs.size()-1; i >=0; --i)
 	for (size_t i = 0; i < skinMesh->m_vecMeshs.size(); ++i)
 	{
 		if (skinMesh->m_vecMeshs[i] == NULL)
+			continue;
+		if (skinMesh->iHideMeshIndex == i)
 			continue;
 		if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_LINE)
 		{

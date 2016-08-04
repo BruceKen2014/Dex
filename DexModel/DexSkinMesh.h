@@ -3,6 +3,9 @@
    by Bruce
 */
 
+#ifndef _DEX_MODEL_DEXSKINMESH_H
+#define _DEX_MODEL_DEXSKINMESH_H
+
 
 #include <d3dx9math.h>
 #include <map>
@@ -227,6 +230,7 @@ public:
 	DexSkinMesh();
 	DexSkinMesh(int16 maxAniTime);
 	virtual ~DexSkinMesh();
+	uint8 iHideMeshIndex;
 public:
 	static uint16 sGetMaxJointCount();
 public:
@@ -256,6 +260,8 @@ public:
 //mesh
 	DexMesh* FindMesh(int8 meshId);
 	DexMesh* FindMesh(const char* meshName);
+	//根据传入的iMaterialIndex寻找mesh，如果没有，bAdd表示是否添加
+	DexMesh* FindMesh(uint8 iMaterialIndex, bool bAdd);
 	DexMesh* AddMesh(int8 meshId);
 	DexMesh* AddMesh(const char* meshName);
 	//设置对应mesh的顶点信息
@@ -341,3 +347,5 @@ protected:
 	void RenderVertexNormal();
 	void RenderVertexToJoint();
 };
+
+#endif

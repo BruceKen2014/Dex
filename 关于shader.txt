@@ -8,3 +8,5 @@ shader¾ÍÊÇ½«GPUËù×÷µÄÒ»²¿·Ö¹¤×÷½ØÁËÏÂÀ´£¬ÓÉ×ÅÉ«Æ÷´úÂë½øÐÐÊµÏÖ£¬È»ºó½«ÊµÏÖ½á¹ûËÍ»
 shaderÀïÃæ×îÖØÒªµÄÊÇÊäÈëÓëÊä³ö£¬¾ÝÎÒÄ¿Ç°Ëù¿´µÄ×ÊÁÏÀ´Ëµ£¬ÊäÈëÓëÊä³öËùº¬ÓÐµÄ±äÁ¿ÍùÍùÒª¼ÓÓïÒå±íÃ÷Õâ¸ö±äÁ¿ÊÇ¸öÊ²Ã´¶«Î÷£¬±ÈÈçÒª½ÓÊÜÎ»ÖÃÊ±£¬Ëù¼ÓµÄÓïÒåÊÇPOSITION,Òª½ÓÊÜuvÊ±£¬Òª¼ÓÓïÒåTEXCOORD0¡£ÄÇÃ´ÎªÊ²Ã´Òª¼ÓÕâ¸ö¶«Î÷ÄØ£¿¼ÓÕâ¸ö¶«Î÷ÊÇÎªÁË¸øË­¿´£¿ºÜ¶àÌÖÂÛµÄÎÄÕÂ¶¼Ã»ÓÐ½âÊÍÎªÊ²Ã´Òª¼ÓÓïÒå¡£
 ¾ÝÎÒÄ¿Ç°µÄÀí½â£¬shader¿ªÊ¼½ÓÊÜµÄinputÊý¾Ý£¬ÊÇÀ´Ô´ÓÚÓ²¼þ£¬¶ø×î¿ªÊ¼µÄinputÊý¾ÝÊÇÎÒÃÇÔÚ´úÂëÖÐÍ¨¹ýdevice´«¸øÓ²¼þµÄ£¬ÎÒÃÇ´úÂë´«ÊäµÄÊý¾ÝÁ÷ÓÐÒ»¶¨µÄ¸ñÊ½£¬´«ÊäÊý¾ÝÊ±Òª¸ødeviceÉèÖÃÒ»¸öFVF£¬±ÈÈç0µ½12¸ö×Ö½Ú±íÊ¾Î»ÖÃ£¬¶øshader½ØÏÂµÄ¹ý³ÌÐèÒª´¦ÀíµÄÊý¾ÝÒ²Ô´×ÔÕâÒ»¶ÎÊý¾Ý£¬Èç¹ûÎÒÃÇÔÚshaderÀïÃæ´¦ÀíÎÆÀíµÄ»°£¬ÄÇÃ´±ãÐèÒªÊý¾ÝÁ÷ÖÐµÄuv£¬Ó²¼þÍ¨¹ýÔ­Ê¼Êý¾ÝÁ÷°´ÕÕFVF¸ñÊ½Æ«ÒÆÒ»Ð©×Ö½ÚÖ®ºóÕÒµ½uv£¬È»ºó´«¸øshader,ÕâÊ±shaderÄÃµ½µÄuvÖµ±ãÊÇÕýÈ·µÄuvÖµ¡£¶øÈç¹ûshaderÖÐinputµÄuv²»¼ÓÓïÒåµÄ»°£¬shaderÔÚÇëÇóÊý¾ÝÊ±£¬²»ÖªµÀÒª²éÕÒÊý¾ÝÁ÷ÖÐÎ»ÖÃ»¹ÊÇuv»¹ÊÇcolor£¬ÄÇÃ´ÕâÑù¾ÍÎÞ·¨ÕýÈ·¹¤×÷ÁË£¬Êµ¼ÊÉÏÒ²ÊÇÕâÑù£¬inputÖÐµÄ±äÁ¿Èç¹û²»¼ÓÓïÒåµÄ»°£¬ÊÇÎÞ·¨ÕýÈ·±àÒëµÄ¡£
 outputµÄ±äÁ¿ÓïÒåÒ²ÊÇÍ¬ÑùµÄµÀÀí¡£shaderÐèÒª¸æËßÓ²¼þ£¬Ëü´«»ØÈ¥µÄÊÇ¸öÊ²Ã´¶«Î÷£¬ÕâÑùÓ²¼þ²ÅÄÜÕýÈ·Ê¹ÓÃ´«»ØÈ¥µÄÊý¾Ý¡£
+
+shade ps½×¶ÎÊä³öÒ»¸öSrcÑÕÉ«£¬È»ºóÏÔ¿¨ÓÃÕâ¸öSrcÑÕÉ«ÓëDestÑÕÉ«°´ÕÕshaderÖ¸¶¨µÄ»ìºÏ·½·¨½øÐÐ»ìºÏ£¬Ò²¾ÍÊÇËµ£¬shaderºÃÏñÊÇÎÞ·¨Ö±½Ó¸ÉÔ¤SrcÓëDestµÄ»ìºÏ¹ý³ÌµÄ£¬Ö»ÄÜ½øÐÐSrcµÄ´¦Àí¡£

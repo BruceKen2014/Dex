@@ -430,7 +430,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_material(TiXmlNode* pXmlNod
 		}
 		else IS_Element("extra")
 		{
-			getLog()->LogLine(log_ok, "dae file skip extra under material.", pXmlElement->Value());
+			//getLog()->LogLine(log_ok, "dae file skip extra under material.", pXmlElement->Value());
 			pXmlChildNode = pXmlChildNode->NextSibling();
 			continue;
 		}
@@ -500,8 +500,10 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_effect(TiXmlNode* pXmlNode,
 				pEffect->pProfile = parse_effect_profile(pXmlChildNode);
 		}
 		else
-			getLog()->LogLine(log_allert, "dae file unknown element:%s under effect!", pXmlElement->Value());
-		pXmlChildNode = pXmlChildNode->NextSibling();
+		{
+			//getLog()->LogLine(log_allert, "dae file unknown element:%s under effect!", pXmlElement->Value());
+		}
+pXmlChildNode = pXmlChildNode->NextSibling();
 	}
 	return pEffect;
 }
@@ -605,8 +607,8 @@ DexModelDaeLoader::DaeSource* DexModelDaeLoader::parse_source(TiXmlNode* pXmlNod
 			}
 			//读取float_array的value
 			const char* strFloatValue = pXmlElement->GetText();
-			pSource->pFloatArrayValues = new float32[pSource->iFloatArrayCount];
-			str_to_float_array(strFloatValue, pSource->pFloatArrayValues);
+			pSource->pFloatArrayValues = new float64[pSource->iFloatArrayCount];
+			str_to_float64_array(strFloatValue, pSource->pFloatArrayValues);
 			pXmlChildNode = pXmlChildNode->NextSibling();
 			continue;
 		}
@@ -793,9 +795,10 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 		pXmlElement = pXmlChildNode->ToElement();
 		IS_Element("bind_shape_matrix")
 		{
-			float32* values = new float32[16];
-			str_to_float_array(pXmlElement->GetText(), values);
-			pSkin->mMatrix = DexMatrix4x4(values);
+			float64* values = new float64[16];
+			str_to_float64_array(pXmlElement->GetText(), values);
+			for (uint16 i = 0; i < 16; ++i)
+				pSkin->mMatrix.m[i] = values[i];
 			delete[] values;
 		}
 		else IS_Element("source")
@@ -1753,7 +1756,7 @@ DexModelDaeLoader::DaeNode* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode)
 	TiXmlNode* pXmlChildNode = pXmlNode->FirstChild();
 	DaeBase* pOldDaeElement = nullptr;
 	DaeBase* pNewDaeElement = nullptr;
-	float* pFloatValue = new float[16];
+	float64* pFloatValue = new float64[16];
 	DexMatrix4x4 tempMatrix;
 	while (pXmlChildNode != nullptr)
 	{
@@ -1762,14 +1765,14 @@ DexModelDaeLoader::DaeNode* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode)
 			pNode->vNodeChildren.push_back(parse_node(pXmlChildNode));
 		else IS_Element("translate")
 		{
-			str_to_float_array(pXmlElement->GetText(),pFloatValue);
-			pNode->mMatrix.Translate(DexVector3(pFloatValue));
+			str_to_float64_array(pXmlElement->GetText(),pFloatValue);
+			pNode->mMatrix.Translate(pFloatValue[0], pFloatValue[1],pFloatValue[2]);
 		}
 		else IS_Element("rotate")
 		{
-			str_to_float_array(pXmlElement->GetText(), pFloatValue);
+			str_to_float64_array(pXmlElement->GetText(), pFloatValue);
 			DexQuaternion quaternion;
-			quaternion.Set(DexVector3(pFloatValue), pFloatValue[3]);
+			quaternion.Set(DexVector3(pFloatValue[0], pFloatValue[1], pFloatValue[2]), pFloatValue[3]);
 			tempMatrix = quaternion.GetMatrix();
 			//因为这些rotate都是在自身local坐标系进行旋转的，所以不能后操作，要先乘
 			//先乘就相当于物体在原点先rotate再translate
@@ -1777,13 +1780,14 @@ DexModelDaeLoader::DaeNode* DexModelDaeLoader::parse_node(TiXmlNode* pXmlNode)
 		}
 		else IS_Element("scale")
 		{
-			str_to_float_array(pXmlElement->GetText(), pFloatValue);
-			pNode->mMatrix.Scale(DexVector3(pFloatValue));
+			str_to_float64_array(pXmlElement->GetText(), pFloatValue);
+			pNode->mMatrix.Scale(DexVector3(pFloatValue[0], pFloatValue[1], pFloatValue[2]));
 		}
 		else IS_Element("matrix")
 		{
-			str_to_float_array(pXmlElement->GetText(), pFloatValue);
-			pNode->mMatrix.Set(pFloatValue);
+			str_to_float64_array(pXmlElement->GetText(), pFloatValue);
+			for (uint16 i = 0; i < 16; ++i)
+				pNode->mMatrix.m[i] = pFloatValue[i];
 			pNode->mMatrix.MakeTranspose(); //如果node下面只有matrix的话，matrix好像必须要转置一下？
 		}
 		else IS_Element("instance_geometry")
@@ -2003,7 +2007,7 @@ DexModelDaeLoader::stInstanceMaterial& DexModelDaeLoader::parse_instance_materia
 	return instanceMaterial;
 }
 
-void DexModelDaeLoader::str_to_float_array(const char* str, float32* value, char splitChar)
+void DexModelDaeLoader::str_to_float64_array(const char* str, float64* value, char splitChar)
 {
 	const char* pt = str;
 	char tempValue[32];
@@ -2251,14 +2255,20 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 						else
 						{
 							DexSkinMesh::stMeshVertex newVertex;
-							newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
-							newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
+							if (m_bFFXIIModel)
+								newVertex.pos.Set(pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3] * 60, pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 1] * 60,
+								pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 2] * 60);
+							else
+								newVertex.pos.Set(pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3], pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 1],
+								pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 2]);
+							newVertex.normal.Set(pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3],
+								pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3+1], pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3+2]);
 							TransVector3ByAxis(newVertex.pos);
 							TransVector3ByAxis(newVertex.normal);
 							//newVertex.uv.x = 1.0f - newVertex.uv.x;
 							//newVertex.uv.y = 1.0f - newVertex.uv.y;
 
-							newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
+							newVertex.uv.Set(pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2], pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2+1]);
 							if (iInputSize > 5)
 							{//有color
 								uint8 r = pSourceColor->pFloatArrayValues[index.m_iColorIndex * 4 + 0] * 255;
@@ -2347,12 +2357,18 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 							else
 							{
 								DexSkinMesh::stMeshVertex newVertex;
-								newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
-								newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
+								if (m_bFFXIIModel)
+									newVertex.pos.Set(pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3] * 60, pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 1] * 60,
+									pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 2] * 60);
+								else
+									newVertex.pos.Set(pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3], pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 1],
+									pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 2]);
+								newVertex.normal.Set(pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3], pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3+1],
+									pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3+2]);
 								TransVector3ByAxis(newVertex.pos);
 								TransVector3ByAxis(newVertex.normal);
 
-								newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
+								newVertex.uv.Set(pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2], pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2+1]);
 								newVertex.uv.y = 1 - newVertex.uv.y;
 								//newVertex.uv.x = 1.0f - newVertex.uv.x;
 								//newVertex.uv.y = 1.0f - newVertex.uv.y;
@@ -2414,7 +2430,9 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 
 		for (size_t i = 0; i < pController->pSkin->pJointInvMatrix->iFloatArrayCount / 16; ++i)
 		{
-			DexMatrix4x4 invMatrix(&pController->pSkin->pJointInvMatrix->pFloatArrayValues[i*16]);
+			DexMatrix4x4 invMatrix;
+			for (uint16 m = 0; m < 16; ++m)
+				invMatrix.m[m] = pController->pSkin->pJointInvMatrix->pFloatArrayValues[i * 16 + m];
 			invMatrix.MakeTranspose();
 			m_MapJointMatrix[pController->pSkin->pJointsName->vNamaArray[i]] = invMatrix;
 		}
@@ -2453,7 +2471,8 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 						for (int32 iFrame = 0; iFrame < pAnimation->pInput->iFloatArrayCount; ++iFrame)
 						{
 							iFrameTime = pAnimation->pInput->pFloatArrayValues[iFrame] * 1000;//从s转为ms
-							frameMatrix.Set(&pAnimation->pOutput->pFloatArrayValues[iFrame*16]);
+							for (uint16 m = 0; m < 16; ++m)
+								frameMatrix.m[m] = pAnimation->pOutput->pFloatArrayValues[iFrame * 16 + m];
 							frameMatrix.MakeTranspose();
 							pJoint->AddKeyFrame(iFrameTime, frameMatrix);
 							if (iFrameTime > iMaxAniTime)
@@ -2548,10 +2567,15 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 							else
 							{
 								DexSkinMesh::stMeshVertex newVertex;
-								if (pSourcePos != nullptr)
-									newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
+								if (m_bFFXIIModel)
+									newVertex.pos.Set(pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3] * 60, pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 1] * 60,
+									pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 2] * 60);
+								else
+									newVertex.pos.Set(pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3], pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 1],
+									pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 2]);
 								if (pSourceNormal != nullptr)
-									newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
+									newVertex.normal.Set(pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3], pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3+1],
+									pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3+2]);
 								TransVector3ByAxis(newVertex.pos);
 								TransVector3ByAxis(newVertex.normal);
 								if (m_bFFXIIModel)
@@ -2560,7 +2584,7 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 									newVertex.normal.z *= -1;
 								}
 								if (pSourceUv != nullptr)
-									newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
+									newVertex.uv.Set(pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2], pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2+1]);
 								if (iVertexWeightInputSize == 2)
 								{//默认vertex weight 里面是joint 的index 和 weight
 									//geometry里有多少个顶点，skin vertex weight 就有多少count，
@@ -2696,13 +2720,18 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 								{
 									DexSkinMesh::stMeshVertex newVertex;
 									if (pSourcePos != nullptr)
-										newVertex.pos.Set(&pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3]);//从该索引处取3个浮点数放进pos中
+										if (m_bFFXIIModel)
+											newVertex.pos.Set(pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3] * 60, pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 1] * 60,
+											pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 2] * 60);
+										else
+											newVertex.pos.Set(pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3], pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 1],
+											pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 2]);
 									if (pSourceNormal != nullptr)
-										newVertex.normal.Set(&pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3]);
+										newVertex.normal.Set(pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3], pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3 + 1], pSourceNormal->pFloatArrayValues[index.m_iNormalIndex * 3+2]);
 									TransVector3ByAxis(newVertex.pos);
 									TransVector3ByAxis(newVertex.normal);
 									if (pSourceUv != nullptr)
-										newVertex.uv.Set(&pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2]);
+										newVertex.uv.Set(pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2], pSourceUv->pFloatArrayValues[index.m_iUvIndex * 2+1]);
 									//一些导出工具对于uv坐标是从左到右为x ,从下到上为y，而引擎使用的dx，使用的是从左到右为x，从上到下为y
 									//如果y方向不一致，就要进行转换
 									newVertex.uv.y = 1 - newVertex.uv.y;
@@ -2751,6 +2780,8 @@ void DexModelDaeLoader::add_joints(DexSkinMesh* pSkinMesh, DaeNode* pNode, DaeNo
 			if (m_bFFXIIModel)
 			{//右手坐标系转为左手坐标系
 				pJoint->meshMatrix.ConvertHandMatrix();
+				DexMatrix4x4 matrix; matrix.Scale(DexVector3(60,60,60));
+				pJoint->meshMatrix *= matrix;
 				pJoint->localMeshMatrixInvert = pJoint->meshMatrix.GetInvert();
 			}
 			else
@@ -3049,9 +3080,9 @@ bool DexModelDaeLoader::ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString fi
 				{
 					int32 index = atoi(values[1].c_str());
 					DexVector3 translate;
-					translate.x = atof(values[3].c_str()) / 60.0f;
-					translate.y = atof(values[4].c_str()) / 60.0f;
-					translate.z = atof(values[5].c_str()) / 60.0f;
+					translate.x = atof(values[3].c_str());
+					translate.y = atof(values[4].c_str());
+					translate.z = atof(values[5].c_str());
 					DexQuaternion quatenion;
 					DexMatrix4x4 matrix;
 					DexMatrix4x4 tempMatrix;
@@ -3141,15 +3172,15 @@ bool DexModelDaeLoader::ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, DString sFile
 			if (values[1].length() == 1)
 				translate.x = oldTranslate.x;
 			else
-				translate.x = atof(values[1].c_str()) / 60.0f;
+				translate.x = atof(values[1].c_str());
 			if (values[2].length() == 1)
 				translate.y = oldTranslate.y;
 			else
-				translate.y = atof(values[2].c_str()) / 60.0f;
+				translate.y = atof(values[2].c_str());
 			if (values[3].length() == 1)
 				translate.z = oldTranslate.z;
 			else
-				translate.z = atof(values[3].c_str()) / 60.0f;
+				translate.z = atof(values[3].c_str());
 
 			DexVector3 rotation;
 			if (values[4].length() == 1)

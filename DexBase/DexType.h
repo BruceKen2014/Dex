@@ -40,5 +40,14 @@ typedef double float64;
 typedef unsigned long     DWORD;
 #endif
 
+#ifdef _MSC_VER
+	#if _MSC_VER >= 1600 //vs2010 and later
+	#define  DexNull  nullptr
+	#endif
 #endif
+#ifndef DexNull
+#define DexNull NULL
+#endif
+
+#endif //_DEX_TYPE_H
 

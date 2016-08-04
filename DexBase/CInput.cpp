@@ -25,17 +25,14 @@ CKeyboard::CKeyboard(LPDIRECTINPUT8 input, HWND hwnd)
     if(input->CreateDevice(GUID_SysKeyboard, &m_device, NULL) != DI_OK)
 	{
 		_Message("键盘设备创建失败!");
-		return;
 	}
     if(m_device->SetDataFormat(&c_dfDIKeyboard) != DI_OK)
 	{
 		_Message("键盘设置数据格式失败!");
-		return;
 	}
 	if(m_device->SetCooperativeLevel(hwnd,DISCL_FOREGROUND |DISCL_NONEXCLUSIVE) != DI_OK)
 	{
 		_Message("键盘设置合作等级失败!");
-		return;
 	}		  
 	m_device->Acquire();
 
@@ -134,12 +131,10 @@ CMouse::CMouse(LPDIRECTINPUT8 input, HWND hwnd, bool exclusive)
    if(input->CreateDevice(GUID_SysMouse, &m_device, NULL) != DI_OK)
    {
 	   _Message("鼠标设备创建失败!");
-	   return;
    }
    if(m_device->SetDataFormat(&c_dfDIMouse) != DI_OK)
    {
 	   _Message("鼠标设置数据格式失败！");
-	   return;
    }		
    if(exclusive) 
 	   flags = DISCL_FOREGROUND | DISCL_EXCLUSIVE | DISCL_NOWINKEY;
@@ -149,7 +144,6 @@ CMouse::CMouse(LPDIRECTINPUT8 input, HWND hwnd, bool exclusive)
    if(m_device->SetCooperativeLevel(hwnd, flags) != DI_OK)
    {
 	   _Message("鼠标设置合作等级失败！");
-	   return;
    }	
    m_device->Acquire();
 }
@@ -193,8 +187,8 @@ void CMouse::Update(HWND hwnd)
 	m_yPos   = pt.y;
     m_zPos = m_mouseState.lZ;
 
-	m_xPos += get2DDrawer()->GetCameraPos().x;
-	m_yPos -= get2DDrawer()->GetCameraPos().y;
+	//m_xPos += get2DDrawer()->GetCameraPos().x;
+	//m_yPos -= get2DDrawer()->GetCameraPos().y;
 
 	if(LeftButtonDown())
 	{//左键按下
@@ -203,14 +197,13 @@ void CMouse::Update(HWND hwnd)
 		{//鼠标未移动 为左键事件
 			_event.name = string(EVENT_NAME_MOUSE_L_DOWN);
 			_event.id = EVENT_ID_MOUSE_L_DOWN;	 
-			_event.push_args(stArgs(m_xPos));
 			_event.push_args(stArgs(m_yPos));
-			getDesktop()->SetUiEvent(true);
+			//getDesktop()->SetUiEvent(true); //目前测试opengl，因为2D目前依然采用DX，所以暂时先把UI注掉
 			NotifyEvent(_event);
 		}
 		else
 		{//鼠标移动了 为左键拖拽事件
-			if(getDesktop()->getDragingWgt() == NULL)
+			if(0)//getDesktop()->getDragingWgt() == NULL)
 			{
 				_event.name = string(EVENT_NAME_MOUSE_L_DRAG);
 				_event.id = EVENT_ID_MOUSE_L_DRAG;
@@ -218,23 +211,23 @@ void CMouse::Update(HWND hwnd)
 				_event.push_args(stArgs(m_yPos - m_yPrePos)); 
 				_event.push_args(stArgs(m_xPos));
 				_event.push_args(stArgs(m_yPos));
-				getDesktop()->SetUiEvent(true);
+				//getDesktop()->SetUiEvent(true);
 				NotifyEvent(_event);
 			}
 			else
 			{//如果正在拖拽一个控件，没必要再调用NotifyEvent(_event);
-				getDesktop()->getDragingWgt()->OffSet(DexPoint(m_xPos - m_xPrePos, m_yPos - m_yPrePos));
+				//getDesktop()->getDragingWgt()->OffSet(DexPoint(m_xPos - m_xPrePos, m_yPos - m_yPrePos));
 			}
 		}
 		
 	}
 	else if(LeftButtonUp())
 	{
-		getDesktop()->SetDragingWgt(NULL);
+		//getDesktop()->SetDragingWgt(NULL);
 		stEvent _event(EVENT_NAME_MOUSE_L_UP, EVENT_ID_MOUSE_L_UP);
 		_event.push_args(stArgs(m_xPos));
 		_event.push_args(stArgs(m_yPos));
-		getDesktop()->SetUiEvent(true);
+		//getDesktop()->SetUiEvent(true);
 		NotifyEvent(_event);
 	}
 	else if(RightButtonDown())
@@ -246,12 +239,12 @@ void CMouse::Update(HWND hwnd)
 			_event.id = EVENT_ID_MOUSE_R_DOWN;	 
 			_event.push_args(stArgs(m_xPos));
 			_event.push_args(stArgs(m_yPos));
-			getDesktop()->SetUiEvent(true);
+			//getDesktop()->SetUiEvent(true);
 			NotifyEvent(_event);
 		}
 		else
 		{//鼠标移动了 为右键拖拽事件
-			if(getDesktop()->getDragingWgt() == NULL)
+			if(0)//getDesktop()->getDragingWgt() == NULL)
 			{
 				_event.name = string(EVENT_NAME_MOUSE_R_DRAG);
 				_event.id = EVENT_ID_MOUSE_R_DRAG;
@@ -259,22 +252,22 @@ void CMouse::Update(HWND hwnd)
 				_event.push_args(stArgs(m_yPos - m_yPrePos)); 
 				_event.push_args(stArgs(m_xPos));
 				_event.push_args(stArgs(m_yPos));
-				getDesktop()->SetUiEvent(true);
+				//getDesktop()->SetUiEvent(true);
 				NotifyEvent(_event);
 			}
 			else
 			{
-				getDesktop()->getDragingWgt()->OffSet(DexPoint(m_xPos - m_xPrePos, m_yPos - m_yPrePos));
+				//getDesktop()->getDragingWgt()->OffSet(DexPoint(m_xPos - m_xPrePos, m_yPos - m_yPrePos));
 			}
 		}
 	}
 	else if(RightButtonUp())
 	{
-		getDesktop()->SetDragingWgt(NULL);
+		//getDesktop()->SetDragingWgt(NULL);
 		stEvent _event(EVENT_NAME_MOUSE_R_UP, EVENT_ID_MOUSE_R_UP);
 		_event.push_args(stArgs(m_xPos));
 		_event.push_args(stArgs(m_yPos));
-		getDesktop()->SetUiEvent(true);
+		//getDesktop()->SetUiEvent(true);
 		NotifyEvent(_event);
 	}
 	else if(WheelFront())
@@ -282,7 +275,7 @@ void CMouse::Update(HWND hwnd)
 		stEvent _event(EVENT_NAME_MOUSE_WHEEL_F, EVENT_ID_MOUSE_WHEEL_F);
 		//_event.push_args(stArgs(m_xPos));
 		//_event.push_args(stArgs(m_yPos));
-		getDesktop()->SetUiEvent(true);	      
+		//getDesktop()->SetUiEvent(true);	      
 		NotifyEvent(_event);
 	}
 	else if(WheelBack())
@@ -290,7 +283,7 @@ void CMouse::Update(HWND hwnd)
 		stEvent _event(EVENT_NAME_MOUSE_WHEEL_B, EVENT_ID_MOUSE_WHEEL_B);
 		//_event.push_args(stArgs(m_xPos));
 		//_event.push_args(stArgs(m_yPos));
-		getDesktop()->SetUiEvent(true);
+		//getDesktop()->SetUiEvent(true);
 		NotifyEvent(_event);
 	}
 	else if(m_xPos != m_xPrePos || m_yPos != m_yPrePos)
@@ -300,7 +293,7 @@ void CMouse::Update(HWND hwnd)
 		_event.id = EVENT_ID_MOUSE_MOVE;
 		_event.push_args(stArgs(m_xPos));
 		_event.push_args(stArgs(m_yPos));
-		getDesktop()->SetUiEvent(true);
+		//getDesktop()->SetUiEvent(true);
 		NotifyEvent(_event);
 	}
 	m_iDeltaX = m_xPos - m_xPrePos;

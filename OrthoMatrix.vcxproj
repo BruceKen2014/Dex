@@ -110,8 +110,8 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath);../Dex;sdk/lua/include;sdk/directx9/include;</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);sdk/lua/lib;sdk/directx9/lib/x86;</LibraryPath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">$(WindowsSdkDir)include;$(IncludePath);../Dex;sdk/lua/include;sdk/directx9/include</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">$(LibraryPath);sdk/lua/lib/vs2010/debug;sdk/directx9/lib/x86</LibraryPath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">sdk/opengl/include;$(WindowsSdkDir)include;$(IncludePath);../Dex;sdk/lua/include;sdk/directx9/include;</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">$(LibraryPath);sdk/lua/lib/vs2010/debug;sdk/directx9/lib/x86;sdk/opengl/lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -161,7 +161,11 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DexBase\DexCompiler.h" />
     <ClInclude Include="DexBase\DexDefine.h" />
+    <ClInclude Include="DexBase\DexDeviceDirectx9.h" />
+    <ClInclude Include="DexBase\DexDeviceOpenGLWindows.h" />
+    <ClInclude Include="DexBase\IDexDevice.h" />
     <ClInclude Include="DexBase\DexDMap.h" />
     <ClInclude Include="DexBase\DexLight.h" />
     <ClInclude Include="DexBase\DexMaterial.h" />
@@ -173,6 +177,7 @@
     <ClInclude Include="DexBase\DexVertex.h" />
     <ClInclude Include="DexBase\DexVertexDeclDx9.h" />
     <ClInclude Include="DexBase\DexString.h" />
+    <ClInclude Include="DexBase\IDexDeviceWindows.h" />
     <ClInclude Include="DexBase\IDexRender.h" />
     <ClInclude Include="DexBase\IDexShader.h" />
     <ClInclude Include="DexBase\IDexShaderHlsl.h" />
@@ -310,9 +315,13 @@
     <ClInclude Include="state\DexGameState.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DexBase\DexDeviceDirectx9.cpp" />
+    <ClCompile Include="DexBase\DexDeviceOpenGLWindows.cpp" />
     <ClCompile Include="DexBase\DexRenderDirectX9.cpp" />
     <ClCompile Include="DexBase\DexVertex.cpp" />
     <ClCompile Include="DexBase\DexVertexDeclDx9.cpp" />
+    <ClCompile Include="DexBase\IDexDevice.cpp" />
+    <ClCompile Include="DexBase\IDexDeviceWindows.cpp" />
     <ClCompile Include="DexBase\IDexRender.cpp" />
     <ClCompile Include="DexBase\IDexShader.cpp" />
     <ClCompile Include="DexBase\IDexShaderHlsl.cpp" />

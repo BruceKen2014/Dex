@@ -1,10 +1,13 @@
 
+#include "DexCompiler.h"
 
-#pragma once
+#ifdef _DEX_PLATFORM_WINDOWS
+
+#ifndef _DEX_LOG_H
+#define _DEX_LOG_H
 #include <iostream>
 #include <fcntl.h>
 #include <io.h>
-#include "typedefine.h"
 enum DexLogType
 {
 	log_ok,		//正常！
@@ -42,10 +45,10 @@ private:
 	bool m_BackHighLight; //背景是否高亮
 	bool m_bLogFile;	  //是否向文件输出log
 	bool m_FrontHighlight[log_count]; 
-	WORD m_consoleBackgroundColor;
-	WORD m_consoleFontColor[log_count];
+	short m_consoleBackgroundColor;
+	short m_consoleFontColor[log_count];
 
-	HANDLE m_stdHandle;
+	void* m_stdHandle;
 
 	DexLogType m_lastLogType;//上次的log类型 如果类型没变 则没必要再调用SetConsoleTextAttribute
 	int  m_logByte;  //本次已经打印的字节数,根据这个变量来确定填充的背景空格(如果已经开启了背景色的话)
@@ -89,3 +92,6 @@ CDexLog* getLog();
 #define dex_log_current_f_l(type) \
 	dex_log_current_file(type)\
 	dex_log_current_line(type)
+
+#endif //_DEX_LOG_H
+#endif //_DEX_PLATFORM_WINDOWS

@@ -105,6 +105,10 @@
     <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">false</EmbedManifest>
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">false</GenerateManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">
+    <IncludePath>../sdk/opengl/include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);../sdk/opengl/lib</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -191,6 +195,7 @@
     <ClCompile Include="PalFightHeadManager.cpp" />
     <ClCompile Include="PalNpc.cpp" />
     <ClCompile Include="PalNumber.cpp" />
+    <ClCompile Include="PalOpenglTestScene.cpp" />
     <ClCompile Include="PalPanelInterface.cpp" />
     <ClCompile Include="PalPanel_Order.cpp" />
     <ClCompile Include="PalPanel_SelectSkill.cpp" />
@@ -215,6 +220,7 @@
     <ClInclude Include="PalModelIndexManager.h" />
     <ClInclude Include="PalNpc.h" />
     <ClInclude Include="PalNumber.h" />
+    <ClInclude Include="PalOpenglTestScene.h" />
     <ClInclude Include="PalPanelInterface.h" />
     <ClInclude Include="PalPanel_Order.h" />
     <ClInclude Include="PalPanel_SelectSkill.h" />
