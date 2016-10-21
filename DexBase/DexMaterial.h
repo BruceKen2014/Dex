@@ -6,9 +6,11 @@ DexEngine&Material
 
 #include "DexType.h"
 #include "DexColor.h"
+#include "DexString.h"
 class DexMaterial
 {
 public:
+	char	 name[64];
 	DexColor diffuse;
 	DexColor specular;
 	DexColor ambient;
@@ -17,10 +19,12 @@ public:
 public:
 	DexMaterial()
 	{
+		dexstrcpy(name, "default");
 		diffuse = DEXCOLOR_WHITE;
 		ambient = DEXCOLOR_WHITE;
 		specular = DEXCOLOR_BLACK;
 		emissive = DEXCOLOR_BLACK;
+		power = 1.0f;
 	};
 	DexMaterial(const DexColor& _diffuse, const DexColor& _specular, const DexColor& _ambient,
 		const DexColor& _emissive, float32  _power = 1.0f) :diffuse(_diffuse), specular(_specular),

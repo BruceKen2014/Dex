@@ -9,6 +9,7 @@
 #include "../DexMath/DexMatrix.h"
 #include "DexSkinMesh.h"
 #include "DexModelObjLoader.h"
+#include "../DexCommonFunction.h"
 
 DexModelObjLoader::DexModelObjLoader()
 {
@@ -25,6 +26,10 @@ bool DexModelObjLoader::SupportType(const char* fileType)
 }
 DexModelBase* DexModelObjLoader::LoadModel(const char* filename, int32 flag)
 {
+	//这里专门为Obj文件加了这个路径变量，因为在用MeshConvert转换模型的时候，需要读取material数据
+	//而obj文件的material是分开存放的，obj文件中mtllib的名字并不带有路径前缀，因此需要知道到底是在什么路径下面
+	//否则就会找不到material文件，导致丢失material数据
+	m_strFilePath = DexCommonFunction::getFilePath(filename, m_strFilePath);
 	getLog()->BeginLog();
 	int64 Time = getTime()->GetTotalMillSeconds();
 	getLog()->Log(log_ok, "load obj model %s...\n", filename);
@@ -67,10 +72,13 @@ DexModelBase* DexModelObjLoader::LoadModel(const char* filename, int32 flag)
 		switch (pBufferCurr[0])
 		{
 		case 'm':
-			pBufferCurr += sizeof(int8)* 7;//'mtllib' and space
+		{
+			pBufferCurr += sizeof(int8) * 7;//'mtllib' and space
 			getToken(pBufferCurr, tempArry, pBufferEnd);
-			readMaterial((const char*)tempArry, vecMaterials);
+			DString materialPath = m_strFilePath + DString((const char*)tempArry);
+			readMaterial(materialPath.c_str(), vecMaterials);
 			break;
+		}
 		case 'g':
 			pBufferCurr += sizeof(int8)* 2;//'g' and space
 			getToken(pBufferCurr, tempArry, pBufferEnd);
@@ -84,16 +92,14 @@ DexModelBase* DexModelObjLoader::LoadModel(const char* filename, int32 flag)
 			{
 				if (strcmp((const char*)vecMaterials[i].name, (const char*)tempArry) == 0)
 				{
+					dexstrcpy(tempMaterial.name, (const char*)tempArry);
 					tempMaterial.ambient.Set(vecMaterials[i].m_ambient[0], vecMaterials[i].m_ambient[1], vecMaterials[i].m_ambient[2], 1.0f);
 					tempMaterial.diffuse.Set(vecMaterials[i].m_diffuse[0], vecMaterials[i].m_diffuse[1], vecMaterials[i].m_diffuse[2], 1.0f);
 					tempMaterial.specular.Set(vecMaterials[i].m_specular[0], vecMaterials[i].m_specular[1], vecMaterials[i].m_specular[2], 1.0f);
 					tempMaterial.emissive.Set(vecMaterials[i].m_emissive[0], vecMaterials[i].m_emissive[1], vecMaterials[i].m_emissive[2], 1.0f);
 					tempMaterial.power = vecMaterials[i].m_shininess;
-					pMesh->m_iMaterialId = skinMesh->m_vecMaterials.size();
-					if (skinMesh->AddTexture((const char*)vecMaterials[i].m_texture))
-						//与material不同，texture有可能加载失败，所以需加安全判断
-						pMesh->m_iTextureId = skinMesh->m_vecTextures.size() - 1;
-					skinMesh->AddMaterial(tempMaterial);
+					pMesh->m_iMaterialId = skinMesh->AddMaterial(tempMaterial);
+					pMesh->m_iTextureId = skinMesh->AddTexture((const char*)vecMaterials[i].m_texture);
 					break;
 				}
 			}
@@ -231,6 +237,11 @@ DexModelBase* DexModelObjLoader::LoadModel(const char* filename, int32 flag)
 	getLog()->Log(log_ok, "load obj model %s ok, use time %d ms\n", filename, Time);
 	getLog()->EndLog();
 	return skinMesh;
+}
+
+bool DexModelObjLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag)
+{
+	return true;
 }
 
 bool DexModelObjLoader::readMaterial(const char* filename, DVector<ObjMaterial>& vecMaterial)

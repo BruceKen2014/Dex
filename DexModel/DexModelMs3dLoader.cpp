@@ -237,6 +237,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 	{
 		MS3DMaterial *pMaterial = (MS3DMaterial*)pPtr;
 		DexMaterial material;
+		dexstrcpy(material.name, pMaterial->m_name);
 		material.diffuse.Set(pMaterial->m_diffuse[0], pMaterial->m_diffuse[1], pMaterial->m_diffuse[2],
 			pMaterial->m_diffuse[3]);
 		material.ambient.Set(pMaterial->m_ambient[0], pMaterial->m_ambient[1], pMaterial->m_ambient[2],
@@ -428,4 +429,9 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 	getLog()->Log(log_ok, "load ms3d %s ok, use time %d ms\n", filename, Time);
 	getLog()->EndLog();
 	return skinMesh;
+}
+
+bool DexModelMs3dLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag)
+{
+	return true;
 }

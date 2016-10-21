@@ -18,6 +18,7 @@
 #include "PalBattleStateTransition.h"
 #include "DexStateCommonEvent.h"
 #include "DexBase/Dex3DScene.h"
+#include "DexBase/DexTextureManager.h"
 #include "PalPlayer.h"
 #include "PalPlayerAttackState.h"
 #include "PalFightHeadManager.h"
@@ -27,6 +28,7 @@
 
 #include "PalPanel_Order.h"
 #include "PalPanel_SelectSkill.h"
+#include "../DexModel/DexModelSkinMeshLoader.h"
 //#include "Pal2Global.h"
 
 
@@ -248,7 +250,7 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event); 
-	mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/ald0100_sky.mws");
+	mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/ald0100_sky.dexmodel");//mws
 	//mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/alc1002_kabe.mws");
 	mwsModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
 	mwsModel->SetRenderFlag(//SKINMESH_RENDER_JOINT | SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
@@ -265,9 +267,9 @@ bool PalGameStateBattleMain::ApplyRes()
 	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/f0011/mws/f0011_a.act");
 	*/
 	
-	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/mws/c1004.xml",1);
+	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/mws/c1004.dexmodel",1);//xml
 	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/c1004/mws/c1004.mws");
-	//DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/c1004/mws/walk.act");
+	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/c1004/mws/walk.act");
 	
 	/*
 	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/m1014/mws/m1014.dae", 1);
@@ -283,10 +285,10 @@ bool PalGameStateBattleMain::ApplyRes()
 	daeModel->SetAmbientColor(DexColor(200, 200, 200));
 	
 	
-	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/obj/RYU.obj");
+	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/obj/RYU.dexmodel");//obj
 	objModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
-	//objModel->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
-	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/ms3d/Model.ms3d");
+	objModel->SetRenderFlag(SKINMESH_RENDER_MESH);
+	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/ms3d/Model.ms3d"); //ms3d
 	ms3d->SetAnimateType(SkinMeshAnimateType_Loop);
 	ms3d->SetAnimateRatio(1.0f);
 	ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
@@ -316,15 +318,17 @@ bool PalGameStateBattleMain::ApplyRes()
 	testMesh->AddJointKeyFrame(4, 0,    DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
 	testMesh->AddJointKeyFrame(4, 1000, DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
 	testMesh->AddJointKeyFrame(4, 2000, DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	testMesh->AddTexture(getUiSrcMgrSingleton()->getUiTexFactory()->FindTex("b23.png"));
+	testMesh->AddTexture("res/lingsha.bmp");
 	DexMaterial material1;
+	dexstrcpy(material1.name, "material1");
 	material1.diffuse = DexColor(1.0f, 1.0f, 1.0f);
 	material1.ambient = DexColor(0.0f, 0.0f, 0.0f);
 	material1.emissive = DexColor(0.0f, 0.0f, 0.0f);
 	material1.specular = DexColor(0.0f, 0.0f, 0.0f);
 	testMesh->AddMaterial(material1);
-	testMesh->AddTexture(getUiSrcMgrSingleton()->getUiTexFactory()->FindTex("Å®º¢0.png"));
+	testMesh->AddTexture("res/jingjing.png");
 	DexMaterial material2;
+	dexstrcpy(material2.name, "material2");
 	material2.diffuse = DexColor(1.0f, 1.0f, 1.0f);
 	material2.ambient = DexColor(0.0f, 0.0f, 0.0f);
 	material2.emissive = DexColor(0.0f, 0.0f, 0.0f);
@@ -399,6 +403,16 @@ bool PalGameStateBattleMain::ApplyRes()
 	InitVertexShader();
 	InitPixelShader();
 	m_bApply = true;
+	/*
+	//DexModelSkinMeshLoader* loader = new DexModelSkinMeshLoader;
+	//loader->WriteModel(daeModel, "test.dexmodel");
+	//daeModel = (DexSkinMesh*)loader->LoadModel("test.dexmodel", 1);
+	DexGameEngine::getEngine()->SaveModel(daeModel, "test.dexmodel", 0);
+	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("D:/Dex/ParticleEditer/bin/test.dexmodel", 1);
+	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("test.dexmodel", 1);
+	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/c1004/mws/c1004.mws");
+	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/c1004/mws/walk.act");
+	*/
 	return true;
 }
 bool PalGameStateBattleMain::Test_AddEnemy1()

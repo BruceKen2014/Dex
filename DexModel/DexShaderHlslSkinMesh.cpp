@@ -4,7 +4,7 @@
 #include "../DexBase/DexLog.h"
 #include "../DexBase/DexDefine.h"
 #include "../DexBase/DexRenderDirectx9.h"
-#include "../Source/CTexture.h"
+#include "../DexBase/DexTexture.h"
 #include "DexShaderHlslSkinMesh.h"
 #include "DexSkinMesh.h"
 
@@ -167,7 +167,11 @@ void DexShaderHlslSkinMesh::Render()
 			{
 				if (skinMesh->m_vecMeshs[i]->m_iTextureId < skinMesh->m_vecTextures.size() &&
 					skinMesh->m_vecTextures[skinMesh->m_vecMeshs[i]->m_iTextureId] != nullptr)
-					pFxEffect->SetTexture(m_handleTex0, skinMesh->m_vecTextures[skinMesh->m_vecMeshs[i]->m_iTextureId]->GetTexPt());
+				{
+					LPDIRECT3DBASETEXTURE9 tex = (LPDIRECT3DBASETEXTURE9)(skinMesh->m_vecTextures[skinMesh->m_vecMeshs[i]->m_iTextureId]->GetData());
+					pFxEffect->SetTexture(m_handleTex0, tex);
+				}
+					
 			}
 			else
 			{

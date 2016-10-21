@@ -30,7 +30,7 @@ public:
 	virtual ~CRefCount();
 
 protected:
-	virtual void ShutDown();   //不允许外界调用，只能由自身在释放自己时调用
+	virtual void ShutDown() = 0;   //不允许外界调用，只能由自身在释放自己时调用
 public:	
 	void AddRef();
 	unsigned int GetRefCount() { return m_count;}; //被引用了多少次

@@ -3,7 +3,9 @@
 #define _DEX_MODEL_LOADER_H
 
 #include "../DexBase/DexType.h"
+#include "../DexBase/DexString.h"
 class DexModelBase;
+class DexSkinMesh;
 class IDexModelLoader
 {
 protected:
@@ -44,6 +46,8 @@ protected:
 			return false;
 		}
 	};
+protected:
+	DString m_strFilePath;
 public:
 	IDexModelLoader(){};
 	virtual ~IDexModelLoader(){};
@@ -51,5 +55,6 @@ public:
 public:
 	virtual bool		  SupportType(const char* fileType) = 0;
 	virtual DexModelBase* LoadModel(const char* filename, int32 flag) = 0;
+	virtual bool		  SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag) = 0;
 };
 #endif

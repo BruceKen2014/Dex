@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevhInst, LPSTR cmdLine, int show
 	DexGameEngine::getEngine()->SetFullScreen(false);
 	
 
-	int testDevice = 1; 
+	int testDevice = 0; 
 	DexGameEngine::getEngine()->Initialize(testDevice);
 	if (testDevice == 0)
 	{//dx9

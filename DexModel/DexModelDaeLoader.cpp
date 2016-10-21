@@ -2199,8 +2199,8 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 				{
 					if (vMaterials[i] == pTriangle->material)
 					{
-						pDexMesh->m_iMaterialId = i;
-						pDexMesh->m_iTextureId = i;
+						pDexMesh->m_iMaterialId = pDexSkinMesh->FindMaterial(pTriangle->material);
+						pDexMesh->m_iTextureId = pDexMesh->m_iMaterialId;
 					}
 				}
 				//对应pos normal uv 等source
@@ -2298,8 +2298,8 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 				{
 					if (vMaterials[i] == pPolylist->material)
 					{
-						pDexMesh->m_iMaterialId = i;
-						pDexMesh->m_iTextureId = i;
+						pDexMesh->m_iMaterialId = pDexSkinMesh->FindMaterial(pPolylist->material);
+						pDexMesh->m_iTextureId = pDexMesh->m_iMaterialId;
 					}
 				}
 				//对应pos normal uv 等source
@@ -2508,8 +2508,10 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 					{
 						if (vMaterials[i] == pTriangle->material)
 						{
-							pDexMesh->m_iMaterialId = i;
-							pDexMesh->m_iTextureId = i;
+							stInstanceMaterial m;
+							find_instance_material(pInstanceController->vecMaterials, m, pTriangle->material);
+							pDexMesh->m_iMaterialId = pDexSkinMesh->FindMaterial(m.sSymbol);
+							pDexMesh->m_iTextureId = pDexSkinMesh->FindTexture(m.texture);
 							break;
 						}
 					}
@@ -2658,8 +2660,8 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 					{
 						if (vMaterials[i] == pPolylist->material)
 						{
-							pDexMesh->m_iMaterialId = i;
-							pDexMesh->m_iTextureId = i;
+							pDexMesh->m_iMaterialId = pDexSkinMesh->FindMaterial(pPolylist->material);
+							pDexMesh->m_iTextureId = pDexMesh->m_iMaterialId;
 						}
 					}
 					//对应pos normal uv 等source
@@ -2813,6 +2815,7 @@ void DexModelDaeLoader::deal_with_material_texture(DVector<stInstanceMaterial>& 
 				if (pTechnique != nullptr && pTechnique->pPhong != nullptr)
 				{
 					DaePhong* pPhong = pEffectProfile->pTechnique->pPhong;
+					dexstrcpy(dexMaterial.name, pMaterial->name.c_str());
 					dexMaterial.emissive = pPhong->colorEmission;
 					dexMaterial.diffuse = pPhong->pDiffuse->color;
 					dexMaterial.ambient = pPhong->colorAmbient;
@@ -2840,7 +2843,8 @@ void DexModelDaeLoader::deal_with_material_texture(DVector<stInstanceMaterial>& 
 									DaeNewParamSurface* pNewParamSurface = (DaeNewParamSurface*)pEffectProfile->vecNewParams[k];
 									DaeImage* pImage = find_image(pNewParamSurface->sInitFrom);
 									vec2.push_back(vec[i].sSymbol);
-									
+									vec[i].texture = pImage->init_from;
+									dexstrcpy(dexMaterial.name, vec[i].sSymbol.c_str());
 									pSkinMesh->AddMaterial(dexMaterial);
 									if (pImage != nullptr)
 									{
@@ -2857,6 +2861,20 @@ void DexModelDaeLoader::deal_with_material_texture(DVector<stInstanceMaterial>& 
 					}
 				}
 			}
+		}
+	}
+}
+
+void DexModelDaeLoader::find_instance_material(DVector<stInstanceMaterial>& vec, stInstanceMaterial& material, DString materialSymbol)
+{
+	for (size_t i = 0; i < vec.size(); ++i)
+	{
+		if (vec[i].sSymbol == materialSymbol)
+		{
+			material.sSymbol =  vec[i].sSymbol;
+			material.sTarget = vec[i].sTarget;
+			material.texture = vec[i].texture;
+			break;
 		}
 	}
 }
@@ -2973,6 +2991,11 @@ DexModelBase* DexModelDaeLoader::LoadModel(const char* filename, int32 flag)
 	}
 
 	return pSkinMesh;
+}
+
+bool DexModelDaeLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag)
+{
+	return true;
 }
 
 

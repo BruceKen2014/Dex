@@ -152,6 +152,7 @@ public:
 	{
 		DString sSymbol;
 		DString sTarget;
+		DString texture; //由程序生成，判断该material用的是哪个texture
 	};
 	class DaeImage :public DaeBase
 	{
@@ -544,10 +545,12 @@ protected:
 	void		 add_joints(DexSkinMesh* pSkinMesh, DaeNode* pNode, DaeNode* pFatherNode = nullptr);
 	//将vec里面所有的meterial和texture数据读进mesh中，并且将名字保存到vec2(material) 和 vec3(image)
 	void		 deal_with_material_texture(DVector<stInstanceMaterial>& vec, DexSkinMesh* pSkinMesh, DVector<DString>& vec2, DVector<DString>& vec3);
-	
+	//在vec中寻找symbol为materialSymbol的材质，传到material中
+	void         find_instance_material(DVector<stInstanceMaterial>& vec, stInstanceMaterial& material, DString materialSymbol);
 public:
 	virtual bool		  SupportType(const char* fileType);
 	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
+	virtual bool		  SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag);
 
 	void LoadFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename);
 	bool ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename);//mws file

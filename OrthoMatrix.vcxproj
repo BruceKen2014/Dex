@@ -165,6 +165,10 @@
     <ClInclude Include="DexBase\DexDefine.h" />
     <ClInclude Include="DexBase\DexDeviceDirectx9.h" />
     <ClInclude Include="DexBase\DexDeviceOpenGLWindows.h" />
+    <ClInclude Include="DexBase\DexList.h" />
+    <ClInclude Include="DexBase\DexTextureDx9.h" />
+    <ClInclude Include="DexBase\DexTextureManager.h" />
+    <ClInclude Include="DexBase\DexTextureNull.h" />
     <ClInclude Include="DexBase\IDexDevice.h" />
     <ClInclude Include="DexBase\DexDMap.h" />
     <ClInclude Include="DexBase\DexLight.h" />
@@ -197,6 +201,7 @@
     <ClInclude Include="DexModel\DexModelMs3dLoader.h" />
     <ClInclude Include="DexModel\DexModelMwsLoader.h" />
     <ClInclude Include="DexModel\DexModelObjLoader.h" />
+    <ClInclude Include="DexModel\DexModelSkinMeshLoader.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMesh.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexNormal.h" />
@@ -318,6 +323,9 @@
     <ClCompile Include="DexBase\DexDeviceDirectx9.cpp" />
     <ClCompile Include="DexBase\DexDeviceOpenGLWindows.cpp" />
     <ClCompile Include="DexBase\DexRenderDirectX9.cpp" />
+    <ClCompile Include="DexBase\DexTextureDx9.cpp" />
+    <ClCompile Include="DexBase\DexTextureManager.cpp" />
+    <ClCompile Include="DexBase\DexTextureNull.cpp" />
     <ClCompile Include="DexBase\DexVertex.cpp" />
     <ClCompile Include="DexBase\DexVertexDeclDx9.cpp" />
     <ClCompile Include="DexBase\IDexDevice.cpp" />
@@ -334,6 +342,7 @@
     <ClCompile Include="DexModel\DexModelMs3dLoader.cpp" />
     <ClCompile Include="DexModel\DexModelMwsLoader.cpp" />
     <ClCompile Include="DexModel\DexModelObjLoader.cpp" />
+    <ClCompile Include="DexModel\DexModelSkinMeshLoader.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMesh.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexNormal.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.cpp" />

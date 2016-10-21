@@ -67,7 +67,7 @@ typedef enum
 	SkinMeshModelType_X,       //.X
 	SkinMeshModelType_Total
 }SkinMeshModelType;
-class CDexTex;
+class DexTexture;
 //根节点ID
 #define _SKIN_MESH_ROOT_JOINT_ID	0x0FFF
 class DexSkinMesh: public DexModelBase
@@ -76,6 +76,7 @@ class DexSkinMesh: public DexModelBase
 	friend class DexModelMs3dLoader;
 	friend class DexModelObjLoader;
 	friend class DexModelDaeLoader;
+	friend class DexModelSkinMeshLoader;
 	friend class DexShaderHlslSkinMesh;
 	friend class DexShaderHlslSkinMeshVertexToJoint;
 	friend class DexShaderHlslSkinMeshVertexNormal;
@@ -205,7 +206,7 @@ protected:
 	DexMatrix4x4 bindMatrix; //一个skinmesh被绑定在场景中的一个节点上，这是该节点的matrix
 	DVector<DexMesh*>	 m_vecMeshs;		//mesh
 	DVector<Joint*>		 m_vecJoints;		//joint
-	DVector<CDexTex*>	 m_vecTextures;		//texture
+	DVector<DexTexture*>	 m_vecTextures;		//texture
 	DVector<DexMaterial> m_vecMaterials;	//material
 protected:
 	D3DXMATRIX   matWVP;
@@ -305,10 +306,13 @@ public:
 
 //texture
 	bool SetTexture(int8 meshId, int8 textureId);
-	bool AddTexture(CDexTex* tex);
-	bool AddTexture(const char* filename);
-//material
-	bool AddMaterial(const DexMaterial& material);
+	bool AddTexture(DexTexture* tex);
+	int32 AddTexture(const char* filename);
+	int32 FindTexture(DString textureName);
+//material 
+	//添加material,返回新添加的material的index
+	int32 AddMaterial(const DexMaterial& material);
+	int32 FindMaterial(DString materialName);
 
 //vertex
 	void AddVertex(const DexVector3& pos);

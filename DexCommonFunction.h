@@ -7,10 +7,12 @@
 #include <vector>
 
 #include <d3dx9math.h>
+#include <DexBase\DexString.h>
 
 using namespace std;
-class CDexCommonFunction
+class DexCommonFunction
 {
+public:
 	static string int_to_str(int i);
 	static string float_to_str(float f);	
 
@@ -29,6 +31,8 @@ class CDexCommonFunction
 	static void SplitStr(string str, char split_char, vector<string> &out);
 	static string D3DVector3toStr(const D3DXVECTOR3& vec, char split_char=';');
 	static bool   StrToD3DVector3(string str, D3DXVECTOR3& vec, char split_char=';');
+	//函数功能：取得文件名中的路径，如传入filename如model/x.obj,传出path如model/
+	static DString&   getFilePath(DString filename, DString& path);
 
 };
 #endif

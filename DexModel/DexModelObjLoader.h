@@ -33,6 +33,7 @@ public:
 public:
 	virtual bool SupportType(const char* fileType);
 	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
+	virtual bool SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag);
 private:
 	bool readMaterial(const char* filename, DVector<ObjMaterial>& vecMaterial);
 	void getToken(int8*& pBuffer, int8* pOut, int8* pEnd);

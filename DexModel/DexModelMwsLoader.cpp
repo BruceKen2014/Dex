@@ -721,3 +721,8 @@ DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, int32 flag)
 	getLog()->LogLine(log_ok, "load mws model %s ok, use time %d ms", filename, Time);
 	return pDexSkinMesh;
 }
+
+bool DexModelMwsLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag)
+{
+	return true;
+}

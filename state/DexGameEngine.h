@@ -25,6 +25,7 @@ class IDexModelLoader;
 class IDexVertexDecl;
 class IDexRender;
 class IDexDevice;
+class DexTextureManager;
 class DexGameEngine
 {
 private:
@@ -83,7 +84,7 @@ private:
 	LPD3DXMESH  g_sphere;
 	string         g_nextStateName;
 	DVector<IDexModelLoader*> vecModelLoader;
-
+	DexTextureManager* g_TextureManager;
 	IDexRender*      m_pRender;
 	//light data
 	DVector<DexLight> g_vecLight;
@@ -150,6 +151,9 @@ public:
 	
 	int  getFps()		{ return g_iFps;}
 
+	//texture manager
+	DexTextureManager* GetTextureManager();
+
 	//game state
 	bool AddState(DexGameState* state);
 	DexGameState* getGameState(string type);
@@ -214,7 +218,9 @@ public:
 	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize);
 	//for shader，不需要设置FVF
 	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize);
+	//本接口可以加载各种引擎支持的模型文件，包括引擎本身模型文件.dexmodel,加载.dexmodel以二进制数据读入，速度会很快，建议把其他模型文件用引擎工具MeshConvert转换为.dexmodel,然后加载转换后的二进制模型文件
 	DexModelBase* CreateModel(const char* filename, int flag=0);
+	bool SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int flag=0);
 	bool ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, const char* filename);
 	bool ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename);
 	

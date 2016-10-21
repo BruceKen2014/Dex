@@ -2,13 +2,13 @@
 #include "DexCommonFunction.h"
 
 
-string CDexCommonFunction::int_to_str(int i)
+string DexCommonFunction::int_to_str(int i)
 {
 	char ch[32];
 	sprintf(ch, "%d", i);
 	return string(ch);
 }
-string CDexCommonFunction::float_to_str(float f)
+string DexCommonFunction::float_to_str(float f)
 {
 	char ch[32];
 	sprintf(ch, "%.3f",  f);
@@ -17,29 +17,29 @@ string CDexCommonFunction::float_to_str(float f)
 
 
 
-int CDexCommonFunction::str_to_int(string str)
+int DexCommonFunction::str_to_int(string str)
 {
 	return atoi(str.c_str());
 }
-int CDexCommonFunction::str_to_int(char* str)
+int DexCommonFunction::str_to_int(char* str)
 {
 	if(str == NULL)
 		return 0;
 	return atoi(str);
 }
 
-float CDexCommonFunction::str_to_float(string str)
+float DexCommonFunction::str_to_float(string str)
 {
 	return atof(str.c_str());
 }
-float CDexCommonFunction::str_to_float(char* str)
+float DexCommonFunction::str_to_float(char* str)
 {
 	if(str == NULL)
 		return 0.0f;
 	return atof(str);
 }
 
-bool CDexCommonFunction::str_to_bool(string str)
+bool DexCommonFunction::str_to_bool(string str)
 {
 	if(str == "true")
 		return true;
@@ -50,7 +50,7 @@ bool CDexCommonFunction::str_to_bool(string str)
 	return true;
 }
 
-bool CDexCommonFunction::str_to_bool(char* str)
+bool DexCommonFunction::str_to_bool(char* str)
 {
 	if(str == NULL)
 		return false;
@@ -63,18 +63,18 @@ bool CDexCommonFunction::str_to_bool(char* str)
 	return true;
 }
 
-bool CDexCommonFunction::strcat(string& ret, string str)
+bool DexCommonFunction::strcat(string& ret, string str)
 {
 	ret += str;
 	return true;
 }
-bool CDexCommonFunction::strcat(char* ret, const char* str)
+bool DexCommonFunction::strcat(char* ret, const char* str)
 {
 	::strcat(ret, str);
 	return true;
 }
 
-void CDexCommonFunction::SplitStr(string str, char split_char, vector<string> &out)
+void DexCommonFunction::SplitStr(string str, char split_char, vector<string> &out)
 {
 	char* pt = (char*)str.c_str();
 	char* begin = pt;
@@ -95,7 +95,7 @@ void CDexCommonFunction::SplitStr(string str, char split_char, vector<string> &o
 	}
 }
 
-string CDexCommonFunction::D3DVector3toStr(const D3DXVECTOR3& vec, char split_char)
+string DexCommonFunction::D3DVector3toStr(const D3DXVECTOR3& vec, char split_char)
 {
 	string str;
 	string temp;
@@ -111,7 +111,7 @@ string CDexCommonFunction::D3DVector3toStr(const D3DXVECTOR3& vec, char split_ch
 	str += temp;
 	return str;
 }
-bool CDexCommonFunction::StrToD3DVector3(string str, D3DXVECTOR3& vec, char split_char)
+bool DexCommonFunction::StrToD3DVector3(string str, D3DXVECTOR3& vec, char split_char)
 {
 	std::vector<string> str_arr;
 	SplitStr(str, split_char, str_arr);
@@ -121,4 +121,12 @@ bool CDexCommonFunction::StrToD3DVector3(string str, D3DXVECTOR3& vec, char spli
 	vec.y  = atof(str_arr[1].c_str());
 	vec.z  = atof(str_arr[2].c_str());
 	return true;
+}
+
+DString& DexCommonFunction::getFilePath(DString filename, DString& path)
+{
+	int length = filename.length();
+	int last_pos = filename.rfind('/');
+	path = filename.substr(0, last_pos + 1);
+	return path;
 }

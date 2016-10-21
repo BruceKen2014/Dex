@@ -21,6 +21,8 @@ private:
 public:
 	CDexTex();
 	virtual ~CDexTex();
+protected:
+	virtual void ShutDown();
 public:
 	bool LoadTex(std::string filname, const DexColor& transcolor = NULL);
 	int  GetWidth() { return m_width;};

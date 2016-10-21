@@ -6,8 +6,10 @@
 #include "DexMath/DexVector4.h"
 #include "../Source/CTexture.h"
 #include "../state/DexGameEngine.h"
+#include "../DexBase/DexTextureManager.h"
 #include "../DexMath/DexMath2.h"
 #include "DexSkinMesh.h"
+#include "../DexBase/DexTexture.h"
 
 DexSkinMesh::Joint::Joint() :m_bAnimate(true)
 {
@@ -352,7 +354,7 @@ void DexSkinMesh::Init()
 	m_pRootJoint->localMeshMatrixInvert.Identity();
 	m_pRootJoint->world_matrix.Identity();
 	m_vecJoints.push_back(m_pRootJoint);
-	//SetRenderFlag(SKINMESH_RENDER_MESH);
+	SetRenderFlag(SKINMESH_RENDER_MESH);
 	jointsMatrix = new D3DXMATRIX[sGetMaxJointCount()];
 	m_fJointScale = 1.0f;
 	InitShader();
@@ -364,9 +366,12 @@ void DexSkinMesh::InitShader()
 {
 	D3DXMatrixIdentity(&matWVP);
 	memset(jointsMatrix, 0, sizeof(D3DXMATRIX)* sGetMaxJointCount());
-	m_pShaderForMesh = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMesh::getClassType());
-	m_pShaderForVertexToJoint = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMeshVertexToJoint::getClassType());
-	m_pShaderForVertexNormal = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMeshVertexNormal::getClassType());
+	if (DexGameEngine::getEngine()->GetRender() != DexNull)
+	{
+		m_pShaderForMesh = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMesh::getClassType());
+		m_pShaderForVertexToJoint = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMeshVertexToJoint::getClassType());
+		m_pShaderForVertexNormal = DexGameEngine::getEngine()->GetRender()->GetShader(DexShaderHlslSkinMeshVertexNormal::getClassType());
+	}
 	SetAmbientColor(DexColor(0.3f, 0.0f, 0.0f, 1.0f));
 }
 
@@ -398,7 +403,7 @@ DexSkinMesh::~DexSkinMesh()
 	m_vecMaterials.clear();
 	for (size_t i = 0; i < m_vecTextures.size(); ++i)
 	{
-		_SafeReduceRef(m_vecTextures[i]);
+		DexGameEngine::getEngine()->GetTextureManager()->ReleaseTexture(m_vecTextures[i]);
 	}
 	m_vecTextures.clear();
 }
@@ -718,7 +723,9 @@ DexSkinMesh::Joint* DexSkinMesh::SetJointInfo(int id, string name, string father
 
 DexSkinMesh::Joint* DexSkinMesh::AddJoint(int id, int father_id, const DexMatrix4x4& father_matrix)
 {
-	Joint* joint = new Joint;
+	Joint* joint = FindJoint(id);
+	DEX_ENSURE_P(joint == DexNull);
+	joint = new Joint;
 	joint->id = id;
 	Joint* father = NULL;
 	for (size_t i = 0; i < m_vecJoints.size(); ++i)
@@ -1074,43 +1081,85 @@ bool DexSkinMesh::SetTexture(int8 meshId, int8 textureId)
 	return true;
 }
 
-bool DexSkinMesh::AddTexture(CDexTex* tex)
+bool DexSkinMesh::AddTexture(DexTexture* tex)
 {
 	tex->AddRef();
 	m_vecTextures.push_back(tex);
 	return true;
 }
 
-bool DexSkinMesh::AddTexture(const char* filename)
+int32 DexSkinMesh::FindTexture(DString textureName)
 {
-	CDexTex* tex = nullptr;
+	int32 index = -1;
 	for (size_t i = 0; i < m_vecTextures.size(); ++i)
 	{
-		if (m_vecTextures[i] != nullptr &&
-			m_vecTextures[i]->Name() == filename)
+		if (m_vecTextures[i] != DexNull &&
+			m_vecTextures[i]->Name() == textureName)
 		{
-			tex = m_vecTextures[i];
-			tex->AddRef();
+			index = i;
 			break;
 		}
 	}
-	if (tex == nullptr)
-	{
-		tex = new CDexTex();
-		if (!tex->LoadTex(filename))
-		{
-			tex->ReduceRef();
-			return false;
-		}
-	}
-	m_vecTextures.push_back(tex);
-	return true;
+	return index;
 }
 
-bool DexSkinMesh::AddMaterial(const DexMaterial& material)
+int32 DexSkinMesh::AddTexture(const char* filename)
 {
-	m_vecMaterials.push_back(material);
-	return true;
+	int32 index = -1;
+	for (size_t i = 0; i < m_vecTextures.size(); ++i)
+	{
+		if (m_vecTextures[i] != DexNull &&
+			m_vecTextures[i]->Name() == filename)
+		{
+			index = i;
+			m_vecTextures[i]->AddRef();
+			break;
+		}
+	}
+	if (index == -1)
+	{
+		DexTexture* tex = DexGameEngine::getEngine()->GetTextureManager()->FindTexure(filename);
+		if (tex != DexNull)
+			tex->AddRef();
+		else
+			tex = DexGameEngine::getEngine()->GetTextureManager()->CreateTexture(filename);
+		m_vecTextures.push_back(tex);
+		index = m_vecTextures.size()-1;
+	}
+	return index;
+}
+
+int32 DexSkinMesh::AddMaterial(const DexMaterial& material)
+{
+	int32 index = -1;
+	for (size_t i = 0; i < m_vecMaterials.size(); ++i)
+	{
+		if (dexstrcmp(material.name, m_vecMaterials[i].name) == 0)
+		{
+			index = i;
+			break;
+		}
+	}
+	if (index == -1)
+	{
+		m_vecMaterials.push_back(material);
+		index = m_vecMaterials.size()-1;
+	}
+	return index;
+}
+
+int32 DexSkinMesh::FindMaterial(DString materialName)
+{
+	int32 index = -1;
+	for (size_t i = 0; i < m_vecMaterials.size(); ++i)
+	{
+		if (dexstrcmp(materialName.c_str(), m_vecMaterials[i].name) == 0)
+		{
+			index = i;
+			break;
+		}
+	}
+	return index;
 }
 
 void DexSkinMesh::AddVertex(const DexVector3& pos)

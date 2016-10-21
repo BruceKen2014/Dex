@@ -459,6 +459,21 @@
     <ClInclude Include="DexBase\IDexDeviceWindows.h">
       <Filter>DexBase</Filter>
     </ClInclude>
+    <ClInclude Include="DexModel\DexModelSkinMeshLoader.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexTextureManager.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexList.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexTextureDx9.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexTextureNull.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
@@ -819,6 +834,18 @@
       <Filter>DexBase</Filter>
     </ClCompile>
     <ClCompile Include="DexBase\IDexDeviceWindows.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexModelSkinMeshLoader.cpp">
+      <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexTextureManager.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexTextureDx9.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexTextureNull.cpp">
       <Filter>DexBase</Filter>
     </ClCompile>
   </ItemGroup>

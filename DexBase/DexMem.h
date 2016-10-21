@@ -62,16 +62,21 @@ public:
 	template<typename T>
 	void Write(const T& _In)
 	{
-		memcpy(&m_data[m_curr], &_In, sizeof(T));
-		m_length += sizeof(T);
-		m_curr += sizeof(T);
+		size_t Tsize = sizeof(T);
+		memcpy(&m_data[m_curr], &_In, Tsize);
+		m_length += Tsize;
+		m_curr += Tsize;
 	}
+	void Write(void* _In, int length);
 	template<typename T>
 	void Read(T& _Out)
 	{
-		memcpy((void*)&_Out, &m_data[m_curr], sizeof(T));
-		m_curr += sizeof(T);
+		size_t Tsize = sizeof(T);
+		memcpy((void*)&_Out, &m_data[m_curr], Tsize);
+		m_curr += Tsize;
 	}
+	void Read(void* _Out, int length);
+	void ReadLine(char* _Out);//从data读取一行数据到_Out中，遇见换行停止
 	template<typename T>
 	friend DexMem& operator << (DexMem& mem, const T& _In)
 	{

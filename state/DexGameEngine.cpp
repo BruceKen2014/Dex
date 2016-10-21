@@ -20,9 +20,11 @@
 #include "../DexModel/DexModelObjLoader.h"
 #include "../DexModel/DexModelDaeLoader.h"
 #include "../DexModel/DexModelMwsLoader.h"
+#include "../DexModel/DexModelSkinMeshLoader.h"
 #include "../DexModel/DexSkinMesh.h"
 #include "../Source/CTexture.h"
 #include "../DexBase/DexDeviceOpenGLWindows.h"
+#include "../DexBase/DexTextureManager.h"
 
 /*目前的DexGameEngine特指windows engine，如果日后要在别的平台上开发，需要将engine抽象为基类
 实现windows派生类，然后再实现对应平台的派生类*/
@@ -69,6 +71,13 @@ DexGameEngine::DexGameEngine()
 	g_material.Emissive = D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f);
 	g_material.Power = 0;
 	m_RenderMode = DexRenderMode_TRIANGLE;
+	m_pRender = DexNull;
+	vecModelLoader.push_back(new DexModelMs3dLoader);
+	vecModelLoader.push_back(new DexModelObjLoader);
+	vecModelLoader.push_back(new DexModelDaeLoader);
+	vecModelLoader.push_back(new DexModelMwsLoader);
+	vecModelLoader.push_back(new DexModelSkinMeshLoader);
+	g_TextureManager = DexTextureManager::GetManager();
 }
 DexGameEngine::~DexGameEngine()
 {
@@ -185,10 +194,6 @@ bool DexGameEngine::Initialize(int flag)
 		CInputSystem::GetInputSingleton();
 		CDexObjectFactroy::getObjectFactory();
 		CDexScene::RegisterLuaFunction(L);
-		vecModelLoader.push_back(new DexModelMs3dLoader);
-		vecModelLoader.push_back(new DexModelObjLoader);
-		vecModelLoader.push_back(new DexModelDaeLoader);
-		vecModelLoader.push_back(new DexModelMwsLoader);
 
 		m_pRender = new DexRenderDirectX9();
 		m_pRender->InitShader();
@@ -201,7 +206,8 @@ bool DexGameEngine::Initialize(int flag)
 	{
 		CreateDevice(DexDeviceOpenGLWindows::getClassType());
 	}
-	g_pDevice->SetRenderState(DEXRENDERSTATE_LIGHTING, FALSE);
+	g_pDevice->SetRenderState(DEXRENDERSTATE_LIGHTING, FALSE); 
+	g_TextureManager = DexTextureManager::GetManager();
 	return true;
 }
 
@@ -491,6 +497,22 @@ DexModelBase* DexGameEngine::CreateModel(const char* filename, int flag)
 	}
 	return ret;
 }
+
+bool DexGameEngine::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int flag/* =0 */)
+{
+	bool ret = false;
+	const char* suffix = dexstrchr(filename, '.');
+	for (uint32 i = 0; i < vecModelLoader.size(); ++i)
+	{
+		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(suffix))
+		{
+			ret = vecModelLoader[i]->SaveModel(pSkinMesh, filename, flag);
+			break;
+		}
+	}
+	return ret;
+}
+
 
 bool DexGameEngine::ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, const char* filename)
 {
@@ -1054,4 +1076,9 @@ void DexGameEngine::setDexVertexDecl(IDexVertexDecl* decl)
 	DEX_ENSURE(decl);
 	//ifdef dx9
 	g_D3DDevice->SetVertexDeclaration(((DexVertexDeclDx9*)decl)->m_pDecl);
+}
+
+DexTextureManager* DexGameEngine::GetTextureManager()
+{
+	return g_TextureManager;
 }

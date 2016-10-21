@@ -23,6 +23,7 @@ void DexMem::BeginWrite()
 {
 	memset(m_data, 0, sizeof(char)*MAX_BUFF);
 	m_curr = 0;
+	m_length = 0;
 }
 void DexMem::BeginRead()
 {
@@ -31,7 +32,7 @@ void DexMem::BeginRead()
 
 bool DexMem::End()
 {
-	return m_curr == m_length;
+	return m_curr >= m_length;
 }
 void DexMem::IniFromBuff(char* buff, int length)
 {
@@ -100,7 +101,7 @@ void DexMem::SaveToFile(const char* filename)
 {
 	BeginRead();
 	FILE* hFile = NULL;
-	hFile = fopen(filename, "w+");
+	hFile = fopen(filename, "wb");
 	if(hFile == NULL)
 	{
 		return;
@@ -116,6 +117,32 @@ void DexMem::AddBuffToEnd(char* buff, int length)
 	m_length += length;
 	m_curr += length;
 	//cout<<"×·¼ÓÍê³É!"<<endl;
+}
+
+void DexMem::Write(void* _In, int length)
+{
+	memcpy(&m_data[m_curr], _In, length);
+	m_length += length;
+	m_curr += length;
+}
+void DexMem::Read(void* _Out, int length)
+{
+	memcpy(_Out, &m_data[m_curr], length);
+	m_curr += length;
+}
+void DexMem::ReadLine(char* _Out)
+{
+	while (m_curr <= m_length)
+	{
+		if (m_data[m_curr] != '\n')
+			*_Out++ = m_data[m_curr++];
+		else
+		{
+			m_curr++;
+			break;
+		}
+	}
+	*_Out = '\0';
 }
 void DexMem::WriteToBuff(char* buff)
 {

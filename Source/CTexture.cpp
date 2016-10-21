@@ -12,7 +12,7 @@ CDexTex::CDexTex()
 }
 CDexTex::~CDexTex()
 {
-	_SafeRelease(m_tex);
+	
 }
 
 bool CDexTex::LoadTex(string filename, const DexColor& transcolor)
@@ -39,6 +39,11 @@ std::string CDexTex::FileName()
 	if(out.size() == 0)
 		return "";
 	return out[out.size() - 1];
+}
+
+void CDexTex::ShutDown()
+{
+	_SafeRelease(m_tex);
 }
 
 CTexture::CTexture()
