@@ -9,6 +9,7 @@
 #include "../DexMath/DexQuaternion.h"
 #include "DexSkinMeshFF.h"
 #include "../DexBase/DexMemoryLeakCheck.h"
+#include "../DexBase/DexStreamFile.h"
 
 
 
@@ -2723,6 +2724,7 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 									DexSkinMesh::stMeshVertex newVertex;
 									if (pSourcePos != nullptr)
 										if (m_bFFXIIModel)
+											//FF12的dae模型，本身太小，正好是mws模型的1/60，而所有的act文件里面的骨骼信息都是根据mws设置的，所以这里得放大60倍
 											newVertex.pos.Set(pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3] * 60, pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 1] * 60,
 											pSourcePos->pFloatArrayValues[index.m_iPosIndex * 3 + 2] * 60);
 										else
@@ -2782,7 +2784,7 @@ void DexModelDaeLoader::add_joints(DexSkinMesh* pSkinMesh, DaeNode* pNode, DaeNo
 			if (m_bFFXIIModel)
 			{//右手坐标系转为左手坐标系
 				pJoint->meshMatrix.ConvertHandMatrix();
-				DexMatrix4x4 matrix; matrix.Scale(DexVector3(60,60,60));
+				DexMatrix4x4 matrix; matrix.Scale(DexVector3(60,60,60));//FF12的模型很小，骨骼也很小，需要放大60倍
 				pJoint->meshMatrix *= matrix;
 				pJoint->localMeshMatrixInvert = pJoint->meshMatrix.GetInvert();
 			}
@@ -2922,17 +2924,19 @@ DexModelBase* DexModelDaeLoader::LoadModel(const char* filename, int32 flag)
 	//静态模型下面有instance_geometry,动态模型下面有instance_controller
 	//无论instance_geometry还是instantce_controller都会引用一个geometry,一个geometry就是一个skinmesh的mesh数据
 	//geometry里面有多组triangles或者polylist等，每一组都对应一个材质，也就是DexMesh
-	getLog()->LogLine(log_ok, "load dae model %s...\n", filename);
 	int64 Time = getTime()->GetTotalMillSeconds();
-	TiXmlDocument Xml(filename);
-	Xml.LoadFile();
-	DexSkinMesh* pSkinMesh = nullptr;
-	TiXmlNode* pXmlNode = Xml.FirstChild();
-	if (Xml.Error())
+	bool ret = false;
+	DexMem mem(filename);
+	DEX_ENSURE_P(mem.GetLength() != 0);
+	TiXmlDocument Xml;
+	if (Xml.Parse((char*)mem.GetData()) == 0)
 	{
 		getLog()->LogLine(log_error, "open dae model error!:%s", Xml.ErrorDesc());
+		return DexNull;
 	}
-	else if (pXmlNode->Type() == TiXmlNode::TINYXML_DECLARATION)
+	DexSkinMesh* pSkinMesh = nullptr;
+	TiXmlNode* pXmlNode = Xml.FirstChild();
+	if (pXmlNode->Type() == TiXmlNode::TINYXML_DECLARATION)
 	{
 		pXmlNode = pXmlNode->NextSibling();
 		if (pXmlNode->Type() != TiXmlNode::TINYXML_ELEMENT)
@@ -3071,12 +3075,8 @@ bool DexModelDaeLoader::ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString fi
 	DEX_ENSURE_B(pDexSkinMesh != nullptr && pDexSkinMesh->getType() == DexSkinMeshFF::getClassType());
 
 	DexSkinMeshFF* pSkinMeshFF = (DexSkinMeshFF*)pDexSkinMesh;
-	FILE* pFile = fopen(filename.c_str(), "rb");
-	if (pFile == NULL)
-	{
-		getLog()->LogLine(log_error, "		load %s failed!", filename.c_str());
-		return false;
-	}
+	DexMem mem;
+	DEX_ENSURE_B(mem.IniFromFile(filename.c_str()));
 
 	DexSkinMesh::Joint* pFatherJoint = nullptr;
 	DexSkinMesh::Joint* pJoint = nullptr;
@@ -3087,9 +3087,9 @@ bool DexModelDaeLoader::ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString fi
 	DVector<DString> values;
 	
 	bool bReadSkeletonInfo = false;
-	while (!feof(pFile))
+	while (!mem.End())
 	{
-		fgets(tempData, iMaxLineByte, pFile);
+		mem.ReadLine(tempData);
 		if (bReadSkeletonInfo)
 		{
 			if (tempData[0] == '\r' || tempData[0] == '\n')
@@ -3147,7 +3147,6 @@ bool DexModelDaeLoader::ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString fi
 			bReadSkeletonInfo = true;
 		}
 	}
-	fclose(pFile);
 	return true;
 }
 
@@ -3155,35 +3154,31 @@ bool DexModelDaeLoader::ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, DString sFile
 {
 	DEX_ENSURE_B(pDexSkinMesh != nullptr && pDexSkinMesh->getType() == DexSkinMeshFF::getClassType());
 	DexSkinMeshFF* pSkinMeshFF = (DexSkinMeshFF*)pDexSkinMesh;
+
+	DexMem mem;
+	DEX_ENSURE_B(mem.IniFromFile(sFileName.c_str()));
 	//将之前的动画信息清除
 	for (size_t i = 0; i < pSkinMeshFF->m_vecMwsJoints.size(); ++i)
 		pSkinMeshFF->m_vecMwsJoints[i]->m_vecKeyFrames.clear();
 
-	FILE* pFile = fopen(sFileName.c_str(), "rb");
-	if (pFile == NULL)
-	{
-		getLog()->LogLine(log_error, "		load %s failed!", sFileName.c_str());
-		return false;
-	}
-
 	DexSkinMesh::Joint* pJoint = nullptr;
 	const int16  iMaxLineByte = 256;
 	const int16  iMaxJointNameByte = 64;
-	const int16  iFps = 1000/30; //每秒60帧
+	const int16  iFps = 1000 / 30; //每秒60帧
 	int16        iFrames = 0;//该动画有多少帧
 	char tempData[iMaxLineByte];
 	char jointName[iMaxJointNameByte];
 	DexVector3 oldTranslate;
 	DexVector3 oldRotation;
 	DVector<DString> values;
-	while (!feof(pFile))
+	while (!mem.End())
 	{
-		fgets(tempData, iMaxLineByte, pFile);
+		mem.ReadLine(tempData);
 		if (pJoint != nullptr)
 		{
 			values.clear();
 			SplitStr(tempData, ',', values);
-			if (tempData[0] == '\r' || tempData[0] == '\n')
+			if (strlen(tempData) == 0)
 			{
 				pJoint = nullptr;
 				continue;
@@ -3261,8 +3256,7 @@ bool DexModelDaeLoader::ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, DString sFile
 		}
 
 	}
-	pDexSkinMesh->SetMaxAniTime((iFrames-1) * iFps);
-	fclose(pFile);
+	pDexSkinMesh->SetMaxAniTime((iFrames - 1) * iFps);
 	return true;
 }
 

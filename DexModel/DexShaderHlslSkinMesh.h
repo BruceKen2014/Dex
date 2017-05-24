@@ -21,6 +21,7 @@ protected:
 	D3DXHANDLE	 m_handleDirectionLightData;
 	D3DXHANDLE   m_handleAmbientColor;
 	D3DXHANDLE   m_handleMaterial;
+	D3DXHANDLE   m_handleFogEnable;
 public:
 	DexShaderHlslSkinMesh();
 	virtual ~DexShaderHlslSkinMesh();

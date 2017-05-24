@@ -7,7 +7,7 @@
 #ifndef _CFILE_H
 #define _CFILE_H
 
-#include "typedefine.h"
+#include "DexType.h"
 
 class CFile
 {

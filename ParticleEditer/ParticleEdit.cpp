@@ -12,6 +12,7 @@
 #include "ParticleEditState.h"
 #include "PalStateBattleMain.h"
 #include "PalOpenglTestScene.h"
+#include "../DexBase/DexStreamFile.h"
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -29,6 +30,20 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			getDesktop()->OnKeyChar(char(wParam));
 			break;
 		}
+	case WM_DROPFILES:
+	{
+		HDROP hDrop = (HDROP)wParam;
+		uint32 nFileNum = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+		char strFileName[128];
+		DVector<DString> FileNames;
+		for (uint32 i = 0; i < nFileNum; ++i)
+		{
+			DragQueryFile(hDrop, i, strFileName, 128);
+			FileNames.push_back(strFileName);
+		}
+		DragFinish(hDrop);
+		DexGameEngine::getEngine()->OnDragFiles(FileNames);
+	}
 	case WM_IME_SETCONTEXT:
 		{
 			int i = 0;
@@ -50,6 +65,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevhInst, LPSTR cmdLine, int show
 
 	int testDevice = 0; 
 	DexGameEngine::getEngine()->Initialize(testDevice);
+	DexStreamFile::sGetStreamFile()->AddBigFile("data.pak");
 	if (testDevice == 0)
 	{//dx9
 		CDexUiTexFactory::AddFilePath("res/");

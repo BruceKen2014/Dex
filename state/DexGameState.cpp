@@ -47,6 +47,12 @@ void DexGameState::KeyDown()
 {
 
 }
+
+void DexGameState::OnDragFiles(const DVector<DString>& FileNames)
+{
+
+}
+
 //==========================================================================
 #include "DexGameEngine.h"
 #include "../DexBase/CDexDraw2D.h"

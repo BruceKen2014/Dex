@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dex", "OrthoMatrix.vcxproj", "{C3A28F43-DC23-49A3-975D-533F904F3E3C}"
 EndProject
@@ -9,6 +9,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ParticleEditer", "ParticleEditer\ParticleEditer.vcxproj", "{6EBA8A61-7EE7-48A4-B02E-FB7B4DFCFC9D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MeshConvert", "MeshConvert\MeshConvert.vcxproj", "{306BFA1C-BD04-4AFE-AE21-ACFD7EC7D20B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DexBigFilePacker", "DexBigFilePacker\DexBigFilePacker.vcxproj", "{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,7 +36,6 @@ Global
 		{B81899B5-8777-4BD2-BDB8-17D27D06D00F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{B81899B5-8777-4BD2-BDB8-17D27D06D00F}.Debug|Win32.Build.0 = Debug|Win32
 		{B81899B5-8777-4BD2-BDB8-17D27D06D00F}.DebugLib|Win32.ActiveCfg = Debug|Win32
-		{B81899B5-8777-4BD2-BDB8-17D27D06D00F}.DebugLib|Win32.Build.0 = Debug|Win32
 		{B81899B5-8777-4BD2-BDB8-17D27D06D00F}.Release|Win32.ActiveCfg = Release|Win32
 		{B81899B5-8777-4BD2-BDB8-17D27D06D00F}.Release|Win32.Build.0 = Release|Win32
 		{B81899B5-8777-4BD2-BDB8-17D27D06D00F}.ReleaseLib|Win32.ActiveCfg = Release|Win32
@@ -59,6 +60,16 @@ Global
 		{306BFA1C-BD04-4AFE-AE21-ACFD7EC7D20B}.Release|Win32.Build.0 = Release|Win32
 		{306BFA1C-BD04-4AFE-AE21-ACFD7EC7D20B}.ReleaseLib|Win32.ActiveCfg = Release|Win32
 		{306BFA1C-BD04-4AFE-AE21-ACFD7EC7D20B}.ReleaseLib|Win32.Build.0 = Release|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.111|Win32.ActiveCfg = Release|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.111|Win32.Build.0 = Release|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.Debug|Win32.Build.0 = Debug|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.DebugLib|Win32.ActiveCfg = Debug|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.DebugLib|Win32.Build.0 = Debug|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.Release|Win32.ActiveCfg = Release|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.Release|Win32.Build.0 = Release|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.ReleaseLib|Win32.ActiveCfg = Release|Win32
+		{430499BB-A774-46D9-A7BF-9E3D4DC8FABE}.ReleaseLib|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

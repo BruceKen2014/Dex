@@ -9,6 +9,7 @@ class DexSkinMeshFF : public DexSkinMesh
 	Dex_DeclareClass(DexSkinMeshFF, 0)
 		
 	friend class DexModelDaeLoader;
+	friend class DexModelAniFileFF12ActLoader;
 public:
 	DexSkinMeshFF();
 	virtual ~DexSkinMeshFF();

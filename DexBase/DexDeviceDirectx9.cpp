@@ -14,7 +14,8 @@ DexDeviceDirectx9::DexDeviceDirectx9() :IDexDeviceWindows()
 
 DexDeviceDirectx9::~DexDeviceDirectx9()
 {
-
+	g_D3DDevice->Release();
+	g_D3D->Release();
 }
 
 bool DexDeviceDirectx9::InitDevice(bool bFullScreen, int16 iWindowWidth, int16 iWindowHeight, void* param1, void* param2)
@@ -36,6 +37,7 @@ bool DexDeviceDirectx9::InitDevice(bool bFullScreen, int16 iWindowWidth, int16 i
 	g_hwnd = CreateWindow("Pal", "windowname", style,
 		100, 100, iWindowWidth, iWindowHeight, NULL,
 		NULL, wc.hInstance, NULL);
+	DragAcceptFiles(g_hwnd, true);//accept drag files
 	g_D3D = Direct3DCreate9(D3D_SDK_VERSION);
 	if (g_D3D == DexNull)
 		return false;

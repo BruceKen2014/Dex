@@ -6,10 +6,8 @@ Dex引擎对自定义结构进行序列化
 #ifndef _DEX_MEM_H
 #define _DEX_MEM_H
 #include <string>
+#include "DexType.h"
 
-
-//默认提供的内存大小为10M
-#define  MAX_BUFF (10 * 1024*1024)
 class DexMem
 {
 public:
@@ -19,13 +17,17 @@ public:
 		MEM_WRITE = 1
 	};
 protected:
-	bool    m_mode; //0:读入数据 1：输出数据
+	bool    m_mode;    //0:读入数据 1：输出数据
+	bool    m_bMemory; //true:DexMem自己申请内存 自己释放 false:内存来源于外部，DexMem只负责中间处理
 	char*   m_data;
-	size_t     m_length;
-	size_t     m_curr;
+	uint64  m_iMemorySize; //内存空间大小
+	uint64  m_length;   //内存实际使用的空间大小，如申请了一块10M的内存，但只向这个内存写入了1M的数据，
+	                      //则m_iMemorySize= 10M，m_length= 1M
+	uint64  m_curr;     //内存指针位置，用于读写时的定位
 
 public:
 	DexMem();
+	DexMem(const char* fileName);
 	~DexMem();
 	void Reset();
 public:
@@ -40,15 +42,15 @@ public:
 	//friend DexMem& operator >> (short args);
 	//friend DexMem& operator >> (char args);
 	//friend DexMem& operator >> (string args);
-	char* GetData()		{return m_data;}
+	void SetMemoryFlag(bool selfMemory = true, uint32 size = 0, void* buffer = DexNull);
+	void* GetData()		{return m_data;}
 	void  GetData(int offset, int size, DexMem& _out); //从指定偏移处取出指定长度的数据到_out中
 	int   GetLength()	{return (int)m_length;}
 	void BeginWrite();
 	void BeginRead();
 	bool End();
-	void IniFromBuff(char* buff, int length);
+	void IniFromBuff(char* buff, int length, bool bSelfMemory=true);
 	bool IniFromFile(const char* filename); //加载整个文件
-	bool IniFromFile(const char* filename, int offset, int size); //加载一个文件中的部分数据
 	void SaveToFile(const char* filename);
 	void AddBuffToEnd(char* buff, int length); //追加buff内容
 	void WriteToBuff(char* buff);	

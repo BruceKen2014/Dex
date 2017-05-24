@@ -359,7 +359,10 @@ void DexSkinMesh::Init()
 	m_fJointScale = 1.0f;
 	InitShader();
 
+#ifdef _DEBUG
 	iHideMeshIndex = -1;
+	iOnlyShowIndex = -1;
+#endif
 
 }
 void DexSkinMesh::InitShader()
@@ -1257,6 +1260,17 @@ void DexSkinMesh::SetJointScale(float32 fScale)
 	m_fJointScale = fScale;
 }
 
+void DexSkinMesh::SetOrderInfo(const DVector<int32>& vector)
+{
+	uint32 size = m_vecMeshs.size();
+	DEX_ENSURE(size == vector.size());//二者必須相等
+	DVector<DexMesh*> tempVecMeshs;
+	for (size_t i = 0; i < size; ++i)
+	{
+		tempVecMeshs.push_back(m_vecMeshs[vector[i]]);
+	}
+	m_vecMeshs.swap(tempVecMeshs);
+}
 bool DexSkinMesh::FindVertex(const DexVector3& pos)
 {
 	return false;

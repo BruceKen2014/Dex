@@ -3,6 +3,8 @@
 #define _DEXGAMESTATE_H
 
 #include "../DexBase/CDexObject.h"
+#include "../DexBase/DexDVector.h"
+#include "../DexBase/DexString.h"
 class DexGlobal
 {
 
@@ -39,9 +41,11 @@ public:
 	virtual void  MouseRUp(int xPos, int yPos);
 	virtual void  KeyUp();
 	virtual void  KeyDown();
+	virtual void OnDragFiles(const DVector<DString>& FileNames);
 	CDexScene* getStateScene(){ return m_pScene;} ;
 	void SetApply(bool apply) { m_bApply = apply;}
 	bool NeedApply()		  { return !m_bApply;}
+	
 };
 
 class DexGameStateLoading: public DexGameState

@@ -237,7 +237,7 @@ bool PalGameStateBattleMain::ApplyRes()
 	panel->setVisible(false);
 	m_mapBattlePanels[panel->getType()] = panel;
 	Test_AddJingtian();
-	Test_AddEnemy1();
+	//Test_AddEnemy1();
 	DexGameEngine::getEngine()->GetDevice()->CreateTexture(128,128,1,D3DUSAGE_RENDERTARGET,D3DFMT_A8R8G8B8, 
 		D3DPOOL_DEFAULT, & m_testTexture, NULL);
 	m_testTexture->GetSurfaceLevel(0, &m_testSurface);
@@ -250,14 +250,18 @@ bool PalGameStateBattleMain::ApplyRes()
 	g_pImageBackgroud->SetPos(200,200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
 	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event); 
-	mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/ald0100_sky.dexmodel");//mws
+	mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/alc0101_sky.mws");//mws dexmodel
 	//mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/alc1002_kabe.mws");
-	mwsModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
+	mwsModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT | DEXRENDER_ENABLE_FOG);
 	mwsModel->SetRenderFlag(//SKINMESH_RENDER_JOINT | SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
 		SKINMESH_RENDER_MESH);
 	mwsModel->SetAmbientColor(DexColor(255, 255, 255));
 	//mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/mws/c1004.mws");
-	
+	daeWeaponModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/weapon/w0001.dexmodel", 1);//xml
+	daeWeaponModel->SetRenderFlag(SKINMESH_RENDER_JOINT | SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
+		SKINMESH_RENDER_MESH);
+	daeWeaponModel->SetAmbientColor(DexColor(200, 200, 200));
+	daeWeaponModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/Old Book/Book.dae");
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/mickey/Mickey_Mouse.dae",0);
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/ArmyPilot/ArmyPilot2.dae");
@@ -267,115 +271,41 @@ bool PalGameStateBattleMain::ApplyRes()
 	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/f0011/mws/f0011_a.act");
 	*/
 	
-	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/mws/c1004.dexmodel",1);//xml
-	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/c1004/mws/c1004.mws");
-	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/c1004/mws/walk.act");
+	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/c1004.dexmodel",1);//xml
+	//DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/c1004/c1004.mws");
+	//DexGameEngine::getEngine()->ReadModelAnimation(daeModel, "model/dae/c1004/act/mgc_4.act");
 	
-	/*
-	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/m1014/mws/m1014.dae", 1);
-	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/m1014/mws/m1014.mws");
-	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/m1014/mws/idle0.act");
-	*/
+	
+	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/monster/m1019/m1019.dexmodel", 1);
+	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/monster/m1019/m1019.mws");
+	DexGameEngine::getEngine()->ReadModelAnimation(daeModel, "model/dae/monster/m1019/act/atk_m_1.act");
+	
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/weapon/mws/w0002.xml", 1);
 	daeModel->SetJointScale(0.01f);
 	//daeModel->SetAnimateType(SkinMeshAnimateType_Loop_Back);
-	daeModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT| DEXRENDER_LIGHT_POINT);
+	daeModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);// | DEXRENDER_ENABLE_FOG);
 	daeModel->SetRenderFlag(SKINMESH_RENDER_JOINT |SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
 		SKINMESH_RENDER_MESH );
 	daeModel->SetAmbientColor(DexColor(200, 200, 200));
-	
+	int32 order[24] = { 0, 1, 2, 9, 23, 12, 13, 17, 14, 21, 22, 20, 11, 15, 16, 19, 18, 3, 4, 5, 6, 7, 8, 10 };
+	DVector<int32> tempOrder(order, order + sizeof(order)/sizeof(order[0]));
+	//daeModel->SetOrderInfo(tempOrder);
 	
 	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/obj/RYU.dexmodel");//obj
-	objModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
+	objModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT | DEXRENDER_ENABLE_FOG);
 	objModel->SetRenderFlag(SKINMESH_RENDER_MESH);
 	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/ms3d/Model.ms3d"); //ms3d
 	ms3d->SetAnimateType(SkinMeshAnimateType_Loop);
 	ms3d->SetAnimateRatio(1.0f);
-	ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
-	ms3d->SetLightFlag(DEXRENDER_LIGHT_ALL_ON);
+	ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS );
+	ms3d->SetLightFlag(DEXRENDER_LIGHT_ALL_ON | DEXRENDER_ENABLE_FOG);
 	DexMatrix4x4 world_matrix; 
 
-	testMesh = new DexSkinMesh(2000); 
-	testMesh->SetAnimateTime(0, 2000);
-	testMesh->SetLightFlag(true);
-	DexMatrix4x4 temp_matrix;	temp_matrix.Identity();
-	temp_matrix.SetPosition(0, 0, 0); testMesh->AddJoint(1, -1, temp_matrix);
-	testMesh->AddJointKeyFrameTrans(1, 0, DexVector3(0.0f, 0.0f, 0.0f));
-	testMesh->AddJointKeyFrameRotation(1, 1000, DexVector3(0.0f, 0.0f, 1.0f), _getRadian(-90.0f));
-	testMesh->AddJointKeyFrameTrans(1, 2000, DexVector3(0.0f, 0.0f, 0.0f));
+	groundModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dexmodel/ground.dexmodeltext");//dexmodeltext
 
-	temp_matrix.SetPosition(100, 0, 0); testMesh->AddJoint(2, 1, temp_matrix);
-	testMesh->AddJointKeyFrame(2, 0, DexVector3(100.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	testMesh->AddJointKeyFrame(2, 1000, DexVector3(100.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(1.0f, 0.0f, 0.0f), _getRadian(90.0f));
-	testMesh->AddJointKeyFrame(2, 2000, DexVector3(100.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(1.0f, 0.0f, 0.0f), _getRadian(0.0f));
+	testMesh = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dexmodel/cube.dexmodeltext");//dexmodeltext 
+	DexGameEngine::getEngine()->ReadModelAnimation(testMesh, "model/dexmodel/cube.dexact");
 
-	temp_matrix.SetPosition(0, 0, 20); testMesh->AddJoint(3, 2, temp_matrix);
-	testMesh->AddJointKeyFrame(3, 0, DexVector3(0.0f, 0.0f, 20.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	testMesh->AddJointKeyFrame(3, 1000, DexVector3(0.0f, 0.0f, 20.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	testMesh->AddJointKeyFrame(3, 2000, DexVector3(0.0f, 0.0f, 20.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-
-	temp_matrix.SetPosition(20, 0, 0); testMesh->AddJoint(4, 2, temp_matrix);
-	testMesh->AddJointKeyFrame(4, 0,    DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	testMesh->AddJointKeyFrame(4, 1000, DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	testMesh->AddJointKeyFrame(4, 2000, DexVector3(20.0f, 0.0f, 0.0f), DexVector3(1.0f, 1.0f, 1.0f), DexVector3(0.0f, 1.0f, 0.0f), 0.0f);
-	testMesh->AddTexture("res/lingsha.bmp");
-	DexMaterial material1;
-	dexstrcpy(material1.name, "material1");
-	material1.diffuse = DexColor(1.0f, 1.0f, 1.0f);
-	material1.ambient = DexColor(0.0f, 0.0f, 0.0f);
-	material1.emissive = DexColor(0.0f, 0.0f, 0.0f);
-	material1.specular = DexColor(0.0f, 0.0f, 0.0f);
-	testMesh->AddMaterial(material1);
-	testMesh->AddTexture("res/jingjing.png");
-	DexMaterial material2;
-	dexstrcpy(material2.name, "material2");
-	material2.diffuse = DexColor(1.0f, 1.0f, 1.0f);
-	material2.ambient = DexColor(0.0f, 0.0f, 0.0f);
-	material2.emissive = DexColor(0.0f, 0.0f, 0.0f);
-	material2.specular = DexColor(0.0f, 0.0f, 0.0f);
-	testMesh->AddMaterial(material2);
-	DexSkinMesh::DexMesh* mesh1 = testMesh->AddMesh(1);
-	DexSkinMesh::DexMesh* mesh2 = testMesh->AddMesh(2);
-	int16 arrJointId[2] = {0,0};
-	float arrJointWeight[2] = {0.0f, 0.0f};
-	arrJointId[0] = 4; arrJointWeight[0] = 1.0f;
-	testMesh->AddVertex(1, DexVector3(30.0f, 0, -30.0f), DexVector3(1.0f, -1.0f, -1.0f).Normalize(), DexVector2(0.33f, 1.0f), arrJointId, arrJointWeight, 1);
-	arrJointId[0] = 4; arrJointWeight[0] = 1.0f;
-	testMesh->AddVertex(1, DexVector3(30.0f, 0, 30.0f), DexVector3(1.0f, -1.0f, 1.0f).Normalize(), DexVector2(0.66f, 1.0f), arrJointId, arrJointWeight, 1);
-	arrJointId[0] = 4; arrJointWeight[0] = 0.5f; arrJointId[1] = 3; arrJointWeight[1] = 0.5f;
-	testMesh->AddVertex(1, DexVector3(-30.0f, 0, 30.0f), DexVector3(-1.0f, -1.0f, 1.0f).Normalize(), DexVector2(0.99f, 1.0f), arrJointId, arrJointWeight, 2);
-	arrJointId[0] = 4; arrJointWeight[0] = 0.5f; arrJointId[1] = 3; arrJointWeight[1] = 0.5f;
-	testMesh->AddVertex(1, DexVector3(-30.0f, 0, -30.0f), DexVector3(-1.0f, -1.0f, -1.0f).Normalize(), DexVector2(0.0f, 1.0f), arrJointId, arrJointWeight, 2);
-	arrJointId[0] = 4; arrJointWeight[0] = 1.0f;
-	testMesh->AddVertex(1, DexVector3(30.0f, 60, -30.0f), DexVector3(1.0f, 1.0f, -1.0f).Normalize(), DexVector2(0.33f, 0.0f), arrJointId, arrJointWeight, 1);
-	arrJointId[0] = 4; arrJointWeight[0] = 1.0f;
-	testMesh->AddVertex(1, DexVector3(30.0f, 60, 30.0f), DexVector3(1.0f, 1.0f, -1.0f).Normalize(), DexVector2(0.33f, 0.0f), arrJointId, arrJointWeight, 1);
-	arrJointId[0] = 3; arrJointWeight[0] = 1.0f;
-	testMesh->AddVertex(1, DexVector3(-30.0f, 60, 30.0f), DexVector3(-1.0f, 1.0f, 1.0f).Normalize(), DexVector2(0.99f, 0.0f), arrJointId, arrJointWeight, 1);
-	arrJointId[0] = 3; arrJointWeight[0] = 1.0f;
-	testMesh->AddVertex(1, DexVector3(-30.0f, 60, -30.0f), DexVector3(-1.0f, 1.0f, -1.0f).Normalize(), DexVector2(0.0f, 0.0f), arrJointId, arrJointWeight, 1);
-	
-	mesh1->m_iMaterialId = mesh1->m_iTextureId = 0;
-	int32 indices1[] = { 0, 4, 1, 1, 4, 5, 2, 6, 3, 6, 7, 3, 0, 3, 4, 3, 7, 4, 1, 5, 2, 2, 5, 6 };
-	testMesh->SetMeshIndices(1, indices1, sizeof(indices1) / sizeof(int32));
-	//mesh2 vertex
-	
-	mesh2->m_iMaterialId = mesh2->m_iTextureId = 1;
-	int32 indices2[] = { 0, 1, 3, 3, 1, 2, 4, 7, 5, 7, 6, 5 };
-	testMesh->SetMeshIndices(2, indices2, sizeof(indices2) / sizeof(int32));
-	
-	testMesh->AddVertex(2, DexVector3(30.0f, 0, -30.0f), DexVector3(1.0f, -1.0f, -1.0f).Normalize(), DexVector2(1.0f, 0.0f), arrJointId, arrJointWeight, 1);
-	testMesh->AddVertex(2, DexVector3(30.0f, 0, 30.0f), DexVector3(1.0f, -1.0f, 1.0f).Normalize(), DexVector2(1.0f, 1.0f), arrJointId, arrJointWeight, 1);
-	testMesh->AddVertex(2, DexVector3(-30.0f, 0, 30.0f), DexVector3(-1.0f, -1.0f, 1.0f).Normalize(), DexVector2(0.0f, 1.0f), arrJointId, arrJointWeight, 1);
-	testMesh->AddVertex(2, DexVector3(-30.0f, 0, -30.0f), DexVector3(-1.0f, -1.0f, -1.0f).Normalize(), DexVector2(0.0f, 0.0f), arrJointId, arrJointWeight, 1);
-	testMesh->AddVertex(2, DexVector3(30.0f, 60, -30.0f), DexVector3(1.0f, 1.0f, -1.0f).Normalize(), DexVector2(1.0f, 0.0f), arrJointId, arrJointWeight, 1);
-	testMesh->AddVertex(2, DexVector3(30.0f, 60, 30.0f), DexVector3(1.0f, 1.0f, 1.0f).Normalize(), DexVector2(1.0f, 1.0f), arrJointId, arrJointWeight, 1);
-	testMesh->AddVertex(2, DexVector3(-30.0f, 60, 30.0f), DexVector3(-1.0f, 1.0f, 1.0f).Normalize(), DexVector2(0.0f, 1.0f), arrJointId, arrJointWeight, 1);
-	testMesh->AddVertex(2, DexVector3(-30.0f, 60, -30.0f), DexVector3(-1.0f, 1.0f, -1.0f).Normalize(), DexVector2(0.0f, 0.0f), arrJointId, arrJointWeight, 1);
-
-	testMesh->CalculateVertex();
-	testMesh->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
-	testMesh->SetLightFlag(DEXRENDER_LIGHT_ALL_ON);
 	light.type = DexLight::DexLight_POINT;
 	light.id = 1;
 	light.attenuation0 = 1.0f;
@@ -403,16 +333,7 @@ bool PalGameStateBattleMain::ApplyRes()
 	InitVertexShader();
 	InitPixelShader();
 	m_bApply = true;
-	/*
-	//DexModelSkinMeshLoader* loader = new DexModelSkinMeshLoader;
-	//loader->WriteModel(daeModel, "test.dexmodel");
-	//daeModel = (DexSkinMesh*)loader->LoadModel("test.dexmodel", 1);
-	DexGameEngine::getEngine()->SaveModel(daeModel, "test.dexmodel", 0);
-	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("D:/Dex/ParticleEditer/bin/test.dexmodel", 1);
-	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("test.dexmodel", 1);
-	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/c1004/mws/c1004.mws");
-	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/c1004/mws/walk.act");
-	*/
+
 	return true;
 }
 bool PalGameStateBattleMain::Test_AddEnemy1()
@@ -545,10 +466,19 @@ bool PalGameStateBattleMain::Update(int delta)
 	}
 	ms3d->Update(delta/2);
 	objModel->Update(delta);
-	mwsModel->Update(delta);
-	daeModel->Update(delta); 
+	mwsModel->Update(delta); 
+	static int testDelta = 16;
+	daeModel->Update(testDelta);
+	static int32 jointIndex = 14;
+	DexSkinMesh::Joint* pJoint = daeModel->FindJoint(jointIndex);
+	if (pJoint != nullptr)
+		daeWeaponModel->SetSceneNodeMatrix(pJoint->world_matrix);
+	else 
+		daeWeaponModel->SetSceneNodeMatrix(DexMatrix4x4());
+	daeWeaponModel->Update(delta);
 	UpdateVertexShader(delta);
 	UpdatePixelShader(delta);
+	groundModel->Update(delta);
 	testMesh->Update(delta/4);
 	return true;
 	//getGlobal()->g_pJingtian->Update();
@@ -608,7 +538,11 @@ void PalGameStateBattleMain::Render()
 	testMesh->AddPointLight(pointLight1);
 	testMesh->AddPointLight(pointLight2);
 	testMesh->Render();
-
+	groundModel->ClearPointLight();
+	groundModel->SetDirectionLight(dirLight);
+	groundModel->AddPointLight(pointLight1);
+	groundModel->AddPointLight(pointLight2);
+	groundModel->Render();
 	
 	matrix.Identity();
 	matrix.Scale(10.0f, 10.0f, 10.0f);
@@ -619,6 +553,8 @@ void PalGameStateBattleMain::Render()
 	char tempLineData[iMaxLineByte];
 	fgets(tempLineData, iMaxLineByte, pFile);
 	daeModel->iHideMeshIndex = atoi(tempLineData);
+	fgets(tempLineData, iMaxLineByte, pFile);
+	daeModel->iOnlyShowIndex = atoi(tempLineData);
 	fclose(pFile);
 	mwsModel->SetSceneNodeMatrix(matrix);
 	mwsModel->ClearPointLight();
@@ -626,6 +562,18 @@ void PalGameStateBattleMain::Render()
 	mwsModel->AddPointLight(pointLight2);
 	mwsModel->SetDirectionLight(dirLight);
 	mwsModel->Render();
+	matrix.Identity();
+	matrix.Scale(1.0f, 1.0f, 1.0f);
+	//matrix.RotateY(rotate);
+	matrix.Translate(20.0f, 0.0f, 0.0f);
+	//daeWeaponModel->SetSceneNodeMatrix(matrix);
+	daeWeaponModel->ClearPointLight();
+	daeWeaponModel->SetDirectionLight(dirLight);
+	pointLight1.rangeAtte.x = 100;
+	daeWeaponModel->AddPointLight(pointLight1);
+	daeWeaponModel->AddPointLight(pointLight2);
+	//daeWeaponModel->Render();
+	
 
 	matrix.Identity();
 	matrix.Scale(1.0f, 1.0f, 1.0f);
@@ -646,7 +594,7 @@ void PalGameStateBattleMain::Render()
 	{
 		if(ite->second != NULL)
 		{
-			ite->second->Render();
+			//ite->second->Render();
 		}
 		
 	}
@@ -665,8 +613,8 @@ void PalGameStateBattleMain::Render()
 	get2DDrawer()->SetTrans(100,200);
 	get2DDrawer()->Draw(m_testTexture);
 
-	m_pFightHeadManager->Render();
-	m_pNumberManager->Render();
+	//m_pFightHeadManager->Render();
+	//m_pNumberManager->Render();
 	get2DDrawer()->SetTextSize(15);
 	get2DDrawer()->DrawString(0,0,"fps:%d", DexGameEngine::getEngine()->getFps());
 	D3DXVECTOR3 pos;
@@ -814,4 +762,27 @@ bool PalGameStateBattleMain::AddEnemy(PalPlayer* player)
 	m_listEnemies.push_back(player);
 	m_pFightHeadManager->AddFightHead(player);
 	return true;
+}
+
+void PalGameStateBattleMain::OnDragFiles(const DVector<DString>& FileNames)
+{
+	size_t len = FileNames[0].length();
+	if (FileNames[0][len - 1] == 's')
+	{//mws model
+		delete mwsModel;
+		mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel(FileNames[0].c_str());//mws dexmodel
+	}
+	else if (FileNames[0][len - 1] == 'e')
+	{//dae weapon
+		delete daeWeaponModel;
+		daeWeaponModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel(FileNames[0].c_str(), 1);//dae weapon dexmodel
+		daeWeaponModel->SetRenderFlag(//SKINMESH_RENDER_VERTEX2JOINT|
+			SKINMESH_RENDER_MESH);
+		daeWeaponModel->SetAmbientColor(DexColor(200, 200, 200));
+		daeWeaponModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);
+	}
+	if (FileNames[0][len - 1] == 't')
+	{//act file
+		DexGameEngine::getEngine()->ReadModelAnimation(daeModel, FileNames[0].c_str());
+	}
 }

@@ -53,8 +53,10 @@ protected:
 	DexSkinMesh* ms3d;
 	DexSkinMesh* objModel;
 	DexSkinMesh* daeModel;
+	DexSkinMesh* daeWeaponModel;
 	DexSkinMesh* testMesh;
 	DexSkinMesh* mwsModel;
+	DexSkinMesh* groundModel;
 	DVector<DexSkinMesh*> vecFFMap;
 	DexLight light;
 	void* test_primitive_vertex;
@@ -121,7 +123,7 @@ public:
 	virtual void  MouseRUp(int xPos, int yPos);
 	virtual void  KeyUp();
 	virtual void  KeyDown();
-
+	virtual void  OnDragFiles(const DVector<DString>& FileNames);
 	void SetApply(bool apply) { m_bApply = apply;}
 	bool NeedApply()		  { return m_bApply;}
 

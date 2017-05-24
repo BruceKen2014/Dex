@@ -91,6 +91,10 @@ void CDexObject::OnTimer(const stTimer& timer)
 
 }
 
+int32 CDexObject::Size() const
+{//继承类要计算自己的size大小
+	return sizeof(stTimer)*m_timers.size() + sizeof(m_iObjectId)+sizeof(m_bUpdate)+sizeof(m_bObjectValid)+sizeof(m_param);
+}
 bool CDexObject::ArchiveIn(DexMem& mem)
 {
 	size_t timer_size = 0 ;

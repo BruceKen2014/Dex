@@ -22,10 +22,10 @@ bool DexModelSkinMeshLoader::SupportType(const char* fileType)
 
 DexModelBase* DexModelSkinMeshLoader::LoadModel(const char* filename, int32 flag)
 {
-	getLog()->LogLine(log_ok, "load dex model %s...\n", filename);
 	int64 Time = getTime()->GetTotalMillSeconds();
-	DexMem& mem = DexGameEngine::getEngine()->getMem();
+	DexMem mem;
 	mem.IniFromFile(filename);
+	getLog()->LogLine(log_ok, "load dex model %s...\n", filename);
 	DexSkinMesh* pNewSkinMesh = DexNull;
 	if (flag == 1)
 		pNewSkinMesh = new DexSkinMeshFF;
@@ -64,7 +64,8 @@ DexModelBase* DexModelSkinMeshLoader::LoadModel(const char* filename, int32 flag
 
 bool DexModelSkinMeshLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag)
 {
-	DexMem& mem = DexGameEngine::getEngine()->getMem();
+	DexMem mem; 
+	mem.SetMemoryFlag(true, 1024 * 1024 * 10);
 	mem.BeginWrite();
 	//ambient color
 	mem << pSkinMesh->m_ambientColor;

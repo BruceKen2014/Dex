@@ -5,6 +5,9 @@
 #include "CFile.h"
 #include "CDexTime.h"
 
+#ifdef _DEBUG
+#define DEX_LOG
+#endif
 using namespace std;
 CDexLog::CDexLog() :m_bLogFile(true)
 {
@@ -134,12 +137,13 @@ void CDexLog::BeginLog()
 }
 void CDexLog::LogTime()
 {
-	setDexBuffer("[%d-%d-%d-%d:%d:%d]", getTime()->m_time.year, getTime()->m_time.month, getTime()->m_time.day, 
+	char str[128];
+	sprintf(str, "[%d-%d-%d-%d:%d:%d]", getTime()->m_time.year, getTime()->m_time.month, getTime()->m_time.day,
 		getTime()->m_time.hour, getTime()->m_time.minute, getTime()->m_time.second);
-	m_logByte += strlen(getDexBuffer());
-	cout<<getDexBuffer();
+	m_logByte += strlen(str);
+	cout << str;
 	if (m_bLogFile)
-		m_logFile->InString(getDexBuffer());
+		m_logFile->InString(str);
 }
 void CDexLog::LogOK(char* msg)
 {

@@ -22,6 +22,7 @@ class CDexTex;
 class DexModelBase;
 class DexSkinMesh;
 class IDexModelLoader;
+class IDexModelAniFileLoader;
 class IDexVertexDecl;
 class IDexRender;
 class IDexDevice;
@@ -84,6 +85,7 @@ private:
 	LPD3DXMESH  g_sphere;
 	string         g_nextStateName;
 	DVector<IDexModelLoader*> vecModelLoader;
+	DVector<IDexModelAniFileLoader*> vecModelAniLoader;
 	DexTextureManager* g_TextureManager;
 	IDexRender*      m_pRender;
 	//light data
@@ -176,6 +178,8 @@ public:
 	//render mode
 	void SetRenderMode(DexRenderMode mode);
 	DexRenderMode	GetRenderMode();
+	//
+	void OnDragFiles(const DVector<DString>& FileNames);
 	//fog
 	void DisableFog();
 	bool OpenFog();
@@ -221,7 +225,7 @@ public:
 	//本接口可以加载各种引擎支持的模型文件，包括引擎本身模型文件.dexmodel,加载.dexmodel以二进制数据读入，速度会很快，建议把其他模型文件用引擎工具MeshConvert转换为.dexmodel,然后加载转换后的二进制模型文件
 	DexModelBase* CreateModel(const char* filename, int flag=0);
 	bool SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int flag=0);
-	bool ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, const char* filename);
+	bool ReadModelAnimation(DexSkinMesh* pDexSkinMesh, const char* filename);
 	bool ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename);
 	
 	void LookAtLH(const DexVector3 *pEye, const DexVector3 *pAt, const DexVector3 *pUp);

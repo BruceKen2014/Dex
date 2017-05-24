@@ -474,6 +474,30 @@
     <ClInclude Include="DexBase\DexTextureNull.h">
       <Filter>DexBase</Filter>
     </ClInclude>
+    <ClInclude Include="DexBase\DexBigFileHandle.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexStreamFile.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexFile.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexMd5Generator.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexModelSkinMeshTextLoader.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexModelAniFileLoader.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexModelAniFileFF12ActLoader.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexModel\DexModelAniFileText.h">
+      <Filter>DexModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
@@ -847,6 +871,27 @@
     </ClCompile>
     <ClCompile Include="DexBase\DexTextureNull.cpp">
       <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexBigFileHandle.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexStreamFile.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexFile.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexMd5Generator.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexModelSkinMeshTextLoader.cpp">
+      <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexModelAniFileFF12ActLoader.cpp">
+      <Filter>DexModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexModel\DexModelAniFileText.cpp">
+      <Filter>DexModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

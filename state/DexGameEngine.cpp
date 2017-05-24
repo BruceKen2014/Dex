@@ -25,6 +25,11 @@
 #include "../Source/CTexture.h"
 #include "../DexBase/DexDeviceOpenGLWindows.h"
 #include "../DexBase/DexTextureManager.h"
+#include "../DexBase/DexStreamFile.h"
+#include "../DexBase/DexMd5Generator.h"
+#include "../DexModel/DexModelSkinMeshTextLoader.h"
+#include "../DexModel/DexModelAniFileFF12ActLoader.h"
+#include "../DexModel/DexModelAniFileText.h"
 
 /*目前的DexGameEngine特指windows engine，如果日后要在别的平台上开发，需要将engine抽象为基类
 实现windows派生类，然后再实现对应平台的派生类*/
@@ -77,15 +82,19 @@ DexGameEngine::DexGameEngine()
 	vecModelLoader.push_back(new DexModelDaeLoader);
 	vecModelLoader.push_back(new DexModelMwsLoader);
 	vecModelLoader.push_back(new DexModelSkinMeshLoader);
+	vecModelLoader.push_back(new DexModelSkinMeshTextLoader);
+	vecModelAniLoader.push_back(new DexModelAniFileFF12ActLoader);
+	vecModelAniLoader.push_back(new DexModelAniFileTextLoader);
 	g_TextureManager = DexTextureManager::GetManager();
 }
 DexGameEngine::~DexGameEngine()
 {
-	_SafeDelete(g_pDevice);
 	_SafeRelease(m_pBufferFontTextureSurface);
 	_SafeRelease(m_pBufferFontTexture);
 	_SafeRelease(m_pBackSurface);
 	_SafeClearVector(vecModelLoader);
+	_SafeClearVector(vecModelAniLoader);
+	_SafeDelete(g_pDevice);
 }
 DWORD WINAPI LoadThread(LPVOID lpParam)
 {
@@ -173,7 +182,9 @@ bool DexGameEngine::Initialize(int flag)
 {	
 /*	getLog()->EnableFontFrontHighLight();
 	getLog()->EnableBackColor(true);*/
-	getLog()->SetConsoleScreenSize(256, 1000);	   
+	getLog()->SetConsoleScreenSize(256, 1000);	  
+	DexStreamFile::sCreateStreamFile();
+	DexMd5Generator::sCreateDexMd5Generator();
 	srand(unsigned(time(0)));
 	L = lua_open();	   //创建接口指针
 	luaopen_base(L);   //加载基本库
@@ -514,13 +525,14 @@ bool DexGameEngine::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int 
 }
 
 
-bool DexGameEngine::ReadActInfoFxii(DexSkinMesh* pDexSkinMesh, const char* filename)
+bool DexGameEngine::ReadModelAnimation(DexSkinMesh* pDexSkinMesh, const char* filename)
 {
-	for (uint32 i = 0; i < vecModelLoader.size(); ++i)
+	const char* suffix = dexstrchr(filename, '.');
+	for (uint32 i = 0; i < vecModelAniLoader.size(); ++i)
 	{
-		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(".dae"))
+		if (vecModelAniLoader[i] != NULL && vecModelAniLoader[i]->SupportType(suffix))
 		{
-			return ((DexModelDaeLoader*)vecModelLoader[i])->ReadActInfoFxii(pDexSkinMesh, filename);
+			return vecModelAniLoader[i]->LoadAnimationFile(pDexSkinMesh, filename);
 		}
 	}
 	return false;
@@ -706,6 +718,12 @@ void DexGameEngine::SetRenderMode(DexRenderMode mode)
 DexRenderMode DexGameEngine::GetRenderMode()
 {
 	return m_RenderMode;
+}
+
+void DexGameEngine::OnDragFiles(const DVector<DString>& FileNames)
+{
+	DEX_ENSURE(g_pCurrState != DexNull);
+	g_pCurrState->OnDragFiles(FileNames);
 }
 
 #define case_value2value(value1, para, value2) \

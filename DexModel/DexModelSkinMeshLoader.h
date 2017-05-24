@@ -1,6 +1,6 @@
 /*
 DexEngine& dex model Loader
-加载dex engine自己的模型数据
+加载dex engine自己的模型数据，二进制格式
 */
 
 #ifndef _DEX_MODEL_LOADER_DEX_MODEL_H

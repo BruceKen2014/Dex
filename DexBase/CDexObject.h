@@ -58,6 +58,7 @@ public:
 	virtual bool OnEvent(stEvent event){ return false;};	 //监听到事件，
 	virtual bool EventValid(stEvent event){ return false;};   //决定是否处理该事件public:
 public:
+	virtual int32 Size() const;
 	virtual bool ArchiveIn(DexMem& mem);
 	virtual bool ArchiveOut(DexMem& mem) const;
 };

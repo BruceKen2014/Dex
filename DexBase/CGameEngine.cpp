@@ -219,7 +219,7 @@ void CGameEngine::StartRender(bool color, bool zbuffer, bool stencil)
 	if(!Check()) 
 		return;
 
-	unsigned int buffers = 0;
+	uint32 buffers = 0;
 	if(color) buffers |= D3DCLEAR_TARGET;
 	if(zbuffer) buffers |= D3DCLEAR_ZBUFFER;
 	if(stencil) buffers |= D3DCLEAR_STENCIL;

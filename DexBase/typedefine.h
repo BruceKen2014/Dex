@@ -23,6 +23,7 @@ extern "C"
 #include "lualib.h"
 #include "lauxlib.h"
 } 
+/*
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 #pragma comment(lib, "dinput8.lib")
@@ -30,6 +31,7 @@ extern "C"
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "winmm.lib")
 #pragma comment(lib ,"lua.lib")
+*/
 
 #pragma warning(disable:4244)  //从size_t 到 int 可能丢失数据
 #pragma warning(disable:4267)  //从size_t 到 int 可能丢失数据

@@ -77,6 +77,7 @@ class DexSkinMesh: public DexModelBase
 	friend class DexModelObjLoader;
 	friend class DexModelDaeLoader;
 	friend class DexModelSkinMeshLoader;
+	friend class DexModelAniFileTextLoader;
 	friend class DexShaderHlslSkinMesh;
 	friend class DexShaderHlslSkinMeshVertexToJoint;
 	friend class DexShaderHlslSkinMeshVertexNormal;
@@ -231,7 +232,11 @@ public:
 	DexSkinMesh();
 	DexSkinMesh(int16 maxAniTime);
 	virtual ~DexSkinMesh();
-	uint8 iHideMeshIndex;
+#ifdef _DEBUG
+	// for debug
+	int32 iHideMeshIndex;
+	int32 iOnlyShowIndex;
+#endif
 public:
 	static uint16 sGetMaxJointCount();
 public:
@@ -327,6 +332,8 @@ public:
 	bool GetRenderFlag(int16 flag);
 	void SetRenderFlag(int16 flag);
 	void SetJointScale(float32 fScale);
+//Render Order
+	void SetOrderInfo(const DVector<int32>& vector);//÷ÿ÷√‰÷»æÌò–Ú
 protected:
 //joint key frame
 	bool AddJointKeyFrame(Joint* joint, int32 time, const DexMatrix4x4& matrix);

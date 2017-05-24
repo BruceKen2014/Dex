@@ -1,114 +1,120 @@
 
 #include "DexMem.h"
+#include "DexStreamFile.h"
+#include "DexDefine.h"
+#include "DexFile.h"
 #pragma warning(disable:4996) 
 DexMem::DexMem()
 {
-	Reset();
+	m_mode = 0;
+	m_bMemory = true;
+	m_iMemorySize = 0;
+	m_curr = 0;
+	m_length = 0;
+	m_data = DexNull;
 
+}
+DexMem::DexMem(const char* filename)
+{
+	m_mode = 0;
+	m_bMemory = true;
+	m_iMemorySize = 0;
+	m_curr = 0;
+	m_length = 0;
+	m_data = DexNull;
+	IniFromFile(filename);
 }
 DexMem::~DexMem()
 {
-	free(m_data);
+	Reset();
 }
 
 void DexMem::Reset()
 {
+	if (m_bMemory && m_data != DexNull)
+		free(m_data);
+	m_data = DexNull;
 	m_mode = 0;
-	m_data = (char*)malloc(sizeof(char)*MAX_BUFF);
-	memset(m_data, 0, sizeof(char)*MAX_BUFF);
+	m_bMemory = true;
+	m_iMemorySize = 0;
 	m_curr = 0;
 	m_length = 0;
 }
+
+void DexMem::SetMemoryFlag(bool selfMemory /* = true */, uint32 size /* = 0 */, void* buffer /* = DexNull */)
+{
+	m_bMemory = selfMemory;
+	m_iMemorySize = size;
+	m_length = size;
+	if (selfMemory)
+	{
+		m_data = (char*)malloc(sizeof(char)*size);
+		memset(m_data, 0, sizeof(char)*size);
+	}
+	else
+	{
+		m_data = (char*)buffer; 
+	}
+}
 void DexMem::BeginWrite()
 {
-	memset(m_data, 0, sizeof(char)*MAX_BUFF);
+	memset(m_data, 0, m_iMemorySize);
 	m_curr = 0;
 	m_length = 0;
+	m_mode = MEM_WRITE;
 }
 void DexMem::BeginRead()
 {
 	m_curr = 0;
+	m_mode = MEM_READ;
 }
 
 bool DexMem::End()
 {
 	return m_curr >= m_length;
 }
-void DexMem::IniFromBuff(char* buff, int length)
+void DexMem::IniFromBuff(char* buff, int length, bool bSelfMemory)
 {
-	BeginWrite();
-	memcpy(m_data, buff, length);
+	Reset();
+	m_curr = 0;
+	m_length = 0;
+	m_iMemorySize = length;
+	if (bSelfMemory)
+	{
+		m_data = (char*)malloc(sizeof(char)* length);
+		memcpy(m_data, buff, length);
+	}
+	else
+		m_data = buff;
+	m_bMemory = bSelfMemory;
 }
 
 void DexMem::GetData(int offset, int size, DexMem& _out)
 {
-	if(offset + size > m_length)
-		return;
-	char ch[64]; //不能分配过大 否则会提示栈溢出的错误
-	memset(ch, 0, 64);
-	while(size > 0)
-	{
-		if(size > 64)
-		{
-			memcpy((void*)&ch, &m_data[offset], 64 * sizeof(char));
-			_out.AddBuffToEnd(ch, 64);
-		}
-		else
-		{
-			memcpy((void*)&ch, &m_data[offset], size * sizeof(char));
-			_out.AddBuffToEnd(ch, size);
-		}
-		memset(ch, 0, 64);
-		offset += 64;
-		size -= 64;
-	}
+	_out.IniFromBuff(&m_data[offset], size, true);
 }
 bool DexMem::IniFromFile(const char* filename)
 {
-	BeginWrite();
-	FILE* hFile = NULL;
-	hFile = fopen(filename, "rb");
-	if(hFile == NULL)
-	{
-		return false;
-	}
-	fseek(hFile, 0, SEEK_END);
-	m_length = ftell(hFile);
-	fseek(hFile, 0, SEEK_SET);
-	fread(m_data, m_length, 1, hFile);
-	fclose(hFile);
-	return true;
-}
-
-bool DexMem::IniFromFile(const char* filename, int offset, int size)
-{
-	BeginWrite();
-	FILE* hFile = NULL;
-	hFile = fopen(filename, "rb");
-	if(hFile == NULL)
-	{
-		return false;
-	}
-	m_length = size;
-	//下一版本加入检错机制
-	fseek(hFile, offset, SEEK_SET);
-	fread(m_data, m_length, 1, hFile);
-	fclose(hFile);
+	Reset();
+	bool ret = DexStreamFile::sGetStreamFile()->OpenFile(filename);
+	DEX_ENSURE_B(ret);
+	uint64 fileSize = DexStreamFile::sGetStreamFile()->FileSize();
+	DEX_ENSURE_B(fileSize != 0);
+	m_bMemory = true;
+	m_data = (char*)malloc(sizeof(char)* fileSize);
+	m_curr = 0;
+	m_iMemorySize = fileSize;
+	m_length = fileSize;
+	DexStreamFile::sGetStreamFile()->ReadData(m_data);
 	return true;
 }
 
 void DexMem::SaveToFile(const char* filename)
 {
-	BeginRead();
-	FILE* hFile = NULL;
-	hFile = fopen(filename, "wb");
-	if(hFile == NULL)
-	{
-		return;
-	}
-	fseek(hFile, 0, SEEK_SET);
-	fwrite((const void*)m_data, m_length, 1, hFile);
-	fclose(hFile);
+	DexFile file;
+	bool ret = file.NewFile(filename);
+	DEX_ENSURE(ret);
+	file.Write(m_data, m_length);
 }
 void DexMem::AddBuffToEnd(char* buff, int length)
 {//必须已经调用了BeginWrite
@@ -132,9 +138,29 @@ void DexMem::Read(void* _Out, int length)
 }
 void DexMem::ReadLine(char* _Out)
 {
-	while (m_curr <= m_length)
+	while (m_curr < m_length)
 	{
-		if (m_data[m_curr] != '\n')
+		if (m_data[m_curr] == '\n' || m_data[m_curr] == '\r')
+		{
+			if (++m_curr < m_length)
+			{
+				if (m_data[m_curr] == '\n' || m_data[m_curr] == '\r')
+				{
+					m_curr++;
+				}
+			}
+			break;
+		}
+		else
+		{
+			*_Out++ = m_data[m_curr++];
+		}
+	}
+	*_Out = '\0';
+	/*
+	while (m_curr < m_length)
+	{
+		if (m_data[m_curr] != '\n' && m_data[m_curr] != '\r')
 			*_Out++ = m_data[m_curr++];
 		else
 		{
@@ -143,6 +169,7 @@ void DexMem::ReadLine(char* _Out)
 		}
 	}
 	*_Out = '\0';
+	*/
 }
 void DexMem::WriteToBuff(char* buff)
 {

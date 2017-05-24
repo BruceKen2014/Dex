@@ -5,7 +5,7 @@ Dex引擎引用计数文件
 */
 
 #pragma  once
-
+#include "DexType.h"
 #define _ADDREF(p) if((p) != NULL)  p->AddRef()
 
 #define _REDUCEREF(p) if((p) != NULL)	   \
@@ -23,7 +23,7 @@ Dex引擎引用计数文件
 class CRefCount
 {
 protected:
-	unsigned int m_count;
+	uint32 m_count;
 
 public:
 	CRefCount();
@@ -33,7 +33,7 @@ protected:
 	virtual void ShutDown() = 0;   //不允许外界调用，只能由自身在释放自己时调用
 public:	
 	void AddRef();
-	unsigned int GetRefCount() { return m_count;}; //被引用了多少次
+	uint32 GetRefCount() { return m_count;}; //被引用了多少次
 	void ReduceRef();
 };
 

@@ -149,6 +149,9 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
+    <Lib>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dinput8.lib;dxguid.lib;dsound.lib;winmm.lib;lua.lib</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseLib|Win32'">
     <ClCompile>
@@ -161,11 +164,15 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DexBase\DexBigFileHandle.h" />
     <ClInclude Include="DexBase\DexCompiler.h" />
     <ClInclude Include="DexBase\DexDefine.h" />
     <ClInclude Include="DexBase\DexDeviceDirectx9.h" />
     <ClInclude Include="DexBase\DexDeviceOpenGLWindows.h" />
+    <ClInclude Include="DexBase\DexFile.h" />
     <ClInclude Include="DexBase\DexList.h" />
+    <ClInclude Include="DexBase\DexMd5Generator.h" />
+    <ClInclude Include="DexBase\DexStreamFile.h" />
     <ClInclude Include="DexBase\DexTextureDx9.h" />
     <ClInclude Include="DexBase\DexTextureManager.h" />
     <ClInclude Include="DexBase\DexTextureNull.h" />
@@ -195,6 +202,9 @@
     <ClInclude Include="DexMath\DexVector3.h" />
     <ClInclude Include="DexMath\DexVector4.h" />
     <ClInclude Include="DexMath\Dex_To_Dx.h" />
+    <ClInclude Include="DexModel\DexModelAniFileFF12ActLoader.h" />
+    <ClInclude Include="DexModel\DexModelAniFileLoader.h" />
+    <ClInclude Include="DexModel\DexModelAniFileText.h" />
     <ClInclude Include="DexModel\DexModelBase.h" />
     <ClInclude Include="DexModel\DexModelDaeLoader.h" />
     <ClInclude Include="DexModel\DexModelLoader.h" />
@@ -202,6 +212,7 @@
     <ClInclude Include="DexModel\DexModelMwsLoader.h" />
     <ClInclude Include="DexModel\DexModelObjLoader.h" />
     <ClInclude Include="DexModel\DexModelSkinMeshLoader.h" />
+    <ClInclude Include="DexModel\DexModelSkinMeshTextLoader.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMesh.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.h" />
     <ClInclude Include="DexModel\DexShaderHlslSkinMeshVertexNormal.h" />
@@ -320,9 +331,13 @@
     <ClInclude Include="state\DexGameState.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DexBase\DexBigFileHandle.cpp" />
     <ClCompile Include="DexBase\DexDeviceDirectx9.cpp" />
     <ClCompile Include="DexBase\DexDeviceOpenGLWindows.cpp" />
+    <ClCompile Include="DexBase\DexFile.cpp" />
+    <ClCompile Include="DexBase\DexMd5Generator.cpp" />
     <ClCompile Include="DexBase\DexRenderDirectX9.cpp" />
+    <ClCompile Include="DexBase\DexStreamFile.cpp" />
     <ClCompile Include="DexBase\DexTextureDx9.cpp" />
     <ClCompile Include="DexBase\DexTextureManager.cpp" />
     <ClCompile Include="DexBase\DexTextureNull.cpp" />
@@ -337,12 +352,15 @@
     <ClCompile Include="DexMath\DexMath.cpp" />
     <ClCompile Include="DexMath\DexMath2.cpp" />
     <ClCompile Include="DexMath\DexQuaternion.cpp" />
+    <ClCompile Include="DexModel\DexModelAniFileFF12ActLoader.cpp" />
+    <ClCompile Include="DexModel\DexModelAniFileText.cpp" />
     <ClCompile Include="DexModel\DexModelBase.cpp" />
     <ClCompile Include="DexModel\DexModelDaeLoader.cpp" />
     <ClCompile Include="DexModel\DexModelMs3dLoader.cpp" />
     <ClCompile Include="DexModel\DexModelMwsLoader.cpp" />
     <ClCompile Include="DexModel\DexModelObjLoader.cpp" />
     <ClCompile Include="DexModel\DexModelSkinMeshLoader.cpp" />
+    <ClCompile Include="DexModel\DexModelSkinMeshTextLoader.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMesh.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexNormal.cpp" />
     <ClCompile Include="DexModel\DexShaderHlslSkinMeshVertexToJoint.cpp" />

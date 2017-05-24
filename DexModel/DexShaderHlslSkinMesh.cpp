@@ -39,6 +39,7 @@ DexShaderHlslSkinMesh::DexShaderHlslSkinMesh()
 		m_handlePointLightData = pFxEffect->GetParameterByName(0, "g_LightPoints");
 		m_handleDirectionLightData = pFxEffect->GetParameterByName(0, "g_LightDirection");
 		m_handleAmbientColor = pFxEffect->GetParameterByName(0, "g_ambientColor");
+		m_handleFogEnable = pFxEffect->GetParameterByName(0, "g_bFogEnable");
 		m_handleMaterial = pFxEffect->GetParameterByName(0, "g_material");
 		m_handleJointMatrix = pFxEffect->GetParameterByName(0, "JointsMatrix");
 		//JointInvertMatrixHandle = pFxEffect->GetParameterByName(0, "JointsMatrixInvert");
@@ -103,6 +104,7 @@ void DexShaderHlslSkinMesh::Render()
 	pFxEffect->SetBool(m_handleAmbientEnable, m_iLightFlag & DEXRENDER_LIGHT_AMBIENT);
 	pFxEffect->SetBool(m_handlePointLightEnable, m_iLightFlag & DEXRENDER_LIGHT_POINT);
 	pFxEffect->SetBool(m_handleDirectionLightEnable, m_iLightFlag & DEXRENDER_LIGHT_DIRECTION);
+	pFxEffect->SetBool(m_handleFogEnable, m_iLightFlag & DEXRENDER_ENABLE_FOG);
 	pFxEffect->SetInt(m_handlePointLightCount, m_iPointLightCount);
 	pFxEffect->SetRawValue(m_handlePointLightData, m_arrPointLights, 0, sizeof(stDexPointLight)* m_iPointLightCount);
 	pFxEffect->SetRawValue(m_handleDirectionLightData, &m_directionLight, 0, sizeof(m_directionLight));
@@ -115,8 +117,15 @@ void DexShaderHlslSkinMesh::Render()
 	{
 		if (skinMesh->m_vecMeshs[i] == NULL)
 			continue;
-		if (skinMesh->iHideMeshIndex == i)
+#ifdef _DEBUG
+		if (skinMesh->iOnlyShowIndex != -1)
+		{
+			if (i != skinMesh->iOnlyShowIndex)
+				continue;
+		}
+		else if (skinMesh->iHideMeshIndex == i)
 			continue;
+#endif
 		if (DexGameEngine::getEngine()->GetRenderMode() == DexRenderMode_LINE)
 		{
 			if (skinMesh->m_vecMeshs[i]->GetLineIndiceCount() == 0)
