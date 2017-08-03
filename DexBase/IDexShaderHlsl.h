@@ -7,7 +7,7 @@
 
 class IDexShaderHlsl: public IDexShader
 {
-	Dex_DeclareClass(IDexShaderHlsl, 0)
+	Dex_DeclareClass(IDexShaderHlsl, IDexShader, 0)
 protected:
 	LPD3DXEFFECT pFxEffect;
 public:

@@ -18,8 +18,8 @@ public:
 
 public:
 	virtual bool		  SupportType(const char* fileType);
-	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
-	virtual bool		  SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag);
+	virtual DexModelBase* LoadModel(const char* filename, DInt32 flag);
+	virtual bool		  SaveModel(DexSkinMesh* pSkinMesh, const char* filename, DInt32 flag);
 	void WriteModel(DexModelBase* model, const char* filename);
 
 protected:

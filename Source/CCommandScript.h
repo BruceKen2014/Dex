@@ -49,7 +49,7 @@ public:
 	virtual void  GetTotalLine(char* lineContent);  //将一整行字符读入lineContent
     virtual int   GetIntParam();
 	virtual long  GetLongParam();
-	virtual int64 GetLLongParam();	
+	virtual DInt64 GetLLongParam();	
 	virtual float GetFloatParam();
     virtual void  GetStringParam(char * pParamString);
 	virtual void  GetTextguiString(char * pString);

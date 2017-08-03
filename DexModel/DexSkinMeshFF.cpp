@@ -12,7 +12,7 @@ DexSkinMeshFF::~DexSkinMeshFF()
 	_SafeClearVector(m_vecMwsJoints);
 }
 
-DexSkinMesh::Joint* DexSkinMeshFF::FindMwsJoint(int32 index)
+DexSkinMesh::Joint* DexSkinMeshFF::FindMwsJoint(DInt32 index)
 {
 	for (size_t i = 0; i < m_vecMwsJoints.size(); ++i)
 		if (m_vecMwsJoints[i]->id == index)
@@ -28,7 +28,7 @@ DexSkinMesh::Joint* DexSkinMeshFF::FindMwsJoint(DString name)
 	return nullptr;
 }
 
-DexSkinMesh::Joint* DexSkinMeshFF::AddMwsJoint(DString name, int32 index, DexSkinMesh::Joint* pFather, DexMatrix4x4 father_matrix)
+DexSkinMesh::Joint* DexSkinMeshFF::AddMwsJoint(DString name, DInt32 index, DexSkinMesh::Joint* pFather, DexMatrix4x4 father_matrix)
 {
 	Joint* pJoint = new Joint;
 	pJoint->str_name = name;
@@ -58,7 +58,7 @@ DexSkinMesh::Joint* DexSkinMeshFF::AddMwsJoint(DString name, int32 index, DexSki
 	return pJoint;
 }
 
-bool DexSkinMeshFF::Update(int32 delta)
+bool DexSkinMeshFF::Update(DInt32 delta)
 {
 	delta = m_fAnimateRatio * delta;
 	DEX_ENSURE_B(DexModelBase::Update(delta));

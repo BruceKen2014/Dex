@@ -25,7 +25,7 @@ int DexTexture::GetHeight() const
 {
 	return m_height;
 }
-int8* DexTexture::GetData() 
+DInt8* DexTexture::GetData() 
 {
 	return m_pData; 
 }

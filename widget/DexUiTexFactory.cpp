@@ -29,7 +29,7 @@ CDexTex* CDexUiTexFactory::AddUiTex(string  name, const DexColor& transcolor)
 	if(it != m_TexMap.end())  //该资源已经存在
 		return it->second;
 	CDexTex* tex = new CDexTex();
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	string true_name;
 	for(std::list<string>::iterator it = m_FilePath.begin(); it != m_FilePath.end(); it ++)
 	{
@@ -38,14 +38,14 @@ CDexTex* CDexUiTexFactory::AddUiTex(string  name, const DexColor& transcolor)
 		true_name += name;
 		if(tex->LoadTex(true_name.c_str(), transcolor))
 		{
-			getLog()->Log(log_ok, "CDexUiTexFactory::AddUiTex(%s)成功！", true_name.c_str());
-			getLog()->EndLog();
+			DexLog::getSingleton()->Log(log_ok, "CDexUiTexFactory::AddUiTex(%s)成功！", true_name.c_str());
+			DexLog::getSingleton()->EndLog();
 			m_TexMap[name] = tex;
 			return tex;
 		}
 	}
-	getLog()->Log(log_allert, "CDexUiTexFactory::AddUiTex(%s)失败！", true_name.c_str());
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_allert, "CDexUiTexFactory::AddUiTex(%s)失败！", true_name.c_str());
+	DexLog::getSingleton()->EndLog();
 	delete tex;
 	return NULL;
 }

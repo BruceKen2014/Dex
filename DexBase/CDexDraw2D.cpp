@@ -209,6 +209,13 @@ void CDexDraw2DOrth::SetUV(D3DXVECTOR2 p0,D3DXVECTOR2 p1,D3DXVECTOR2 p2,D3DXVECT
 	m_point[2].SetUV(p2.x, p2.y);
 	m_point[3].SetUV(p3.x, p3.y);
 }
+void CDexDraw2DOrth::SetUV(const DexVector2& p0, const DexVector2& p1, const DexVector2& p2, const DexVector2& p3)
+{
+	m_point[0].SetUV(p0.x, p0.y);
+	m_point[1].SetUV(p1.x, p1.y);
+	m_point[2].SetUV(p2.x, p2.y);
+	m_point[3].SetUV(p3.x, p3.y);
+}
 void CDexDraw2DOrth::SetScale(float xScale, float yScale)
 {
 	m_xScale = xScale;

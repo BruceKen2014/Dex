@@ -38,20 +38,20 @@ CDexWidget* CDexDesktop::getFocusWgt()
 
 void CDexDesktop::SetFocusWgt(CDexWidget* wgt)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	if(m_focusWidget != NULL)
 	{
 		if(m_focusWidget != wgt)
 		{
-			getLog()->Log(log_ok,"控件%s lose focus!\n", m_focusWidget->GetName().c_str());
+			DexLog::getSingleton()->Log(log_ok,"控件%s lose focus!", m_focusWidget->GetName().c_str());
 		}
 	}
 	m_focusWidget = wgt;
 	if(m_focusWidget != NULL)
 	{
-		getLog()->Log(log_ok,"控件%s get focus!\n", m_focusWidget->GetName().c_str());
+		DexLog::getSingleton()->Log(log_ok,"控件%s get focus!", m_focusWidget->GetName().c_str());
 	}
-	getLog()->EndLog();
+	DexLog::getSingleton()->EndLog();
 }
 
 CDexWidget* CDexDesktop::getSelectWgt()

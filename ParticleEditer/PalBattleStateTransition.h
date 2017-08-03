@@ -8,7 +8,7 @@
 /////======================state transition========================================
 class PalBattleStateTransition: public IDexStateTransition
 {
-	Dex_DeclareClass(PalBattleStateTransition,0)
+	Dex_DeclareClass(PalBattleStateTransition, IDexStateTransition, 0)
 public:
 	PalBattleStateTransition(IDexState* state);
 	virtual ~PalBattleStateTransition();
@@ -18,7 +18,7 @@ public:
 /////======================
 class PalBattleStateTransitionSelectTargetOK: public PalBattleStateTransition
 {
-	Dex_DeclareClass(PalBattleStateTransitionSelectTargetOK,0)
+	Dex_DeclareClass(PalBattleStateTransitionSelectTargetOK, PalBattleStateTransition, 0)
 public:
 	PalBattleStateTransitionSelectTargetOK(IDexState* state);
 	virtual ~PalBattleStateTransitionSelectTargetOK();
@@ -29,7 +29,7 @@ public:
 /////======================
 class PalBattleStateTransitionCancelSkill: public PalBattleStateTransition
 {
-	Dex_DeclareClass(PalBattleStateTransitionCancelSkill,0)
+	Dex_DeclareClass(PalBattleStateTransitionCancelSkill, PalBattleStateTransition, 0)
 public:
 	PalBattleStateTransitionCancelSkill(IDexState* state);
 	virtual ~PalBattleStateTransitionCancelSkill();
@@ -40,7 +40,7 @@ public:
 /////======================
 class PalBattleStateTransitionPlayerMarchComplete: public PalBattleStateTransition
 {
-	Dex_DeclareClass(PalBattleStateTransitionPlayerMarchComplete,0)
+	Dex_DeclareClass(PalBattleStateTransitionPlayerMarchComplete, PalBattleStateTransition, 0)
 public:
 	PalBattleStateTransitionPlayerMarchComplete(IDexState* state);
 	virtual ~PalBattleStateTransitionPlayerMarchComplete();
@@ -52,7 +52,7 @@ public:
 /////======================
 class PalBattleStateTransitionSelectSkillOK: public PalBattleStateTransition
 {
-	Dex_DeclareClass(PalBattleStateTransitionSelectSkillOK,0)
+	Dex_DeclareClass(PalBattleStateTransitionSelectSkillOK, PalBattleStateTransition, 0)
 public:
 	PalBattleStateTransitionSelectSkillOK(IDexState* state);
 	virtual ~PalBattleStateTransitionSelectSkillOK();

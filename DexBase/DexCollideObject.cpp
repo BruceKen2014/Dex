@@ -49,7 +49,7 @@ bool DexCollideObjectBox::Initialize(const D3DXVECTOR3& pos, const D3DXVECTOR3& 
 
 void DexCollideObjectBox::Reset()
 {
-	DexCollideObject::Reset();
+	Super::Reset();
 }
 
 DexCollideObjectBox::~DexCollideObjectBox()
@@ -79,7 +79,7 @@ bool DexCollideObjectBox::CheckCollide(const DexCollideObject* object)
 
 void DexCollideObjectBox::SetObjectMatrix(const D3DXMATRIX& matrix)
 {
-	DexCollideObject::SetObjectMatrix(matrix);
+	Super::SetObjectMatrix(matrix);
 	m_box->setCenter(DexVector3(m_pos.x, m_pos.y, m_pos.z));
 	//m_box->setCenter(pos);
 }
@@ -98,7 +98,7 @@ void DexCollideObjectBox::getCenter(D3DXVECTOR3& center)
 
 bool DexCollideObjectBox::ArchiveIn(DexMem& mem)
 {
-	DEX_ENSURE_B(DexCollideObject::ArchiveIn(mem));
+	DEX_ENSURE_B(Super::ArchiveIn(mem));
 	bool box;
 	mem>>box;
 	if(box)
@@ -116,7 +116,7 @@ bool DexCollideObjectBox::ArchiveIn(DexMem& mem)
 
 bool DexCollideObjectBox::ArchiveOut(DexMem& mem) const
 {
-	DEX_ENSURE_B(DexCollideObject::ArchiveOut(mem));
+	DEX_ENSURE_B(Super::ArchiveOut(mem));
 	if(m_box != NULL)
 	{
 		mem<<(bool)true;	
@@ -176,7 +176,7 @@ bool DexCollideObjectSphere::CheckCollide(const DexCollideObject* object)
 
 void DexCollideObjectSphere::SetObjectMatrix(const D3DXMATRIX& matrix)
 {
-	DexCollideObject::SetObjectMatrix(matrix);
+	Super::SetObjectMatrix(matrix);
 	memcpy(&m_ball.m_center, &m_pos, sizeof(m_pos));
 }
 
@@ -198,7 +198,7 @@ stBall DexCollideObjectSphere::getBall()
 
 bool DexCollideObjectSphere::ArchiveIn(DexMem& mem)
 {
-	DEX_ENSURE_B(DexCollideObject::ArchiveIn(mem));
+	DEX_ENSURE_B(Super::ArchiveIn(mem));
 	mem>>m_ball;
 	memcpy(&m_pos, &m_ball.m_center, sizeof(m_pos));
 	return true;
@@ -213,7 +213,7 @@ bool DexCollideObjectSphere::checkPick(const stRay& ray)
 
 bool DexCollideObjectSphere::ArchiveOut(DexMem& mem) const
 {
-	DEX_ENSURE_B(DexCollideObject::ArchiveOut(mem));
+	DEX_ENSURE_B(Super::ArchiveOut(mem));
 	mem<<m_ball;
 	return true;
 }

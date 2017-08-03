@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="111|Win32">
       <Configuration>111</Configuration>
@@ -33,7 +33,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <CLRSupport>true</CLRSupport>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -44,13 +44,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='111|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CLRSupport>true</CLRSupport>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>NotSet</CharacterSet>
     <CLRSupport>true</CLRSupport>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -111,7 +111,7 @@
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IncludePath);../Dex;sdk/lua/include;sdk/directx9/include;</IncludePath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);sdk/lua/lib;sdk/directx9/lib/x86;</LibraryPath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">sdk/opengl/include;$(WindowsSdkDir)include;$(IncludePath);../Dex;sdk/lua/include;sdk/directx9/include;</IncludePath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">$(LibraryPath);sdk/lua/lib/vs2010/debug;sdk/directx9/lib/x86;sdk/opengl/lib</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">$(LibraryPath);sdk/lua/lib/debug;sdk/directx9/lib/x86;sdk/opengl/lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -164,14 +164,19 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DexBase\DDeque.h" />
     <ClInclude Include="DexBase\DexBigFileHandle.h" />
+    <ClInclude Include="DexBase\DexCommonFunction.h" />
     <ClInclude Include="DexBase\DexCompiler.h" />
     <ClInclude Include="DexBase\DexDefine.h" />
     <ClInclude Include="DexBase\DexDeviceDirectx9.h" />
     <ClInclude Include="DexBase\DexDeviceOpenGLWindows.h" />
     <ClInclude Include="DexBase\DexFile.h" />
+    <ClInclude Include="DexBase\DexIni.h" />
     <ClInclude Include="DexBase\DexList.h" />
     <ClInclude Include="DexBase\DexMd5Generator.h" />
+    <ClInclude Include="DexBase\DexMemoryManager.h" />
+    <ClInclude Include="DexBase\DexSingleton.h" />
     <ClInclude Include="DexBase\DexStreamFile.h" />
     <ClInclude Include="DexBase\DexTextureDx9.h" />
     <ClInclude Include="DexBase\DexTextureManager.h" />
@@ -193,7 +198,6 @@
     <ClInclude Include="DexBase\IDexShader.h" />
     <ClInclude Include="DexBase\IDexShaderHlsl.h" />
     <ClInclude Include="DexBase\IDexVertexDecl.h" />
-    <ClInclude Include="DexCommonFunction.h" />
     <ClInclude Include="DexMath\DexMath.h" />
     <ClInclude Include="DexMath\DexMath2.h" />
     <ClInclude Include="DexMath\DexMatrix.h" />
@@ -325,6 +329,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </CustomBuildStep>
+    <ClInclude Include="widget\DexWidgetProgressBar.h" />
     <ClInclude Include="xml\tinystr.h" />
     <ClInclude Include="xml\tinyxml.h" />
     <ClInclude Include="state\DexGameEngine.h" />
@@ -332,10 +337,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DexBase\DexBigFileHandle.cpp" />
+    <ClCompile Include="DexBase\DexCommonFunction.cpp" />
     <ClCompile Include="DexBase\DexDeviceDirectx9.cpp" />
     <ClCompile Include="DexBase\DexDeviceOpenGLWindows.cpp" />
     <ClCompile Include="DexBase\DexFile.cpp" />
+    <ClCompile Include="DexBase\DexIni.cpp" />
     <ClCompile Include="DexBase\DexMd5Generator.cpp" />
+    <ClCompile Include="DexBase\DexMemoryManager.cpp" />
     <ClCompile Include="DexBase\DexRenderDirectX9.cpp" />
     <ClCompile Include="DexBase\DexStreamFile.cpp" />
     <ClCompile Include="DexBase\DexTextureDx9.cpp" />
@@ -348,7 +356,6 @@
     <ClCompile Include="DexBase\IDexRender.cpp" />
     <ClCompile Include="DexBase\IDexShader.cpp" />
     <ClCompile Include="DexBase\IDexShaderHlsl.cpp" />
-    <ClCompile Include="DexCommonFunction.cpp" />
     <ClCompile Include="DexMath\DexMath.cpp" />
     <ClCompile Include="DexMath\DexMath2.cpp" />
     <ClCompile Include="DexMath\DexQuaternion.cpp" />
@@ -458,6 +465,7 @@
     <ClCompile Include="widget\DexWidgetImage.cpp" />
     <ClCompile Include="widget\DexWidgetImageSequence.cpp" />
     <ClCompile Include="widget\DexWidgetLabel.cpp" />
+    <ClCompile Include="widget\DexWidgetProgressBar.cpp" />
     <ClCompile Include="widget\DexWidgetScrollBar.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

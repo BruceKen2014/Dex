@@ -6,7 +6,7 @@ DexModelBase::DexModelBase()
 {
 	m_iLightFlag = 0;
 }
-void DexModelBase::SetLightFlag(uint8 flag)
+void DexModelBase::SetLightFlag(DUInt8 flag)
 {
 	m_iLightFlag = flag;
 }

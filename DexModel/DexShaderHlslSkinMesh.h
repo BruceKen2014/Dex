@@ -6,7 +6,7 @@
 class DexSkinMesh;
 class DexShaderHlslSkinMesh:public IDexShaderHlsl
 {
-	Dex_DeclareClass(DexShaderHlslSkinMesh, 0)
+	Dex_DeclareClass(DexShaderHlslSkinMesh, IDexShaderHlsl, 0)
 protected:
 	D3DXHANDLE	 m_handleWVPMatrix;
 	D3DXHANDLE	 m_handleTex0;

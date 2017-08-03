@@ -105,8 +105,8 @@ D3DXVECTOR3      g_cameraPos; //保存摄像机位置
 
 int g_fps = 0;
 int g_counter = 0;
-int64 g_currentTime = 0.0f;
-int64 g_lastTime    = 0.0f;
+DInt64 g_currentTime = 0.0f;
+DInt64 g_lastTime    = 0.0f;
 
 bool  g_isSelectEnemy = false;	 //是否正在选择攻击的敌人
 bool  g_isAttacking = false;    //是否正在攻击
@@ -139,7 +139,7 @@ stVertex1* vertexs = NULL;
 
 CDexWidgetContainer widget_container;
 CTestPanel* g_testPanel = NULL;
-int64 g_lastTickTime = 0;
+DInt64 g_lastTickTime = 0;
 int  g_delta = 0;
 
 CDexParticalEmit* particalMgr = NULL;

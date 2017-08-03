@@ -87,23 +87,23 @@ typedef enum _eDEXRENDERSTATE
 #define DEXFVF_TEXTURE0			   0x00000004
 class IDexDevice:public CDexObject
 {
-	Dex_DeclareClass(IDexDevice, 0)
+	Dex_DeclareClass(IDexDevice, CDexObject, 0)
 public:
 	IDexDevice();
 	virtual ~IDexDevice();
 public:
-	virtual bool InitDevice(bool bFullScreen, int16 iWindowWidth, int16 iWindowHeight, void* param1, void* param2) = 0;
+	virtual bool InitDevice(bool bFullScreen, DInt16 iWindowWidth, DInt16 iWindowHeight, void* param1, void* param2) = 0;
 	virtual bool SetTransform(DEXTRANSFORMSTATETYPE transformStateType, const DexMatrix4x4* matrix) = 0;
-	virtual bool SetRenderState(eDEXRENDERSTATE eRenderState, int64 value) = 0;
-	virtual bool SetFVF(int64 iFVF) = 0;
-	virtual bool DrawPrimitiveUp(DexPrimitivetType eType, uint32 iPrimitiveCount, const void* pVertexStreamData, uint32 iVertexStreamStride) = 0;
-	virtual bool Clear(int64 flags, const DexColor& color, float32 fZ, int64 sStencil) = 0;
+	virtual bool SetRenderState(eDEXRENDERSTATE eRenderState, DInt64 value) = 0;
+	virtual bool SetFVF(DInt64 iFVF) = 0;
+	virtual bool DrawPrimitiveUp(DexPrimitivetType eType, DUDInt32 iPrimitiveCount, const void* pVertexStreamData, DUDInt32 iVertexStreamStride) = 0;
+	virtual bool Clear(DInt64 flags, const DexColor& color, DFloat32 fZ, DInt64 sStencil) = 0;
 	virtual bool BeginScene() = 0;
 	virtual bool EndScene() = 0;
 	//for固定管线，需要设置FVF
-	//virtual bool DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize) = 0;
+	//virtual bool DrawPrimitive(DexPrimitivetType type, const void* vertexs, DInt32 vertexCount, const void* indices, DInt32 primitiveCount, DInt32 fvf, DInt32 stridesize) = 0;
 	//for shader，不需要设置FVF
-	//virtual bool DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize) = 0;
+	//virtual bool DrawPrimitive(DexPrimitivetType type, const void* vertexs, DInt32 vertexCount, const void* indices, DInt32 primitiveCount, DInt32 stridesize) = 0;
 public:
 	void SetViewMatrixType(eVIEWMATRIXTYPE eType);
 	void LookAt(const DexVector3& eye, const DexVector3& lookat, const DexVector3& up);

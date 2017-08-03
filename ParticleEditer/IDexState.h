@@ -6,7 +6,7 @@
 class IDexState;
 class IDexStateTransition:public CDexObject
 {
-	Dex_DeclareClass(IDexStateTransition, 0)
+	Dex_DeclareClass(IDexStateTransition, CDexObject, 0)
 protected:
 	IDexState* m_transitionState;
 	std::vector<stArgs> m_vecEventArgs; //属于事件本身的参数
@@ -27,7 +27,7 @@ public:
 };
 class IDexState:public CDexObject
 {
-	Dex_DeclareClass(IDexState, 0)
+	Dex_DeclareClass(IDexState, CDexObject,0)
 protected:
 	std::list<IDexStateTransition*> m_listTrans;
 public:
@@ -42,7 +42,7 @@ public:
 
 class IDexStateMachine: public CDexObject
 {
-	Dex_DeclareClass(IDexStateMachine,0)
+	Dex_DeclareClass(IDexStateMachine, CDexObject,0)
 public:
 	IDexStateMachine();
 	virtual ~IDexStateMachine();

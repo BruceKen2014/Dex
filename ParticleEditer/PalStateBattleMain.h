@@ -21,9 +21,10 @@ class PalBattleStateMachine;
 class CDexWidgetImage;
 class DexModelBase;
 class DexSkinMesh;
+class DexWidgetProgressBar;
 class PalGameStateBattleMain: public DexGameState
 {
-	Dex_DeclareClass(PalGameStateBattleMain,1)
+	Dex_DeclareClass(PalGameStateBattleMain, DexGameState, 1)
 public:
 	PalGameStateBattleMain();
 	virtual ~PalGameStateBattleMain();
@@ -70,6 +71,7 @@ protected:
 	LPDIRECT3DSURFACE9 m_testBufferSurface;
 	D3DXMATRIX m_testProjection, m_testProjectionOld;
 	CDexWidgetImage* g_pImageBackgroud;
+	DexWidgetProgressBar* g_pProgressBar;
 protected:
 	//vertex shader
 	LPDIRECT3DVERTEXSHADER9 BasicShader; //顶点着色器指针
@@ -77,7 +79,7 @@ protected:
 	D3DXHANDLE				WVPMatrixHandle;//句柄
 	D3DXHANDLE				ColorHandle;
 	void InitVertexShader();
-	void UpdateVertexShader(int32 delta);
+	void UpdateVertexShader(DInt32 delta);
 	void RenderVertexShader();
 	//pixel shader
 	LPDIRECT3DPIXELSHADER9 pixelShader;
@@ -88,7 +90,7 @@ protected:
 	D3DXCONSTANT_DESC	   Samp0Desc;//常量描述结构
 	D3DXCONSTANT_DESC	   Samp1Desc;
 	void InitPixelShader();
-	void UpdatePixelShader(int32 delta);
+	void UpdatePixelShader(DInt32 delta);
 	void RenderPixelShader();
 
 public:

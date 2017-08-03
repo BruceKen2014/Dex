@@ -67,7 +67,7 @@ public:
 	virtual void LoadIni(char *inifile){};//从配置文件中初始化对话框数据
 
 public:
-	virtual bool LoadBackPic(int16 index, char* filename);
+	virtual bool LoadBackPic(DInt16 index, char* filename);
 	virtual void Show();
 	virtual void SetHead(CTexture* head, short pos = 0);  //设置头像,同时传入头像的位置
 

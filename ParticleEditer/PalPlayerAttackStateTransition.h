@@ -8,7 +8,7 @@ class PalPlayerAttackState;
 /////======================state transition========================================
 class PalPlayerAttackStateTransition: public IDexStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransition,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransition, IDexStateTransition,0)
 public:
 	PalPlayerAttackStateTransition(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransition();
@@ -22,7 +22,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionMarchComplete: public PalPlayerAttackStateTransition
 {//自己进度完成后进入选择技能状态
-	Dex_DeclareClass(PalPlayerAttackStateTransitionMarchComplete,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionMarchComplete, PalPlayerAttackStateTransition, 0)
 public:
 	PalPlayerAttackStateTransitionMarchComplete(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionMarchComplete();
@@ -34,7 +34,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionWait: public PalPlayerAttackStateTransition
 {//别人正在操作则进入等待状态（如我方一个角色正在选择技能或者选择目标）
-	Dex_DeclareClass(PalPlayerAttackStateTransitionWait,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionWait, PalPlayerAttackStateTransition, 0)
 public:
 	PalPlayerAttackStateTransitionWait(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionWait();
@@ -46,7 +46,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionWaitOK: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionWaitOK,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionWaitOK, PalPlayerAttackStateTransition,0)
 public:
 	PalPlayerAttackStateTransitionWaitOK(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionWaitOK();
@@ -58,7 +58,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionSelectSkillOK: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionSelectSkillOK,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionSelectSkillOK, PalPlayerAttackStateTransition,0)
 public:
 	PalPlayerAttackStateTransitionSelectSkillOK(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionSelectSkillOK();
@@ -70,7 +70,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionSelectTargetOK: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionSelectTargetOK,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionSelectTargetOK, PalPlayerAttackStateTransition,0)
 public:
 	PalPlayerAttackStateTransitionSelectTargetOK(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionSelectTargetOK();
@@ -82,7 +82,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionSelectTargetOK_NearSkill: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionSelectTargetOK_NearSkill,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionSelectTargetOK_NearSkill, PalPlayerAttackStateTransition, 0)
 public:
 	PalPlayerAttackStateTransitionSelectTargetOK_NearSkill(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionSelectTargetOK_NearSkill();
@@ -94,7 +94,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionSelectTargetOK_FarSkill: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionSelectTargetOK_FarSkill,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionSelectTargetOK_FarSkill, PalPlayerAttackStateTransition, 0)
 public:
 	PalPlayerAttackStateTransitionSelectTargetOK_FarSkill(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionSelectTargetOK_FarSkill();
@@ -107,7 +107,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionRun2TargetOK: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionRun2TargetOK,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionRun2TargetOK, PalPlayerAttackStateTransition,0)
 public:
 	PalPlayerAttackStateTransitionRun2TargetOK(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionRun2TargetOK();
@@ -120,7 +120,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionPlayAttackAniOK: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionPlayAttackAniOK,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionPlayAttackAniOK, PalPlayerAttackStateTransition,0)
 public:
 	PalPlayerAttackStateTransitionPlayAttackAniOK(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionPlayAttackAniOK();
@@ -133,7 +133,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionFarSkillComplete: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionFarSkillComplete,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionFarSkillComplete, PalPlayerAttackStateTransition,0)
 public:
 	PalPlayerAttackStateTransitionFarSkillComplete(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionFarSkillComplete();
@@ -145,7 +145,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionNearSkillComplete: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionNearSkillComplete,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionNearSkillComplete, PalPlayerAttackStateTransition,0)
 public:
 	PalPlayerAttackStateTransitionNearSkillComplete(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionNearSkillComplete();
@@ -158,7 +158,7 @@ public:
 ////////////////////////
 class PalPlayerAttackStateTransitionRunBackOK: public PalPlayerAttackStateTransition
 {
-	Dex_DeclareClass(PalPlayerAttackStateTransitionRunBackOK,0)
+	Dex_DeclareClass(PalPlayerAttackStateTransitionRunBackOK, PalPlayerAttackStateTransition,0)
 public:
 	PalPlayerAttackStateTransitionRunBackOK(PalPlayerAttackState* state, PalPlayer* p);
 	virtual ~PalPlayerAttackStateTransitionRunBackOK();

@@ -12,7 +12,7 @@ class DexGlobal
 class CDexScene;
 class DexGameState: public CDexObject
 {
-	Dex_DeclareClass(DexGameState,1)
+	Dex_DeclareClass(DexGameState, CDexObject, 1)
 protected:
     /*该state对应的资源是否已经申请，在切换state的时候，要将state资源释放掉，用此变量标志是否申请了资源,
 	*/
@@ -50,7 +50,7 @@ public:
 
 class DexGameStateLoading: public DexGameState
 {
-	Dex_DeclareClass(DexGameStateLoading,1)
+	Dex_DeclareClass(DexGameStateLoading, DexGameState, 1)
 public:
 	DexGameStateLoading();
 	virtual ~DexGameStateLoading();

@@ -3,6 +3,7 @@
 #include "DexStreamFile.h"
 #include "DexDefine.h"
 #include "DexFile.h"
+#include "DexMemoryManager.h"
 #pragma warning(disable:4996) 
 DexMem::DexMem()
 {
@@ -14,14 +15,8 @@ DexMem::DexMem()
 	m_data = DexNull;
 
 }
-DexMem::DexMem(const char* filename)
+DexMem::DexMem(const char* filename) :DexMem()
 {
-	m_mode = 0;
-	m_bMemory = true;
-	m_iMemorySize = 0;
-	m_curr = 0;
-	m_length = 0;
-	m_data = DexNull;
 	IniFromFile(filename);
 }
 DexMem::~DexMem()
@@ -32,23 +27,23 @@ DexMem::~DexMem()
 void DexMem::Reset()
 {
 	if (m_bMemory && m_data != DexNull)
-		free(m_data);
+		DexMemoryManager::sGetMemoryManager()->deallocateMemory((void*)m_data);
 	m_data = DexNull;
-	m_mode = 0;
+	m_mode = 0;   
 	m_bMemory = true;
 	m_iMemorySize = 0;
 	m_curr = 0;
 	m_length = 0;
 }
 
-void DexMem::SetMemoryFlag(bool selfMemory /* = true */, uint32 size /* = 0 */, void* buffer /* = DexNull */)
+void DexMem::SetMemoryFlag(bool selfMemory /* = true */, DUDInt32 size /* = 0 */, void* buffer /* = DexNull */)
 {
 	m_bMemory = selfMemory;
 	m_iMemorySize = size;
 	m_length = size;
 	if (selfMemory)
 	{
-		m_data = (char*)malloc(sizeof(char)*size);
+		m_data = DexMemoryManager::sGetMemoryManager()->allocateMemory(size);
 		memset(m_data, 0, sizeof(char)*size);
 	}
 	else
@@ -81,7 +76,7 @@ void DexMem::IniFromBuff(char* buff, int length, bool bSelfMemory)
 	m_iMemorySize = length;
 	if (bSelfMemory)
 	{
-		m_data = (char*)malloc(sizeof(char)* length);
+		m_data = (char*)DexMemoryManager::sGetMemoryManager()->allocateMemory(length);
 		memcpy(m_data, buff, length);
 	}
 	else
@@ -98,10 +93,10 @@ bool DexMem::IniFromFile(const char* filename)
 	Reset();
 	bool ret = DexStreamFile::sGetStreamFile()->OpenFile(filename);
 	DEX_ENSURE_B(ret);
-	uint64 fileSize = DexStreamFile::sGetStreamFile()->FileSize();
+	DUInt64 fileSize = DexStreamFile::sGetStreamFile()->FileSize();
 	DEX_ENSURE_B(fileSize != 0);
 	m_bMemory = true;
-	m_data = (char*)malloc(sizeof(char)* fileSize);
+	m_data = DexMemoryManager::sGetMemoryManager()->allocateMemory(fileSize);
 	m_curr = 0;
 	m_iMemorySize = fileSize;
 	m_length = fileSize;
@@ -177,10 +172,8 @@ void DexMem::WriteToBuff(char* buff)
 	memcpy(buff, m_data, m_length);
 }
 
-void DexMem::WriteString(char* ch)
+void DexMem::WriteString(const char* ch)
 {
-	//cout<<"WriteString写入："<<ch<<endl;
-
 	strcpy(&m_data[m_curr], ch);
 	//这里由于ch源长小于&m_data[m_curr],所以不会将\0拷进去！
 	
@@ -188,9 +181,28 @@ void DexMem::WriteString(char* ch)
 	m_data[m_curr++] = '\0'; //加入字符串分隔符，否则连续写入字符串的话，会将两个字串连在一起
 	
 	m_length += strlen(ch) + 1;
-	//cout<<"WriteString写入完毕！"<<endl;
 }
 
+void DexMem::WriteLine(const char* str)
+{
+	strcpy(&m_data[m_curr], str);
+
+	m_curr += strlen(str);
+	m_data[m_curr++] = '\r';
+	m_data[m_curr++] = '\n';
+
+	m_length += strlen(str) + 2;
+}
+
+void DexMem::WriteLine(DString str)
+{
+	WriteLine(str.c_str());
+}
+
+void DexMem::WriteString(DString str)
+{
+	WriteString(str.c_str());
+}
 void DexMem::ReadString(char* ch)
 {
 	//cout<<"ReadString读出中..."<<endl;

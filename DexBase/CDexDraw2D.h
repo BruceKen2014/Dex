@@ -9,6 +9,7 @@
 #include "../widget/DexGuiStruct.h"
 #include <map>
 #include <string>
+#include "../DexMath/DexVector2.h"
 //统一用此对象进行2D纹理的绘制
 //采用sprite进行绘制
 class CDexDraw2D
@@ -86,7 +87,7 @@ class CModel;
 class CMyFont;
 class CDexDraw2DOrth:public CDexObject
 {
-	Dex_DeclareClass(CDexDraw2DOrth,0)
+	Dex_DeclareClass(CDexDraw2DOrth, CDexObject,0)
 public:
 	static const stEvent g_moveCamera;//();
 protected:
@@ -140,6 +141,7 @@ public:
 	void EndDraw2D() ;
 	void ResetMatrix();
 	void SetUV(D3DXVECTOR2 p0,D3DXVECTOR2 p1,D3DXVECTOR2 p2,D3DXVECTOR2 p3);
+	void SetUV(const DexVector2& p0, const DexVector2& p1, const DexVector2& p2, const DexVector2& p3);
 	void SetScale(float xScale, float yScale);    //设置 x y 的缩放（这里传入的其实就是渲染到屏幕的纹理宽高）
 	void SetTrans(int xPos, int yPos);   //传入屏幕坐标，函数体内进行平移转换(如传入屏幕上的20 20)
 	void SetRotate(float rotate);		    	  //设置旋转弧度

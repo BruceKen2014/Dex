@@ -13,7 +13,7 @@ class DexCollideObject;
 class CDexScene;
 class CDexSceneObject: public CDexObject
 {
-	Dex_DeclareClass(CDexSceneObject,0)
+	Dex_DeclareClass(CDexSceneObject, CDexObject, 0)
 	friend class CDexScene;
 public:
 	typedef enum 

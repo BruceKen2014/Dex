@@ -6,7 +6,7 @@
 class DexSkinMesh;
 class DexShaderHlslSkinMeshVertexNormal :public IDexShaderHlsl
 {
-	Dex_DeclareClass(DexShaderHlslSkinMeshVertexNormal, 0)
+	Dex_DeclareClass(DexShaderHlslSkinMeshVertexNormal, IDexShaderHlsl,0)
 protected:
 	D3DXHANDLE	 WVPMatrixHandle;
 	D3DXHANDLE	 JointMatrixHandle;

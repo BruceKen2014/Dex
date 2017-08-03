@@ -41,7 +41,7 @@ DexDeviceOpenGLWindows::~DexDeviceOpenGLWindows()
 	}
 }
 
-bool DexDeviceOpenGLWindows::InitDevice(bool bFullScreen, int16 iWindowWidth, int16 iWindowHeight, void* param1, void* param2)
+bool DexDeviceOpenGLWindows::InitDevice(bool bFullScreen, DInt16 iWindowWidth, DInt16 iWindowHeight, void* param1, void* param2)
 {
 	GLuint		PixelFormat;			// Holds The Results After Searching For A Match
 	WNDCLASS	wc;						// Windows Class Structure
@@ -202,16 +202,16 @@ bool DexDeviceOpenGLWindows::SetTransform(DEXTRANSFORMSTATETYPE transformStateTy
 	return true;
 }
 
-bool DexDeviceOpenGLWindows::SetRenderState(eDEXRENDERSTATE eRenderState, int64 value)
+bool DexDeviceOpenGLWindows::SetRenderState(eDEXRENDERSTATE eRenderState, DInt64 value)
 {
 	return true;
 }
 
-bool DexDeviceOpenGLWindows::SetFVF(int64 iFVF)
+bool DexDeviceOpenGLWindows::SetFVF(DInt64 iFVF)
 {
 	return true;
 }
-bool DexDeviceOpenGLWindows::DrawPrimitiveUp(DexPrimitivetType eType, uint32 iPrimitiveCount, const void* pVertexStreamData, uint32 iVertexStreamStride)
+bool DexDeviceOpenGLWindows::DrawPrimitiveUp(DexPrimitivetType eType, DUDInt32 iPrimitiveCount, const void* pVertexStreamData, DUDInt32 iVertexStreamStride)
 {
 	if (eType == DexPT_LINELIST)
 	{
@@ -220,7 +220,7 @@ bool DexDeviceOpenGLWindows::DrawPrimitiveUp(DexPrimitivetType eType, uint32 iPr
 	return true;
 }
 
-bool DexDeviceOpenGLWindows::Clear(int64 flags, const DexColor& color, float32 fZ, int64 sStencil)
+bool DexDeviceOpenGLWindows::Clear(DInt64 flags, const DexColor& color, DFloat32 fZ, DInt64 sStencil)
 {
 	GLbitfield glFlag = 0;
 	if (flags & DEXCLEAR_STENCIL)

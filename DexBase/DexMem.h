@@ -5,7 +5,7 @@ Dex引擎对自定义结构进行序列化
 */
 #ifndef _DEX_MEM_H
 #define _DEX_MEM_H
-#include <string>
+#include "DexString.h"
 #include "DexType.h"
 
 class DexMem
@@ -20,10 +20,10 @@ protected:
 	bool    m_mode;    //0:读入数据 1：输出数据
 	bool    m_bMemory; //true:DexMem自己申请内存 自己释放 false:内存来源于外部，DexMem只负责中间处理
 	char*   m_data;
-	uint64  m_iMemorySize; //内存空间大小
-	uint64  m_length;   //内存实际使用的空间大小，如申请了一块10M的内存，但只向这个内存写入了1M的数据，
+	DUInt64  m_iMemorySize; //内存空间大小
+	DUInt64  m_length;   //内存实际使用的空间大小，如申请了一块10M的内存，但只向这个内存写入了1M的数据，
 	                      //则m_iMemorySize= 10M，m_length= 1M
-	uint64  m_curr;     //内存指针位置，用于读写时的定位
+	DUInt64  m_curr;     //内存指针位置，用于读写时的定位
 
 public:
 	DexMem();
@@ -42,7 +42,7 @@ public:
 	//friend DexMem& operator >> (short args);
 	//friend DexMem& operator >> (char args);
 	//friend DexMem& operator >> (string args);
-	void SetMemoryFlag(bool selfMemory = true, uint32 size = 0, void* buffer = DexNull);
+	void SetMemoryFlag(bool selfMemory = true, DUDInt32 size = 0, void* buffer = DexNull);
 	void* GetData()		{return m_data;}
 	void  GetData(int offset, int size, DexMem& _out); //从指定偏移处取出指定长度的数据到_out中
 	int   GetLength()	{return (int)m_length;}
@@ -54,7 +54,10 @@ public:
 	void SaveToFile(const char* filename);
 	void AddBuffToEnd(char* buff, int length); //追加buff内容
 	void WriteToBuff(char* buff);	
-	void WriteString(char* ch);
+	void WriteString(const char* ch);
+	void WriteString(DString str);
+	void WriteLine(const char* str);
+	void WriteLine(DString str);
 	void ReadString(char* ch);
 
 	//这里模板函数的实现不能放在cpp文件中，如此便不利于隐藏细节
@@ -80,16 +83,16 @@ public:
 	void Read(void* _Out, int length);
 	void ReadLine(char* _Out);//从data读取一行数据到_Out中，遇见换行停止
 	template<typename T>
-	friend DexMem& operator << (DexMem& mem, const T& _In)
+	DexMem& operator << (const T& _In)
 	{
-		mem.Write(_In);
-		return mem;
+		Write(_In);
+		return *this;
 	}
 	template<typename T>
-	friend DexMem& operator >> (DexMem& mem, T& _Out)
+	DexMem& operator >> (T& _Out)
 	{
-		mem.Read(_Out);
-		return mem;
+		Read(_Out);
+		return *this;
 	}
 
 };

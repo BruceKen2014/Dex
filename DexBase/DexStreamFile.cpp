@@ -52,9 +52,9 @@ bool DexStreamFile::AddBigFile(const char* filename)
 	}
 	return ret;
 }
-uint64 DexStreamFile::ReadData(void* buffer)
+DUInt64 DexStreamFile::ReadData(void* buffer)
 {
-	uint64 ret = 0;
+	DUInt64 ret = 0;
 #ifdef USE_BIG_FILE
 	if (m_pBigFileHandler != nullptr)
 	{
@@ -73,7 +73,7 @@ bool DexStreamFile::OpenFile(const char* filename)
 	if(m_pBigFileHandler != nullptr && m_pBigFileHandler->OpenFile(filename))
 	{
 		//log big file find filename
-		getLog()->Log(log_ok, "BigFile:open %s success!\n", filename);
+		DexLog::getSingleton()->LogLine(log_ok, "BigFile:open %s success!", filename);
 		return true;
 	}
 	else
@@ -84,31 +84,31 @@ bool DexStreamFile::OpenFile(const char* filename)
 			if (find)
 			{
 				m_pBigFileHandler = m_arrBigFile[i];
-				getLog()->Log(log_ok, "BigFile:open %s success!\n", filename);
+				DexLog::getSingleton()->LogLine(log_ok, "BigFile:open %s success!", filename);
 				//log big file find filename
 				return true;
 			}
 		}
 	}
-	getLog()->Log(log_allert, "BigFile:open %s failed! try to open small file...\n", filename);
+	DexLog::getSingleton()->LogLine(log_allert, "BigFile:open %s failed! try to open small file...", filename);
 	m_pBigFileHandler = DexNull;
 	//log big file not find file, try to find small file
 #endif
 	bool find = m_pDexFile->OpenFile(filename);
 	if (find)
 	{//log smal file find filename
-		getLog()->Log(log_ok, "SmallFile:open %s success!\n", filename);
+		DexLog::getSingleton()->LogLine(log_ok, "SmallFile:open %s success!", filename);
 	}
 	else
 	{//log small file not find filename
-		getLog()->Log(log_error, "SmallFile:open %s failed!\n", filename);
+		DexLog::getSingleton()->LogLine(log_error, "SmallFile:open %s failed!", filename);
 	}
 	return find;
 }
 
-uint64 DexStreamFile::FileSize()
+DUInt64 DexStreamFile::FileSize()
 {
-	uint64 ret = 0;
+	DUInt64 ret = 0;
 #ifdef USE_BIG_FILE
 	if (m_pBigFileHandler != nullptr)
 	{

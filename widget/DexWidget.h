@@ -13,6 +13,7 @@
 #include "../DexBase/CDexObject.h"
 #include "../Source/CTexture.h"
 #include "DexGuiStruct.h"
+#include "../DexMath/DexVector2.h"
 
 #define UI_ADD_REF(p)    _ADDREF(p)
 #define UI_DROP_REF(p)   _REDUCEREF(p)
@@ -51,6 +52,7 @@ namespace DexGUI
 		widget_editbox,
 		widget_scrollbar_v,
 		widget_scrollbar_h,
+		widget_progressBar,
 		widget_form,  //面板
 	};
 	enum EModiFyType
@@ -62,7 +64,6 @@ namespace DexGUI
 	struct stUiImage
 	{
 		CDexTex* m_tex;
-		string   m_texname;
 		DexRect  m_srcArea; //纹理中的区域
 		bool     m_Mirro;  //是否镜像
 		stUiImage()
@@ -175,6 +176,7 @@ protected:
 	virtual bool MouseRDragValid(stEvent event);
 
 	bool CheckPointIn(const DexPoint& pt); //判断一点是否落在控件内
+	void ReCalculateUV(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3, const DexRectF& srcRect, const DexRectF& clipRect);//控件被裁减之后，重新计算裁减矩形对应的uv
 public:
 	CDexWidget();
 	virtual ~CDexWidget();

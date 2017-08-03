@@ -17,15 +17,15 @@ DexShaderHlslSkinMeshVertexToJoint::DexShaderHlslSkinMeshVertexToJoint()
 		NULL, NULL, D3DXSHADER_DEBUG, NULL, &pFxEffect, &pbuff);
 	if (pbuff)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, (char*)(pbuff->GetBufferPointer()));
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, (char*)(pbuff->GetBufferPointer()));
 		pbuff->Release();
 	}
 	if (FAILED(hr))
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, "DexShaderHlslSkinMesh D3DXCreateEffectFromFile 调用失败！");
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, "DexShaderHlslSkinMesh D3DXCreateEffectFromFile 调用失败！");
+		DexLog::getSingleton()->EndLog();
 	}
 	else
 	{
@@ -63,13 +63,13 @@ void DexShaderHlslSkinMeshVertexToJoint::Render()
 
 	DexGameEngine::getEngine()->setDexVertexDecl(m_pDeclaration);
 	pFxEffect->SetTechnique(TechHandle);
-	uint32 pass = 0;
+	DUDInt32 pass = 0;
 	pFxEffect->Begin(&pass, 0);
 	for (size_t i = 0; i < skinMesh->m_vecMeshs.size(); ++i)
 	{
 		if (skinMesh->m_vecMeshs[i] == NULL)
 			continue;
-		for (uint32 p = 0; p < pass; ++p)
+		for (DUDInt32 p = 0; p < pass; ++p)
 		{
 			pFxEffect->BeginPass(p);
 			DexGameEngine::getEngine()->DrawPrimitive(DexPT_LINELIST, skinMesh->m_vecMeshs[i]->GetVertexToJointBuffer(),

@@ -5,14 +5,22 @@
 
 #ifndef _DEX_LOG_H
 #define _DEX_LOG_H
+#include <wtypes.h>
 #include <iostream>
 #include <fcntl.h>
 #include <io.h>
+#include "DDeque.h"
+#include "DexDVector.h"
+#include "DexString.h"
+#include "DexSingleton.h"
+
 enum DexLogType
 {
 	log_ok,		//正常！
 	log_allert, //警告！
 	log_error,  //错误！
+	log_begin,  //BeginLog
+	log_end,    //endlog
 	log_count,
 };
 //控制台文字颜色
@@ -36,27 +44,12 @@ enum DexLogType
 
 #define log_font_underline       COMMON_LVB_UNDERSCORE  //打印下划线
 
+
 	 //字体颜色高亮
 class CFile;
-class CDexLog
+class DexLog
 {
-private:
-	bool m_OpenFontBack;  //是否开启控制台背景色的打印功能
-	bool m_BackHighLight; //背景是否高亮
-	bool m_bLogFile;	  //是否向文件输出log
-	bool m_FrontHighlight[log_count]; 
-	short m_consoleBackgroundColor;
-	short m_consoleFontColor[log_count];
-
-	void* m_stdHandle;
-
-	DexLogType m_lastLogType;//上次的log类型 如果类型没变 则没必要再调用SetConsoleTextAttribute
-	int  m_logByte;  //本次已经打印的字节数,根据这个变量来确定填充的背景空格(如果已经开启了背景色的话)
-	int  m_wSize;
-	CFile* m_logFile;
-public:
-	CDexLog();
-	~CDexLog();
+	DECLARE_SINGLETON(DexLog)
 public:
 	//w可理解为控制台一行可以容纳的字符数 h可理解为控制台可记录的行数 超过h行的打印将覆盖之前的记录
 	void SetConsoleScreenSize(int w, int h);  //设置控制台缓存
@@ -72,26 +65,52 @@ public:
 	void EnableFontBackHighLight(bool enable = true);  
 
 	void EnableBackColor(bool enable); //是否开启背景色打印
-
-protected:
-	void LogTime();
-	void LogOK(char* msg);
-	void LogAllert(char* msg);
-	void LogError(char* msg);
-	
 public:
+	void DoLog();
 	void SetLogFile(bool bLogFile);
 	void BeginLog();
 	void Log(DexLogType log_type, char* msg, ...);
 	void LogLine(DexLogType log_type, char* msg, ...);
 	void EndLog();
+protected:
+	void LogTime();
+	void LogOK(char* msg);
+	void LogAllert(char* msg);
+	void LogError(char* msg);
+protected:
+	DexLog();
+	~DexLog();
+private:
+	bool m_OpenFontBack;  //是否开启控制台背景色的打印功能
+	bool m_BackHighLight; //背景是否高亮
+	bool m_bLogFile;	  //是否向文件输出log
+	bool m_FrontHighlight[log_count];
+	short m_consoleBackgroundColor;
+	short m_consoleFontColor[log_count];
+
+	void* m_stdHandle;
+
+	DexLogType m_lastLogType;//上次的log类型 如果类型没变 则没必要再调用SetConsoleTextAttribute
+	int  m_logByte;  //本次已经打印的字节数,根据这个变量来确定填充的背景空格(如果已经开启了背景色的话)
+	int  m_wSize;
+	CFile* m_logFile;
+
+	HANDLE m_eventMutex; //用于互斥访问
+	typedef struct _stLogTask
+	{
+		DexLogType type;
+		DString    msg;
+		_stLogTask() = default;
+		_stLogTask(DexLogType _type) :type(_type)
+		{};
+		_stLogTask(DexLogType _type, char* _msg) :type(_type), msg(_msg)
+		{};
+	}stLogTask;
+	DDeque<stLogTask>  m_logTasks;
 };
-CDexLog* getLog();
-#define dex_log_current_file(type)  getLog()->Log(type, "%s", __FILE__);
-#define dex_log_current_line(type)  getLog()->Log(type, "%d", __LINE__);
-#define dex_log_current_f_l(type) \
-	dex_log_current_file(type)\
-	dex_log_current_line(type)
+#define dex_log_current_file(type)  DexLog::getSingleton()->Log(type, "%s ", __FILE__);
+#define dex_log_current_line(type)  DexLog::getSingleton()->Log(type, "%d ", __LINE__);
+#define dex_log_current_f_l(type)   DexLog::getSingleton()->LogLine(type, "%s %d ", __FILE__, __LINE__);
 
 #endif //_DEX_LOG_H
 #endif //_DEX_PLATFORM_WINDOWS

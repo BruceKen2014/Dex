@@ -25,7 +25,7 @@ protected:
 	//高度同理 如高500 但只能显示200 则m_iTotalValue为 500/200 -1 = 1.5
 	float     m_fTotalValue;  
 	float     m_fCurrValue;
-	int16     m_iLength;   //长度
+	DInt16     m_iLength;   //长度
 protected:
 	virtual void ShutDown();
 	
@@ -46,7 +46,7 @@ public:
 	virtual void Enable(bool child);
 	virtual void Disable(bool child);
 
-	void SetLength(int16 length);
+	void SetLength(DInt16 length);
 
 
 public:

@@ -1,43 +1,27 @@
 
 #ifndef _DEX_TYPE_H
 #define _DEX_TYPE_H
+#include "DexCompiler.h"
 
-#ifndef int8
-typedef signed char    int8;
-#endif
-#ifndef uint8
-typedef unsigned char    uint8;
-#endif
-#ifndef byte
-typedef unsigned char    byte;
-#endif
-#ifndef int16
-typedef signed short   int16;
-#endif
-#ifndef uint16
-typedef unsigned short   uint16;
-#endif
-#ifndef int32
-typedef signed int     int32;
-#endif
-#ifndef uint32
-typedef unsigned int     uint32;
-#endif
-#ifndef int64
-typedef signed __int64 int64;
-#endif
-#ifndef uint64
-typedef unsigned __int64 uint64;
-#endif
-#ifndef float32
-typedef float  float32;
-#endif
-#ifndef float64
-typedef double float64;
-#endif
-
-#ifndef DWORD
-typedef unsigned long     DWORD;
+using DChar    =    char		 ;
+using DBool    =    bool;
+using DByte	   =	unsigned char;
+using DInt8    =	signed char  ;
+using DUInt8   =	unsigned char;
+using DInt16   =	signed short;
+using DUInt16  =	unsigned short;
+using DInt32   =	signed int;
+using DUDInt32  =	 unsigned int;
+using DInt64   =	signed __int64;
+using DUInt64  =	unsigned __int64;
+using DFloat32 =	float;
+using DFloat64 =	double;
+using DWORD	   =	unsigned long;
+#define DEXINFINITE            0xFFFFFFFF
+#ifdef _DEX_PLATFORM_WIN32
+using DEXWORD = DUDInt32;
+#else
+using DEXWORD = DUInt64;
 #endif
 
 #ifdef _MSC_VER

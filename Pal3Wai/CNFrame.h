@@ -29,10 +29,10 @@ protected:
 protected:
 	LPDIRECT3DDEVICE9 m_device;
 	CTextureEx* m_pic[PIC_COUNT];    //9副图片
-	int16 m_width;	   //整体宽高
-	int16 m_height;
-	int16 m_posX;	   //绘制的起始点
-	int16 m_posY;
+	DInt16 m_width;	   //整体宽高
+	DInt16 m_height;
+	DInt16 m_posX;	   //绘制的起始点
+	DInt16 m_posY;
 	float m_horizonScale; //横向缩放(上、中、下三副图)
 	float m_verticalScale;//竖向缩放(坐、中、右三副图)
 	bool  m_render;
@@ -48,12 +48,12 @@ protected:
 public:
 	virtual void ShutDown();
 	virtual void Draw(); 
-	virtual bool LoadTexture(int16 index, char* filename);	
+	virtual bool LoadTexture(DInt16 index, char* filename);	
 
-	virtual void SetPos(int16 x, int16 y);
+	virtual void SetPos(DInt16 x, DInt16 y);
 	virtual D3DXVECTOR2 GetPos();
 	
-	virtual void SetSize(int16 width, int16 height);
+	virtual void SetSize(DInt16 width, DInt16 height);
 	virtual D3DXVECTOR2 GetSize();
 	
 	virtual void SetRender(bool b);

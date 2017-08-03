@@ -26,28 +26,28 @@ private:
 	//vertex
 	typedef struct _stMwsVertex :public _stMwsToken
 	{
-		float64 pos[3];
+		DFloat64 pos[3];
 		_stMwsVertex(){};
 		virtual ~_stMwsVertex(){};
 	}stMwsVertex;
 	//normal
 	typedef struct _stMwsNormal :public _stMwsToken
 	{
-		float64 normal[3];
+		DFloat64 normal[3];
 		_stMwsNormal(){};
 		virtual ~_stMwsNormal(){};
 	}stMwsNormal;
 	//uv
 	typedef struct _stMwsUv :public _stMwsToken
 	{
-		float64 uv[2];
+		DFloat64 uv[2];
 		_stMwsUv(){};
 		virtual ~_stMwsUv(){};
 	}stMwsUv;
 	//color
 	typedef struct _stMwsColor :public _stMwsToken
 	{
-		float64 color[4];
+		DFloat64 color[4];
 		_stMwsColor(){};
 		virtual ~_stMwsColor(){};
 	}stMwsColor;
@@ -90,7 +90,7 @@ private:
 			DexMaterial& getDexMaterial(DexMaterial& material);
 		}stMaterialLayerData;
 		DString sName;
-		uint16  iNumLayers;
+		DUInt16  iNumLayers;
 		stMaterialLayerData* pData;
 		_stMwsMaterial() :pData(nullptr){};
 		virtual ~_stMwsMaterial() { delete[] pData; };
@@ -98,13 +98,13 @@ private:
 	//face
 	typedef struct _stMwsFace :public _stMwsToken
 	{
-		uint16 iTimes; //暂时只支持iTimes==1的情况
-		uint16 iVertices;
-		uint16* pVertexIndex;
-		uint16* pNormalIndex;
-		uint16* pColorIndex;
-		uint16* pUvIndex;
-		uint16* pMaterialIndex;
+		DUInt16 iTimes; //暂时只支持iTimes==1的情况
+		DUInt16 iVertices;
+		DUInt16* pVertexIndex;
+		DUInt16* pNormalIndex;
+		DUInt16* pColorIndex;
+		DUInt16* pUvIndex;
+		DUInt16* pMaterialIndex;
 		_stMwsFace(){ pVertexIndex = pNormalIndex = pColorIndex = pUvIndex = pMaterialIndex = nullptr; }
 		virtual ~_stMwsFace() { delete[] pVertexIndex; delete[] pNormalIndex; delete[] pColorIndex; delete[] pUvIndex; delete[] pMaterialIndex; }
 	}stMwsFace;
@@ -113,8 +113,8 @@ private:
 	{
 		DString sName;
 		DString sParentName;
-		uint16  iFaceCount;
-		uint16*  pFaceIndex;
+		DUInt16  iFaceCount;
+		DUInt16*  pFaceIndex;
 		_stMwsGroup() :pFaceIndex(nullptr){}
 		virtual ~_stMwsGroup() { delete[]pFaceIndex; }
 	}stMwsGroup;
@@ -145,14 +145,14 @@ private:
 			NUM_TREETYPE
 		};
 		DString sName;
-		int16   iParentIndex;
+		DInt16   iParentIndex;
 		TreeType eTreeType;
 		double translation[3];
 		double rotation[3];
 		double scale[3];
 
-		uint16 iGroupIndex;
-		uint16 iNumLods;
+		DUInt16 iGroupIndex;
+		DUInt16 iNumLods;
 		double lodThresold[4];
 		_stMwsTree* pFather;
 		DVector<_stMwsTree*> children;
@@ -163,17 +163,17 @@ private:
 		bool isShape();
 	}stMwsTree;
 protected:
-	uint32 iMwsVersion;
+	DUDInt32 iMwsVersion;
 
-	uint16 iVertexCount;
-	uint16 iNormalCount;
-	uint16 iUvCount;
-	uint16 iColorCount;
-	uint16 iTextureCount;
-	uint16 iMaterialCount;
-	uint16 iFaceCount;
-	uint16 iGroupCount;
-	uint16 iTreeCount;
+	DUInt16 iVertexCount;
+	DUInt16 iNormalCount;
+	DUInt16 iUvCount;
+	DUInt16 iColorCount;
+	DUInt16 iTextureCount;
+	DUInt16 iMaterialCount;
+	DUInt16 iFaceCount;
+	DUInt16 iGroupCount;
+	DUInt16 iTreeCount;
 	stMwsVertex*	pVertexData;
 	stMwsNormal*	pNormalData;
 	stMwsUv*		pUvData;
@@ -187,7 +187,7 @@ protected:
 protected:
 	int getNextInt(const char*& ptr, char splitChar[3]);
 	bool getNextBool(const char*& ptr, char splitChar[3]);
-	float64 getNextDouble(const char*& ptr, char splitChar[3]);
+	DFloat64 getNextDouble(const char*& ptr, char splitChar[3]);
 	float getNextFloat(const char*& ptr, char splitChar[3]);
 	void getNextString(const char*& ptr, DString& str);
 	void getNextString(const char*& ptr, char* str);
@@ -214,8 +214,8 @@ public:
 
 public:
 	virtual bool		  SupportType(const char* fileType);
-	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
-	virtual bool		  SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag);
+	virtual DexModelBase* LoadModel(const char* filename, DInt32 flag);
+	virtual bool		  SaveModel(DexSkinMesh* pSkinMesh, const char* filename, DInt32 flag);
 };
 
 #endif 

@@ -36,8 +36,8 @@ protected:
 	LPDIRECT3DDEVICE9 m_device;
 
 	HWND              m_window;
-	int32             m_width;
-	int32             m_height;
+	DInt32             m_width;
+	DInt32             m_height;
 	int               m_fps;       
 
 	D3DXMATRIX        m_projection;
@@ -56,8 +56,8 @@ protected:
 
 	//fps参数
 	int               m_counter;
-	int64             m_currentTime;
-	int64             m_lastTime;
+	DInt64             m_currentTime;
+	DInt64             m_lastTime;
 	
 
 
@@ -70,7 +70,7 @@ protected:
 	D3DMULTISAMPLE_TYPE GetSampleType(DEMO_SAMPLE_TYPE _type, D3DDEVTYPE type, D3DFORMAT format, bool fullscreen);      //自定义类型到D3D类型转换
 
 public:
-	virtual bool Initialize(int32 width, int32 height, HWND hWnd, bool fullscreen, DEMO_SAMPLE_TYPE _type);
+	virtual bool Initialize(DInt32 width, DInt32 height, HWND hWnd, bool fullscreen, DEMO_SAMPLE_TYPE _type);
 	virtual void SetSamState(DEMOEX_SAM_STATE sam_state, int flag = 0);
 
 	virtual LPDIRECT3DDEVICE9 GetDevice();
@@ -97,10 +97,10 @@ public:
 	virtual void ClearLights() {};
 	virtual void EnableLight();            //开启光照效果
 	virtual void DisableLight()  ;         //关闭光照效果
-	virtual void EnableLightId(int32 lightid) ;      //激活灯光，根据灯光自身ID进行设置
-	virtual void EnableLightIndex(int32 index);      //激活灯光，根据灯光在D3D中的索引设置
-	virtual void DisableLightId(int32 lightid);	     //关闭指定灯
-	virtual void DisableLightIndex(int32 index);	 //关闭指定灯
+	virtual void EnableLightId(DInt32 lightid) ;      //激活灯光，根据灯光自身ID进行设置
+	virtual void EnableLightIndex(DInt32 index);      //激活灯光，根据灯光在D3D中的索引设置
+	virtual void DisableLightId(DInt32 lightid);	     //关闭指定灯
+	virtual void DisableLightIndex(DInt32 index);	 //关闭指定灯
 
 	virtual void AddXmodel(CModelX * model);
 	virtual void ClearXModels() {};

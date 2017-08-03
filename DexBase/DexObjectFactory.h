@@ -32,7 +32,7 @@ public:
 	static CDexObjectFactroy* getObjectFactory();
 	CDexObject* queryObject(std::string classType);
 	void allocateObject(CDexObject* object);
-	int32 getObjectId();
+	DInt32 getObjectId();
 };
 
 #define Dex_QueryObject(clas)  (clas*)CDexObjectFactroy::getObjectFactory()->queryObject(clas::getClassType())

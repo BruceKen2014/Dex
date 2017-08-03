@@ -28,7 +28,7 @@ public:
 	virtual void InBlankChar(int count = 1);             //向文件写入空字符，默认写入一个空字符
 	virtual void InNumber(int integer);                  //写入一个int整数
 	virtual void InNumber(long _long);                   //写入一个long整数
-	virtual void InNumber(int64 llong);                  //写入一个int64整数
+	virtual void InNumber(DInt64 llong);                  //写入一个DInt64整数
 	virtual void InNumber(float f, int precise = 6);     //写入一个浮点数, 保存浮点后面几位小数
 	virtual void InString(char * word, ...);             //写入字符串
 };

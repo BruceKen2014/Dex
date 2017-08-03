@@ -29,7 +29,7 @@ protected:
 	float       m_fU2;	
 	float       m_fV2;
 	DexColor    m_color;
-	int64       m_iCurrLiveTime; //当前已经生存的时间
+	DInt64       m_iCurrLiveTime; //当前已经生存的时间
 	CDexParticalEmit* m_pEmit; //粒子所在的发射器
 public:
 	CDexPartical();
@@ -87,11 +87,11 @@ enum EEmitType
 struct stFrame
 {
 	stFrame():frame(0),param1(0),param2(0) {}
-	int16 frame;    //有效帧 对于explode模式来说 是要爆炸的帧
+	DInt16 frame;    //有效帧 对于explode模式来说 是要爆炸的帧
 	                //对于frame_normal来说是 有效的开始帧
-	int16 param1;   //对于explode来说 是该帧要爆炸的粒子数量
+	DInt16 param1;   //对于explode来说 是该帧要爆炸的粒子数量
 					//对于frame_normal来说 是有效的结束帧
-	int16 param2; 
+	DInt16 param2; 
 };
 class CDexTex;	
 //一个粒子发射器
@@ -99,7 +99,7 @@ class CDexTex;
 //lua提供创建特效实例函数，并支持对指定ID实例的特效进行添加粒子发射器的添加
 class CDexParticalEmit: public CDexSceneObject
 {
-	Dex_DeclareClass(CDexParticalEmit,4)
+	Dex_DeclareClass(CDexParticalEmit, CDexSceneObject, 4)
 	friend class CDexPartical;
 public:
 	CDexParticalEmit();
@@ -107,13 +107,13 @@ public:
 
 public:
 	EEmitType          m_EmitType;
-	int16              m_iCurFrame;  //当前是第几帧 (如果是爆炸模式的话 在update之前要设置帧数)
-	typedef map<int16, stFrame>  TMapFrame;
+	DInt16              m_iCurFrame;  //当前是第几帧 (如果是爆炸模式的话 在update之前要设置帧数)
+	typedef map<DInt16, stFrame>  TMapFrame;
 	TMapFrame        m_keyFrame; //粒子关键帧及该帧对应的数据   
 	std::list<CDexPartical*>  m_particalList;	  //生存粒子链表
 	CDexTex*                  m_pDexTex;
-	int8                      m_iTexFrameX; //纹理横向有几帧资源 
-	int8                      m_iTexFrameTotal; //纹理一共有几帧资源(不用纵向帧数的原因是 用这个变量的话 图片最后一行可以不是满的) 
+	DInt8                      m_iTexFrameX; //纹理横向有几帧资源 
+	DInt8                      m_iTexFrameTotal; //纹理一共有几帧资源(不用纵向帧数的原因是 用这个变量的话 图片最后一行可以不是满的) 
 	EParticalFaceState m_eParticalFaceState;  //粒子的朝向状态
 	//D3DXVECTOR3 m_EmitPos;        //发射器的位置 这个变量已经不再起作用 若想要改变发射器位置 请直接设置object的 localmatrix
 	//发射器的朝向
@@ -126,9 +126,9 @@ public:
 	D3DXVECTOR3 m_rotateInit;     //粒子的初始旋转参数 以(0,0,-1)为参照
 	D3DXVECTOR3 m_rotateVelMax;      //最大旋转速度 度/s
 	D3DXVECTOR3 m_rotateVelMin;      //最小旋转速度 度/s
-	int64       m_iParticalLiveTime; //粒子生存时间
-	int64       m_iCreateLastParticalTime; //生成上一个粒子的时间
-	int32       m_createInterval; //生成粒子间隔 ms
+	DInt64       m_iParticalLiveTime; //粒子生存时间
+	DInt64       m_iCreateLastParticalTime; //生成上一个粒子的时间
+	DInt32       m_createInterval; //生成粒子间隔 ms
 	D3DXVECTOR3 m_velMin;          //粒子生成最小速度
 	D3DXVECTOR3 m_velMax;         //粒子生成最大速度
 	D3DXVECTOR3 m_acc;            //粒子加速度
@@ -149,12 +149,12 @@ protected:
 	void _UpdateFrameNormal(int delta, const D3DXVECTOR3& cam_pos);
 	void _InitParticalData(CDexPartical* partical);	 //normal和explode等只影响生成粒子的时机 不影响数据 故数据赋值提出来
 public:
-	void SetCurrFrame(int16 frame_index);
+	void SetCurrFrame(DInt16 frame_index);
 	void SetTexFile(string filename);
-	bool AddKeyFrame(int16 frame_index, const stFrame data); //添加关键帧
-	bool AddKeyFrame(int16 frame_index, int16 count);
+	bool AddKeyFrame(DInt16 frame_index, const stFrame data); //添加关键帧
+	bool AddKeyFrame(DInt16 frame_index, DInt16 count);
 	bool AddKeyFrame(const stFrame& data);
-	bool AddKeyFrameDur(int16 frame_start, int16 frame_end);
+	bool AddKeyFrameDur(DInt16 frame_start, DInt16 frame_end);
 	void PreInitMemRes();  //为系统预分配粒子内存 一边渲染一边申请 严重影响开始的帧数
 	bool Update(int delta);
 	bool Render();
@@ -191,7 +191,7 @@ public:
 };
 class CDexEffectInstance: public CDexSceneObject
 {//特效实例
-	Dex_DeclareClass(CDexEffectInstance,0)
+	Dex_DeclareClass(CDexEffectInstance, CDexSceneObject, 0)
 protected:
 	CDexEffectNotify*  m_pEffectBeginNotify; //由外部传入
 protected:
@@ -218,11 +218,11 @@ public:
 //常用于有先后关系的技能特效
 class CDexEffectEmitInstance: public CDexEffectInstance 
 {
-	Dex_DeclareClass(CDexEffectEmitInstance,4)
+	Dex_DeclareClass(CDexEffectEmitInstance, CDexEffectInstance, 4)
 protected:				  
-	int16  m_iPerFrameTime; //每一帧时间 单位:ms 如 1000/60 = 16ms 则一秒有60帧  
-	int16  m_iTotalFrames;	//特效的总帧数
-	int64  m_iTotalTime;    //特效总共过去的时间
+	DInt16  m_iPerFrameTime; //每一帧时间 单位:ms 如 1000/60 = 16ms 则一秒有60帧  
+	DInt16  m_iTotalFrames;	//特效的总帧数
+	DInt64  m_iTotalTime;    //特效总共过去的时间
 	typedef std::list<CDexParticalEmit*> TListEmitter;
 	TListEmitter m_EmiterList;
 
@@ -231,7 +231,7 @@ public:
 	virtual ~CDexEffectEmitInstance();
 public:
 	void AddEmitter(CDexParticalEmit* emitter);
-	void SetTotalFrames(int16 frames)  { m_iTotalFrames = frames;};
+	void SetTotalFrames(DInt16 frames)  { m_iTotalFrames = frames;};
 	virtual void StartFromBegin() ;
 	bool Update(int delta);
 	bool Render();
@@ -282,7 +282,7 @@ extern CDexClassParticalPool* getParticalPool();
 
 class CDexPieceEffectInstance: public CDexEffectInstance
 {
-	Dex_DeclareClass(CDexPieceEffectInstance,4)
+	Dex_DeclareClass(CDexPieceEffectInstance, CDexEffectInstance, 4)
 public:
 	typedef struct _stPiece 
 	{
@@ -311,7 +311,7 @@ protected:
 	float m_fLastPosRate;
 public:
 	float m_fMiddleTimeRate;  //中间生命比率(0.5)则为生命值的一半
-	int16 m_iPieceLiveTime;  //面片生存时间 单位ms
+	DInt16 m_iPieceLiveTime;  //面片生存时间 单位ms
 	DexColor m_startColor;
 	DexColor m_middleColor;
 	DexColor m_endColor;
@@ -332,7 +332,7 @@ public:
 	void setFactor(float factor);
 	void setSpeed(float speed);
 	bool setTexture(string filename);
-	void setPieceLiveTime(int16 time);
+	void setPieceLiveTime(DInt16 time);
 };
 
 //面片池 负责所有面片系统的内存管理

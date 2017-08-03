@@ -10,7 +10,7 @@
 //========================================model interface====================================
 class CDextModel: public CDexObject
 {
-	Dex_DeclareClass(CDextModel,0)
+	Dex_DeclareClass(CDextModel, CDexObject, 0)
 public:
 	CDextModel();
 	virtual ~CDextModel();
@@ -24,7 +24,7 @@ public:
 //=============================================.X file static=====================================
 class CDexModelX: public CDextModel
 {
-	Dex_DeclareClass(CDexModelX,10)
+	Dex_DeclareClass(CDexModelX, CDextModel, 10)
 protected:
 	LPD3DXMESH        m_model;            //网格模型接口
 	DWORD             m_numMaterials;	  
@@ -89,7 +89,7 @@ public:
 };
 class CDexModelXAni:public CDextModel
 {
-	Dex_DeclareClass(CDexModelXAni, 10)
+	Dex_DeclareClass(CDexModelXAni, CDextModel, 10)
 protected:
 	DexAllocateHierarchy*          m_pAlloc;
 	LPD3DXFRAME					m_pFrameRoot;
@@ -132,7 +132,7 @@ public:
 //========================================model factory==============================================
 class CDexModelFactory:public CDexObject
 {
-	Dex_DeclareClass(CDexModelFactory, 1)
+	Dex_DeclareClass(CDexModelFactory, CDexObject, 1)
 	friend class CDexObjectFactroy;
 private:
 	typedef std::map<string, CDextModel*> TMapModel;
@@ -151,7 +151,7 @@ public:
 
 class CDexSceneObjectModel: public CDexSceneObject
 {
-	Dex_DeclareClass(CDexSceneObjectModel, 10)
+	Dex_DeclareClass(CDexSceneObjectModel, CDexSceneObject, 10)
 protected:
 	CDextModel* m_pModel;
 public:

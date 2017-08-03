@@ -25,40 +25,40 @@ MS3D STRUCTURES
 struct MS3DHeader
 {
 	char m_ID[10]; //固定的标志 MS3D000000
-	int32 m_version; //格式版本号
+	DInt32 m_version; //格式版本号
 } PACK_STRUCT;
 
 // Vertex information
 struct MS3DVertex
 {
-	int8 m_flags;		// SELECTED | SELECTED2 | HIDDEN。显示时无用，仅在编辑时使用
+	DInt8 m_flags;		// SELECTED | SELECTED2 | HIDDEN。显示时无用，仅在编辑时使用
 	float m_vertex[3];	// 顶点坐标
 	char m_boneID;		// 所属关节的索引，-1表示顶点没有被指定到关节
-	int8 m_refCount;	// 显示时无用，仅在编辑时使用
+	DInt8 m_refCount;	// 显示时无用，仅在编辑时使用
 } PACK_STRUCT;
 
 // vertex weights in 1.8.x
 struct MS3DVertexWeights
 {
 	char boneIds[3];
-	uint8 weights[3];
+	DUInt8 weights[3];
 } PACK_STRUCT;
 
 // Triangle information
 struct MS3DTriangle
 {
-	int16 m_flags;					// SELECTED | SELECTED2 | HIDDEN。显示时无用，仅在编辑时使用
-	int16 m_vertexIndices[3];
+	DInt16 m_flags;					// SELECTED | SELECTED2 | HIDDEN。显示时无用，仅在编辑时使用
+	DInt16 m_vertexIndices[3];
 	float m_vertexNormals[3][3];
 	float m_s[3], m_t[3];
-	int8 m_smoothingGroup;		// 平滑组，范围1-32
-	int8 m_groupIndex;			// 所属的组索引
+	DInt8 m_smoothingGroup;		// 平滑组，范围1-32
+	DInt8 m_groupIndex;			// 所属的组索引
 } PACK_STRUCT;
 struct MS3DGroup {
-	int8         flags;              // SELECTED | HIDDEN。显示时无用，仅在编辑时使用
+	DInt8         flags;              // SELECTED | HIDDEN。显示时无用，仅在编辑时使用
 	char         name[32];           // 
-	int16        triangles;          // 三角形的数目
-	int16*       triangleIndices;    // 组中所有三角形的索引
+	DInt16        triangles;          // 三角形的数目
+	DInt16*       triangleIndices;    // 组中所有三角形的索引
 	char         materialIndex;      // 材质的索引，-1表示没有材质
 }PACK_STRUCT;
 // Material information
@@ -71,7 +71,7 @@ struct MS3DMaterial
 	float m_emissive[4];
 	float m_shininess;	// 0.0f - 128.0f 值越大越光滑，光源照在其上形成的亮点越小
 	float m_transparency;	// 0.0f - 1.0f
-	int8 m_mode;	// 0, 1, 2 is unused now
+	DInt8 m_mode;	// 0, 1, 2 is unused now
 	char m_texture[128];
 	char m_alphamap[128];
 } PACK_STRUCT;
@@ -85,13 +85,13 @@ struct MS3DKeyframe
 //	Joint information
 struct MS3DJoint
 {	
-	int8 m_flags;			// SELECTED | DIRTY
+	DInt8 m_flags;			// SELECTED | DIRTY
 	char m_name[32];
 	char m_parentName[32];	// 上一级关节的名字
 	float m_rotation[3];	 // 旋转，保存的是弧度而不是角度。旋转时先绕x轴旋转rotation[0]，再绕y旋转rotation[1]，最后绕z旋转rotation[2]
 	float m_translation[3];
-	int16 m_numRotationKeyframes;	// 关键帧。旋转和移动使用不同的关键帧。关键帧的数据包括了帧的时刻、帧的值。
-	int16 m_numTranslationKeyframes;
+	DInt16 m_numRotationKeyframes;	// 关键帧。旋转和移动使用不同的关键帧。关键帧的数据包括了帧的时刻、帧的值。
+	DInt16 m_numTranslationKeyframes;
 } PACK_STRUCT;
 
 
@@ -114,19 +114,19 @@ bool DexModelMs3dLoader::SupportType(const char* fileType)
 {
 	return dexstricmp(fileType, ".ms3d") == 0;
 }
-DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
+DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, DInt32 flag)
 {
-	getLog()->BeginLog();
-	int64 Time = getTime()->GetTotalMillSeconds();
-	getLog()->Log(log_ok, "load ms3d %s...\n", filename);
+	DexLog::getSingleton()->BeginLog();
+	DInt64 Time = getTime()->GetTotalMillSeconds();
+	DexLog::getSingleton()->LogLine(log_ok, "load ms3d %s...", filename);
 	//TODO 把model加入object工程，采用query机制
 	DexSkinMesh* skinMesh = new DexSkinMesh();
 	skinMesh->SetMeshType(SkinMeshModelType_MS3D);
 	ifstream inputFile(filename, ios::in | ios::binary | ios::_Nocreate);
 	if (inputFile.fail())
 	{
-		getLog()->Log(log_error, "		load ms3d %s failed!\n");
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_error, "		load ms3d %s failed!");
+		DexLog::getSingleton()->EndLog();
 		delete skinMesh;
 		return NULL;
 	}
@@ -134,18 +134,18 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 	long fileSize = inputFile.tellg();
 	inputFile.seekg(0, ios::beg);
 
-	int8 *pBuffer = new int8[fileSize];
+	DInt8 *pBuffer = new DInt8[fileSize];
 	inputFile.read((char*)pBuffer, fileSize);
 	inputFile.close();
 
-	const int8 *pPtr = pBuffer;
-	const int8 *EndPtr = pBuffer + fileSize;
+	const DInt8 *pPtr = pBuffer;
+	const DInt8 *EndPtr = pBuffer + fileSize;
 	MS3DHeader *pHeader = (MS3DHeader*)pPtr;
 	pPtr += sizeof(MS3DHeader);
 	if (strncmp(pHeader->m_ID, "MS3D000000", 10) != 0)
 	{
-		getLog()->Log(log_error, "		load ms3d %s failed! Id error!\n");
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_error, "		load ms3d %s failed! Id error!");
+		DexLog::getSingleton()->EndLog();
 		delete skinMesh;
 		delete[] pBuffer;
 		return NULL;
@@ -153,35 +153,35 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 
 	if (pHeader->m_version < 3 || pHeader->m_version > 4)
 	{
-		getLog()->Log(log_error, "		load ms3d %s failed! version error!\n");
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_error, "		load ms3d %s failed! version error!");
+		DexLog::getSingleton()->EndLog();
 		delete skinMesh;
 		return NULL;
 	}// "Unhandled file version. Only Milkshape3D Version 1.3 and 1.4 is supported." );
 
-	uint32 nVertices = *(int16*)pPtr;  //顶点个数
-	pPtr += sizeof(int16);
+	DUDInt32 nVertices = *(DInt16*)pPtr;  //顶点个数
+	pPtr += sizeof(DInt16);
 
 	MS3DVertex *pVertex = (MS3DVertex*)pPtr;
 
 	MS3DVertex pVertex22[100];
 	memcpy(pVertex22, pVertex, sizeof(MS3DVertex)* nVertices);
 	pPtr += sizeof(MS3DVertex)* nVertices;
-	int nTriangles = *(int16*)pPtr; //三角形个数
-	pPtr += sizeof(int16);
+	int nTriangles = *(DInt16*)pPtr; //三角形个数
+	pPtr += sizeof(DInt16);
 	MS3DTriangle* Triangles = (MS3DTriangle*)pPtr;
 	pPtr += sizeof(MS3DTriangle)*nTriangles;
-	int nGroups = *(int16*)pPtr; //mesh数量
-	pPtr += sizeof(int16);
+	int nGroups = *(DInt16*)pPtr; //mesh数量
+	pPtr += sizeof(DInt16);
 	for (int i = 0; i < nGroups; i++)
 	{
-		pPtr += sizeof(byte);	// flags
+		pPtr += sizeof(DByte);	// flags
 		pPtr += 32;				// name
-		int16 iTriangles = *(int16*)pPtr; //这个mesh有多少个三角形
-		pPtr += sizeof(int16);
-		int16 *pTriangleIndices = (int16*)pPtr; //三角形索引
-		pPtr += sizeof(int16)* iTriangles;
-		int32 indice_index = 0;
+		DInt16 iTriangles = *(DInt16*)pPtr; //这个mesh有多少个三角形
+		pPtr += sizeof(DInt16);
+		DInt16 *pTriangleIndices = (DInt16*)pPtr; //三角形索引
+		pPtr += sizeof(DInt16)* iTriangles;
+		DInt32 indice_index = 0;
 		DexSkinMesh::DexMesh* mesh = skinMesh->AddMesh(i); //新建mesh
 		DexVector3 tempPos;
 		DexVector3 tempNormal;
@@ -193,7 +193,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 			//检测三角形的三个顶点是否可在当前mesh中查找到，需要匹配pos normal uv
 			for (int point = 0; point < 3; ++point)
 			{
-				uint32 iPosIndex = Triangles[triangleIndex].m_vertexIndices[point];
+				DUDInt32 iPosIndex = Triangles[triangleIndex].m_vertexIndices[point];
 				tempPos.Set(pVertex[iPosIndex].m_vertex);
 				tempPos.z *= -1;
 				tempNormal.Set(Triangles[triangleIndex].m_vertexNormals[point]);
@@ -231,8 +231,8 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 		mesh->m_iTextureId = materialIndex;
 	}
 
-	int nMaterials = *(int16*)pPtr;
-	pPtr += sizeof(int16);
+	int nMaterials = *(DInt16*)pPtr;
+	pPtr += sizeof(DInt16);
 	for (int i = 0; i < nMaterials; i++)
 	{
 		MS3DMaterial *pMaterial = (MS3DMaterial*)pPtr;
@@ -255,17 +255,17 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 		pPtr += sizeof(MS3DMaterial);
 		_SafeFree(filename);
 	}
-	float32 framePerSecond = *(float32*)pPtr;
-	pPtr += sizeof(float32);
+	DFloat32 framePerSecond = *(DFloat32*)pPtr;
+	pPtr += sizeof(DFloat32);
 
-	float32 currentTime = *(float32*)pPtr;
-	pPtr += sizeof(float32);
+	DFloat32 currentTime = *(DFloat32*)pPtr;
+	pPtr += sizeof(DFloat32);
 
-	float32 totalFrames = *(float32*)pPtr;
-	pPtr += sizeof(float32);
+	DFloat32 totalFrames = *(DFloat32*)pPtr;
+	pPtr += sizeof(DFloat32);
 
-	int16 jointCount = *(int16*)pPtr;
-	pPtr += sizeof(int16);
+	DInt16 jointCount = *(DInt16*)pPtr;
+	pPtr += sizeof(DInt16);
 
 	DexMatrix4x4 baseMatrix;
 	DexMatrix4x4 matrix;
@@ -273,8 +273,8 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 	DexMatrix4x4 matrixRotateY;
 	DexMatrix4x4 matrixRotateZ;
 
-	float32 AniTime = 0.0f;
-	float32 minAniTime = 0;
+	DFloat32 AniTime = 0.0f;
+	DFloat32 minAniTime = 0;
 	for (int i = 1; i <= jointCount; ++i)
 	{
 		baseMatrix.Identity(); matrixRotateX.Identity(); matrixRotateY.Identity(); matrixRotateZ.Identity();
@@ -321,7 +321,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 		}
 		for (size_t k = 0; k < vec_rotation.size(); ++k)
 		{
-			float32 time = vec_rotation[k].m_time;
+			DFloat32 time = vec_rotation[k].m_time;
 			DexVector3 trans;
 			for (size_t t = 0; t < vec_position.size(); ++t)
 			{
@@ -342,7 +342,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 		}
 		for (size_t k = 0; k < vec_position.size(); ++k)
 		{
-			float32 time = vec_position[k].m_time;
+			DFloat32 time = vec_position[k].m_time;
 			DexVector3 trans(vec_position[k].m_parameter[0],
 				vec_position[k].m_parameter[1], -vec_position[k].m_parameter[2]);
 			bool _continue;
@@ -361,7 +361,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 			skinMesh->AddJointKeyFrame(newJoint->str_name, time * 1000, matrix * baseMatrix);
 		}
 	}
-	//map<int16, Vector<JointVertex>>::iterator ite = joint_Vertexs.find(-1);
+	//map<DInt16, Vector<JointVertex>>::iterator ite = joint_Vertexs.find(-1);
 	//if (ite != joint_Vertexs.end())
 	//{//处理没有绑定的顶点
 	//	for (int v = 0; v < ite->second.size(); ++v)
@@ -371,32 +371,32 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 	//}
 	if (pPtr < EndPtr && pHeader->m_version == 4)
 	{
-		int32 subVersion = *(int32*)pPtr; // comment subVersion, always 1
+		DInt32 subVersion = *(DInt32*)pPtr; // comment subVersion, always 1
 		pPtr += sizeof(subVersion);
 		for (int i = 0; i < 4; ++i)
 		{
-			uint32 numComment = *(uint32*)pPtr;
+			DUDInt32 numComment = *(DUDInt32*)pPtr;
 			pPtr += sizeof(numComment);
-			for (uint32 j = 0; j < numComment; ++j)
+			for (DUDInt32 j = 0; j < numComment; ++j)
 			{
 				// according to scorpiomidget this field does
 				// not exist for model comments. So avoid to
 				// read it
 				if (i != 3)
 				{
-					pPtr += sizeof(int32); //index
+					pPtr += sizeof(DInt32); //index
 				}
-				int32 commentLength = *(int32*)pPtr;
+				DInt32 commentLength = *(DInt32*)pPtr;
 				pPtr += sizeof(commentLength);
 				pPtr += commentLength;
 			}
 		}
 		if (pPtr < EndPtr)
 		{
-			subVersion = *(int32*)pPtr; //vertex subversion
+			subVersion = *(DInt32*)pPtr; //vertex subversion
 			pPtr += sizeof(subVersion);
 			// read vertex weights, ignoring data 'extra' from 1.8.2
-			int16 offset = subVersion == 1 ? 6 : 10;
+			DInt16 offset = subVersion == 1 ? 6 : 10;
 			for (int index = 0; index < nVertices; ++index)
 			{
 				MS3DVertexWeights* vertexEx = (MS3DVertexWeights*)pPtr;
@@ -409,14 +409,14 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 		}
 		if (pPtr < EndPtr)
 		{
-			subVersion = *(int32*)pPtr; //joint subversion
+			subVersion = *(DInt32*)pPtr; //joint subversion
 			pPtr += sizeof(subVersion);
 			// skip joint colors
-			pPtr += 3 * sizeof(float32)*jointCount;
+			pPtr += 3 * sizeof(DFloat32)*jointCount;
 		}
 		if (pPtr < EndPtr)
 		{
-			subVersion = *(int32*)pPtr; //model subversion
+			subVersion = *(DInt32*)pPtr; //model subversion
 			pPtr += sizeof(subVersion);
 		}
 	}
@@ -426,12 +426,12 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, int32 flag)
 	//skinMesh->CalculateVertex();
 
 	Time = getTime()->GetTotalMillSeconds() - Time;
-	getLog()->Log(log_ok, "load ms3d %s ok, use time %d ms\n", filename, Time);
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "load ms3d %s ok, use time %d ms", filename, Time);
+	DexLog::getSingleton()->EndLog();
 	return skinMesh;
 }
 
-bool DexModelMs3dLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag)
+bool DexModelMs3dLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, DInt32 flag)
 {
 	return true;
 }

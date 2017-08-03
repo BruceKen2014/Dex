@@ -10,7 +10,7 @@
 
 class IDexDeviceWindows : public IDexDevice
 {
-	Dex_DeclareClass(IDexDeviceWindows, 0)
+	Dex_DeclareClass(IDexDeviceWindows, IDexDevice, 0)
 public:
 	IDexDeviceWindows();
 	virtual ~IDexDeviceWindows();

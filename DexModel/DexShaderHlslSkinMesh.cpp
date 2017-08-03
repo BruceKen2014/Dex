@@ -16,15 +16,15 @@ DexShaderHlslSkinMesh::DexShaderHlslSkinMesh()
 		&pFxEffect, &pbuff);
 	if (pbuff)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, (char*)(pbuff->GetBufferPointer()));
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, (char*)(pbuff->GetBufferPointer()));
 		pbuff->Release();
 	}
 	if (FAILED(hr))
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, "DexShaderHlslSkinMesh D3DXCreateEffectFromFile 调用失败！");
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, "DexShaderHlslSkinMesh D3DXCreateEffectFromFile 调用失败！");
+		DexLog::getSingleton()->EndLog();
 	}
 	else
 	{
@@ -110,7 +110,7 @@ void DexShaderHlslSkinMesh::Render()
 	pFxEffect->SetRawValue(m_handleDirectionLightData, &m_directionLight, 0, sizeof(m_directionLight));
 
 	pFxEffect->SetTechnique(m_handleTech);
-	uint32 pass = 0;
+	DUDInt32 pass = 0;
 	pFxEffect->Begin(&pass, 0);
 	//for (int i = skinMesh->m_vecMeshs.size()-1; i >=0; --i)
 	for (size_t i = 0; i < skinMesh->m_vecMeshs.size(); ++i)
@@ -133,7 +133,7 @@ void DexShaderHlslSkinMesh::Render()
 				skinMesh->m_vecMeshs[i]->CreateLineIndices();
 			}
 			pFxEffect->SetTexture(m_handleTex0, NULL);
-			for (uint32 p = 0; p < pass; ++p)
+			for (DUDInt32 p = 0; p < pass; ++p)
 			{
 				pFxEffect->BeginPass(p);
 				DexGameEngine::getEngine()->GetRender()->DrawPrimitive(DexPT_LINELIST, skinMesh->m_vecMeshs[i]->GetVertexBuffer(),
@@ -186,7 +186,7 @@ void DexShaderHlslSkinMesh::Render()
 			{
 				pFxEffect->SetTexture(0, NULL);
 			}
-			for (uint32 p = 0; p < pass; ++p)
+			for (DUDInt32 p = 0; p < pass; ++p)
 			{
 				pFxEffect->BeginPass(p);
 				DexGameEngine::getEngine()->GetRender()->DrawPrimitive(DexPT_TRIANGLELIST, skinMesh->m_vecMeshs[i]->GetVertexBuffer(),

@@ -368,9 +368,9 @@ bool CRainSystem::CreatePartical()
 			m_particalList[i].m_color = D3DCOLOR_XRGB(rand()%255, rand()%255,rand()%255);
 		m_particalList[i].m_deltaX = m_particalList[i].m_deltaY = m_particalList[i].m_deltaZ = 0;
 	}
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "初始化雨雪粒子系统成功！");
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "初始化雨雪粒子系统成功！");
+	DexLog::getSingleton()->EndLog();
 	return true;
 }
 
@@ -571,9 +571,9 @@ bool CFireSystem::CreatePartical()
 		m_particalList[i].m_deltaY = abs(m_particalList[i].m_deltaY);  //Y方向只能向上波动
 		m_particalList[i].m_deltaZ = m_wave * normal_vector.z;;
 	}
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "初始化火焰粒子系统成功！");
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "初始化火焰粒子系统成功！");
+	DexLog::getSingleton()->EndLog();
 	return true;
 }
 

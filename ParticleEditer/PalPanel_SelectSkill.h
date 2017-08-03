@@ -11,7 +11,7 @@ class CDexWidgetLabel;
 class PalPanel_SelectSkill: public PalPanelInterface
 {
 	//根据技能 法术和 物品的不同对widget信息进行不同的显示
-	Dex_DeclareClass(PalPanel_SelectSkill,0)
+	Dex_DeclareClass(PalPanel_SelectSkill, PalPanelInterface,0)
 protected:
 	CDexWidgetImage*  m_pImgOrderBack;
 	CDexWidgetCheckBtn* m_pCheckBtnWater;    //水
@@ -29,8 +29,6 @@ public:
 
 public:
 	virtual bool Initialize();
-private:
-	PalPanel_SelectSkill* This(CEventHandler* sys);
 public:
 	virtual void setVisible(bool visible);
 	virtual bool getVisible();

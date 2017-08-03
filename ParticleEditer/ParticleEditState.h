@@ -31,7 +31,7 @@ class CDexWidgetImage;
 class CDexWidgetImageSequence;
 class CLoadingState: public DexGameState
 {
-	Dex_DeclareClass(CLoadingState,1)
+	Dex_DeclareClass(CLoadingState, DexGameState,1)
 public:
 	CDexWidgetImage*         g_pImageBackgroud;
 	CDexWidgetImageSequence* g_pImage;
@@ -53,7 +53,7 @@ public:
 
 class ParticalEditState: public DexGameState
 {
-	Dex_DeclareClass(ParticalEditState,1)
+	Dex_DeclareClass(ParticalEditState, DexGameState,1)
 	friend class TestPanel;
 public:
 	ParticalEditState();

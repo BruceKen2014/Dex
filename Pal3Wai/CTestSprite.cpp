@@ -119,18 +119,18 @@ void CTestSprite::Update(float delta, int mousex, int mousey)
 	}
 	if(vec_node.size() == 0)
 	{//
-		getLog()->BeginLog();
-		getLog()->Log(log_allert,"有sprite不属于任何区域，尝试重新插入...\n");
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert,"有sprite不属于任何区域，尝试重新插入...\n");
 		if(m_pQuadTree->AddSprite(this))
 		{
-			getLog()->Log(log_allert,"本次插入成功\n");
+			DexLog::getSingleton()->Log(log_allert,"本次插入成功\n");
 		}
 		else
 		{
-			getLog()->Log(log_allert,"本次插入失败，坐标left:%d, right:%d,, top:%d,, bottom:%d\n",
+			DexLog::getSingleton()->Log(log_allert,"本次插入失败，坐标left:%d, right:%d,, top:%d,, bottom:%d\n",
 				(int)m_rect.left, (int)m_rect.right, (int)m_rect.top, (int)m_rect.bottom);
 		}
-		getLog()->EndLog();
+		DexLog::getSingleton()->EndLog();
 	}
 }
 

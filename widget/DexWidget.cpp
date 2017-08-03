@@ -58,9 +58,9 @@ void CDexWidget::ShutDown()
 			continue;
 		}
 	}
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "控件:%s 销毁", m_name.c_str());
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "控件:%s 销毁", m_name.c_str());
+	DexLog::getSingleton()->EndLog();
 	getWidgetFactory()->removeWidget(m_name);
 }
 void CDexWidget::Show()
@@ -134,6 +134,7 @@ bool CDexWidget::Update(int delta)
 	}
 	if(m_bClipByParent)
 	{
+		//TODO:不要每帧调用，在形状位置发生改变时调用
 		if( m_father != NULL)
 		{
 			DexRectF father_rect = m_father->GetArea();
@@ -171,6 +172,56 @@ bool CDexWidget::CheckPointIn(const DexPoint& pt)
 {
 	return pt.x >= m_rect.left && pt.x <= m_rect.right
 		&& pt.y >= m_rect.top  && pt.y <= m_rect.bottom;
+}
+
+void CDexWidget::ReCalculateUV(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3, const DexRectF& srcRect, const DexRectF& clipRect)
+{
+	DEX_ENSURE(m_bClipByParent);
+	/*
+	uv0_____________uv1
+	|	_____	|
+	|	|	|	|
+	|	|___|	|
+	uv3|___________|uv2
+	外圈正方形是源矩形，内矩形是裁减之后的矩形，通过外矩形计算内矩形的uv
+	*/
+	float image_u_length = uv2.x - uv0.x;
+	float image_v_length = uv2.y - uv0.y;
+	DexVector2 uv0_clip(uv0), uv1_clip(uv1), uv2_clip(uv2), uv3_clip(uv3);
+	float real_width = srcRect.getWidth();
+	float real_height = srcRect.getHeight();
+	if (clipRect.left > srcRect.left)
+	{
+		float clip_length = clipRect.left - srcRect.left;
+		float clip_rate = clip_length / real_width;
+		float clip_u = image_u_length * clip_rate;
+		uv0.x += clip_u;
+	}
+	if (clipRect.top > srcRect.top)
+	{
+		float clip_length = clipRect.top - srcRect.top;
+		float clip_rate = clip_length / real_height;
+		float clip_v = image_v_length * clip_rate;
+		uv0.y += clip_v;
+	}
+	if (clipRect.right < srcRect.right)
+	{
+		float clip_length = srcRect.right - clipRect.right;
+		float clip_rate = clip_length / real_width;
+		float clip_u = image_u_length * clip_rate;
+		uv2.x -= clip_u;
+	}
+	if (clipRect.bottom < srcRect.bottom)
+	{
+		float clip_length = srcRect.bottom - clipRect.bottom;
+		float clip_rate = clip_length / real_height;
+		float clip_v = image_v_length * clip_rate;
+		uv2.y -= clip_v;
+	}
+	uv1.x = uv2.x;
+	uv1.y = uv0.y;
+	uv3.x = uv0.x;
+	uv3.y = uv2.y;
 }
 
 void CDexWidget::EraseAction(CDexGuiAction* action)
@@ -245,9 +296,9 @@ bool CDexWidget::OnMouseLUp(stEvent event)
 {
 	m_MouseLUp.Handle(this, event);
 	getDesktop()->SetUiEvent(false);
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "控件%s处理鼠标左键弹起事件", m_name.c_str());
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "控件%s处理鼠标左键弹起事件", m_name.c_str());
+	DexLog::getSingleton()->EndLog();
 	return true;
 }
 void CDexWidget::OnMouseLDown(stEvent event)
@@ -257,9 +308,9 @@ void CDexWidget::OnMouseLDown(stEvent event)
 	getDesktop()->SetUiEvent(false);
 
 	//getDesktop()->SetUiEvent(false);
-	//getLog()->BeginLog();
-	//getLog()->Log(log_ok, "控件%s处理鼠标左键按下事件", m_name.c_str());
-	//getLog()->EndLog();
+	//DexLog::getSingleton()->BeginLog();
+	//DexLog::getSingleton()->Log(log_ok, "控件%s处理鼠标左键按下事件", m_name.c_str());
+	//DexLog::getSingleton()->EndLog();
 }
 void CDexWidget::OnMouseRUp(stEvent event)
 {
@@ -448,9 +499,9 @@ bool CDexWidget::OnEvent(stEvent event)
 	                            //如一个图片上有一个子按钮，点击如果鼠标的点击范围在按钮和图片的共同区域内，则优先处理按钮
 	if(child_deal_event)
 	{
-		//getLog()->BeginLog();
-		//getLog()->Log(log_ok,"事件被控件%s子控件处理，本控件不再处理\n", GetName().c_str());
-		//getLog()->EndLog();
+		//DexLog::getSingleton()->BeginLog();
+		//DexLog::getSingleton()->Log(log_ok,"事件被控件%s子控件处理，本控件不再处理\n", GetName().c_str());
+		//DexLog::getSingleton()->EndLog();
 		return true;
 	}
 	bool deal = false;
@@ -471,9 +522,9 @@ bool CDexWidget::OnEvent(stEvent event)
 				deal = OnMouseLUp(event);
 				//if(deal)
 				//{
-				//	getLog()->BeginLog();
-				//	getLog()->Log(log_ok,"控件%s处理事件左鍵彈起\n", GetName().c_str());
-				//	getLog()->EndLog();
+				//	DexLog::getSingleton()->BeginLog();
+				//	DexLog::getSingleton()->Log(log_ok,"控件%s处理事件左鍵彈起\n", GetName().c_str());
+				//	DexLog::getSingleton()->EndLog();
 				//}
 			}
 			break;
@@ -630,9 +681,9 @@ void CDexWidget::AddAction(CDexGuiAction* action)
 	DEX_ENSURE(action);
 	action->SetOwner(this);
 	m_actions.push_back(action);
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "控件%s添加动作%s", m_name.c_str(), action->GetName().c_str());
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "控件%s添加动作%s", m_name.c_str(), action->GetName().c_str());
+	DexLog::getSingleton()->EndLog();
 }
 void CDexWidget::ModifyFlag( EModiFyType i_o, int flag )
 {

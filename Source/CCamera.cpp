@@ -33,7 +33,7 @@ void CCamera::Rotation(D3DXMATRIX matrix)
 	//memcpy(&m_right, &right, sizeof(D3DXVECTOR3));
 	//memcpy(&m_pos, &pos, sizeof(D3DXVECTOR3));
 	//memcpy(&m_focusPoint, &focus, sizeof(D3DXVECTOR3));
-	DexMatrix4x4 dexMatrix((float32*)&matrix);
+	DexMatrix4x4 dexMatrix((DFloat32*)&matrix);
 	DexMatrix4x4::TransformNormal(m_up, dexMatrix);
 	DexMatrix4x4::TransformNormal(m_view, dexMatrix);
 	DexMatrix4x4::TransformNormal(m_right, dexMatrix);

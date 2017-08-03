@@ -28,7 +28,7 @@ void DexSkinMesh::Joint::AddChild(Joint* child)
 	child->m_pFather = this;
 }
 //先按照时间从小到大插入
-void DexSkinMesh::Joint::AddKeyFrame(int32 time, const DexMatrix4x4& matrix)
+void DexSkinMesh::Joint::AddKeyFrame(DInt32 time, const DexMatrix4x4& matrix)
 {
 	m_vecKeyFrames.push_back(matrix_key(time, matrix));
 }
@@ -60,7 +60,7 @@ void DexSkinMesh::Joint::Update(int time)
 		m_vecChildren[i]->Update(time);
 	}
 }
-void DexSkinMesh::Joint::ComputeWorldMatrix(int32 time)
+void DexSkinMesh::Joint::ComputeWorldMatrix(DInt32 time)
 {
 	if (m_bAnimate)
 	{
@@ -101,7 +101,7 @@ void DexSkinMesh::Joint::ComputeWorldMatrix(int32 time)
 				if (bJustEqual)
 					frame_matrix = matrix1;
 				else
-					frame_matrix = matrix1 + (matrix2 - matrix1) * ((float32)(time - time1)) / ((float32)(time2 - time1));
+					frame_matrix = matrix1 + (matrix2 - matrix1) * ((DFloat32)(time - time1)) / ((DFloat32)(time2 - time1));
 			}
 		}
 	}
@@ -131,11 +131,11 @@ void DexSkinMesh::DexMesh::DestroyLineIndices()
 {
 	m_vecLineIndices.clear();
 }
-int32* DexSkinMesh::DexMesh::CreateLineIndices()
+DInt32* DexSkinMesh::DexMesh::CreateLineIndices()
 {
 	m_vecLineIndices.clear();
 	int lineCount = m_vecIndices.size() * 2;
-	int32 line_indice_index = 0;
+	DInt32 line_indice_index = 0;
 	for (int i = 0; i + 2 < m_vecIndices.size();)
 	{//3个顶点为一个三角形
 		m_vecLineIndices.push_back(m_vecIndices[i]);
@@ -147,7 +147,7 @@ int32* DexSkinMesh::DexMesh::CreateLineIndices()
 		i = i + 3;
 	}
 	DEX_ENSURE_P(m_vecLineIndices.size() != 0);
-	return (int32*)&m_vecLineIndices[0];
+	return (DInt32*)&m_vecLineIndices[0];
 }
 
 void DexSkinMesh::DexMesh::CreateNormalBuffer()
@@ -170,7 +170,7 @@ void DexSkinMesh::DexMesh::DestroyNormalBuffer()
 	m_vecDebugNormalBuffer.clear();
 	m_vecDebugNormalIndices.clear();
 }
-uint32 DexSkinMesh::DexMesh::GetNormalBufferCount() const
+DUDInt32 DexSkinMesh::DexMesh::GetNormalBufferCount() const
 {
 	return m_vecDebugNormalBuffer.size();
 }
@@ -180,7 +180,7 @@ void* DexSkinMesh::DexMesh::GetNormalBuffer()
 	DEX_ENSURE_P(m_vecDebugNormalBuffer.size() != 0);
 	return (void*)&m_vecDebugNormalBuffer[0];
 }
-uint32 DexSkinMesh::DexMesh::GetNormalIndiceCount() const
+DUDInt32 DexSkinMesh::DexMesh::GetNormalIndiceCount() const
 {
 	return m_vecDebugNormalIndices.size();
 }
@@ -193,7 +193,7 @@ void* DexSkinMesh::DexMesh::GetNormalIndiceBuffer()
 
 void DexSkinMesh::DexMesh::CreateVertexToJointBuffer(const DVector<Joint*>& vecJoints)
 {
-	uint32 iVertexSize = m_vecVertexsBuffer.size();
+	DUDInt32 iVertexSize = m_vecVertexsBuffer.size();
 	for (size_t i = 0; i < iVertexSize; ++i)
 	{
 		stMeshVertex temp;
@@ -230,7 +230,7 @@ void DexSkinMesh::DexMesh::DestroyVertexToJointlBuffer()
 	m_vecDebugVertexToJointBuffer.clear();
 	m_vecDebugVertexToJointIndices.clear();
 }
-uint32 DexSkinMesh::DexMesh::GetVertexToJointBufferCount() const
+DUDInt32 DexSkinMesh::DexMesh::GetVertexToJointBufferCount() const
 {
 	return m_vecDebugVertexToJointBuffer.size();
 }
@@ -240,7 +240,7 @@ void* DexSkinMesh::DexMesh::GetVertexToJointBuffer()
 	DEX_ENSURE_P(m_vecDebugVertexToJointBuffer.size() != 0);
 	return (void*)&m_vecDebugVertexToJointBuffer[0];
 }
-uint32 DexSkinMesh::DexMesh::GetVertexToJointIndiceCount() const
+DUDInt32 DexSkinMesh::DexMesh::GetVertexToJointIndiceCount() const
 {
 	return m_vecDebugVertexToJointIndices.size();
 }
@@ -251,7 +251,7 @@ void* DexSkinMesh::DexMesh::GetVertexToJointIndiceBuffer()
 	return (void*)&m_vecDebugVertexToJointIndices[0];
 }
 
-uint32 DexSkinMesh::DexMesh::GetVertexCount() const
+DUDInt32 DexSkinMesh::DexMesh::GetVertexCount() const
 {
 	return m_vecVertexsBuffer.size();
 }
@@ -261,7 +261,7 @@ void* DexSkinMesh::DexMesh::GetVertexBuffer()
 	DEX_ENSURE_P(m_vecVertexsBuffer.size() != 0);
 	return (void*)&m_vecVertexsBuffer[0];
 }
-uint32 DexSkinMesh::DexMesh::GetIndiceCount() const
+DUDInt32 DexSkinMesh::DexMesh::GetIndiceCount() const
 {
 	return m_vecIndices.size();
 }
@@ -271,7 +271,7 @@ void* DexSkinMesh::DexMesh::GetIndiceBuffer()
 	DEX_ENSURE_P(m_vecIndices.size() != 0);
 	return (void*)&m_vecIndices[0];
 }
-uint32 DexSkinMesh::DexMesh::GetLineIndiceCount() const
+DUDInt32 DexSkinMesh::DexMesh::GetLineIndiceCount() const
 {
 	return m_vecLineIndices.size();
 }
@@ -281,9 +281,9 @@ void* DexSkinMesh::DexMesh::GetLineIndiceBuffer()
 	DEX_ENSURE_P(m_vecLineIndices.size() != 0);
 	return (void*)&m_vecLineIndices[0];
 }
-uint32 DexSkinMesh::DexMesh::AddVertex(const DexVector3& pos, const DexVector3& normal, float u, float v)
+DUDInt32 DexSkinMesh::DexMesh::AddVertex(const DexVector3& pos, const DexVector3& normal, float u, float v)
 {
-	uint32 ret = 0;
+	DUDInt32 ret = 0;
 	DexVector3 Normal(normal);
 	Normal.Normalize();
 	bool find = false;
@@ -313,7 +313,7 @@ uint32 DexSkinMesh::DexMesh::AddVertex(const DexVector3& pos, const DexVector3& 
 	return ret;
 }
 
-void DexSkinMesh::DexMesh::AddVertexIndice(const int32& index)
+void DexSkinMesh::DexMesh::AddVertexIndice(const DInt32& index)
 {
 	m_vecIndices.push_back(index);
 }
@@ -322,7 +322,7 @@ DexSkinMesh::DexSkinMesh()
 {
 	Init();
 }
-DexSkinMesh::DexSkinMesh(int16 maxAniTime)
+DexSkinMesh::DexSkinMesh(DInt16 maxAniTime)
 
 {
 	Init();
@@ -411,7 +411,7 @@ DexSkinMesh::~DexSkinMesh()
 	m_vecTextures.clear();
 }
 
-uint16 DexSkinMesh::sGetMaxJointCount()
+DUInt16 DexSkinMesh::sGetMaxJointCount()
 {
 	return 60;
 }
@@ -422,7 +422,7 @@ void DexSkinMesh::SetSceneNodeMatrix(const DexMatrix4x4& matrix)
 	m_pRootJoint->world_matrix = bindMatrix;
 }
 
-void DexSkinMesh::SetMaxAniTime(int16 time)
+void DexSkinMesh::SetMaxAniTime(DInt16 time)
 {
 	m_iAnimateMaxTime = time;
 	m_iAnimateStartTime = 0;
@@ -430,7 +430,7 @@ void DexSkinMesh::SetMaxAniTime(int16 time)
 	m_bHaveAnimation = true;
 	m_bAnimate = true;
 }
-bool DexSkinMesh::SetAnimateTime(int16 start, int16 end)
+bool DexSkinMesh::SetAnimateTime(DInt16 start, DInt16 end)
 {
 	bool ret = false;
 	if (start >= 0 && start <= end && end <= m_iAnimateMaxTime)
@@ -464,27 +464,27 @@ void DexSkinMesh::ReStartAnimation()
 		m_iAnimateNowTime = m_iAnimateEndTime;
 	}
 }
-int16 DexSkinMesh::GetAnimateNowTime() const
+DInt16 DexSkinMesh::GetAnimateNowTime() const
 {
 	return m_iAnimateNowTime;
 }
 
-int16 DexSkinMesh::GetAnimateEndTime()const
+DInt16 DexSkinMesh::GetAnimateEndTime()const
 {
 	return m_iAnimateEndTime;
 }
 
-int16 DexSkinMesh::GetAnimateStartTime() const
+DInt16 DexSkinMesh::GetAnimateStartTime() const
 {
 	return m_iAnimateStartTime;
 }
 
-float32 DexSkinMesh::GetAnimateRatio() const
+DFloat32 DexSkinMesh::GetAnimateRatio() const
 {
 	return m_fAnimateRatio;
 }
 
-void DexSkinMesh::SetAnimateRatio(float32 ratio)
+void DexSkinMesh::SetAnimateRatio(DFloat32 ratio)
 {
 	m_fAnimateRatio = ratio;
 }
@@ -520,7 +520,7 @@ SkinMeshModelType DexSkinMesh::GetMeshType() const
 	return m_eMeshType;
 }
 
-bool DexSkinMesh::Update(int32 delta)
+bool DexSkinMesh::Update(DInt32 delta)
 {
 	delta = m_fAnimateRatio * delta;
 	DEX_ENSURE_B(DexModelBase::Update(delta));
@@ -593,7 +593,7 @@ bool DexSkinMesh::Render()
 	return true;
 }
 
-DexSkinMesh::DexMesh* DexSkinMesh::FindMesh(int8 meshId)
+DexSkinMesh::DexMesh* DexSkinMesh::FindMesh(DInt8 meshId)
 {
 	DexMesh* ret = NULL;
 	for (size_t i = 0; i < m_vecMeshs.size(); ++i)
@@ -621,7 +621,7 @@ DexSkinMesh::DexMesh* DexSkinMesh::FindMesh(const char*  meshName)
 	return ret;
 }
 
-DexSkinMesh::DexMesh* DexSkinMesh::FindMesh(uint8 iMaterialIndex, bool bAdd)
+DexSkinMesh::DexMesh* DexSkinMesh::FindMesh(DUInt8 iMaterialIndex, bool bAdd)
 {
 	DexMesh* pRet = nullptr;
 	for (size_t i = 0; i < m_vecMeshs.size(); ++i)
@@ -640,7 +640,7 @@ DexSkinMesh::DexMesh* DexSkinMesh::FindMesh(uint8 iMaterialIndex, bool bAdd)
 	}
 	return pRet;
 }
-DexSkinMesh::DexMesh* DexSkinMesh::AddMesh(int8 meshId)
+DexSkinMesh::DexMesh* DexSkinMesh::AddMesh(DInt8 meshId)
 {
 	DexMesh* mesh = FindMesh(meshId);
 	DEX_ENSURE_P(mesh == NULL);
@@ -661,25 +661,25 @@ DexSkinMesh::DexMesh* DexSkinMesh::AddMesh(const char* meshName)
 	return mesh;
 }
 
-void DexSkinMesh::SetMeshVertexs(int8 meshId, void* vertexs, int32 count)
+void DexSkinMesh::SetMeshVertexs(DInt8 meshId, void* vertexs, DInt32 count)
 {
 	DexMesh* mesh = FindMesh(meshId);
 	DEX_ENSURE(mesh);
 	mesh->m_vecVertexsBuffer.clear();
 	mesh->m_vecVertexsBuffer.resize(count);
 	memcpy(&mesh->m_vecVertexsBuffer[0], vertexs, sizeof(stMeshVertex)*count);
-	//for (uint32 i = 0; i < count; ++i)
+	//for (DUDInt32 i = 0; i < count; ++i)
 	//	mesh->m_vecVertexs.push_back(((stVertex3*)vertexs)[i]);
 }
-void DexSkinMesh::SetMeshIndices(int8 meshId, void* indics, int32 count)
+void DexSkinMesh::SetMeshIndices(DInt8 meshId, void* indics, DInt32 count)
 {
 	DexMesh* mesh = FindMesh(meshId);
 	DEX_ENSURE(mesh);
 	mesh->m_vecIndices.clear();
 	mesh->m_vecIndices.resize(count);
-	memcpy(&mesh->m_vecIndices[0], indics, sizeof(int32)*count);
-	//for (uint32 i = 0; i < count; ++i)
-	//	mesh->m_vecIndices.push_back(((int32*)indics)[i]);
+	memcpy(&mesh->m_vecIndices[0], indics, sizeof(DInt32)*count);
+	//for (DUDInt32 i = 0; i < count; ++i)
+	//	mesh->m_vecIndices.push_back(((DInt32*)indics)[i]);
 }
 
 DexSkinMesh::Joint* DexSkinMesh::AddJoint(int id)
@@ -753,7 +753,7 @@ DexSkinMesh::Joint* DexSkinMesh::AddJoint(int id, int father_id, const DexMatrix
 	return joint;
 }
 
-DexSkinMesh::Joint* DexSkinMesh::FindJoint(int32 jointId)
+DexSkinMesh::Joint* DexSkinMesh::FindJoint(DInt32 jointId)
 {
 	if (jointId == -1)
 		return NULL;
@@ -851,9 +851,9 @@ DexSkinMesh::Joint* DexSkinMesh::FindJoint(string name)
 	return ret;
 }
 
-uint32 DexSkinMesh::FindJointIndex(DString name)
+DUDInt32 DexSkinMesh::FindJointIndex(DString name)
 {
-	uint32 ret = -1;
+	DUDInt32 ret = -1;
 	for (size_t i = 0; i < m_vecJoints.size(); ++i)
 	{
 		if (m_vecJoints[i] != NULL && m_vecJoints[i]->str_name == name)
@@ -865,98 +865,98 @@ uint32 DexSkinMesh::FindJointIndex(DString name)
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrame(int32 jointid, int32 time, const DexMatrix4x4& matrix)
+bool DexSkinMesh::AddJointKeyFrame(DInt32 jointid, DInt32 time, const DexMatrix4x4& matrix)
 {
 	Joint* joint = FindJoint(jointid);
 	bool ret = AddJointKeyFrame(joint, time, matrix);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrame(int32 jointid, int32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, float32 radian)
+bool DexSkinMesh::AddJointKeyFrame(DInt32 jointid, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, DFloat32 radian)
 {
 	Joint* joint = FindJoint(jointid);
 	bool ret = AddJointKeyFrame(joint, time, pos, scale, axis, radian);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrame(int32 jointid, int32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua)
+bool DexSkinMesh::AddJointKeyFrame(DInt32 jointid, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua)
 {
 	Joint* joint = FindJoint(jointid);
 	bool ret = AddJointKeyFrame(joint, time, pos, scale, qua);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrameTrans(int32 jointId, int32 time, const DexVector3& pos)
+bool DexSkinMesh::AddJointKeyFrameTrans(DInt32 jointId, DInt32 time, const DexVector3& pos)
 {
 	Joint* joint = FindJoint(jointId);
 	bool ret = AddJointKeyFrameTrans(joint, time, pos);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrameScale(int32 jointId, int32 time, const DexVector3& scale)
+bool DexSkinMesh::AddJointKeyFrameScale(DInt32 jointId, DInt32 time, const DexVector3& scale)
 {
 	Joint* joint = FindJoint(jointId);
 	bool ret = AddJointKeyFrameScale(joint, time, scale);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrameRotation(int32 jointId, int32 time, const DexVector3& axis, float32 radian)
+bool DexSkinMesh::AddJointKeyFrameRotation(DInt32 jointId, DInt32 time, const DexVector3& axis, DFloat32 radian)
 {
 	Joint* joint = FindJoint(jointId);
 	bool ret = AddJointKeyFrameRotation(joint, time, axis, radian);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrameRotation(int32 jointId, int32 time, const DexQuaternion& qua)
+bool DexSkinMesh::AddJointKeyFrameRotation(DInt32 jointId, DInt32 time, const DexQuaternion& qua)
 {
 	Joint* joint = FindJoint(jointId);
 	bool ret = AddJointKeyFrameRotation(joint, time, qua);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrame(string name, int32 time, const DexMatrix4x4& matrix)
+bool DexSkinMesh::AddJointKeyFrame(string name, DInt32 time, const DexMatrix4x4& matrix)
 {
 	Joint* joint = FindJoint(name);
 	bool ret = AddJointKeyFrame(joint, time, matrix);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrame(string name, int32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, float32 radian)
+bool DexSkinMesh::AddJointKeyFrame(string name, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, DFloat32 radian)
 {
 	Joint* joint = FindJoint(name);
 	bool ret = AddJointKeyFrame(joint, time, pos, scale, axis, radian);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrame(string name, int32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua)
+bool DexSkinMesh::AddJointKeyFrame(string name, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua)
 {
 	Joint* joint = FindJoint(name);
 	bool ret = AddJointKeyFrame(joint, time, pos, scale, qua);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrameTrans(string name, int32 time, const DexVector3& pos)
+bool DexSkinMesh::AddJointKeyFrameTrans(string name, DInt32 time, const DexVector3& pos)
 {
 	Joint* joint = FindJoint(name);
 	bool ret = AddJointKeyFrameTrans(joint, time, pos);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrameScale(string name, int32 time, const DexVector3& scale)
+bool DexSkinMesh::AddJointKeyFrameScale(string name, DInt32 time, const DexVector3& scale)
 {
 	Joint* joint = FindJoint(name);
 	bool ret = AddJointKeyFrameScale(joint, time, scale);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrameRotation(string name, int32 time, const DexVector3& axis, float32 radian)
+bool DexSkinMesh::AddJointKeyFrameRotation(string name, DInt32 time, const DexVector3& axis, DFloat32 radian)
 {
 	Joint* joint = FindJoint(name);
 	bool ret = AddJointKeyFrameRotation(joint, time, axis, radian);
 	return ret;
 }
 
-bool DexSkinMesh::AddJointKeyFrameRotation(string name, int32 time, const DexQuaternion& qua)
+bool DexSkinMesh::AddJointKeyFrameRotation(string name, DInt32 time, const DexQuaternion& qua)
 {
 	Joint* joint = FindJoint(name);
 	bool ret = AddJointKeyFrameRotation(joint, time, qua);
@@ -964,14 +964,14 @@ bool DexSkinMesh::AddJointKeyFrameRotation(string name, int32 time, const DexQua
 }
 
 
-bool DexSkinMesh::AddJointKeyFrame(Joint* joint, int32 time, const DexMatrix4x4& matrix)
+bool DexSkinMesh::AddJointKeyFrame(Joint* joint, DInt32 time, const DexMatrix4x4& matrix)
 {
 	DEX_ENSURE_B(joint);
 	joint->AddKeyFrame(time, matrix);
 	return true;
 }
 
-bool DexSkinMesh::AddJointKeyFrame(Joint* joint, int32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, float32 radian)
+bool DexSkinMesh::AddJointKeyFrame(Joint* joint, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, DFloat32 radian)
 {
 	DEX_ENSURE_B(joint);
 	DexQuaternion qua(axis, radian);
@@ -983,7 +983,7 @@ bool DexSkinMesh::AddJointKeyFrame(Joint* joint, int32 time, const DexVector3& p
 	return true;
 }
 
-bool DexSkinMesh::AddJointKeyFrame(Joint* joint, int32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua)
+bool DexSkinMesh::AddJointKeyFrame(Joint* joint, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua)
 {
 	DEX_ENSURE_B(joint);
 	DexMatrix4x4 rotationMatrix = qua.GetMatrix();
@@ -994,7 +994,7 @@ bool DexSkinMesh::AddJointKeyFrame(Joint* joint, int32 time, const DexVector3& p
 	return true;
 }
 
-bool DexSkinMesh::AddJointKeyFrameTrans(Joint* joint, int32 time, const DexVector3& pos)
+bool DexSkinMesh::AddJointKeyFrameTrans(Joint* joint, DInt32 time, const DexVector3& pos)
 {
 	DEX_ENSURE_B(joint);
 	DexMatrix4x4 matrix;
@@ -1003,7 +1003,7 @@ bool DexSkinMesh::AddJointKeyFrameTrans(Joint* joint, int32 time, const DexVecto
 	return true;
 }
 
-bool DexSkinMesh::AddJointKeyFrameScale(Joint* joint, int32 time, const DexVector3& scale)
+bool DexSkinMesh::AddJointKeyFrameScale(Joint* joint, DInt32 time, const DexVector3& scale)
 {
 	DEX_ENSURE_B(joint);
 	DexMatrix4x4 matrix;
@@ -1011,7 +1011,7 @@ bool DexSkinMesh::AddJointKeyFrameScale(Joint* joint, int32 time, const DexVecto
 	return true;
 }
 
-bool DexSkinMesh::AddJointKeyFrameRotation(Joint* joint, int32 time, const DexVector3& axis, float32 radian)
+bool DexSkinMesh::AddJointKeyFrameRotation(Joint* joint, DInt32 time, const DexVector3& axis, DFloat32 radian)
 {
 	DEX_ENSURE_B(joint);
 	DexQuaternion qua(axis, radian);
@@ -1020,7 +1020,7 @@ bool DexSkinMesh::AddJointKeyFrameRotation(Joint* joint, int32 time, const DexVe
 	return true;
 }
 
-bool DexSkinMesh::AddJointKeyFrameRotation(Joint* joint, int32 time, const DexQuaternion& qua)
+bool DexSkinMesh::AddJointKeyFrameRotation(Joint* joint, DInt32 time, const DexQuaternion& qua)
 {
 	DEX_ENSURE_B(joint);
 	DexMatrix4x4 matrix = qua.GetMatrix();
@@ -1028,7 +1028,7 @@ bool DexSkinMesh::AddJointKeyFrameRotation(Joint* joint, int32 time, const DexQu
 	return true;
 }
 
-bool DexSkinMesh::UpdateOneTime(int32 delta)
+bool DexSkinMesh::UpdateOneTime(DInt32 delta)
 {
 	bool before_end = m_iAnimateNowTime < m_iAnimateEndTime;
 	if (m_pRootJoint != NULL)
@@ -1045,7 +1045,7 @@ bool DexSkinMesh::UpdateOneTime(int32 delta)
 	return true;
 }
 
-bool DexSkinMesh::UpdateLoop(int32 delta)
+bool DexSkinMesh::UpdateLoop(DInt32 delta)
 {
 	if (m_pRootJoint != NULL)
 		m_pRootJoint->Update(m_iAnimateNowTime);
@@ -1055,7 +1055,7 @@ bool DexSkinMesh::UpdateLoop(int32 delta)
 	return true;
 }
 
-bool DexSkinMesh::UpdateOneTimeBack(int32 delta)
+bool DexSkinMesh::UpdateOneTimeBack(DInt32 delta)
 {
 	if (m_pRootJoint != NULL)
 		m_pRootJoint->Update(m_iAnimateNowTime);
@@ -1065,7 +1065,7 @@ bool DexSkinMesh::UpdateOneTimeBack(int32 delta)
 	return true;
 }
 
-bool DexSkinMesh::UpdateLoopBack(int32 delta)
+bool DexSkinMesh::UpdateLoopBack(DInt32 delta)
 {
 	if (m_pRootJoint != NULL)
 		m_pRootJoint->Update(m_iAnimateNowTime);
@@ -1076,7 +1076,7 @@ bool DexSkinMesh::UpdateLoopBack(int32 delta)
 }
 
 
-bool DexSkinMesh::SetTexture(int8 meshId, int8 textureId)
+bool DexSkinMesh::SetTexture(DInt8 meshId, DInt8 textureId)
 {
 	DexMesh* mesh = FindMesh(meshId);
 	DEX_ENSURE_B(mesh);
@@ -1091,9 +1091,9 @@ bool DexSkinMesh::AddTexture(DexTexture* tex)
 	return true;
 }
 
-int32 DexSkinMesh::FindTexture(DString textureName)
+DInt32 DexSkinMesh::FindTexture(DString textureName)
 {
-	int32 index = -1;
+	DInt32 index = -1;
 	for (size_t i = 0; i < m_vecTextures.size(); ++i)
 	{
 		if (m_vecTextures[i] != DexNull &&
@@ -1106,9 +1106,9 @@ int32 DexSkinMesh::FindTexture(DString textureName)
 	return index;
 }
 
-int32 DexSkinMesh::AddTexture(const char* filename)
+DInt32 DexSkinMesh::AddTexture(const char* filename)
 {
-	int32 index = -1;
+	DInt32 index = -1;
 	for (size_t i = 0; i < m_vecTextures.size(); ++i)
 	{
 		if (m_vecTextures[i] != DexNull &&
@@ -1132,9 +1132,9 @@ int32 DexSkinMesh::AddTexture(const char* filename)
 	return index;
 }
 
-int32 DexSkinMesh::AddMaterial(const DexMaterial& material)
+DInt32 DexSkinMesh::AddMaterial(const DexMaterial& material)
 {
-	int32 index = -1;
+	DInt32 index = -1;
 	for (size_t i = 0; i < m_vecMaterials.size(); ++i)
 	{
 		if (dexstrcmp(material.name, m_vecMaterials[i].name) == 0)
@@ -1151,9 +1151,9 @@ int32 DexSkinMesh::AddMaterial(const DexMaterial& material)
 	return index;
 }
 
-int32 DexSkinMesh::FindMaterial(DString materialName)
+DInt32 DexSkinMesh::FindMaterial(DString materialName)
 {
-	int32 index = -1;
+	DInt32 index = -1;
 	for (size_t i = 0; i < m_vecMaterials.size(); ++i)
 	{
 		if (dexstrcmp(materialName.c_str(), m_vecMaterials[i].name) == 0)
@@ -1168,11 +1168,11 @@ int32 DexSkinMesh::FindMaterial(DString materialName)
 void DexSkinMesh::AddVertex(const DexVector3& pos)
 {
 }
-void DexSkinMesh::AddVertex(const DexVector3& pos, int16* JointId, float* weight, int16 jointCount)
+void DexSkinMesh::AddVertex(const DexVector3& pos, DInt16* JointId, float* weight, DInt16 jointCount)
 {
 }
 
-void DexSkinMesh::AddMeshTriangle(int8 meshId, int32 index0, int32 index1, int32 index2)
+void DexSkinMesh::AddMeshTriangle(DInt8 meshId, DInt32 index0, DInt32 index1, DInt32 index2)
 {
 	DexMesh* pMesh = FindMesh(meshId);
 	DEX_ENSURE(pMesh != NULL);
@@ -1181,7 +1181,7 @@ void DexSkinMesh::AddMeshTriangle(int8 meshId, int32 index0, int32 index1, int32
 	pMesh->m_vecIndices.push_back(index2);
 }
 
-void DexSkinMesh::AddVertex(int8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv)
+void DexSkinMesh::AddVertex(DInt8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv)
 {
 	DexMesh* mesh = FindMesh(meshId);
 	DEX_ENSURE(mesh);
@@ -1192,7 +1192,7 @@ void DexSkinMesh::AddVertex(int8 meshId, const DexVector3& pos, const DexVector3
 	mesh->AddVertex(pos, normal, uv.x, uv.y);
 }
 
-void DexSkinMesh::AddVertex(int8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv, int16* JointId, float* weight, uint16 jointCount)
+void DexSkinMesh::AddVertex(DInt8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv, DInt16* JointId, float* weight, DUInt16 jointCount)
 {
 	DexMesh* mesh = FindMesh(meshId);
 	DEX_ENSURE(mesh);
@@ -1208,7 +1208,7 @@ void DexSkinMesh::AddVertex(int8 meshId, const DexVector3& pos, const DexVector3
 	}
 	else
 	{
-		for (uint16 i = 0; i < jointCount; ++i)
+		for (DUInt16 i = 0; i < jointCount; ++i)
 		{
 			vertex.JointIndex[i] = JointId[i];
 			vertex.JointWeights[i] = weight[i];
@@ -1217,12 +1217,12 @@ void DexSkinMesh::AddVertex(int8 meshId, const DexVector3& pos, const DexVector3
 	mesh->m_vecVertexsBuffer.push_back(vertex);
 }
 
-bool DexSkinMesh::GetRenderFlag(int16 flag)
+bool DexSkinMesh::GetRenderFlag(DInt16 flag)
 {
 	return m_iRenderFlag & flag;
 }
 
-void DexSkinMesh::SetRenderFlag(int16 flag)
+void DexSkinMesh::SetRenderFlag(DInt16 flag)
 {
 	m_iRenderFlag |= flag;
 	if (m_iRenderFlag & SKINMESH_RENDER_VERTEXNORMAL)
@@ -1255,14 +1255,14 @@ void DexSkinMesh::SetRenderFlag(int16 flag)
 	}
 }
 
-void DexSkinMesh::SetJointScale(float32 fScale)
+void DexSkinMesh::SetJointScale(DFloat32 fScale)
 {
 	m_fJointScale = fScale;
 }
 
-void DexSkinMesh::SetOrderInfo(const DVector<int32>& vector)
+void DexSkinMesh::SetOrderInfo(const DVector<DInt32>& vector)
 {
-	uint32 size = m_vecMeshs.size();
+	DUDInt32 size = m_vecMeshs.size();
 	DEX_ENSURE(size == vector.size());//二者必須相等
 	DVector<DexMesh*> tempVecMeshs;
 	for (size_t i = 0; i < size; ++i)

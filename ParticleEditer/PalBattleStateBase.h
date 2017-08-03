@@ -7,7 +7,7 @@
 class PalBattleStateBase;
 class PalBattleStateMachine: public IDexStateMachine
 {
-	Dex_DeclareClass(PalBattleStateMachine,0)
+	Dex_DeclareClass(PalBattleStateMachine, IDexStateMachine, 0)
 public:
 	PalBattleStateMachine();
 	virtual ~PalBattleStateMachine();
@@ -23,7 +23,7 @@ public:
 };
 class PalBattleStateBase:public IDexState
 {
-	Dex_DeclareClass(PalBattleStateBase,0)
+	Dex_DeclareClass(PalBattleStateBase, IDexState, 0)
 protected:
 public:
 	PalBattleStateBase();
@@ -38,7 +38,7 @@ public:
 
 class PalBattleStateMoveCamera: public PalBattleStateBase
 {
-	Dex_DeclareClass(PalBattleStateMoveCamera,0)
+	Dex_DeclareClass(PalBattleStateMoveCamera, PalBattleStateBase,0)
 
 public:
 	PalBattleStateMoveCamera();
@@ -53,7 +53,7 @@ public:
 //====================================
 class PalBattleStateLabelMove: public PalBattleStateBase
 {
-	Dex_DeclareClass(PalBattleStateLabelMove,0)
+	Dex_DeclareClass(PalBattleStateLabelMove, PalBattleStateBase, 0)
 
 public:
 	PalBattleStateLabelMove();
@@ -68,7 +68,7 @@ public:
 //====================================
 class PalBattleStateSelectSkill: public PalBattleStateBase
 {
-	Dex_DeclareClass(PalBattleStateSelectSkill,0)
+	Dex_DeclareClass(PalBattleStateSelectSkill, PalBattleStateBase, 0)
 
 public:
 	PalBattleStateSelectSkill();
@@ -86,7 +86,7 @@ public:
 //====================================
 class PalBattleStateSelectTarget: public PalBattleStateBase
 {
-	Dex_DeclareClass(PalBattleStateSelectTarget,0)
+	Dex_DeclareClass(PalBattleStateSelectTarget, PalBattleStateBase, 0)
 
 public:
 	PalBattleStateSelectTarget();

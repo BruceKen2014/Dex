@@ -11,4 +11,5 @@ typedef std::string DString;
 #define dexstrcat		strcat
 #define dexstrcpy		strcpy
 #define dexatoi			atoi
+#define dexstrlen		strlen
 #endif

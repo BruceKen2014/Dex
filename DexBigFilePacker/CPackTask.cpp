@@ -19,7 +19,7 @@ CPackTaskRead::CPackTaskRead()
 	m_pBuffer = NULL;
 	m_bUse = true;
 }
-void CPackTaskRead::Initialize(DexFile* pFile, uint64 iOffset, int64 iCount, char*pBuffer)
+void CPackTaskRead::Initialize(DexFile* pFile, uint64 iOffset, DInt64 iCount, char*pBuffer)
 {
 	m_pReader = pFile;
 	m_iOffset = iOffset;
@@ -44,7 +44,7 @@ CPackTaskCompress::CPackTaskCompress()
 	m_bSuccess = false;
 	m_bUse = false;
 }
-void CPackTaskCompress::Initialize(char* pDestBuffer, uint32 iDestSize, char* pSrcBuffer, uint32 iSrcSize)
+void CPackTaskCompress::Initialize(char* pDestBuffer, DUDInt32 iDestSize, char* pSrcBuffer, DUDInt32 iSrcSize)
 {
 	m_pDestBuffer = pDestBuffer;
 	m_iDestSize = iDestSize;

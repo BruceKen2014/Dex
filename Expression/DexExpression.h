@@ -89,9 +89,9 @@ struct stExpStackValue
 				}	
 				else
 				{
-					//getLog()->BeginLog();
-					//getLog()->Log(log_allert, "字符串长度过长\n");
-					//getLog()->EndLog();
+					//DexLog::getSingleton()->BeginLog();
+					//DexLog::getSingleton()->Log(log_allert, "字符串长度过长\n");
+					//DexLog::getSingleton()->EndLog();
 				}
 				break;
 			}
@@ -105,9 +105,9 @@ struct stExpStackValue
 		{
 		case Expr_Bool:
 			{
-				//getLog()->BeginLog();
-				//getLog()->Log(log_allert, "操作错误！bool无法互减！\n");
-				//getLog()->EndLog();
+				//DexLog::getSingleton()->BeginLog();
+				//DexLog::getSingleton()->Log(log_allert, "操作错误！bool无法互减！\n");
+				//DexLog::getSingleton()->EndLog();
 				break;
 			}
 		case Expr_Char:
@@ -127,9 +127,9 @@ struct stExpStackValue
 			}
 		case Expr_String:
 			{
-				//getLog()->BeginLog();
-				//getLog()->Log(log_allert, "操作错误！string无法互减！！\n");
-				//getLog()->EndLog();
+				//DexLog::getSingleton()->BeginLog();
+				//DexLog::getSingleton()->Log(log_allert, "操作错误！string无法互减！！\n");
+				//DexLog::getSingleton()->EndLog();
 				break;
 			}
 		} 
@@ -142,16 +142,16 @@ struct stExpStackValue
 		{
 		case Expr_Bool:
 			{
-				//getLog()->BeginLog();
-				//getLog()->Log(log_allert, "操操作错误！bool无法相乘！！\n");
-				//getLog()->EndLog();
+				//DexLog::getSingleton()->BeginLog();
+				//DexLog::getSingleton()->Log(log_allert, "操操作错误！bool无法相乘！！\n");
+				//DexLog::getSingleton()->EndLog();
 				break;
 			}
 		case Expr_Char:
 			{
-				//getLog()->BeginLog();
-				//getLog()->Log(log_allert, "操作错误！char无法相乘！\n");
-				//getLog()->EndLog();
+				//DexLog::getSingleton()->BeginLog();
+				//DexLog::getSingleton()->Log(log_allert, "操作错误！char无法相乘！\n");
+				//DexLog::getSingleton()->EndLog();
 				break;
 			}
 		case Expr_Int:
@@ -166,9 +166,9 @@ struct stExpStackValue
 			}
 		case Expr_String:
 			{
-				//getLog()->BeginLog();
-				//getLog()->Log(log_allert, "操作错误！string无法相乘！\n");
-				//getLog()->EndLog();
+				//DexLog::getSingleton()->BeginLog();
+				//DexLog::getSingleton()->Log(log_allert, "操作错误！string无法相乘！\n");
+				//DexLog::getSingleton()->EndLog();
 				break;
 			}
 		} 

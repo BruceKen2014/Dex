@@ -68,4 +68,35 @@ public:
 
 extern CDexTime* getTime();
 
+class DexTimeCheck
+{
+private:
+	signed __int64& m_pParam;
+	signed __int64 m_iTick;
+public:
+	DexTimeCheck(signed __int64& param);
+	~DexTimeCheck();
+};
+#define TIME_CHECK_START(value)		signed __int64 value = getTime()->GetTotalMillSeconds()
+#define TIME_CHECK_END(value)					   value = getTime()->GetTotalMillSeconds() - value
+/*
+关于time check的使用：
+如果变量只在当前生命期内使用，那么使用TIME_CHECK_START & TIME_CHECK_END，如果要跨生命期使用，则使用DexTimeCheck
+如：
+DInt64 checkTime1 = 0;
+{//A
+	{//B
+		TIME_CHECK_START(checkTime2);
+		//C
+		{//跨生命期使用,统计C区花费的时间
+			DexTimeCheck TIMECHECK(checkTime1);
+			..
+		}
+		...
+		TIME_CHECK_END(checkTime2);
+		log(checkTime2);//只在B区使用
+	}
+}
+log(checkTime1);
+*/
 #endif

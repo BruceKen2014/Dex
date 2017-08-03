@@ -20,6 +20,7 @@
 //m_backImage->ModifyFlag(Add_Flag, DexGUI::mouse_r_drag);
 CDexWidgetImage::CDexWidgetImage()
 {
+	m_pImg = DexNull;
 	m_tex = NULL;
 	m_Mirro = false;
 	m_type = widget_image;
@@ -34,6 +35,24 @@ void CDexWidgetImage::ShutDown()
 	CDexWidget::ShutDown();
 }
 
+void CDexWidgetImage::CalculateUv(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3)
+{
+	uv0.x = (float)m_srcArea.left / (float)m_tex->GetWidth();
+	uv0.y = (float)m_srcArea.top / (float)m_tex->GetHeight();
+	uv2.x = (float)m_srcArea.right / (float)m_tex->GetWidth();
+	uv2.y = (float)m_srcArea.bottom / (float)m_tex->GetHeight();
+	uv1.x = uv2.x;
+	uv1.y = uv0.y;
+	uv3.x = uv0.x;
+	uv3.y = uv2.y;
+	if (m_Mirro)
+	{
+		float coor = uv1.x;
+		uv1.x = uv2.x = uv0.x;
+		uv0.x = uv3.x = coor;
+	}
+}
+
 bool CDexWidgetImage::Update(int delta)
 {
 	DEX_ENSURE_B(CDexWidget::Update(delta));
@@ -43,64 +62,13 @@ bool CDexWidgetImage::Update(int delta)
 void CDexWidgetImage::RenderThis()
 {
 	DEX_ENSURE(m_tex);
-	D3DXVECTOR2 v1, v2, v3, v4;
-	// v1 v2
-	// v4 v3
-	v1.x = (float)m_srcArea.left/(float)m_tex->GetWidth();
-	v1.y = (float)m_srcArea.top /(float)m_tex->GetHeight();
-	v3.x = (float)m_srcArea.right/(float)m_tex->GetWidth();
-	v3.y = (float)m_srcArea.bottom /(float)m_tex->GetHeight();
-	v2.x = v3.x;
-	v2.y = v1.y;
-	v4.x = v1.x;
-	v4.y = v3.y;
-	if(m_Mirro)
-	{
-		float coor = v2.x;
-		v2.x = v3.x = v1.x;
-		v1.x = v4.x = coor;
-	}
+	DexVector2 v1, v2, v3, v4;
+	CalculateUv(v1, v2, v3, v4);
 	get2DDrawer()->ResetMatrix();
 	if(m_bClipByParent)
 	{
-		float image_u_length = v3.x - v1.x;
-		float image_v_length = v3.y - v1.y;
-		D3DXVECTOR2 v1_clip(v1), v2_clip(v2), v3_clip(v3), v4_clip(v4);
-		float real_width = m_rect.getWidth();
-		float real_height = m_rect.getHeight();
-		if(m_rectAfterClip.left > m_rect.left)
-		{
-			float clip_length = m_rectAfterClip.left - m_rect.left;
-			float clip_rate = clip_length/real_width;
-			float clip_u = image_u_length * clip_rate;
-			v1_clip.x += clip_u;
-		}
-		if(m_rectAfterClip.top > m_rect.top)
-		{
-			float clip_length = m_rectAfterClip.top - m_rect.top;
-			float clip_rate = clip_length/real_height;
-			float clip_v = image_v_length * clip_rate;
-			v1_clip.y += clip_v;
-		}
-		if(m_rectAfterClip.right < m_rect.right)
-		{
-			float clip_length = m_rect.right - m_rectAfterClip.right;
-			float clip_rate = clip_length/real_width;
-			float clip_u = image_u_length * clip_rate;
-			v3_clip.x -= clip_u;
-		}
-		if(m_rectAfterClip.bottom < m_rect.bottom)
-		{
-			float clip_length =m_rect.bottom - m_rectAfterClip.bottom;
-			float clip_rate = clip_length/real_height;
-			float clip_v = image_v_length * clip_rate;
-			v3_clip.y -= clip_v;
-		}
-		v2_clip.x = v3_clip.x;
-		v2_clip.y = v1_clip.y;
-		v4_clip.x = v1_clip.x;
-		v4_clip.y = v3_clip.y;
-		get2DDrawer()->SetUV(v1_clip, v2_clip, v3_clip, v4_clip);
+		ReCalculateUV(v1, v2, v3, v4,m_rect,m_rectAfterClip);
+		get2DDrawer()->SetUV(v1, v2, v3, v4);
 	}
 	else
 	{

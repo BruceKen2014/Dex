@@ -4,5 +4,6 @@
 #include <map>
 
 #define DMap  std::map
-
+#include "DexString.h"
+typedef DMap<DString, DString> DMapStrStr;
 #endif

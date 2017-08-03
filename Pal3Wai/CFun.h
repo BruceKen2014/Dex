@@ -16,8 +16,8 @@
 
 
 
-extern int64 g_currentTime;
-extern int64 g_lastTime;
+extern DInt64 g_currentTime;
+extern DInt64 g_lastTime;
 extern int   g_fps;
 extern int   g_counter;
 extern int   g_clickId;

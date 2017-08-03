@@ -19,7 +19,7 @@ protected:
 	CDexWidget*  m_pRootWidget;
 	bool         m_uiEvent;      //是否有mouse事件可处理
 
-	int64        m_lastKeyTime;  //上次处理按键信息的时间
+	DInt64        m_lastKeyTime;  //上次处理按键信息的时间
 
 public:
 	bool m_bRenderRect; //是否渲染ui包围矩形框

@@ -86,7 +86,7 @@ void CFile::InNumber(long _long)
 	WriteFile(m_file, &cData, strlen(cData), &dwBytesWritten, NULL);
 }
 
-void CFile::InNumber(int64 llong)
+void CFile::InNumber(DInt64 llong)
 {
 	if(!Check())
 		return;

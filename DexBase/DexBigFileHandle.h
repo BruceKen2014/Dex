@@ -15,10 +15,10 @@ public:
 typedef struct _stDexBigFileContent
 {
 		   DexMd5 md5Key;  //16 byte
-		   uint32  iBlockIndex;
-		   uint32  iBlockCount;
-		   uint32  iOrigionSize;
-		   uint32  dummy;
+		   DUDInt32  iBlockIndex;
+		   DUDInt32  iBlockCount;
+		   DUDInt32  iOrigionSize;
+		   DUDInt32  dummy;
 		   _stDexBigFileContent()
 		   {
 			   iBlockCount = 0;
@@ -30,14 +30,14 @@ typedef struct _stDexBigFileContent
 }stDexBigFileContent;
 typedef struct _stDexBigFileHeader
 {
-	 uint32 count;
-	 uint32 blockCount;
+	 DUDInt32 count;
+	 DUDInt32 blockCount;
      _stDexBigFileHeader() :count(0), blockCount(0){};
 }stDexBigFileHeader;
 typedef struct _stDexBigFileBlock
 {
-	uint64 iByteOffset;
-	uint32  iBlockSize;
+	DUInt64 iByteOffset;
+	DUDInt32  iBlockSize;
 	bool	bCompress;
 	
 	_stDexBigFileBlock() :bCompress(true), iBlockSize(0), iByteOffset(0){};
@@ -46,22 +46,22 @@ public:
 	void setPrefix(string prefix); //use for save big file
 	//read
 	bool InitBigFile(const char*  filename);
-	uint64 Read(void* buffer);
-	uint64 Read(const char* filename, void* buffer);
+	DUInt64 Read(void* buffer);
+	DUInt64 Read(const char* filename, void* buffer);
 	//write
 	void AddPackFile(const char* filename);
 	bool SaveBigFile(const char* filename);
 	//func
 	bool OpenFile(const char* filename);
-	uint64 FileSize();
+	DUInt64 FileSize();
 	void CloseFile();
-	uint32 ContentCount();
+	DUDInt32 ContentCount();
 	void ClearContent();
 public:
 	DexBigFileHandle();
 	virtual ~DexBigFileHandle();
 protected:
-	uint64 ReadContent(const stDexBigFileContent* content, void* buffer);
+	DUInt64 ReadContent(const stDexBigFileContent* content, void* buffer);
 public:
 	static const int s_iBlockSize = 1024 * 64;
 	

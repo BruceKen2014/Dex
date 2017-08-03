@@ -57,11 +57,11 @@ float CLight::Getphi()
 {
 	return m_light.Phi;
 }
-void CLight::SetId( int32 _id)
+void CLight::SetId( DInt32 _id)
 {
 	m_id = _id;
 }
-int32 CLight::GetId() const
+DInt32 CLight::GetId() const
 {
 	return m_id;
 }

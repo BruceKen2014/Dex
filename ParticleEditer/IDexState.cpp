@@ -59,7 +59,7 @@ bool IDexState::AddTranstion(IDexStateTransition* tran)
 		if((*ite)->getType() == tran->getType())
 		{
 			dex_log_current_f_l(log_allert);
-			getLog()->Log(log_allert, "试图添加一个已经存在的state transition!");
+			DexLog::getSingleton()->Log(log_allert, "试图添加一个已经存在的state transition!");
 			exist =  true;
 			break;
 		}
@@ -112,7 +112,7 @@ bool IDexStateMachine::AddState(IDexState* state)
 		if((*ite)->getType() == state->getType())
 		{
 			dex_log_current_f_l(log_allert);
-			getLog()->Log(log_allert, "试图添加一个已经存在的state!");
+			DexLog::getSingleton()->Log(log_allert, "试图添加一个已经存在的state!");
 			exist =  true;
 			break;
 		}
@@ -193,5 +193,5 @@ bool IDexStateMachine::Update()
 			setCurrState(nextState);
 		}
 	}
-	return CDexObject::Update(getTime()->getDeltaTime());
+	return Super::Update(getTime()->getDeltaTime());
 }

@@ -21,19 +21,21 @@ typedef struct _stTimer
 	_stTimer(int _id, int _interval):id(_id),interval(_interval),delay(_interval){};
 }stTimer;
 
-#define Dex_DeclareClass(Object, count)						\
+#define Dex_DeclareClass(Object, SuperClass, count)						\
 public:												\
+	using This = Object;\
+	using Super = SuperClass;\
 	virtual std::string getType() const { return #Object;}\
 	virtual int         getInst() const { return count;}  \
 	static std::string getClassType()   { return #Object;} \
 	static int         getClassInst()   { return count;}
 class CDexObject:public CListener, public CEventSender, public CEventHandler
 {
-	Dex_DeclareClass(CDexObject,0)
+	Dex_DeclareClass(CDexObject, CDexObject, 0)
 protected:
 	typedef std::list<stTimer> TlistTimer;
 	TlistTimer m_timers;
-	int32      m_iObjectId;  //一个object有唯一的ID
+	DInt32      m_iObjectId;  //一个object有唯一的ID
 	bool        m_bUpdate;  //是否更新
 	bool        m_bObjectValid;  //是否有效
 	stArgs       m_param;
@@ -47,7 +49,7 @@ public:
 	void SetValid(bool valid);
 	void Release();  //一個object通過factory創建 不用時調用Release，不要手動Delete
 	bool GetValid();
-	int32 getObjectId();
+	DInt32 getObjectId();
 	bool Archive(DexMem& mem, bool mode);
 	stArgs& getArgs();
 public:
@@ -58,7 +60,7 @@ public:
 	virtual bool OnEvent(stEvent event){ return false;};	 //监听到事件，
 	virtual bool EventValid(stEvent event){ return false;};   //决定是否处理该事件public:
 public:
-	virtual int32 Size() const;
+	virtual DInt32 Size() const;
 	virtual bool ArchiveIn(DexMem& mem);
 	virtual bool ArchiveOut(DexMem& mem) const;
 };

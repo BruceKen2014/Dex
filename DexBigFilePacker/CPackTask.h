@@ -6,9 +6,9 @@
 #include <iostream>
 #include "..\DexBase\DexBigFileHandle.h"
 typedef unsigned long long uint64;
-typedef long long int64;
-typedef unsigned int uint32;
-typedef int int32;
+typedef long long DInt64;
+typedef unsigned int DUDInt32;
+typedef int DInt32;
 const int g_iBuffSize = 1024 * 64;
 using namespace std;
 class CPackTask
@@ -26,11 +26,11 @@ class CPackTaskRead :CPackTask
 public:
 	DexFile* m_pReader;
 	uint64   m_iOffset;
-	int64    m_iCount;
+	DInt64    m_iCount;
 	char*    m_pBuffer;
 public:
 	CPackTaskRead();
-	void Initialize(DexFile* pFile, uint64 iOffset, int64 iCount, char*pBuffer);
+	void Initialize(DexFile* pFile, uint64 iOffset, DInt64 iCount, char*pBuffer);
 	virtual bool Exe();
 };
 class CPackTaskCompress :CPackTask
@@ -38,13 +38,13 @@ class CPackTaskCompress :CPackTask
 public:
 	char*  m_pSrcBuffer;
 	char*  m_pDestBuffer;
-	uint32 m_iSrcSize;
-	uint32 m_iDestSize;
-	uint32 m_iRetSize;
+	DUDInt32 m_iSrcSize;
+	DUDInt32 m_iDestSize;
+	DUDInt32 m_iRetSize;
 	bool   m_bSuccess;
 public:
 	CPackTaskCompress();
-	void Initialize(char* pDestBuffer, uint32 iDestSize, char* pSrcBuffer, uint32 iSrcSize);
+	void Initialize(char* pDestBuffer, DUDInt32 iDestSize, char* pSrcBuffer, DUDInt32 iSrcSize);
 	virtual bool Exe();
 };
 class CPackTaskWrite :CPackTask
@@ -69,10 +69,10 @@ public:
 
 	//for read
 	uint64   m_iOffset; //read offset
-	int64    m_iCount;  //read count
+	DInt64    m_iCount;  //read count
 	//for compress
-	uint32 m_iSrcSize;  
-	uint32 m_iDestSize;
+	DUDInt32 m_iSrcSize;  
+	DUDInt32 m_iDestSize;
 	bool   m_bSuccess;
 	//
 	string m_fileName;

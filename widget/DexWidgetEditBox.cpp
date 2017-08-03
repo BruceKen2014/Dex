@@ -92,28 +92,28 @@ void CDexWidgetEditBox::Disable(bool child)
 {
 }
 
-void CDexWidgetEditBox::SetStartOffset(int16 iOffsetX, int16 iOffsetY)
+void CDexWidgetEditBox::SetStartOffset(DInt16 iOffsetX, DInt16 iOffsetY)
 {
 	m_iOffsetX = iOffsetX;
 	m_iOffsetY = iOffsetY;
 }
 
-void CDexWidgetEditBox::SetStartOffsetX(int16 iOffsetX)
+void CDexWidgetEditBox::SetStartOffsetX(DInt16 iOffsetX)
 {
 	m_iOffsetX = iOffsetX;
 }
 
-void CDexWidgetEditBox::SetStartOffsetY(int16 iOffsetY)
+void CDexWidgetEditBox::SetStartOffsetY(DInt16 iOffsetY)
 {
 	m_iOffsetY = iOffsetY;
 }
 
-int16 CDexWidgetEditBox::GetStartOffsetX()
+DInt16 CDexWidgetEditBox::GetStartOffsetX()
 {
 	return m_iOffsetX;
 }
 
-int16 CDexWidgetEditBox::GetStartOffsetY()
+DInt16 CDexWidgetEditBox::GetStartOffsetY()
 {
 	return m_iOffsetY;
 }
@@ -137,12 +137,11 @@ void CDexWidgetEditBox::SetBackImage(char* filename, const DexRect& rect, bool m
 	m_BackImage->m_tex = getUiSrcMgrSingleton()->getUiTexFactory()->FindTex(filename);
 	if(m_BackImage->m_tex == NULL)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "CDexWidgetEditBox::SetBackImageµ÷ÓÃÊ§°Ü£ºÎ´ÕÒµ½Í¼Æ¬%s", filename);
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "CDexWidgetEditBox::SetBackImageµ÷ÓÃÊ§°Ü£ºÎ´ÕÒµ½Í¼Æ¬%s", filename);
+		DexLog::getSingleton()->EndLog();
 		return;
 	}
-	m_BackImage->m_texname = filename;
 	if(rect.right == 0)
 	{
 		m_BackImage->m_srcArea = DexRect(0,0,m_BackImage->m_tex->GetWidth(), m_BackImage->m_tex->GetHeight());

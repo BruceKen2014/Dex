@@ -7,7 +7,7 @@
 
 class PalOpenGLTestScene : public DexGameState
 {
-	Dex_DeclareClass(PalOpenGLTestScene, 0)
+	Dex_DeclareClass(PalOpenGLTestScene, DexGameState, 0)
 public:
 	PalOpenGLTestScene();
 	virtual ~PalOpenGLTestScene();

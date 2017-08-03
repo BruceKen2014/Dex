@@ -157,7 +157,7 @@ CTextGui::CTextGui(char * pText, CMyFont * pFont):CGui()
 
 	m_pFont = pFont;
 	m_crTextColor = CGUI_TEXTCOLOR;
-	getLog()->Log(log_ok, "新建CTextGui：内容%s", pText);
+	DexLog::getSingleton()->Log(log_ok, "新建CTextGui：内容%s", pText);
 }
 
 CTextGui::~CTextGui()

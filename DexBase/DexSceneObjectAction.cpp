@@ -157,14 +157,14 @@ bool DexSceneObjectActionCatmull::Render()
 			D3DXMatrixMultiply(&matrix, &matrix, m_pSceneObject->getFatherNode()->getFinalMatrix());
 		//else
 		//	matrix = *m_pSceneObject->getCurrMatrix();
-		//getLog()->BeginLog();
+		//DexLog::getSingleton()->BeginLog();
 		for(size_t i = 0 ; i < m_catmullPoints.size(); i++)
 		{//获得实时的控制点位置
-			//getLog()->Log(log_ok, "点初始位置x:%d y:%d z:%d\n",(int) m_catmullPoints[i].init_pnt.x, (int)m_catmullPoints[i].init_pnt.y, (int)m_catmullPoints[i].init_pnt.z);
+			//DexLog::getSingleton()->Log(log_ok, "点初始位置x:%d y:%d z:%d\n",(int) m_catmullPoints[i].init_pnt.x, (int)m_catmullPoints[i].init_pnt.y, (int)m_catmullPoints[i].init_pnt.z);
 			D3DXVec3TransformCoord(&m_catmullPoints[i].real_pnt, &m_catmullPoints[i].init_pnt, &matrix);
-			//getLog()->Log(log_allert, "转换后x:%d y:%d z:%d\n",(int) m_catmullPoints[i].real_pnt.x, (int)m_catmullPoints[i].real_pnt.y, (int)m_catmullPoints[i].real_pnt.z);
+			//DexLog::getSingleton()->Log(log_allert, "转换后x:%d y:%d z:%d\n",(int) m_catmullPoints[i].real_pnt.x, (int)m_catmullPoints[i].real_pnt.y, (int)m_catmullPoints[i].real_pnt.z);
 		}
-		//getLog()->EndLog();
+		//DexLog::getSingleton()->EndLog();
 
 		for(size_t i = 1; i < m_catmullPoints.size()-2; i++)
 		{

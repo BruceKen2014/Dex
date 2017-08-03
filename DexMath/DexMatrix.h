@@ -134,26 +134,26 @@ public:
 	bool  operator== ( const DexMatrix4x4T<T>& matrix ) const;
 	bool  operator!= ( const DexMatrix4x4T<T>& matrix ) const;
 
-	DexMatrix4x4T<T>  Scale(float32 x, float32 y, float32 z);
+	DexMatrix4x4T<T>  Scale(DFloat32 x, DFloat32 y, DFloat32 z);
 	DexMatrix4x4T<T>  Scale(const DexVector3& scale);
-	DexMatrix4x4T<T>  Translate(float32 x, float32 y, float32 z);
+	DexMatrix4x4T<T>  Translate(DFloat32 x, DFloat32 y, DFloat32 z);
 	DexMatrix4x4T<T>  Translate(const DexVector3& trans);
-	DexMatrix4x4T<T>  SetPosition(float32 x, float32 y, float32 z);
+	DexMatrix4x4T<T>  SetPosition(DFloat32 x, DFloat32 y, DFloat32 z);
 	DexMatrix4x4T<T>  SetPosition(const DexVector3& pos);
 
 	DexVector3		  GetPosition() const;
 	//void MulVec4(CVector4* vec);
 
-	DexMatrix4x4T<T>& RotateX(float32 radian);
-	DexMatrix4x4T<T>& RotateY(float32 radian);
-	DexMatrix4x4T<T>& RotateZ(float32 radian);
-	DexMatrix4x4T<T>& Rotate(const DexVector3& axis, float32 radian);//围绕axis轴旋转radian弧度
+	DexMatrix4x4T<T>& RotateX(DFloat32 radian);
+	DexMatrix4x4T<T>& RotateY(DFloat32 radian);
+	DexMatrix4x4T<T>& RotateZ(DFloat32 radian);
+	DexMatrix4x4T<T>& Rotate(const DexVector3& axis, DFloat32 radian);//围绕axis轴旋转radian弧度
 	DexMatrix4x4T<T>& ConvertHandMatrix();//convert between left and right hand coordinate
 	
 
 public:
 	//让pos点围绕rotatePoint点以rotateAxis轴进行旋转 radian弧度
-	static DexVector3& Rotate(DexVector3& pos, const DexVector3& rotatePoint, const DexVector3& rotateAxis, float32 radian);
+	static DexVector3& Rotate(DexVector3& pos, const DexVector3& rotatePoint, const DexVector3& rotateAxis, DFloat32 radian);
 	static DexVector3& TransformNormal(DexVector3& normal, const DexMatrix4x4T<T>& matrix);
 	static DexVector3& TransformCoord(DexVector3& point, const DexMatrix4x4T<T>& matrix);
 };
@@ -551,7 +551,7 @@ inline bool DexMatrix4x4T<T>::operator != (const DexMatrix4x4T<T>& matrix) const
 	return false;
 }
 template<typename T>
-inline DexMatrix4x4T<T> DexMatrix4x4T<T>::Scale(float32 x, float32 y, float32 z)
+inline DexMatrix4x4T<T> DexMatrix4x4T<T>::Scale(DFloat32 x, DFloat32 y, DFloat32 z)
 {
 	DexMatrix4x4T<T> ma;
 	ma.Identity();
@@ -573,7 +573,7 @@ inline DexMatrix4x4T<T> DexMatrix4x4T<T>::Scale(const DexVector3& scale)
 	return *this;
 }
 template<typename T>
-inline DexMatrix4x4T<T>  DexMatrix4x4T<T>::Translate(float32 x, float32 y, float32 z)
+inline DexMatrix4x4T<T>  DexMatrix4x4T<T>::Translate(DFloat32 x, DFloat32 y, DFloat32 z)
 {
 	DexMatrix4x4T temp;
 	temp.Identity();
@@ -591,7 +591,7 @@ inline DexMatrix4x4T<T>  DexMatrix4x4T<T>::Translate(const DexVector3& trans)
 	return *this;
 }
 template<typename T>
-inline DexMatrix4x4T<T> DexMatrix4x4T<T>::SetPosition(float32 x, float32 y, float32 z)
+inline DexMatrix4x4T<T> DexMatrix4x4T<T>::SetPosition(DFloat32 x, DFloat32 y, DFloat32 z)
 {
 	m_m[3][0] = x;
 	m_m[3][1] = y;
@@ -622,24 +622,24 @@ inline DexVector3 DexMatrix4x4T<T>::GetPosition()	const
 template<typename T>
 inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateX(float radian)
 {
-	//float32 old_12 = _12;
-	//float32 old_13 = _13;
-	//float32 a = radian;
+	//DFloat32 old_12 = _12;
+	//DFloat32 old_13 = _13;
+	//DFloat32 a = radian;
 	//_12 = old_12*cos(a) - old_13*sin(a);
 	//_13 = old_12*sin(a) + old_13*cos(a);
 
-	//float32 old_22 = _22;
-	//float32 old_23 = _23;
+	//DFloat32 old_22 = _22;
+	//DFloat32 old_23 = _23;
 	//_22 = old_22*cos(a) - old_23*sin(a);
 	//_23 = old_22*sin(a) + old_23*cos(a);
 
-	//float32 old_32 = _32;
-	//float32 old_33 = _33;
+	//DFloat32 old_32 = _32;
+	//DFloat32 old_33 = _33;
 	//_32 = old_32*cos(a) - old_33*sin(a);
 	//_33 = old_32*sin(a) + old_33*cos(a);
 
-	//float32 old_42 = _42;
-	//float32 old_43 = _43;
+	//DFloat32 old_42 = _42;
+	//DFloat32 old_43 = _43;
 	//_42 = old_42*cos(a) - old_43*sin(a);
 	//_43 = old_42*sin(a) + old_43*cos(a);
 	T value[16] =
@@ -654,26 +654,26 @@ inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateX(float radian)
 	return *this;
 }
 template<typename T>
-inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateY(float32 radian)
+inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateY(DFloat32 radian)
 {
-	//float32 old_11 = _11;
-	//float32 old_13 = _13;
-	//float32 a = radian;
+	//DFloat32 old_11 = _11;
+	//DFloat32 old_13 = _13;
+	//DFloat32 a = radian;
 	//_11 =  old_11*cos(a) + old_13*sin(a);
 	//_13 = -old_11*sin(a) + old_13*cos(a);
 
-	//float32 old_21 = _21;
-	//float32 old_23 = _23;
+	//DFloat32 old_21 = _21;
+	//DFloat32 old_23 = _23;
 	//_21 =  old_21*cos(a) + old_23*sin(a);
 	//_23 = -old_21*sin(a) + old_23*cos(a);
 
-	//float32 old_31 = _31;
-	//float32 old_33 = _33;
+	//DFloat32 old_31 = _31;
+	//DFloat32 old_33 = _33;
 	//_31 =  old_31*cos(a) + old_33*sin(a);
 	//_33 = -old_31*sin(a) + old_33*cos(a);
 
-	//float32 old_41 = _41;
-	//float32 old_43 = _43;
+	//DFloat32 old_41 = _41;
+	//DFloat32 old_43 = _43;
 	//_41 =  old_41*cos(a) + old_43*sin(a);
 	//_43 = -old_41*sin(a) + old_43*cos(a);
 	T value[16] =
@@ -689,26 +689,26 @@ inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateY(float32 radian)
 }
 
 template<typename T>
-inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateZ(float32 radian)
+inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateZ(DFloat32 radian)
 {
-	//float32 old_11 = _11;
-	//float32 old_12 = _12;
-	//float32 a = radian;
+	//DFloat32 old_11 = _11;
+	//DFloat32 old_12 = _12;
+	//DFloat32 a = radian;
 	//_11 =  old_11*cos(a) - old_12*sin(a);
 	//_12 =  old_11*sin(a) + old_12*cos(a);
 
-	//float32 old_21 = _21;
-	//float32 old_22 = _22;
+	//DFloat32 old_21 = _21;
+	//DFloat32 old_22 = _22;
 	//_21 =  old_21*cos(a) - old_22*sin(a);
 	//_22 =  old_21*sin(a) + old_22*cos(a);
 
-	//float32 old_31 = _31;
-	//float32 old_32 = _32;
+	//DFloat32 old_31 = _31;
+	//DFloat32 old_32 = _32;
 	//_31 =  old_31*cos(a) - old_32*sin(a);
 	//_32 =  old_31*sin(a) + old_32*cos(a);
 
-	//float32 old_41 = _41;
-	//float32 old_42 = _42;
+	//DFloat32 old_41 = _41;
+	//DFloat32 old_42 = _42;
 	//_41 =  old_41*cos(a) - old_42*sin(a);
 	//_42 =  old_41*sin(a) + old_42*cos(a);
 	T value[16] =
@@ -723,7 +723,7 @@ inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::RotateZ(float32 radian)
 	return *this;
 }
 template<typename T>
-inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::Rotate(const DexVector3& axis, float32 radian)
+inline DexMatrix4x4T<T>& DexMatrix4x4T<T>::Rotate(const DexVector3& axis, DFloat32 radian)
 {
 	DexQuaternion quatenion(axis, radian);
 	*this = *this * quatenion.GetMatrix();
@@ -774,7 +774,7 @@ DexVector3T<T1> operator* (const DexVector3T<T1>& vector, const DexMatrix4x4T<T>
 	return ret;
 }
 template<typename T>
-DexVector3& DexMatrix4x4T<T>::Rotate(DexVector3& pos, const DexVector3& rotatePoint, const DexVector3& rotateAxis, float32 radian)
+DexVector3& DexMatrix4x4T<T>::Rotate(DexVector3& pos, const DexVector3& rotatePoint, const DexVector3& rotateAxis, DFloat32 radian)
 {
 	DexMatrix4x4T matrix;
 	DexVector3 tempPos = pos - rotatePoint;
@@ -804,6 +804,6 @@ DexVector3& DexMatrix4x4T<T>::TransformCoord(DexVector3& point, const DexMatrix4
 	point.z = temp.x * matrix._13 + temp.y * matrix._23 + temp.z * matrix._33 + 1 * matrix._43;
 	return point;
 }
-typedef DexMatrix4x4T<float32>  DexMatrix4x4;
+typedef DexMatrix4x4T<DFloat32>  DexMatrix4x4;
 
 #endif

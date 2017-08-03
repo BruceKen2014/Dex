@@ -273,7 +273,7 @@ bool CTerrain::CreateTerrain(char* filename, int cellWidth, int cellHeight,float
 
 bool CTerrain::CreateTerrain2(char* filename, int cellWidth, int cellHeight,float scale, bool flag)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	m_cellWidth = cellWidth;
 	m_cellHeight = cellHeight;
 	m_scale = scale;
@@ -281,7 +281,7 @@ bool CTerrain::CreateTerrain2(char* filename, int cellWidth, int cellHeight,floa
 	CommandScript* pScript =  getComandScript();
 	if(!pScript->OpenScript(filename))
 	{
-		getLog()->Log(log_allert, "加載高度數據文件失敗!\n");
+		DexLog::getSingleton()->Log(log_allert, "加載高度數據文件失敗!\n");
 		return false;
 	}
 	char ** Script = pScript->GetScript();
@@ -412,7 +412,7 @@ bool CTerrain::CreateTerrain2(char* filename, int cellWidth, int cellHeight,floa
 
 	//m_rootNode = new CQuadNode();
 
-	getLog()->EndLog();
+	DexLog::getSingleton()->EndLog();
 	return true;
 }
 

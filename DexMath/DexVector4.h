@@ -69,10 +69,8 @@ inline DexVector4T<T>::DexVector4T()
 }
 
 template<typename T>
-inline DexVector4T<T>::DexVector4T(const DexVector4T<T>& vector4)
-{
-	memcpy(m, vector4.m, sizeof(vector4));
-}
+inline DexVector4T<T>::DexVector4T(const DexVector4T<T>& vector4) :DexVector4T(vector4.x, vector4.y, vector4.z, vector4.w)
+{}
 
 template<typename T>
 inline DexVector4T<T>::DexVector4T(T _x, T _y, T _z, T _w)
@@ -84,13 +82,8 @@ inline DexVector4T<T>::DexVector4T(T _x, T _y, T _z, T _w)
 }
 
 template<typename T>
-inline DexVector4T<T>::DexVector4T(const DexVector3T<T>& vector3, T _w)
-{
-	x = vector3.x;
-	y = vector3.y;
-	z = vector3.z;
-	w = _w;
-}
+inline DexVector4T<T>::DexVector4T(const DexVector3T<T>& vector3, T _w) :DexVector4T(vector3.x, vector3.y, vector3.z, w)
+{}
 
 template<typename T>
 inline DexVector4T<T>::DexVector4T(T* value)
@@ -316,5 +309,5 @@ inline bool DexVector4T<T>::operator<=(const DexVector4T<T>& vector4) const
 }
 
 typedef DexVector4T<float>  DexVector4;
-typedef DexVector4T<int32>  DexVector4_int32;
+typedef DexVector4T<DInt32>  DexVector4_DInt32;
 #endif

@@ -18,21 +18,21 @@ class DexQuaternion
 public:
 	union 
 	{
-		float32 f[4];
+		DFloat32 f[4];
 		struct
 		{
-			float32 x, y, z, w;
+			DFloat32 x, y, z, w;
 		};
 	};
 public:
 	DexQuaternion();
-	DexQuaternion(const DexVector3& vec, float32 radian);
-	DexQuaternion(float32 _x, float32 _y, float32 _z, float32 _w);
-	DexQuaternion(float32 *pValue); //一个4维数组 前三个表明旋转轴 第四个表明旋转角度
+	DexQuaternion(const DexVector3& vec, DFloat32 radian);
+	DexQuaternion(DFloat32 _x, DFloat32 _y, DFloat32 _z, DFloat32 _w);
+	DexQuaternion(DFloat32 *pValue); //一个4维数组 前三个表明旋转轴 第四个表明旋转角度
 public:
-	DexQuaternion   Set(const DexVector3& vector, float32 radian);
-	DexQuaternion   Set(float32 pitch, float32 yaw, float32 roll);
-	DexQuaternion   Set(float32 _x, float32 _y, float32 _z, float32 _w);
+	DexQuaternion   Set(const DexVector3& vector, DFloat32 radian);
+	DexQuaternion   Set(DFloat32 pitch, DFloat32 yaw, DFloat32 roll);
+	DexQuaternion   Set(DFloat32 _x, DFloat32 _y, DFloat32 _z, DFloat32 _w);
 	DexQuaternion   Normalize();
 	DexMatrix4x4    GetMatrix()const;
 	DexQuaternion   GetConjugate() const;
@@ -50,10 +50,10 @@ public:
 	DexQuaternion& operator -=(const DexQuaternion& quaternion);
 	DexQuaternion  operator * (const DexQuaternion& quaternion) const;
 	DexQuaternion& operator *=(const DexQuaternion& quaternion);
-	DexQuaternion  operator * (float32 value) const;
-	DexQuaternion& operator *=(float32 value) ;
-	DexQuaternion  operator / (float32 div) const;
-	DexQuaternion& operator /=(float32 div) ;
+	DexQuaternion  operator * (DFloat32 value) const;
+	DexQuaternion& operator *=(DFloat32 value) ;
+	DexQuaternion  operator / (DFloat32 div) const;
+	DexQuaternion& operator /=(DFloat32 div) ;
 };
-DexQuaternion  operator * (float32 value, const DexQuaternion& quaternion);
+DexQuaternion  operator * (DFloat32 value, const DexQuaternion& quaternion);
 #endif 

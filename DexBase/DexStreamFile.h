@@ -12,9 +12,9 @@ public:
 	static DexStreamFile* sGetStreamFile();
 public:
 	bool AddBigFile(const char* filename);
-	uint64 ReadData(void* buffer);
+	DUInt64 ReadData(void* buffer);
 	bool OpenFile(const char* filename);
-	uint64 FileSize();
+	DUInt64 FileSize();
 	void CloseFile();
 	//open file->get file size0->allocate memory->read data->close file
 protected:

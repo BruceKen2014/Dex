@@ -74,7 +74,17 @@
 #define  CheckPoint(t)  ((t)!=NULL)
 #define  DEX_ENSURE(p)     if(!(p))   return; 
 #define  DEX_ENSURE_B(p)   if(!(p))   return false;
-#define  DEX_ENSURE_P(p)   if(!(p))   return NULL;
+#define  DEX_ENSURE_P(p)   if(!(p))   return DexNull;
+#define  DEX_ENSURE_I(p)   if(!(p))   return 0;
+#define  DEX_ENSURE_F(p)   if(!(p))   return 0.0f;
+#define  DEX_ENSURE_S(p)   if(!(p))   return DString();
+
+#define  DEX_ENSURE_LOG(p,warning)     if(!(p))  { DexLog::getSingleton()->LogLine(log_allert, (warning));  return;} 
+#define  DEX_ENSURE_B_LOG(p,warning)     if(!(p))  { DexLog::getSingleton()->LogLine(log_allert, (warning));  return false;} 
+#define  DEX_CLIP(v,s,b)   if((v) < (s) )\
+						       (v) = (s);\
+						   else if ((v) > (b))	\
+							   (v) = (b);
 #define foreach(type, it, value)  type::iterator it;for( it= (value).begin(); it != (value).end(); ++it)
 #define foreach_const(type, it, value)  type::const_iterator it;for( it= (value).begin(); it != (value).end(); ++it)
 

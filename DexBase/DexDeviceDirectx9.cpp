@@ -18,7 +18,7 @@ DexDeviceDirectx9::~DexDeviceDirectx9()
 	g_D3D->Release();
 }
 
-bool DexDeviceDirectx9::InitDevice(bool bFullScreen, int16 iWindowWidth, int16 iWindowHeight, void* param1, void* param2)
+bool DexDeviceDirectx9::InitDevice(bool bFullScreen, DInt16 iWindowWidth, DInt16 iWindowHeight, void* param1, void* param2)
 {
 	g_hInstance = GetModuleHandle(NULL);
 	WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, (WNDPROC)param1, 0L, 0L,
@@ -82,10 +82,10 @@ bool DexDeviceDirectx9::InitDevice(bool bFullScreen, int16 iWindowWidth, int16 i
 	if (FAILED(g_D3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, g_hwnd,
 		D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &d3dpp, &g_D3DDevice)))
 	{
-		getLog()->LogLine(log_ok, "D3D9 CreateDevice失败！");
+		DexLog::getSingleton()->LogLine(log_ok, "D3D9 CreateDevice失败！");
 		return false;
 	}
-	getLog()->LogLine(log_ok, "D3D9 CreateDevice成功！");
+	DexLog::getSingleton()->LogLine(log_ok, "D3D9 CreateDevice成功！");
 	ShowWindow(g_hwnd, SW_SHOWDEFAULT);
 	UpdateWindow(g_hwnd);
 	return true;
@@ -152,7 +152,7 @@ bool DexDeviceDirectx9::SetTransform(DEXTRANSFORMSTATETYPE transformStateType, c
 	return ret != 0;
 }
 
-bool DexDeviceDirectx9::SetRenderState(eDEXRENDERSTATE eRenderState, int64 value)
+bool DexDeviceDirectx9::SetRenderState(eDEXRENDERSTATE eRenderState, DInt64 value)
 {
 	D3DRENDERSTATETYPE d3dRenderStateType;
 	switch (eRenderState)
@@ -176,7 +176,7 @@ bool DexDeviceDirectx9::SetRenderState(eDEXRENDERSTATE eRenderState, int64 value
 	return ret != 0;
 }
 
-bool DexDeviceDirectx9::SetFVF(int64 iFVF)
+bool DexDeviceDirectx9::SetFVF(DInt64 iFVF)
 {
 	DWORD dxFvF = 0;
 	if (iFVF & DEXFVF_POSITION)
@@ -189,7 +189,7 @@ bool DexDeviceDirectx9::SetFVF(int64 iFVF)
 	return true;
 }
 
-bool DexDeviceDirectx9::DrawPrimitiveUp(DexPrimitivetType eType, uint32 iPrimitiveCount, const void* pVertexStreamData, uint32 iVertexStreamStride)
+bool DexDeviceDirectx9::DrawPrimitiveUp(DexPrimitivetType eType, DUDInt32 iPrimitiveCount, const void* pVertexStreamData, DUDInt32 iVertexStreamStride)
 {
 	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;
 	switch (eType)
@@ -231,7 +231,7 @@ bool DexDeviceDirectx9::DrawPrimitiveUp(DexPrimitivetType eType, uint32 iPrimiti
 	return ret != 0;
 }
 
-bool DexDeviceDirectx9::Clear(int64 flags, const DexColor& color, float32 fZ, int64 sStencil)
+bool DexDeviceDirectx9::Clear(DInt64 flags, const DexColor& color, DFloat32 fZ, DInt64 sStencil)
 {
 	DWORD dxFlag = 0;
 	if (flags & DEXCLEAR_STENCIL)

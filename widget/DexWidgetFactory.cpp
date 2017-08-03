@@ -3,6 +3,7 @@
 #include "DexWidgetFactory.h"
 #include "DexUiInclude.h"
 #include "../DexBase/DexLog.h"
+#include "DexWidgetProgressBar.h"
 CDexWidgetFactory::CDexWidgetFactory()
 {
 	m_totalWidgetCount = 0;
@@ -15,12 +16,13 @@ CDexWidgetFactory::~CDexWidgetFactory()
 
 CDexWidget* CDexWidgetFactory::createWidget(EWidgetType type, string name)
 {
-	if(m_WidgetMap.find(name) != m_WidgetMap.end())
+	TWidgetMap::iterator ite = m_WidgetMap.find(name);
+	if(ite != m_WidgetMap.end())
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "createWidget要创建的widget重名！");
-		getLog()->EndLog();
-		return NULL;
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "createWidget要创建的widget重名！");
+		DexLog::getSingleton()->EndLog();
+		return ite->second;
 	}
 	CDexWidget* ret = NULL;
 	switch(type)
@@ -58,6 +60,11 @@ CDexWidget* CDexWidgetFactory::createWidget(EWidgetType type, string name)
 	case widget_label:
 		{
 			ret = new CDexWidgetLabel();
+			break;
+		}	
+	case widget_progressBar:
+		{
+			ret = new DexWidgetProgressBar();
 		}
 	default:
 		break;
@@ -80,7 +87,7 @@ bool CDexWidgetFactory::removeWidget(string name)
 	TWidgetMap::iterator it = m_WidgetMap.find(name);
 	if(it == m_WidgetMap.end())
 	{
-		getLog()->Log(log_allert, "试图移除一个不存在的widget%s", name.c_str());
+		DexLog::getSingleton()->Log(log_allert, "试图移除一个不存在的widget%s", name.c_str());
 		return false;
 	}
 	CDexWidget* widget = m_WidgetMap[name];	
@@ -102,9 +109,9 @@ CDexWidget* CDexWidgetFactory::findWidget(string name)
 	{
 		return m_WidgetMap[name];
 	}
-	getLog()->BeginLog();
-	getLog()->Log(log_allert,"未找到widget:%s！", name.c_str());
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_allert,"未找到widget:%s！", name.c_str());
+	DexLog::getSingleton()->EndLog();
 	return NULL;
 }
 
@@ -142,9 +149,9 @@ CDexWidget* CDexWidgetFactory::parseButton(TiXmlAttribute* att, CDexWidget* fath
 			SplitStr(str,',',out_str);
 			if(out_str.size() != 5)
 			{
-				getLog()->BeginLog();
-				getLog()->Log(log_allert, "button %s normal_image参数有误,设置失败！", button->GetName().c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->BeginLog();
+				DexLog::getSingleton()->Log(log_allert, "button %s normal_image参数有误,设置失败！", button->GetName().c_str());
+				DexLog::getSingleton()->EndLog();
 			}
 			else
 			{
@@ -164,9 +171,9 @@ CDexWidget* CDexWidgetFactory::parseButton(TiXmlAttribute* att, CDexWidget* fath
 			SplitStr(str,',',out_str);
 			if(out_str.size() != 5)
 			{
-				getLog()->BeginLog();
-				getLog()->Log(log_allert, "button %s mouseon_image参数有误,设置失败！", button->GetName().c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->BeginLog();
+				DexLog::getSingleton()->Log(log_allert, "button %s mouseon_image参数有误,设置失败！", button->GetName().c_str());
+				DexLog::getSingleton()->EndLog();
 			}
 			else
 			{
@@ -186,9 +193,9 @@ CDexWidget* CDexWidgetFactory::parseButton(TiXmlAttribute* att, CDexWidget* fath
 			SplitStr(str,',',out_str);
 			if(out_str.size() != 5)
 			{
-				getLog()->BeginLog();
-				getLog()->Log(log_allert, "button %s mousedown_image参数有误,设置失败！", button->GetName().c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->BeginLog();
+				DexLog::getSingleton()->Log(log_allert, "button %s mousedown_image参数有误,设置失败！", button->GetName().c_str());
+				DexLog::getSingleton()->EndLog();
 			}
 			else
 			{
@@ -238,9 +245,9 @@ CDexWidget* CDexWidgetFactory::parseImage(TiXmlAttribute* att, CDexWidget* fathe
 			SplitStr(str,',',out_str);
 			if(out_str.size() != 5)
 			{
-				getLog()->BeginLog();
-				getLog()->Log(log_allert, "image %s image参数有误,设置失败！", image->GetName().c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->BeginLog();
+				DexLog::getSingleton()->Log(log_allert, "image %s image参数有误,设置失败！", image->GetName().c_str());
+				DexLog::getSingleton()->EndLog();
 			}
 			else
 			{
@@ -292,9 +299,9 @@ CDexWidget* CDexWidgetFactory::parseImageSequence(TiXmlAttribute* att, CDexWidge
 				SplitStr(image_string[i],',', image_info);
 				if(image_info.size() != 5)
 				{
-					getLog()->BeginLog();
-					getLog()->Log(log_allert, "image_sequence %s image参数有误,设置失败！", image_sequence->GetName().c_str());
-					getLog()->EndLog();
+					DexLog::getSingleton()->BeginLog();
+					DexLog::getSingleton()->Log(log_allert, "image_sequence %s image参数有误,设置失败！", image_sequence->GetName().c_str());
+					DexLog::getSingleton()->EndLog();
 				}
 				else
 				{
@@ -347,9 +354,9 @@ CDexWidget* CDexWidgetFactory::parseCheckButton(TiXmlAttribute* att, CDexWidget*
 			SplitStr(str,',',out_str);
 			if(out_str.size() != 5)
 			{
-				getLog()->BeginLog();
-				getLog()->Log(log_allert, "CheckButton %s check_image参数有误,设置失败！", check_button->GetName().c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->BeginLog();
+				DexLog::getSingleton()->Log(log_allert, "CheckButton %s check_image参数有误,设置失败！", check_button->GetName().c_str());
+				DexLog::getSingleton()->EndLog();
 			}
 			else
 			{
@@ -368,9 +375,9 @@ CDexWidget* CDexWidgetFactory::parseCheckButton(TiXmlAttribute* att, CDexWidget*
 			SplitStr(str,',',out_str);
 			if(out_str.size() != 5)
 			{
-				getLog()->BeginLog();
-				getLog()->Log(log_allert, "CheckButton %s ucheck_image参数有误,设置失败！", check_button->GetName().c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->BeginLog();
+				DexLog::getSingleton()->Log(log_allert, "CheckButton %s ucheck_image参数有误,设置失败！", check_button->GetName().c_str());
+				DexLog::getSingleton()->EndLog();
 			}
 			else
 			{
@@ -418,9 +425,9 @@ CDexWidget* CDexWidgetFactory::parseLabel(TiXmlAttribute* att, CDexWidget* fathe
 			SplitStr(str,',',out_str);
 			if(out_str.size() != 4)
 			{
-				getLog()->BeginLog();
-				getLog()->Log(log_allert, "label %s TextColor参数有误,设置失败！", label->GetName().c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->BeginLog();
+				DexLog::getSingleton()->Log(log_allert, "label %s TextColor参数有误,设置失败！", label->GetName().c_str());
+				DexLog::getSingleton()->EndLog();
 			}
 			else
 			{
@@ -494,9 +501,9 @@ void CDexWidgetFactory::parseAttributeSize(CDexWidget* widget, TiXmlAttribute* a
 	SplitStr(str,',',out_str);
 	if(out_str.size() != 2)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "widget %s size参数有误,已被置为0,0", widget->GetName().c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "widget %s size参数有误,已被置为0,0", widget->GetName().c_str());
+		DexLog::getSingleton()->EndLog();
 		widget->Resize(DexSizeF(0,0));
 	}
 	else
@@ -513,9 +520,9 @@ void CDexWidgetFactory::parseAttributePos(CDexWidget* widget, TiXmlAttribute* at
 	SplitStr(str,',',out_str);
 	if(out_str.size() != 2)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "widget %s pos参数有误,已被置为0,0", widget->GetName().c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "widget %s pos参数有误,已被置为0,0", widget->GetName().c_str());
+		DexLog::getSingleton()->EndLog();
 		widget->SetPos(0,0);
 	}
 	else
@@ -533,9 +540,9 @@ void CDexWidgetFactory::parseAttributeOffset(CDexWidget* widget, TiXmlAttribute*
 	SplitStr(str,',',out_str);
 	if(out_str.size() != 2)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "widget %s offset参数有误,已被置为0,0", widget->GetName().c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "widget %s offset参数有误,已被置为0,0", widget->GetName().c_str());
+		DexLog::getSingleton()->EndLog();
 		widget->setFatherOffset(0.0f,0.0f);
 	}
 	else
@@ -558,9 +565,9 @@ void CDexWidgetFactory::parseAttributeMaskColor(CDexWidget* widget, TiXmlAttribu
 	SplitStr(str,',',out_str);
 	if(out_str.size() != 4)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "widget %s maskcolor参数有误,设置失败！", widget->GetName().c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "widget %s maskcolor参数有误,设置失败！", widget->GetName().c_str());
+		DexLog::getSingleton()->EndLog();
 	}
 	else
 	{

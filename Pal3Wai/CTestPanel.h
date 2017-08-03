@@ -26,7 +26,7 @@ protected:
 	CDexWidgetImageSequence* m_imagesequence;
 	CDexWidgetCheckBtn*  m_checkBtn1;
 	//CDexWidgetScrollBarV*  m_scrollV;
-	int16 g_iMouseLX, g_iMouseLY;
+	DInt16 g_iMouseLX, g_iMouseLY;
 	bool  g_bInTriangle;
 
 	CDexWidget* m_focusWidget;

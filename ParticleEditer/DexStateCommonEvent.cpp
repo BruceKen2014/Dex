@@ -34,7 +34,7 @@ bool DexStateCommontEvent_MouseRButtonUp::IsTrue()
 }
 
 /////////////
-DexStateCommontEvent_KeyUp::DexStateCommontEvent_KeyUp(uint32 iKeyId,IDexState* state)
+DexStateCommontEvent_KeyUp::DexStateCommontEvent_KeyUp(DUDInt32 iKeyId,IDexState* state)
 	:IDexStateTransition(state)
 {
 	m_iKeyId = iKeyId;

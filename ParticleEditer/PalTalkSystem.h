@@ -14,7 +14,7 @@ extern int Lua_Talk_Wait(lua_State* L);
 extern int Lua_Talk_Say(lua_State* L);
 class CPalTalkSystem:CDexObject
 {
-	Dex_DeclareClass(CPalTalkSystem,1)
+	Dex_DeclareClass(CPalTalkSystem, CDexObject,1)
 public:
 	typedef enum EHead
 	{
@@ -34,7 +34,7 @@ private:
 	short                    m_iLuaCurrCommandIndex;
 	float m_iCurLength;  //当前已显示的长度
 	short m_iWaitingTime; //脚本暂停的时间
-	int64 m_iLastTime;
+	DInt64 m_iLastTime;
 	bool			  m_bShowLeftHead;
 	CDexWidgetImage*  m_headArray[EH_TOTAL];
 	CDexWidgetImage*  m_pBackImage;//背景图

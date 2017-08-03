@@ -69,9 +69,9 @@ bool CDexWidgetButton::OnMouseLUp(stEvent event)
 		getDesktop()->SetUiEvent(false);
 		if(m_state == btn_mouse_down)
 			m_state = btn_mouse_on;
-		getLog()->BeginLog();
-		getLog()->Log(log_ok, "控件%s处理鼠标左键弹起事件", m_name.c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_ok, "控件%s处理鼠标左键弹起事件", m_name.c_str());
+		DexLog::getSingleton()->EndLog();
 		ret = true;
 	}
 	else

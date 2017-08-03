@@ -34,13 +34,13 @@ CDexObjectFactroy::CDexObjectFactroy()
  Object * obj = new Object();\
  g_Objects[Object::getClassType()].push_back(obj);\
  }\
- getLog()->Log(log_ok, "init object %s total_count:%d pre_inicount: %d ok\n", Object::getClassType().c_str(), init_count, init_count/2);
+ DexLog::getSingleton()->LogLine(log_ok, "init object %s total_count:%d pre_inicount: %d ok", Object::getClassType().c_str(), init_count, init_count/2);
 
 #define check_new_object(clas)	if(classType == clas::getClassType())	{ object = new clas();goto create_over;  }
  void CDexObjectFactroy::Initialize()
  {
 	 int init_count= 0;
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	//scene object action
 	registerObject(DexSceneObjectActionCatmull);
 	registerObject(DexSceneObjectActionRotate);
@@ -58,7 +58,7 @@ CDexObjectFactroy::CDexObjectFactroy()
 	registerObject(CDexModelX);
 	registerObject(CDexModelXAni);
 	registerObject(CDexModelFactory);
-	getLog()->EndLog();
+	DexLog::getSingleton()->EndLog();
  }
 CDexObjectFactroy::~CDexObjectFactroy()
 {
@@ -67,7 +67,6 @@ CDexObjectFactroy::~CDexObjectFactroy()
 
 CDexObject* CDexObjectFactroy::queryObject(std::string classType)
 {
-	getLog()->BeginLog();
 	if(g_Objects.find(classType) != g_Objects.end())
 	{//工廠中有實例
 		foreach(std::list<CDexObject*>, ite, g_Objects[classType])
@@ -75,28 +74,26 @@ CDexObject* CDexObjectFactroy::queryObject(std::string classType)
 			if(!(*ite)->GetValid())
 			{
 				(*ite)->SetValid(true);
-				getLog()->Log(log_ok, "query Object %s ok\n", classType.c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->LogLine(log_ok, "query Object %s ok", classType.c_str());
 				return (*ite);
 			}
 		}
 	};
 	//沒有實例或者實例都有效,重新新建一個
-	getLog()->Log(log_ok, "query Object %s failed, try to create a new one!\n", classType.c_str());
-	getLog()->EndLog();
+	DexLog::getSingleton()->LogLine(log_ok, "query Object %s failed, try to create a new one!", classType.c_str());
 	return createObject(classType);
 }
 
 void CDexObjectFactroy::allocateObject(CDexObject* object)
 {
 	DEX_ENSURE(object != NULL);
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	string type = object->getType();
 	if(g_Objects.find(object->getType()) == g_Objects.end())
 	{
-		getLog()->Log(log_allert, "object factory allocate a unknown object %s, now delete it! \n",type.c_str());
+		DexLog::getSingleton()->Log(log_allert, "object factory allocate a unknown object %s, now delete it! \n",type.c_str());
 		_SafeDelete(object);
-		getLog()->EndLog();
+		DexLog::getSingleton()->EndLog();
 		return;
 	};
 	foreach(std::list<CDexObject*>, ite, g_Objects[type])
@@ -107,27 +104,27 @@ void CDexObjectFactroy::allocateObject(CDexObject* object)
 			{
 				_SafeDelete(*ite);
 				g_Objects[type].erase(ite);
-				getLog()->Log(log_ok, "object factory allocate  object %s ok , two many objects , now delete it!\n",type.c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->Log(log_ok, "object factory allocate  object %s ok , two many objects , now delete it!\n",type.c_str());
+				DexLog::getSingleton()->EndLog();
 			}
 			else
 			{
 				(*ite)->Reset();
-				getLog()->Log(log_ok, "object factory allocate  object %s ok\n",type.c_str());
-				getLog()->EndLog();
+				DexLog::getSingleton()->Log(log_ok, "object factory allocate  object %s ok\n",type.c_str());
+				DexLog::getSingleton()->EndLog();
 			}
 			return;
 		}
 	}
-	getLog()->Log(log_allert, "object factory allocater find a wild object %s ! now delete it!\n",type.c_str());
+	DexLog::getSingleton()->Log(log_allert, "object factory allocater find a wild object %s ! now delete it!\n",type.c_str());
 	_SafeDelete(object);
-	getLog()->EndLog();
+	DexLog::getSingleton()->EndLog();
 }
 
 CDexObject* CDexObjectFactroy::createObject(std::string classType)
 {
 	CDexObject* object = NULL;
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	//scene object action
 	check_new_object(DexSceneObjectActionCatmull);
 	//scene collide object
@@ -147,18 +144,18 @@ CDexObject* CDexObjectFactroy::createObject(std::string classType)
 create_over:
 	if(object == NULL)
 	{
-		getLog()->Log(log_error, "		create object %s failed!\n", classType.c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_error, "		create object %s failed!\n", classType.c_str());
+		DexLog::getSingleton()->EndLog();
 		return NULL;
 	}
-	getLog()->Log(log_ok, "		create object %s ok!\n", classType.c_str());
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "		create object %s ok!\n", classType.c_str());
+	DexLog::getSingleton()->EndLog();
 	object->SetValid(true);
 	g_Objects[classType].push_back(object);
 	return object;
 }
 
-int32 CDexObjectFactroy::getObjectId()
+DInt32 CDexObjectFactroy::getObjectId()
 {
 	return g_iObjectCount++;
 }

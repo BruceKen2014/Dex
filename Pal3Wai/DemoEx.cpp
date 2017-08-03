@@ -113,9 +113,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevhInst, LPSTR cmdLine, int show
 
 bool InitializeOnce(HWND hWnd, bool fullscreen)
 {
-	getLog()->EnableFontFrontHighLight();
-	getLog()->EnableBackColor(true);
-	getLog()->SetConsoleScreenSize(256, 1000);	   
+	DexLog::getSingleton()->EnableFontFrontHighLight();
+	DexLog::getSingleton()->EnableBackColor(true);
+	DexLog::getSingleton()->SetConsoleScreenSize(256, 1000);	   
 	
 	srand(unsigned(time(0)));
 	DEX_ENSURE_B(InitializeD3D(g_hwnd, FULLSCREEN));
@@ -346,7 +346,7 @@ void GameRender()
 	g_D3DDevice->SetTransform(D3DTS_PROJECTION, &g_projection);
 
 	
-	int64 tempTime = getTime()->GetTotalMillSeconds() ;
+	DInt64 tempTime = getTime()->GetTotalMillSeconds() ;
 	if(g_lastTickTime == 0)
 		g_lastTickTime = tempTime;
 	g_delta = tempTime - g_lastTickTime;
@@ -666,17 +666,17 @@ bool InitializeD3D(HWND hWnd, bool fullscreen)
 	//d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 
 	// Create the D3DDevice
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	if(FAILED(g_D3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
 		D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &d3dpp, &g_D3DDevice)))
 	{
 		
-		getLog()->Log(log_ok, "D3D CreateDevice失败！");
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_ok, "D3D CreateDevice失败！");
+		DexLog::getSingleton()->EndLog();
 		return false;
 	}
-	getLog()->Log(log_ok, "D3D CreateDevice成功！");
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "D3D CreateDevice成功！");
+	DexLog::getSingleton()->EndLog();
 	DexGameEngine::getEngine()->SetDevice(g_D3DDevice);
 	DexGameEngine::getEngine()->SetHwnd(g_hwnd);
 	DexGameEngine::getEngine()->SetHInstance(g_hInstance);
@@ -2070,14 +2070,14 @@ void IniMesh()
 		&g_pEffect, &pbuff);
 	if(pbuff)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, (char*)(pbuff->GetBufferPointer()));
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, (char*)(pbuff->GetBufferPointer()));
 		pbuff->Release();
 	}
 	if(FAILED(hr))
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, "D3DXCreateEffectFromFile 调用失败！");
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, "D3DXCreateEffectFromFile 调用失败！");
 	}
 }
 void HandleMesh()

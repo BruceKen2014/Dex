@@ -31,9 +31,9 @@ CDexPartical::CDexPartical()
 
 CDexPartical::~CDexPartical()
 {
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "销毁粒子...");
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "销毁粒子...");
+	DexLog::getSingleton()->EndLog();
 }
 void CDexPartical::Update(int delta, const D3DXVECTOR3& cam_pos)
 {
@@ -389,7 +389,7 @@ CDexParticalEmit::~CDexParticalEmit()
 }
 
 
-void CDexParticalEmit::SetCurrFrame(int16 frame_index)
+void CDexParticalEmit::SetCurrFrame(DInt16 frame_index)
 {
 	m_iCurFrame = frame_index;
 }
@@ -401,9 +401,9 @@ void CDexParticalEmit::SetTexFile(string filename)
 	_ADDREF(m_pDexTex);
 }
 
-bool CDexParticalEmit::AddKeyFrame(int16 frame_index, const stFrame data)
+bool CDexParticalEmit::AddKeyFrame(DInt16 frame_index, const stFrame data)
 {
-	map<int16, stFrame>::iterator it = m_keyFrame.find(frame_index);
+	map<DInt16, stFrame>::iterator it = m_keyFrame.find(frame_index);
 	DEX_ENSURE_B(it == m_keyFrame.end());
 	m_keyFrame[frame_index] = data;
 	return true;
@@ -416,18 +416,18 @@ bool CDexParticalEmit::AddKeyFrame(const stFrame& data)
 	return true;
 }
 
-bool CDexParticalEmit::AddKeyFrame(int16 frame_index, int16 count)
+bool CDexParticalEmit::AddKeyFrame(DInt16 frame_index, DInt16 count)
 {
-	map<int16, stFrame>::iterator it = m_keyFrame.find(frame_index);
+	map<DInt16, stFrame>::iterator it = m_keyFrame.find(frame_index);
 	DEX_ENSURE_B(it == m_keyFrame.end());
 	m_keyFrame[frame_index].frame = frame_index;
 	m_keyFrame[frame_index].param1 = count;
 	return true;
 }
 
-bool CDexParticalEmit::AddKeyFrameDur(int16 frame_start, int16 frame_end)
+bool CDexParticalEmit::AddKeyFrameDur(DInt16 frame_start, DInt16 frame_end)
 {
-	map<int16, stFrame>::iterator it = m_keyFrame.find(frame_start);
+	map<DInt16, stFrame>::iterator it = m_keyFrame.find(frame_start);
 	DEX_ENSURE_B(it == m_keyFrame.end());
 	m_keyFrame[frame_start].frame = frame_start;
 	m_keyFrame[frame_start].param1 = frame_end;
@@ -465,9 +465,9 @@ void CDexParticalEmit::_UpdateNormal(int delta, const D3DXVECTOR3& cam_pos)
 
 void CDexParticalEmit::_UpdateExplode(int delta, const D3DXVECTOR3& cam_pos)
 {
-	map<int16, stFrame>::iterator it = m_keyFrame.find(m_iCurFrame);
+	map<DInt16, stFrame>::iterator it = m_keyFrame.find(m_iCurFrame);
 	DEX_ENSURE(it != m_keyFrame.end());
-	int16 count = it->second.param1;
+	DInt16 count = it->second.param1;
 	while(count > 0)
 	{
 		count--;
@@ -481,7 +481,7 @@ void CDexParticalEmit::_UpdateExplode(int delta, const D3DXVECTOR3& cam_pos)
 
 void CDexParticalEmit::_UpdateFrameNormal(int delta, const D3DXVECTOR3& cam_pos)
 {
-	map<int16, stFrame>::iterator it = m_keyFrame.begin();
+	map<DInt16, stFrame>::iterator it = m_keyFrame.begin();
 	bool find = false;
 	for(; it != m_keyFrame.end(); it++)
 	{
@@ -842,13 +842,13 @@ bool CDexParticalEmit::Archive(DexMem& mem, bool mode)
 
 bool CDexParticalEmit::saveToInitFile(const char* filename)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 
 	CFile* file = getFileHandler();
 	if(!file->CreateCFile((char*)filename))
 	{
-		getLog()->Log(log_allert, "save particle file % failed！\n", filename);
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_allert, "save particle file % failed！\n", filename);
+		DexLog::getSingleton()->EndLog();
 		return false;
 	}
 	file->InNumber((int)m_eParticalFaceState);file->InBlankChar();
@@ -956,19 +956,19 @@ bool CDexParticalEmit::saveToInitFile(const char* filename)
 	file->InBlankLine();
 
 	file->Close();
-	getLog()->Log(log_ok, "save particle file %s successfully！\n", filename);
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "save particle file %s successfully！\n", filename);
+	DexLog::getSingleton()->EndLog();
 	return true;
 }
 
 bool CDexParticalEmit::initFromInitFile(const char* filename)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	CommandScript* pScript = getComandScript();
 	if(!pScript->OpenScript(filename))
 	{
-		getLog()->Log(log_allert, "open particle init file %s failed!\n",filename );
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_allert, "open particle init file %s failed!\n",filename );
+		DexLog::getSingleton()->EndLog();
 		pScript->CloseScript();
 		return false;
 	}
@@ -1035,7 +1035,7 @@ bool CDexParticalEmit::initFromInitFile(const char* filename)
 	m_fScaleEnd = pScript->GetFloatParam();
 	//pScript->MoveCurrLine();pScript->SetCurrChar();
 	pScript->CloseScript();
-	getLog()->Log(log_ok, "emitter init file: %s ok!\n ", filename);
+	DexLog::getSingleton()->LogLine(log_ok, "emitter init file: %s ok! ", filename);
 	return true;
 }
 
@@ -1209,16 +1209,14 @@ bool CDexEffectEmitInstance::Archive(DexMem& mem, bool mode)
 
 bool CDexEffectEmitInstance::LoadInitFile(const char* filename)
 {
-	getLog()->BeginLog();
 	CommandScript* pScript = getComandScript();
 	if(!pScript->OpenScript(filename))
 	{
-		getLog()->Log(log_allert, "open emitInstance init file %s failed!\n",filename );
-		getLog()->EndLog();
+		DexLog::getSingleton()->LogLine(log_allert, "open emitInstance init file %s failed!", filename);
 		pScript->CloseScript();
 		return false;
 	}
-	getLog()->Log(log_ok, "begin loading emitInstance init file %s !\n",filename );
+	DexLog::getSingleton()->LogLine(log_ok, "begin loading emitInstance init file %s !", filename);
 	char ** Script = pScript->GetScript();
 	int  CurrChar = 0;
 	int  CurrLine = 0;
@@ -1293,11 +1291,10 @@ bool CDexEffectEmitInstance::LoadInitFile(const char* filename)
 			}
 			emitter->PreInitMemRes();
 			AddEmitter(emitter);
-			getLog()->Log(log_ok, "		emitInstance add emitter ok!\n");
+			DexLog::getSingleton()->LogLine(log_ok, "		emitInstance add emitter ok!");
 		}
 	}
-	getLog()->Log(log_ok, "load emitInstance init file %s ok!\n",filename );
-	getLog()->EndLog();
+	DexLog::getSingleton()->LogLine(log_ok, "load emitInstance init file %s ok!",filename );
 	pScript->CloseScript();
 	return true;
 }
@@ -1345,20 +1342,20 @@ CDexClassParticalPool::~CDexClassParticalPool()
 
 void CDexClassParticalPool::CreatePartical(int iCount)
 {		
-	int64 time1 = getTime()->GetTotalMillSeconds();
+	DInt64 time1 = getTime()->GetTotalMillSeconds();
 	for(int i = 0 ; i < iCount; i++)
 	{
 		CDexPartical* partical = new CDexPartical;
 		m_particalListFree.push_back(partical);
 	}
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "申请%d个粒子...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "申请%d个粒子...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
+	DexLog::getSingleton()->EndLog();
 }
 
 void CDexClassParticalPool::FreePartical(int iCount)
 {
-	int64 time1 = getTime()->GetTotalMillSeconds();
+	DInt64 time1 = getTime()->GetTotalMillSeconds();
 	int i = 0;
 	foreach(std::list<CDexPartical*>, ite, m_particalListFree)
 	{	 
@@ -1376,9 +1373,9 @@ void CDexClassParticalPool::FreePartical(int iCount)
 			i++;
 		}
 	}
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "释放%d个粒子...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "释放%d个粒子...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
+	DexLog::getSingleton()->EndLog();
 }
 
 CDexPartical* CDexClassParticalPool::GetPartical()
@@ -1386,9 +1383,9 @@ CDexPartical* CDexClassParticalPool::GetPartical()
 	CDexPartical* partical = NULL;
 	if(m_particalListFree.size() == 0)
 	{//粒子池中没有粒子了 新建(这种情况不应该出现 因为所有要求的粒子内存都已经预分配了 警告！)
-		getLog()->BeginLog();
-		getLog()->Log(log_error, "粒子池创建了一个不该创建的粒子，警告！");
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, "粒子池创建了一个不该创建的粒子，警告！");
+		DexLog::getSingleton()->EndLog();
 		partical = new CDexPartical;
 		return partical;
 	}
@@ -1559,16 +1556,16 @@ bool CDexPieceEffectInstance::Update(int delta)
 
 bool CDexPieceEffectInstance::LoadInitFile(const char* filename)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	CommandScript* pScript = getComandScript();
 	if(!pScript->OpenScript(filename))
 	{
-		getLog()->Log(log_allert, "open piece effect init file %s failed!\n",filename );
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_allert, "open piece effect init file %s failed!\n",filename );
+		DexLog::getSingleton()->EndLog();
 		pScript->CloseScript();
 		return false;
 	}
-	getLog()->Log(log_ok, "begin loading piece effect init file %s !\n",filename );
+	DexLog::getSingleton()->Log(log_ok, "begin loading piece effect init file %s !\n",filename );
 	char ** Script = pScript->GetScript();
 	int  CurrChar = 0;
 	int  CurrLine = 0;
@@ -1593,8 +1590,8 @@ bool CDexPieceEffectInstance::LoadInitFile(const char* filename)
 		addControlPoint(D3DXVECTOR3(x1, y1, z1),D3DXVECTOR3(x2, y2, z2));
 	}
 	PreInitMemRes();
-	getLog()->Log(log_ok, "load piece effect init file %s ok!\n",filename );
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "load piece effect init file %s ok!\n",filename );
+	DexLog::getSingleton()->EndLog();
 	pScript->CloseScript();
 	return true;
 }
@@ -1712,7 +1709,7 @@ void CDexPieceEffectInstance::addControlPoint(const D3DXVECTOR3& pnt1, const D3D
 	m_vecControlPoints.push_back(p);
 }
 
-void CDexPieceEffectInstance::setPieceLiveTime(int16 time)
+void CDexPieceEffectInstance::setPieceLiveTime(DInt16 time)
 {
 	m_iPieceLiveTime = time;
 }
@@ -1762,20 +1759,20 @@ CDexPiecePool::~CDexPiecePool()
 
 void CDexPiecePool::CreatePiece(int iCount)
 {		
-	int64 time1 = getTime()->GetTotalMillSeconds();
+	DInt64 time1 = getTime()->GetTotalMillSeconds();
 	for(int i = 0 ; i < iCount; i++)
 	{
 		CDexPieceEffectInstance::stPiece * piece = new CDexPieceEffectInstance::stPiece;
 		m_listFreePiece.push_back(piece);
 	}
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "申请%d个面片...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "申请%d个面片...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
+	DexLog::getSingleton()->EndLog();
 }
 
 void CDexPiecePool::FreePiece(int iCount)
 {
-	int64 time1 = getTime()->GetTotalMillSeconds();
+	DInt64 time1 = getTime()->GetTotalMillSeconds();
 	int i = 0;
 	foreach(std::list<CDexPieceEffectInstance::stPiece *>, ite, m_listFreePiece)
 	{	 
@@ -1793,9 +1790,9 @@ void CDexPiecePool::FreePiece(int iCount)
 			i++;
 		}
 	}
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "释放%d个面片...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "释放%d个面片...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
+	DexLog::getSingleton()->EndLog();
 }
 
 CDexPieceEffectInstance::stPiece* CDexPiecePool::GetPiece()
@@ -1803,9 +1800,9 @@ CDexPieceEffectInstance::stPiece* CDexPiecePool::GetPiece()
 	CDexPieceEffectInstance::stPiece* piece = NULL;
 	if(m_listFreePiece.size() == 0)
 	{//面片池中没有面片了 新建(这种情况不应该出现 因为所有要求的面片内存都已经预分配了 警告！)
-		getLog()->BeginLog();
-		getLog()->Log(log_error, "面片池创建了一个不该创建的面片，警告！");
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, "面片池创建了一个不该创建的面片，警告！");
+		DexLog::getSingleton()->EndLog();
 		piece = new CDexPieceEffectInstance::stPiece;
 		return piece;
 	}

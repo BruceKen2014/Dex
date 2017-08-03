@@ -216,7 +216,7 @@ IDexState* PalPlayerAttackStateSelectTarget::Update()
 {
 	if(player->getAuto() && player->getTargets().size() == 0)
 	{
-		int8 select_enemy = 1;
+		DInt8 select_enemy = 1;
 		EPlayerType self_type = player->getPlayerData()->m_PlayerType;
 		if(select_enemy)
 		{
@@ -231,7 +231,7 @@ IDexState* PalPlayerAttackStateSelectTarget::Update()
 			}
 			if(players.size()==0)
 			{
-				getLog()->Log(log_error, "select target error! enemy size is 0!");
+				DexLog::getSingleton()->Log(log_error, "select target error! enemy size is 0!");
 			}
 			else
 			{

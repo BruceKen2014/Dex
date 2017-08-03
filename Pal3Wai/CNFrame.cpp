@@ -71,7 +71,7 @@ void CNFrame::Draw()
 	m_pic[CENTER]->Draw(m_device,  m_posX + m_pic[TOP_LEFT]->GetWidth(),  m_posY + m_pic[TOP_LEFT]->GetHeight());
 }
 
-bool CNFrame::LoadTexture(int16 index, char* filename)
+bool CNFrame::LoadTexture(DInt16 index, char* filename)
 {
 	switch(index)
 	{
@@ -144,7 +144,7 @@ bool CNFrame::LoadTexture(int16 index, char* filename)
 	m_successRes = true;;
 	return true;
 }
-void CNFrame::SetPos(int16 x, int16 y)
+void CNFrame::SetPos(DInt16 x, DInt16 y)
 {
 	m_posX = x;
 	m_posY = y;
@@ -157,7 +157,7 @@ D3DXVECTOR2 CNFrame::GetPos()
 	return v;
 }
 
-void CNFrame::SetSize(int16 width, int16 height)
+void CNFrame::SetSize(DInt16 width, DInt16 height)
 {
 	m_width = width;
 	m_height = height;

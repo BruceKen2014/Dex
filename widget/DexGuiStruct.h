@@ -144,8 +144,8 @@ enum EDraw_Flag
 			return *this;
 		}
 		bool IsValid() { return right >= left && bottom >= top;};
-		T getWidth()   { return right - left;};
-		T getHeight()  { return bottom - top;};
+		T getWidth()  const { return right - left;};
+		T getHeight() const { return bottom - top;};
 		DexRectT Clip(const DexRectT& clip_rect)
 		{//”√clip_rect ¿¥≤√ºÙ±ærect 
 			T ret_left,ret_right,ret_top,ret_bottom;

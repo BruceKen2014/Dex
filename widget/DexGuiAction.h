@@ -28,7 +28,7 @@ protected:
 	bool        m_valid;   //动作是否有效
 	bool        m_complete; //动作是否完成
 	bool        m_deleteSelf;  //complete之后是否删除自己
-	int64         m_iAlreadDelta;   //action已经执行的时间 单位ms
+	DInt64         m_iAlreadDelta;   //action已经执行的时间 单位ms
 
 public:
 	CDexGuiAction();

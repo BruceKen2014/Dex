@@ -4,12 +4,16 @@
 #include "DexLog.h"
 #include "CFile.h"
 #include "CDexTime.h"
+#include "DexDefine.h"
 
 #ifdef _DEBUG
 #define DEX_LOG
 #endif
+
+#define LOG_THREAD  //启用专用线程输出log
+
 using namespace std;
-CDexLog::CDexLog() :m_bLogFile(true)
+DexLog::DexLog() :m_bLogFile(true)
 {
 #ifdef DEX_LOG
 	AllocConsole();
@@ -36,10 +40,11 @@ CDexLog::CDexLog() :m_bLogFile(true)
 	sprintf(filename, "log/%d-%d-%d-%d-%d-%d.log", getTime()->m_time.year, getTime()->m_time.month, getTime()->m_time.day, 
 		getTime()->m_time.hour, getTime()->m_time.minute, getTime()->m_time.second);
 	m_logFile->CreateCFile(filename);
+	m_eventMutex = CreateEvent(NULL, FALSE, TRUE, NULL);
 #endif
 }
 
-CDexLog::~CDexLog()
+DexLog::~DexLog()
 {
 #ifdef DEX_LOG
 	m_logFile->Close();
@@ -47,19 +52,19 @@ CDexLog::~CDexLog()
 #endif
 }
 
-void CDexLog::SetConsoleScreenSize(int w, int h)
+void DexLog::SetConsoleScreenSize(int w, int h)
 {
 	m_wSize = w;
 	COORD sz = { w, h};
 	SetConsoleScreenBufferSize(m_stdHandle,sz);
 }
 
-void CDexLog::SetConsoleTitle(const char* title)
+void DexLog::SetConsoleTitle(const char* title)
 {
 	::SetConsoleTitle(title);
 }
 
-void CDexLog::SetFrontColor(DexLogType type, int color)
+void DexLog::SetFrontColor(DexLogType type, int color)
 {
 	if(type == log_count)
 		return;
@@ -70,7 +75,7 @@ void CDexLog::SetFrontColor(DexLogType type, int color)
 		m_consoleFontColor[type] |= log_font_front_highlight; 
 }
 
-void CDexLog::EnableFontFrontHighLight(DexLogType type, bool enable)
+void DexLog::EnableFontFrontHighLight(DexLogType type, bool enable)
 {	
 	if(type == log_count)
 	{
@@ -93,7 +98,7 @@ void CDexLog::EnableFontFrontHighLight(DexLogType type, bool enable)
 	}
 }
 
-void CDexLog::SetBackColor(int color)
+void DexLog::SetBackColor(int color)
 {
 	m_consoleBackgroundColor = color;
 	if(m_BackHighLight)
@@ -102,7 +107,7 @@ void CDexLog::SetBackColor(int color)
 		m_consoleBackgroundColor ^= log_font_backt_highlight;
 }
 
-void CDexLog::EnableFontBackHighLight(bool enable)
+void DexLog::EnableFontBackHighLight(bool enable)
 {
 	if(enable)
 	{
@@ -116,7 +121,7 @@ void CDexLog::EnableFontBackHighLight(bool enable)
 	}
 }
 
-void CDexLog::EnableBackColor(bool enable)
+void DexLog::EnableBackColor(bool enable)
 {
 	m_OpenFontBack = enable;
 	for(int i = log_ok; i < log_count; i++)
@@ -125,17 +130,83 @@ void CDexLog::EnableBackColor(bool enable)
 	}
 }
 
-void CDexLog::SetLogFile(bool bLogFile)
+void DexLog::DoLog()
+{
+	DEX_ENSURE(m_logTasks.size() != 0);
+
+	WaitForSingleObject(m_eventMutex, DEXINFINITE);
+	if (m_logTasks.size() == 0)
+	{
+		SetEvent(m_eventMutex);
+		return;
+	}
+	stLogTask log = m_logTasks.back();
+	m_logTasks.pop_back();
+	SetEvent(m_eventMutex);
+	switch (log.type)
+	{
+		case log_begin:
+		{
+			m_logByte = 0;	  
+		}
+		break;
+		case log_end:
+		{
+			if (m_bLogFile)
+				m_logFile->InBlankLine();
+			OutputDebugString("\n");
+			//此处处理控制抬的log
+			if (m_OpenFontBack)
+			{
+				int leftBlank = m_wSize - m_logByte;
+				string blank;
+				for (int i = 0; i < leftBlank; i++)
+				{
+					blank += " ";
+				}
+				cout << blank.c_str();//endl;
+			}
+			else
+			{//未开启背景打印则无需打印剩下的空格 只须换行即可
+				cout << endl;
+			}
+		}
+		break;
+		default:
+		{
+			if (m_lastLogType != log.type)
+			{
+				m_lastLogType = log.type;
+				SetConsoleTextAttribute(m_stdHandle, m_consoleFontColor[log.type]);
+			}
+			m_logByte += log.msg.length();
+			if (log.type == log_ok)
+				LogOK((DChar*)log.msg.c_str());
+			else if (log.type == log_allert)
+				LogAllert((DChar*)log.msg.c_str());
+			else if (log.type == log_error)
+				LogError((DChar*)log.msg.c_str());  
+		}
+		break;
+	}
+}
+void DexLog::SetLogFile(bool bLogFile)
 {
 	m_bLogFile = bLogFile;
 }
-void CDexLog::BeginLog()
+void DexLog::BeginLog()
 {
 #ifdef DEX_LOG
+#ifdef LOG_THREAD
+	WaitForSingleObject(m_eventMutex, DEXINFINITE);
+	m_logTasks.push_front(log_begin);
+	SetEvent(m_eventMutex);
+#else
 	m_logByte = 0;
 #endif
+#endif
 }
-void CDexLog::LogTime()
+void DexLog::LogTime()
 {
 	char str[128];
 	sprintf(str, "[%d-%d-%d-%d:%d:%d]", getTime()->m_time.year, getTime()->m_time.month, getTime()->m_time.day,
@@ -145,39 +216,52 @@ void CDexLog::LogTime()
 	if (m_bLogFile)
 		m_logFile->InString(str);
 }
-void CDexLog::LogOK(char* msg)
+void DexLog::LogOK(char* msg)
 {
 	LogTime();
 	cout<<"[  log_OK  ]"<<msg;
+	OutputDebugString(msg);
 	if (m_bLogFile)
 		m_logFile->InString("[  log_OK  ]%s", msg);
 	m_logByte += 12;
 }
-void CDexLog::LogAllert(char* msg)
+void DexLog::LogAllert(char* msg)
 {
 	LogTime();
 	cout<<"[log_Allert]"<<msg;
+	OutputDebugString(msg);
 	if (m_bLogFile)
 		m_logFile->InString("[log_Allert]%s", msg);
 	m_logByte += 12;
 }
-void CDexLog::LogError(char* msg)
+void DexLog::LogError(char* msg)
 {
 	LogTime();
 	cout<<"[log_Error ]"<<msg;
+	OutputDebugString(msg);
 	if (m_bLogFile)
 		m_logFile->InString("[log_Error ]%s", msg);
 	m_logByte += 12;
 }
-void CDexLog::Log(DexLogType log_type, char* msg, ...)
+void DexLog::Log(DexLogType log_type, char* msg, ...)
 {	
-#ifdef DEX_LOG
+#ifdef DEX_LOG 
+#ifdef LOG_THREAD
 	va_list v_p;
 	va_start(v_p, msg);
-	TCHAR szText[512];
+	TCHAR szText[256];
 	wvsprintf(szText, msg,v_p);
 	va_end(v_p);
 
+	WaitForSingleObject(m_eventMutex,DEXINFINITE);
+	m_logTasks.push_front({ log_type, szText });
+	SetEvent(m_eventMutex);
+#else
+	va_list v_p;
+	va_start(v_p, msg);
+	TCHAR szText[256];
+	wvsprintf(szText, msg, v_p);
+	va_end(v_p);
 	if(m_lastLogType != log_type)
 	{
 		m_lastLogType = log_type;
@@ -191,13 +275,27 @@ void CDexLog::Log(DexLogType log_type, char* msg, ...)
 	else if(log_type == log_error)
 		LogError(szText);
 #endif
+#endif
 
 }
 
-void CDexLog::LogLine(DexLogType log_type, char* msg, ...)
+void DexLog::LogLine(DexLogType log_type, char* msg, ...)
 {
-	BeginLog();
 #ifdef DEX_LOG
+#ifdef LOG_THREAD
+	va_list v_p;
+	va_start(v_p, msg);
+	TCHAR szText[256];
+	wvsprintf(szText, msg, v_p);
+	va_end(v_p);
+
+	WaitForSingleObject(m_eventMutex, DEXINFINITE);
+	m_logTasks.push_front(log_begin);
+	m_logTasks.push_front({ log_type, szText });
+	m_logTasks.push_front(log_end);
+	SetEvent(m_eventMutex);
+#else
+	BeginLog();
 	va_list v_p;
 	va_start(v_p, msg);
 	TCHAR szText[512];
@@ -216,32 +314,34 @@ void CDexLog::LogLine(DexLogType log_type, char* msg, ...)
 		LogAllert(szText);
 	else if (log_type == log_error)
 		LogError(szText);
-#endif
 	EndLog();
+#endif
+#endif
 }
-void CDexLog::EndLog()
+void DexLog::EndLog()
 {
 #ifdef DEX_LOG
+#ifdef LOG_THREAD
+	WaitForSingleObject(m_eventMutex, DEXINFINITE);
+	m_logTasks.push_front(log_end);
+	SetEvent(m_eventMutex);
+#else
 	if (m_bLogFile)
 		m_logFile->InBlankLine();
+	OutputDebugString("\n");
 	//此处处理控制抬的log
-	if(!m_OpenFontBack)
+	if (!m_OpenFontBack)
 	{//未开启背景打印则无需打印剩下的空格 只须换行即可
-		cout<<endl;
+		cout << endl;
 		return;
 	}
 	int leftBlank = m_wSize - m_logByte;
 	string blank;
-	for(int i = 0 ; i < leftBlank; i++)
+	for (int i = 0; i < leftBlank; i++)
 	{
 		blank += " ";
 	}
 	cout<<blank.c_str();//endl;
 #endif
-}
-
-CDexLog* getLog()
-{
-	static CDexLog* g_log = new CDexLog();
-	return g_log;
+#endif
 }

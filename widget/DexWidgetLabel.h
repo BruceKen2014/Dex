@@ -10,7 +10,7 @@
 class CDexWidgetLabel: public CDexWidget
 {
 protected:
-	int16    m_iTextSize;
+	DInt16    m_iTextSize;
 	string m_strText;
 	DexColor m_textColor;	  //文字颜色
 	DexColor m_textBackColor; //文字背景色 
@@ -33,8 +33,8 @@ public:
 	void SetTextColor(const DexColor& color)  { m_textColor = color;}
 	void SetTexBackColor(const DexColor& color) { m_textBackColor = color;}
 	
-	int16 GetTextSize() const { return m_iTextSize;}
-	void SetTextSize(int16 size) { m_iTextSize = size;}
+	DInt16 GetTextSize() const { return m_iTextSize;}
+	void SetTextSize(DInt16 size) { m_iTextSize = size;}
 	
 	
 };

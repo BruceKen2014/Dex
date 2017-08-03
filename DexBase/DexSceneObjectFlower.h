@@ -13,7 +13,7 @@
 class CDexTex;
 class CDexSceneObjectFlower: public CDexSceneObject
 {
-	Dex_DeclareClass(CDexSceneObjectFlower, 10)
+	Dex_DeclareClass(CDexSceneObjectFlower, CDexSceneObject, 10)
 protected:
 	CDexTex* m_pTex;
 	float m_fSwingFactor;  //°Ú¶¯ÏµÊý

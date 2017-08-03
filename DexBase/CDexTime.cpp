@@ -74,3 +74,14 @@ CDexTime* getTime()
 	g_time->UpdateTime();
 	return g_time;
 }
+
+
+DexTimeCheck::DexTimeCheck(signed __int64& param) :m_pParam(param)
+{
+	m_iTick = getTime()->GetTotalMillSeconds();
+}
+
+DexTimeCheck::~DexTimeCheck()
+{
+	m_pParam = getTime()->GetTotalMillSeconds() - m_iTick;
+}

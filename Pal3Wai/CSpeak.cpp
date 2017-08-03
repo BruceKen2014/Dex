@@ -30,7 +30,7 @@ CSpeak::~CSpeak()
 	ShutDown();
 }
 
-bool CSpeak::LoadBackPic(int16 index, char* filename)
+bool CSpeak::LoadBackPic(DInt16 index, char* filename)
 {
 	if(!m_backPic->LoadTexture(index, filename))
 		return false;

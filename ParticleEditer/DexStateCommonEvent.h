@@ -5,7 +5,7 @@
 ////////////////////////always true
 class DexStateCommontEvent_AlwaysTrue: public IDexStateTransition
 {
-	Dex_DeclareClass(DexStateCommontEvent_AlwaysTrue,0)
+	Dex_DeclareClass(DexStateCommontEvent_AlwaysTrue, IDexStateTransition, 0)
 public:
 	DexStateCommontEvent_AlwaysTrue(IDexState* state);
 	virtual ~DexStateCommontEvent_AlwaysTrue();
@@ -17,11 +17,11 @@ public:
 ////////////////////////key up event
 class DexStateCommontEvent_KeyUp: public IDexStateTransition
 {
-	Dex_DeclareClass(DexStateCommontEvent_KeyUp, 0)
+	Dex_DeclareClass(DexStateCommontEvent_KeyUp, IDexStateTransition, 0)
 protected:
-	uint32 m_iKeyId;
+	DUDInt32 m_iKeyId;
 public:
-	DexStateCommontEvent_KeyUp(uint32 iKeyId,IDexState* state);
+	DexStateCommontEvent_KeyUp(DUDInt32 iKeyId,IDexState* state);
 	virtual ~DexStateCommontEvent_KeyUp();
 public:
 	virtual bool IsTrue();
@@ -29,7 +29,7 @@ public:
 ////////////////////////mouse button event
 class DexStateCommontEvent_MouseRButtonUp: public IDexStateTransition
 {
-	Dex_DeclareClass(DexStateCommontEvent_MouseRButtonUp, 0)
+	Dex_DeclareClass(DexStateCommontEvent_MouseRButtonUp, IDexStateTransition, 0)
 public:
 	DexStateCommontEvent_MouseRButtonUp(IDexState* state);
 	virtual ~DexStateCommontEvent_MouseRButtonUp();

@@ -43,7 +43,7 @@ void DexModelMwsLoader::stMwsTree::buildMatrix()
 
 	if (pFather != nullptr)
 		matrix = matrix * pFather->matrix;
-	for (uint32 i = 0; i < children.size(); ++i)
+	for (DUDInt32 i = 0; i < children.size(); ++i)
 		children[i]->buildMatrix();
 }
 
@@ -91,16 +91,16 @@ bool DexModelMwsLoader::readModelData(const char* filename)
 	FILE* pFile = fopen(filename, "rb");
 	if (pFile == NULL)
 	{
-		getLog()->LogLine(log_error, "		open file: %s failed!", filename);
+		DexLog::getSingleton()->LogLine(log_error, "		open file: %s failed!", filename);
 		return false;
 	}
-	const int16  iMaxLineByte = 2048;
+	const DInt16  iMaxLineByte = 2048;
 	char tempLineData[iMaxLineByte];
 	char LineData[iMaxLineByte * 2];
 	char* pTempData = nullptr;
-	uint8 iReadingType = ReadingNone;
+	DUInt8 iReadingType = ReadingNone;
 	bool  bReadingCount = false;
-	uint16 iDataIndex = 0;
+	DUInt16 iDataIndex = 0;
 
 	while (!feof(pFile))
 	{
@@ -233,7 +233,7 @@ bool DexModelMwsLoader::readModelData(const char* filename)
 				break;
 			case ReadingGroup:
 			{
-				uint16 length = strlen(tempLineData);
+				DUInt16 length = strlen(tempLineData);
 				if (tempLineData[length - 3] == '\\')
 				{//最后一个是\n 倒数第二个是\r
 					tempLineData[length - 3] = '\0';
@@ -271,7 +271,7 @@ bool DexModelMwsLoader::readModelData(const char* filename)
 
 void DexModelMwsLoader::buildTree()
 {
-	for (uint16 i = 0; i < iTreeCount; ++i)
+	for (DUInt16 i = 0; i < iTreeCount; ++i)
 	{
 		stMwsTree* treeThis = &pTreeData[i];
 		if (treeThis->iParentIndex >= 0)
@@ -282,7 +282,7 @@ void DexModelMwsLoader::buildTree()
 		}
 	}
 	pRootTree->buildMatrix();
-	for (uint16 i = 0; i < iTreeCount; ++i)
+	for (DUInt16 i = 0; i < iTreeCount; ++i)
 	{
 		pTreeData[i].matrix.ConvertHandMatrix();
 	}
@@ -293,17 +293,17 @@ void DexModelMwsLoader::AddMesh(stMwsTree* pTree, DexSkinMesh* pSkinMesh)
 	//暂时只考虑静态mws文件
 	DEX_ENSURE(pTree != nullptr && pSkinMesh != nullptr);
 	stMwsGroup* pGroup = &pGroupData[pTree->iGroupIndex];
-	uint16 iVertexIndex = 0;
-	uint16 iNormalIndex = 0;
-	uint16 iColorIndex = 0;
-	uint16 iUvIndex = 0;
-	DMap<stIndex, int32> mapVertexInfo;
+	DUInt16 iVertexIndex = 0;
+	DUInt16 iNormalIndex = 0;
+	DUInt16 iColorIndex = 0;
+	DUInt16 iUvIndex = 0;
+	DMap<stIndex, DInt32> mapVertexInfo;
 	stIndex index;
 	DexSkinMesh::stMeshVertex newVertex;
 	DexSkinMesh::DexMesh* pMesh = nullptr;
-	for (uint16 f = 0; f < pGroup->iFaceCount; ++f)
+	for (DUInt16 f = 0; f < pGroup->iFaceCount; ++f)
 	{
-		uint16 iFaceIndex = pGroup->pFaceIndex[f];
+		DUInt16 iFaceIndex = pGroup->pFaceIndex[f];
 		stMwsFace* pFace = &pFaceData[iFaceIndex];
 		if (pMesh == nullptr || pMesh->m_iMaterialId != pFace->pMaterialIndex[0])
 		{//drawcall合并，寻找属于这个材质的mesh，找不到则创建
@@ -314,7 +314,7 @@ void DexModelMwsLoader::AddMesh(stMwsTree* pTree, DexSkinMesh* pSkinMesh)
 		}
 		if (pFace->iVertices == 3)
 		{
-			for (uint16 v = 0; v < pFace->iVertices; ++v)
+			for (DUInt16 v = 0; v < pFace->iVertices; ++v)
 			{//temp consider pFace->iTimes == 1
 				iVertexIndex = pFace->pVertexIndex[v];
 				stMwsVertex* pVertex = &pVertexData[iVertexIndex];
@@ -338,7 +338,7 @@ void DexModelMwsLoader::AddMesh(stMwsTree* pTree, DexSkinMesh* pSkinMesh)
 				index.m_iColorIndex = iColorIndex;
 				index.m_iUvIndex = iUvIndex;
 
-				DMap<stIndex, int32>::iterator ite = mapVertexInfo.find(index);
+				DMap<stIndex, DInt32>::iterator ite = mapVertexInfo.find(index);
 				if (ite != mapVertexInfo.end())
 					pMesh->AddVertexIndice(ite->second);
 				else
@@ -355,11 +355,11 @@ void DexModelMwsLoader::AddMesh(stMwsTree* pTree, DexSkinMesh* pSkinMesh)
 		{
 			int indices1[] = { 0, 1, 2 };
 			int indices2[] = { 0, 2, 3 };
-			for (uint16 n = 0; n < 2; ++n)
+			for (DUInt16 n = 0; n < 2; ++n)
 			{
-				for (uint16 i = 0; i < 3; ++i)
+				for (DUInt16 i = 0; i < 3; ++i)
 				{//temp consider pFace->iTimes == 1
-					uint16 v = 0; 
+					DUInt16 v = 0; 
 					if (n == 0)
 						v = indices1[i];
 					else
@@ -386,7 +386,7 @@ void DexModelMwsLoader::AddMesh(stMwsTree* pTree, DexSkinMesh* pSkinMesh)
 					index.m_iColorIndex = iColorIndex;
 					index.m_iUvIndex = iUvIndex;
 
-					DMap<stIndex, int32>::iterator ite = mapVertexInfo.find(index);
+					DMap<stIndex, DInt32>::iterator ite = mapVertexInfo.find(index);
 					if (ite != mapVertexInfo.end())
 						pMesh->AddVertexIndice(ite->second);
 					else
@@ -421,7 +421,7 @@ void DexModelMwsLoader::freeModelData()
 int DexModelMwsLoader::getNextInt(const char*& ptr, char splitChar[3])
 {
 	char tempData[32];
-	uint16 iIndex = 0;
+	DUInt16 iIndex = 0;
 	while (*ptr != splitChar[0] && *ptr != splitChar[1] && *ptr != splitChar[2])
 		tempData[iIndex++] = *ptr++;
 	ptr++;//skip split char
@@ -434,10 +434,10 @@ bool DexModelMwsLoader::getNextBool(const char*& ptr, char splitChar[3])
 	return getNextInt(ptr, splitChar) == 1;
 }
 
-float64 DexModelMwsLoader::getNextDouble(const char*& ptr, char splitChar[3])
+DFloat64 DexModelMwsLoader::getNextDouble(const char*& ptr, char splitChar[3])
 {
 	char tempData[32];
-	uint16 iIndex = 0;
+	DUInt16 iIndex = 0;
 	while (*ptr != splitChar[0] && *ptr != splitChar[1] && *ptr != splitChar[2])
 		tempData[iIndex++] = *ptr++;
 	ptr++;//skip split char
@@ -453,7 +453,7 @@ float DexModelMwsLoader::getNextFloat(const char*& ptr, char splitChar[3])
 void DexModelMwsLoader::getNextString(const char*& ptr, DString& str)
 {
 	char tempCharArr[128];
-	uint8 index = 0;
+	DUInt8 index = 0;
 	while (*ptr != '\"')
 		ptr++;
 	ptr++;// skip the first "
@@ -467,7 +467,7 @@ void DexModelMwsLoader::getNextString(const char*& ptr, DString& str)
 }
 void DexModelMwsLoader::getNextString(const char*& ptr, char* str)
 {
-	uint8 index = 0;
+	DUInt8 index = 0;
 	while (*ptr != '\"')
 		ptr++;
 	ptr++;// skip the first "
@@ -514,7 +514,7 @@ void DexModelMwsLoader::ReadColor(const char* data, stMwsColor& color)
 }
 void DexModelMwsLoader::ReadTexture(const char* data, stMwsTexture& texture)
 {
-	uint16 nameSize = strlen(data)-4;//首尾两个引号和\r\n
+	DUInt16 nameSize = strlen(data)-4;//首尾两个引号和\r\n
 	memcpy(texture.sName, &data[1], nameSize);
 	texture.sName[nameSize - 3] = 't';
 	texture.sName[nameSize - 2] = 'g';
@@ -527,7 +527,7 @@ void DexModelMwsLoader::ReadMaterial(const char* data, stMwsMaterial& material)
 	getNextString(data, material.sName); 
 	material.iNumLayers = getNextInt(data, splitChar);
 	material.pData = new stMwsMaterial::stMaterialLayerData[material.iNumLayers];
-	for (uint16 i = 0; i < material.iNumLayers; ++i)
+	for (DUInt16 i = 0; i < material.iNumLayers; ++i)
 	{
 		stMwsMaterial::stMaterialLayerData* mld = &material.pData[i];
 		mld->textureIndex = getNextInt(data, splitChar);
@@ -580,17 +580,17 @@ void DexModelMwsLoader::ReadFace(const char* data, stMwsFace& face)
 	face.iTimes = getNextInt(ptr, splitChar);
 	face.iVertices = getNextInt(ptr, splitChar);
 
-	face.pVertexIndex = new uint16[face.iVertices];
-	face.pNormalIndex = new uint16[face.iTimes*face.iVertices];
-	face.pColorIndex = new uint16[face.iTimes*face.iVertices];
-	face.pUvIndex = new uint16[face.iTimes*face.iVertices];
-	face.pMaterialIndex = new uint16[face.iTimes];
+	face.pVertexIndex = new DUInt16[face.iVertices];
+	face.pNormalIndex = new DUInt16[face.iTimes*face.iVertices];
+	face.pColorIndex = new DUInt16[face.iTimes*face.iVertices];
+	face.pUvIndex = new DUInt16[face.iTimes*face.iVertices];
+	face.pMaterialIndex = new DUInt16[face.iTimes];
 
-	for (uint16 i = 0; i < face.iVertices; ++i)
+	for (DUInt16 i = 0; i < face.iVertices; ++i)
 		face.pVertexIndex[i] = getNextInt(ptr, splitChar);
-	for (uint16 t = 0; t < face.iTimes; ++t)
+	for (DUInt16 t = 0; t < face.iTimes; ++t)
 	{
-		for (uint16 v = 0; v < face.iVertices; ++v)
+		for (DUInt16 v = 0; v < face.iVertices; ++v)
 		{
 			face.pNormalIndex[t*face.iVertices + v] = getNextInt(ptr, splitChar);
 			face.pColorIndex[t*face.iVertices + v] = getNextInt(ptr, splitChar);
@@ -606,8 +606,8 @@ void DexModelMwsLoader::ReadGroup(const char* data, stMwsGroup& group)
 	getNextString(data, group.sName);
 	getNextString(data, group.sParentName);
 	group.iFaceCount = getNextInt(data, splitChar);
-	group.pFaceIndex = new uint16[group.iFaceCount];
-	for (uint16 i = 0; i < group.iFaceCount; ++i)
+	group.pFaceIndex = new DUInt16[group.iFaceCount];
+	for (DUInt16 i = 0; i < group.iFaceCount; ++i)
 	{
 		group.pFaceIndex[i] = getNextInt(data, splitChar); 
 	}
@@ -674,7 +674,7 @@ void DexModelMwsLoader::ReadTree(const char* data, stMwsTree& tree)
 	else if (tree.eTreeType == _stMwsTree::TYPE_LOD_GROUP)
 	{
 		tree.iNumLods = getNextInt(data, splitChar);
-		for (uint16 i = 0; i < tree.iNumLods; ++i)
+		for (DUInt16 i = 0; i < tree.iNumLods; ++i)
 			tree.lodThresold[i] = getNextDouble(data, splitChar);
 	}
 	if (tree.iParentIndex == -1)
@@ -685,27 +685,27 @@ bool DexModelMwsLoader::SupportType(const char* fileType)
 {
 	return dexstricmp(fileType, ".mws") == 0;
 }
-DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, int32 flag)
+DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, DInt32 flag)
 {
-	getLog()->LogLine(log_ok, "load mws model %s...\n", filename);
-	int64 Time = getTime()->GetTotalMillSeconds();
+	DexLog::getSingleton()->LogLine(log_ok, "load mws model %s...", filename);
+	DInt64 Time = getTime()->GetTotalMillSeconds();
 	bool ret = readModelData(filename);
 	DEX_ENSURE_P(ret);
 	buildTree();
 	DexSkinMesh* pDexSkinMesh = new DexSkinMesh;
 	
 	//texture
-	for (uint16 t = 0; t < iTextureCount; ++t)
+	for (DUInt16 t = 0; t < iTextureCount; ++t)
 		pDexSkinMesh->AddTexture(pTextureData[t].sName);
 		
 	//material
-	for (uint16 i = 0; i < iMaterialCount; ++i)
+	for (DUInt16 i = 0; i < iMaterialCount; ++i)
 	{
 		DexMaterial material;
 		pMaterialData[i].pData[0].getDexMaterial(material);
 		pDexSkinMesh->AddMaterial(material);
 	}
-	for (uint16 i = 0; i < iTreeCount; ++i)
+	for (DUInt16 i = 0; i < iTreeCount; ++i)
 	{
 		stMwsTree* pTree = &pTreeData[i];
 		if (pTree->isShape())
@@ -718,11 +718,11 @@ DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, int32 flag)
 
 	freeModelData();
 	Time = getTime()->GetTotalMillSeconds() - Time;
-	getLog()->LogLine(log_ok, "load mws model %s ok, use time %d ms", filename, Time);
+	DexLog::getSingleton()->LogLine(log_ok, "load mws model %s ok, use time %d ms", filename, Time);
 	return pDexSkinMesh;
 }
 
-bool DexModelMwsLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag)
+bool DexModelMwsLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, DInt32 flag)
 {
 	return true;
 }

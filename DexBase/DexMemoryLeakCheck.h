@@ -5,7 +5,7 @@
 #ifdef _DEBUG
 #	define _CRTDBG_MAP_ALLOC //为了能够捕捉malloc的泄露，定义这个宏以后malloc会成为_malloc_dbg
 #	define DEBUG_CLIENTBLOCK new(_CLIENT_BLOCK, __FILE__, __LINE__)
-#	define new DEBUG_CLIENTBLOCK
+#	define dexnew DEBUG_CLIENTBLOCK
 #include <crtdbg.h>
 #endif
 /*

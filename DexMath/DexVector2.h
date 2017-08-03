@@ -63,10 +63,8 @@ inline DexVector2T<T>::DexVector2T()
 }
 
 template<typename T>
-inline DexVector2T<T>::DexVector2T(const DexVector2T<T>& vector2)
-{
-	memcpy(m, vector2.m, sizeof(vector2));
-}
+inline DexVector2T<T>::DexVector2T(const DexVector2T<T>& vector2) :DexVector2T(vector2.x, vector2.y)
+{}
 
 template<typename T>
 inline DexVector2T<T>::DexVector2T(T _x, T _y)
@@ -252,5 +250,5 @@ DexVector2T<T> operator* (T1 _value, const DexVector2T<T>& vector2)
 	return ret;
 }
 typedef DexVector2T<float>  DexVector2;
-typedef DexVector2T<int32>  DexVector2_int32;
+typedef DexVector2T<DInt32>  DexVector2_DInt32;
 #endif

@@ -26,14 +26,14 @@ bool DexBigFileHandle::InitBigFile(const char* filename)
 	bool ret = m_pFile->OpenFile(filename);
 	if (!ret)
 		return false;
-	uint64 fileLength = m_pFile->Length();
-	uint64 offset = 0;
+	DUInt64 fileLength = m_pFile->Length();
+	DUInt64 offset = 0;
 	m_pFile->Read(&m_header, offset, sizeof(m_header)); 
-	uint32 iContentSize = sizeof(stDexBigFileContent);
-	uint32 iBlockCount = m_header.blockCount;
+	DUDInt32 iContentSize = sizeof(stDexBigFileContent);
+	DUDInt32 iBlockCount = m_header.blockCount;
 	offset = fileLength - iContentSize * m_header.count - sizeof(stDexBigFileBlock) * iBlockCount;
 	//read content data
-	for (uint32 i = 0; i < m_header.count; ++i)
+	for (DUDInt32 i = 0; i < m_header.count; ++i)
 	{
 		stDexBigFileContent* pContentPtr = new stDexBigFileContent;
 		m_pFile->Read(pContentPtr, offset, iContentSize);
@@ -46,18 +46,18 @@ bool DexBigFileHandle::InitBigFile(const char* filename)
 	return ret;
 }
 
-uint64 DexBigFileHandle::ReadContent(const stDexBigFileContent* content, void* buffer)
+DUInt64 DexBigFileHandle::ReadContent(const stDexBigFileContent* content, void* buffer)
 {
-	uint32 iBlockIndex = content->iBlockIndex;
-	uint32 iBlockCount = content->iBlockCount;
-	uint32 iBlockMaxSize = s_iBlockSize;
-	uint32 iBlockSize = 0;
-	uint64 iBlockOffset = 0;
-	uint64 iBufferOffset = 0;
+	DUDInt32 iBlockIndex = content->iBlockIndex;
+	DUDInt32 iBlockCount = content->iBlockCount;
+	DUDInt32 iBlockMaxSize = s_iBlockSize;
+	DUDInt32 iBlockSize = 0;
+	DUInt64 iBlockOffset = 0;
+	DUInt64 iBufferOffset = 0;
 	bool		 bBlockCompress = true;
-	uint32 destLength = s_iBlockSize;
+	DUDInt32 destLength = s_iBlockSize;
 	const stDexBigFileBlock* block = nullptr;
-	for (uint32 b = 0; b < iBlockCount; ++b)
+	for (DUDInt32 b = 0; b < iBlockCount; ++b)
 	{
 		block = &m_vecBlocks[iBlockIndex];
 		iBlockOffset = block->iByteOffset;
@@ -80,16 +80,16 @@ uint64 DexBigFileHandle::ReadContent(const stDexBigFileContent* content, void* b
 	return iBufferOffset;
 }
 
-uint64 DexBigFileHandle::Read(void* buffer)
+DUInt64 DexBigFileHandle::Read(void* buffer)
 {
-	uint64 ret = 0;
+	DUInt64 ret = 0;
 	if (m_pCurContent != nullptr)
 		ret = ReadContent(m_pCurContent, buffer);
 	return ret;
 }
-uint64 DexBigFileHandle::Read(const char* filename, void* buffer)
+DUInt64 DexBigFileHandle::Read(const char* filename, void* buffer)
 {
-	uint64 ret = 0;
+	DUInt64 ret = 0;
 	DexMd5 md5 = DexMd5Generator::sGetDexMd5Generator()->GenerateMd5(filename);
 	mapContent::iterator iter = m_mapContents.find(md5);
 	if (iter != m_mapContents.end())
@@ -112,21 +112,21 @@ bool DexBigFileHandle::SaveBigFile(const char* filename)
 		return false;
 	m_header.count = m_vecContentName.size();
 	m_pFile->Write(&m_header, sizeof(m_header));
-	uint32 iContentByte = sizeof(stDexBigFileContent);
-	uint64 time = GetTickCount64();
+	DUDInt32 iContentByte = sizeof(stDexBigFileContent);
+	DUInt64 time = GetTickCount64();
 	//write content file data
-	uint32 destSize = 0;
+	DUDInt32 destSize = 0;
 	float ratio = 0.0f;
-	uint32 startIndex = 0;
-	uint64 fileOffset = 0;
-	uint64 fileSize = 0;
-	uint32 fileBlockCount = 0;
-	uint32 tailByte = 0;
-	uint32 writeLength = 0;
-	uint32 BigFileBlockCount = 0;
-	uint32 zlibSrcLength = 0;
-	uint64 bigFileCompressLength = 0;
-	uint64 bigFileSrcLength = 0;
+	DUDInt32 startIndex = 0;
+	DUInt64 fileOffset = 0;
+	DUInt64 fileSize = 0;
+	DUDInt32 fileBlockCount = 0;
+	DUDInt32 tailByte = 0;
+	DUDInt32 writeLength = 0;
+	DUDInt32 BigFileBlockCount = 0;
+	DUDInt32 zlibSrcLength = 0;
+	DUInt64 bigFileCompressLength = 0;
+	DUInt64 bigFileSrcLength = 0;
 	stDexBigFileBlock block;
 	bool		 bCompress = false;
 	int          compressRet = 0;
@@ -156,7 +156,7 @@ bool DexBigFileHandle::SaveBigFile(const char* filename)
 				newContent->iBlockCount = fileBlockCount;
 				newContent->iOrigionSize = fileSize;
 				m_mapContents[md5] = newContent;
-				for (uint32 b = 0; b < fileBlockCount; ++b)
+				for (DUDInt32 b = 0; b < fileBlockCount; ++b)
 				{
 					writeLength = s_iBlockSize;
 					if (b == fileBlockCount - 1 && tailByte != 0)
@@ -204,14 +204,14 @@ bool DexBigFileHandle::SaveBigFile(const char* filename)
 		m_pFile->Write(pContent, iContentByte);
 	}
 	//write block info
-	uint32 blockCount = m_vecBlocks.size();
+	DUDInt32 blockCount = m_vecBlocks.size();
 	if (blockCount != 0)
 		m_pFile->Write(&m_vecBlocks[0], blockCount * sizeof(m_vecBlocks[0]));
 	//Ð´ÈëblockÊýÁ¿
 	m_header.blockCount = blockCount;
 	m_pFile->Seek(DexFile::DSEEK_SET, 0);
 	m_pFile->Write(&m_header, sizeof(m_header));
-	uint64 resLength = m_pFile->ReCalLength();
+	DUInt64 resLength = m_pFile->ReCalLength();
 	m_pFile->Close();
 	ratio = (float)bigFileCompressLength / bigFileSrcLength;
 	time = GetTickCount64() - time;
@@ -233,9 +233,9 @@ bool DexBigFileHandle::OpenFile(const char* filename)
 	m_pCurContent = nullptr;
 	return false;
 }
-uint64 DexBigFileHandle::FileSize()
+DUInt64 DexBigFileHandle::FileSize()
 {
-	uint64 ret = 0;
+	DUInt64 ret = 0;
 	if (m_pCurContent != nullptr)
 		ret = m_pCurContent->iOrigionSize;
 	return ret;
@@ -245,7 +245,7 @@ void DexBigFileHandle::CloseFile()
 	m_pCurContent = nullptr;
 }
 
-uint32 DexBigFileHandle::ContentCount()
+DUDInt32 DexBigFileHandle::ContentCount()
 {
 	return m_mapContents.size();
 }

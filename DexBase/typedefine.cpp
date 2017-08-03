@@ -332,16 +332,16 @@ bool  setDexBuffer(char* data,...)
 {
 	if(data == NULL)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "dexSetBuffer传入空字符串！文件%s 行数%d", __FILE__, __LINE__);
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "dexSetBuffer传入空字符串！文件%s 行数%d", __FILE__, __LINE__);
+		DexLog::getSingleton()->EndLog();
 		return false;
 	}
 	else if(strlen(data) > 2048)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "dexSetBuffer传入字符串长度大于2048！文件%s 行数%d", __FILE__, __LINE__);
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "dexSetBuffer传入字符串长度大于2048！文件%s 行数%d", __FILE__, __LINE__);
+		DexLog::getSingleton()->EndLog();
 		return false;
 	}
 	memset(getDexBuffer(), 0, 2048);

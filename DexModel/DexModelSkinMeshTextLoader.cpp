@@ -1,7 +1,7 @@
 
 #include "DexModelSkinMeshTextLoader.h"
 #include "..\DexBase\DexLog.h"
-#include "..\DexCommonFunction.h"
+#include "..\DexBase\DexCommonFunction.h"
 
 #define getFloat DexCommonFunction::str_to_float(vecStr[index++])
 #define getInt   DexCommonFunction::str_to_int(vecStr[index++])
@@ -21,14 +21,14 @@ bool DexModelSkinMeshTextLoader::SupportType(const char* fileType)
 	return dexstricmp(fileType, ".dexmodeltext") == 0;
 }
 
-DexModelBase* DexModelSkinMeshTextLoader::LoadModel(const char* filename, int32 flag)
+DexModelBase* DexModelSkinMeshTextLoader::LoadModel(const char* filename, DInt32 flag)
 {
 	DexMem mem;
 	DEX_ENSURE_P(mem.IniFromFile(filename));
-	int64 Time = getTime()->GetTotalMillSeconds();
-	getLog()->LogLine(log_ok, "load dex text model %s...", filename);
+	DInt64 Time = getTime()->GetTotalMillSeconds();
+	DexLog::getSingleton()->LogLine(log_ok, "load dex text model %s...", filename);
 	DexSkinMesh* pDexSkinMesh = new DexSkinMesh;
-	const int16  iMaxLineByte = 2048;
+	const DInt16  iMaxLineByte = 2048;
 	char tempLineData[iMaxLineByte];
 
 	DVector<DexSkinMesh::stMeshVertex> vecVertexs;
@@ -62,10 +62,10 @@ DexModelBase* DexModelSkinMeshTextLoader::LoadModel(const char* filename, int32 
 			continue;
 	}
 	Time = getTime()->GetTotalMillSeconds() - Time;
-	getLog()->LogLine(log_ok, "load dex text model %s ok, use time %d ms", filename, Time);
+	DexLog::getSingleton()->LogLine(log_ok, "load dex text model %s ok, use time %d ms", filename, Time);
 	return pDexSkinMesh;
 }
-bool DexModelSkinMeshTextLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag)
+bool DexModelSkinMeshTextLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, DInt32 flag)
 {
 	return true;
 }
@@ -74,13 +74,13 @@ void DexModelSkinMeshTextLoader::ReadMaterials(DexMem* pMem, DexSkinMesh* pSkinM
 {
 	//name diffuse ambient emissive specular power
 	pMem->ReadLine(pBuffer); //read material count
-	int32 materialCount = DexCommonFunction::str_to_int(pBuffer);
+	DInt32 materialCount = DexCommonFunction::str_to_int(pBuffer);
 	for (int m = 0; m < materialCount; ++m)
 	{
 		pMem->ReadLine(pBuffer);
 		DexMaterial material;
 		DVector<DString> vecStr;
-		uint32 index = 0;
+		DUDInt32 index = 0;
 		DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
 		strcpy_s(material.name, vecStr[index++].c_str());
 		DexColor color;
@@ -101,8 +101,8 @@ void DexModelSkinMeshTextLoader::ReadMaterials(DexMem* pMem, DexSkinMesh* pSkinM
 void DexModelSkinMeshTextLoader::ReadTextures(DexMem* pMem, DexSkinMesh* pSkinMesh, char* pBuffer)
 {
 	pMem->ReadLine(pBuffer); //read texture count
-	int32 textureCount = DexCommonFunction::str_to_int(pBuffer);
-	for (int32 t = 0; t < textureCount; ++t)
+	DInt32 textureCount = DexCommonFunction::str_to_int(pBuffer);
+	for (DInt32 t = 0; t < textureCount; ++t)
 	{
 		pMem->ReadLine(pBuffer);
 		pSkinMesh->AddTexture(pBuffer);
@@ -113,20 +113,20 @@ void DexModelSkinMeshTextLoader::ReadJoints(DexMem* pMem, DexSkinMesh* pSkinMesh
 {
 	//jointName fatherId Id offset scale axis radian
 	pMem->ReadLine(pBuffer); //read material count
-	int32 jointCount = DexCommonFunction::str_to_int(pBuffer);
+	DInt32 jointCount = DexCommonFunction::str_to_int(pBuffer);
 	
-	for (int32 j = 0; j < jointCount; ++j)
+	for (DInt32 j = 0; j < jointCount; ++j)
 	{
 		pMem->ReadLine(pBuffer);
-		uint32 index = 1;
+		DUDInt32 index = 1;
 		DVector<DString> vecStr;
 		DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
-		int32 fatherId = getInt;
-		int32 jointId = getInt;
+		DInt32 fatherId = getInt;
+		DInt32 jointId = getInt;
 		DexVector3 translation; translation.x = getFloat; translation.y = getFloat; translation.z = getFloat;
 		DexVector3 scale; scale.x = getFloat; scale.y = getFloat; scale.z = getFloat;
 		DexVector3 axis; axis.x = getFloat; axis.y = getFloat; axis.z = getFloat;
-		float32 axisRadian = _getRadian(getFloat);
+		DFloat32 axisRadian = _getRadian(getFloat);
 		DexQuaternion quatenion(axis, axisRadian);
 
 		DexMatrix4x4 rotationMatrix = quatenion.GetMatrix();
@@ -142,11 +142,11 @@ void DexModelSkinMeshTextLoader::ReadJoints(DexMem* pMem, DexSkinMesh* pSkinMesh
 void DexModelSkinMeshTextLoader::ReadVertex(DexMem* pMem, DVector<DexSkinMesh::stMeshVertex>& vertexs, char* pBuffer)
 {
 	pMem->ReadLine(pBuffer); //read vertex count
-	int32 vertexCount = DexCommonFunction::str_to_int(pBuffer);
-	for (int32 v = 0; v < vertexCount; ++v)
+	DInt32 vertexCount = DexCommonFunction::str_to_int(pBuffer);
+	for (DInt32 v = 0; v < vertexCount; ++v)
 	{
 		pMem->ReadLine(pBuffer);
-		uint32 index = 0;
+		DUDInt32 index = 0;
 		DVector<DString> vecStr;
 		DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
 		DexSkinMesh::stMeshVertex vertex;
@@ -154,7 +154,7 @@ void DexModelSkinMeshTextLoader::ReadVertex(DexMem* pMem, DVector<DexSkinMesh::s
 		vertex.normal.x = getFloat; vertex.normal.y = getFloat; vertex.normal.z = getFloat; vertex.normal.Normalize();
 		vertex.color.r = getColor; vertex.color.g = getColor; vertex.color.b = getColor; vertex.color.a = getColor;
 		vertex.uv.x = getFloat; vertex.uv.y = getFloat;
-		int32 jointCount = getInt;
+		DInt32 jointCount = getInt;
 		for (int j = 0; j < jointCount; ++j)
 		{
 			vertex.JointIndex[j] = getInt;
@@ -167,21 +167,21 @@ void DexModelSkinMeshTextLoader::ReadVertex(DexMem* pMem, DVector<DexSkinMesh::s
 void DexModelSkinMeshTextLoader::ReadMeshes(DexMem* pMem, DexSkinMesh* pSkinMesh, DVector<DexSkinMesh::stMeshVertex>& vertexs, char* pBuffer)
 {
 	pMem->ReadLine(pBuffer); //read mesh count
-	int32 meshCount = DexCommonFunction::str_to_int(pBuffer);
+	DInt32 meshCount = DexCommonFunction::str_to_int(pBuffer);
 	for (int m = 0; m < meshCount; ++m)
 	{
 		pMem->ReadLine(pBuffer);
-		uint32 index = 1;
+		DUDInt32 index = 1;
 		DVector<DString> vecStr;
 		DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
-		int32 meshId = getInt;
+		DInt32 meshId = getInt;
 		DexSkinMesh::DexMesh* pMesh = pSkinMesh->AddMesh(meshId);
 		strcpy_s(pMesh->name, vecStr[0].c_str());
 		pMesh->m_iMaterialId = getInt;
 		pMesh->m_iTextureId = getInt;
-		int32 triangleCount = getInt;
-		int32 vertexIndex = 0;
-		int32 vertexIndice = 0;
+		DInt32 triangleCount = getInt;
+		DInt32 vertexIndex = 0;
+		DInt32 vertexIndice = 0;
 		for (int t = 0; t < triangleCount; ++t)
 		{
 			for (int i = 0; i < 3; ++i)
@@ -199,7 +199,7 @@ void DexModelSkinMeshTextLoader::ReadRenderFlag(DexMem* pMem, DexSkinMesh* pSkin
 	pMem->ReadLine(pBuffer); 
 	DVector<DString> vecStr;
 	DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
-	int16 iRenderFlag = 0;
+	DInt16 iRenderFlag = 0;
 	for (size_t i = 0; i < vecStr.size(); ++i)
 	{
 		if (dexstricmp(vecStr[i].c_str(), "MESH") == 0)
@@ -221,7 +221,7 @@ void DexModelSkinMeshTextLoader::ReadLightFlag(DexMem* pMem, DexSkinMesh* pSkinM
 	pMem->ReadLine(pBuffer);
 	DVector<DString> vecStr;
 	DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
-	int16 iLightFlag = 0;
+	DInt16 iLightFlag = 0;
 	for (size_t i = 0; i < vecStr.size(); ++i)
 	{
 		if (dexstricmp(vecStr[i].c_str(), "ENABLE") == 0)

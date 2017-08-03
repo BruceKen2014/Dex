@@ -72,7 +72,7 @@ class DexTexture;
 #define _SKIN_MESH_ROOT_JOINT_ID	0x0FFF
 class DexSkinMesh: public DexModelBase
 {
-	Dex_DeclareClass(DexSkinMesh, 0)
+	Dex_DeclareClass(DexSkinMesh, DexModelBase,0)
 	friend class DexModelMs3dLoader;
 	friend class DexModelObjLoader;
 	friend class DexModelDaeLoader;
@@ -86,14 +86,14 @@ class DexSkinMesh: public DexModelBase
 	public:
 		typedef struct _matrix_key
 		{//<毫秒，矩阵>
-			int32 time;
+			DInt32 time;
 			DexMatrix4x4 matrix;
 			_matrix_key() :time(0){}
-			_matrix_key(int32 t, const DexMatrix4x4& m) :time(t), matrix(m){}
+			_matrix_key(DInt32 t, const DexMatrix4x4& m) :time(t), matrix(m){}
 		}matrix_key;
 	public:
 		std::string	   str_name;
-		int16		   id;
+		DInt16		   id;
 		bool		   m_bAnimate;
 		Joint*		   m_pFather;
 		DexMatrix4x4   world_matrix; //最终世界matrix
@@ -110,11 +110,11 @@ class DexSkinMesh: public DexModelBase
 		~Joint();
 		void AddChild(Joint* child);
 		//先按照时间从小到大插入
-		void AddKeyFrame(int32 time, const DexMatrix4x4& matrix);
+		void AddKeyFrame(DInt32 time, const DexMatrix4x4& matrix);
 		void Render();
 		void Render2Joint();
 		void Update(int time);
-		void ComputeWorldMatrix(int32 time);
+		void ComputeWorldMatrix(DInt32 time);
 	};
 	typedef struct _stMeshVertex
 	{
@@ -122,8 +122,8 @@ class DexSkinMesh: public DexModelBase
 		DexVector3 normal;
 		DexColor   color;
 		DexVector2 uv;
-		uint8	   JointIndex[SKINMESH_VERTEX_JOINT_COUNT];
-		float32	   JointWeights[SKINMESH_VERTEX_JOINT_COUNT];
+		DUInt8	   JointIndex[SKINMESH_VERTEX_JOINT_COUNT];
+		DFloat32	   JointWeights[SKINMESH_VERTEX_JOINT_COUNT];
 		_stMeshVertex() :color(DEXCOLOR_WHITE)
 		{
 			memset(JointIndex, 0, sizeof(JointIndex));
@@ -139,68 +139,68 @@ class DexSkinMesh: public DexModelBase
 			*/
 	public:
 		char		name[64];
-		int8	    id;
-		int8		m_iTextureId;
-		int8		m_iMaterialId;
+		DInt8	    id;
+		DInt8		m_iTextureId;
+		DInt8		m_iMaterialId;
 
 		////用于向device传输要渲染的顶点信息
-		VectorInt32		m_vecIndices;//vertex indice
+		VectorDInt32		m_vecIndices;//vertex indice
 		DVector<stMeshVertex> m_vecVertexsBuffer;
-		VectorInt32		m_vecLineIndices;//line vertex indice,用的buffer就是m_vecVertexsBuffer
+		VectorDInt32		m_vecLineIndices;//line vertex indice,用的buffer就是m_vecVertexsBuffer
 
 		//用于debug 法线
-		VectorInt32		m_vecDebugNormalIndices;
+		VectorDInt32		m_vecDebugNormalIndices;
 		DVector<stMeshVertex> m_vecDebugNormalBuffer;
 
 		//debug vertex to joint
-		VectorInt32		m_vecDebugVertexToJointIndices;
+		VectorDInt32		m_vecDebugVertexToJointIndices;
 		DVector<stMeshVertex> m_vecDebugVertexToJointBuffer;
 	public:
 		DexMesh();
 		virtual ~DexMesh();
 	public:
 		void   DestroyLineIndices();
-		int32* CreateLineIndices();
+		DInt32* CreateLineIndices();
 
-		uint32 GetVertexCount()	const;
+		DUDInt32 GetVertexCount()	const;
 		void*  GetVertexBuffer();
-		uint32 GetIndiceCount() const;
+		DUDInt32 GetIndiceCount() const;
 		void*  GetIndiceBuffer();
 
-		uint32 GetLineIndiceCount() const;
+		DUDInt32 GetLineIndiceCount() const;
 		void*  GetLineIndiceBuffer();
 	public:
 		//用于debug normal
 		void DestroyNormalBuffer();
 		void CreateNormalBuffer();
-		uint32 GetNormalBufferCount()	const;
+		DUDInt32 GetNormalBufferCount()	const;
 		void*  GetNormalBuffer();
-		uint32 GetNormalIndiceCount() const;
+		DUDInt32 GetNormalIndiceCount() const;
 		void*  GetNormalIndiceBuffer();
 	public:
 		//debug vertex to joint
 		void DestroyVertexToJointlBuffer();
 		void CreateVertexToJointBuffer(const DVector<Joint*>& vecJoints);
-		uint32 GetVertexToJointBufferCount()	const;
+		DUDInt32 GetVertexToJointBufferCount()	const;
 		void*  GetVertexToJointBuffer();
-		uint32 GetVertexToJointIndiceCount() const;
+		DUDInt32 GetVertexToJointIndiceCount() const;
 		void*  GetVertexToJointIndiceBuffer();
 	public:
 
 		//返回新插入顶点的index
-		uint32 AddVertex(const DexVector3& pos, const DexVector3& normal, float u, float v);
-		void   AddVertexIndice(const int32& index);
+		DUDInt32 AddVertex(const DexVector3& pos, const DexVector3& normal, float u, float v);
+		void   AddVertexIndice(const DInt32& index);
 	};
 protected:
 	Joint*		m_pRootJoint;
-	int16		m_iAnimateStartTime;
-	int16		m_iAnimateNowTime;
-	int16		m_iAnimateEndTime;
-	int16		m_iAnimateMaxTime;
-	int16		m_iRenderFlag;
+	DInt16		m_iAnimateStartTime;
+	DInt16		m_iAnimateNowTime;
+	DInt16		m_iAnimateEndTime;
+	DInt16		m_iAnimateMaxTime;
+	DInt16		m_iRenderFlag;
 	bool		m_bHaveAnimation;
 	bool		m_bAnimate;
-	float32		m_fAnimateRatio; //动画速率，默认1.0f
+	DFloat32		m_fAnimateRatio; //动画速率，默认1.0f
 	SkinMeshAnimateType m_eAniType;
 	SkinMeshModelType m_eMeshType;
 
@@ -220,7 +220,7 @@ protected:
 	DexColor	 m_ambientColor;
 	DVector<stDexPointLight>  m_vecPointLight;
 	stDexDirectionLight m_directionLight;
-	float32		m_fJointScale; //骨骼缩放，用于调试渲染骨骼
+	DFloat32		m_fJointScale; //骨骼缩放，用于调试渲染骨骼
 	void Init();
 	void InitShader();
 public:
@@ -230,20 +230,20 @@ public:
 	void AddPointLight(const stDexPointLight& light);
 public:
 	DexSkinMesh();
-	DexSkinMesh(int16 maxAniTime);
+	DexSkinMesh(DInt16 maxAniTime);
 	virtual ~DexSkinMesh();
 #ifdef _DEBUG
 	// for debug
-	int32 iHideMeshIndex;
-	int32 iOnlyShowIndex;
+	DInt32 iHideMeshIndex;
+	DInt32 iOnlyShowIndex;
 #endif
 public:
-	static uint16 sGetMaxJointCount();
+	static DUInt16 sGetMaxJointCount();
 public:
 //skin mesh
 	//改变这个skinmesh的矩阵
 	void SetSceneNodeMatrix(const DexMatrix4x4& matrix);
-	virtual bool Update(int32 delta);
+	virtual bool Update(DInt32 delta);
 	virtual bool Render();
 	//读取索引skinmesh数据后，务必调用此接口
 	void CalculateVertex();
@@ -251,34 +251,34 @@ public:
 	void SetMeshType(SkinMeshModelType type);
 	SkinMeshModelType GetMeshType() const;
 //animation
-	void SetMaxAniTime(int16 time);
+	void SetMaxAniTime(DInt16 time);
 	void SetAnimateEnable(bool animate);
 	bool GetAnimateEnable()const;
-	bool SetAnimateTime(int16 start, int16 end);
+	bool SetAnimateTime(DInt16 start, DInt16 end);
 	SkinMeshAnimateType GetAnimateType()	const;
 	void SetAnimateType(SkinMeshAnimateType type);
 	void ReStartAnimation(); //如果是一次性的动画的话，重新播放当前动画
-	int16 GetAnimateNowTime()const;
-	int16 GetAnimateEndTime()const;
-	int16 GetAnimateStartTime()const;
-	float32 GetAnimateRatio() const;
-	void  SetAnimateRatio(float32 ratio);
+	DInt16 GetAnimateNowTime()const;
+	DInt16 GetAnimateEndTime()const;
+	DInt16 GetAnimateStartTime()const;
+	DFloat32 GetAnimateRatio() const;
+	void  SetAnimateRatio(DFloat32 ratio);
 //mesh
-	DexMesh* FindMesh(int8 meshId);
+	DexMesh* FindMesh(DInt8 meshId);
 	DexMesh* FindMesh(const char* meshName);
 	//根据传入的iMaterialIndex寻找mesh，如果没有，bAdd表示是否添加
-	DexMesh* FindMesh(uint8 iMaterialIndex, bool bAdd);
-	DexMesh* AddMesh(int8 meshId);
+	DexMesh* FindMesh(DUInt8 iMaterialIndex, bool bAdd);
+	DexMesh* AddMesh(DInt8 meshId);
 	DexMesh* AddMesh(const char* meshName);
 	//设置对应mesh的顶点信息
-	void SetMeshVertexs(int8 meshId, void* vertexs, int32 count);
-	void SetMeshIndices(int8 meshId, void* indics, int32 count);
+	void SetMeshVertexs(DInt8 meshId, void* vertexs, DInt32 count);
+	void SetMeshIndices(DInt8 meshId, void* indics, DInt32 count);
 //joint by id
 	Joint* AddJoint(int id); //只单纯添加一个关节，之后调用setjointinfo赋值相关数据
 	Joint* SetJointInfo(int id, string name, string father_name, const DexMatrix4x4& father_matrix);
 	//一次性添加骨骼及其数据
 	Joint* AddJoint(int id, int father_id, const DexMatrix4x4& father_matrix);
-	Joint* FindJoint(int32 jointId);
+	Joint* FindJoint(DInt32 jointId);
 //joint by name
 	//一些模型文件joint只有name没有id,则调用以下接口
 	Joint* AddJoint(string name);
@@ -286,72 +286,72 @@ public:
 	//这里传入的是在父节点中的相对矩阵，传入要计算根据此计算mesh空间矩阵
 	Joint* AddJoint(string name, string father_name, const DexMatrix4x4& father_matrix);
 	Joint* FindJoint(string name);
-	uint32 FindJointIndex(DString name);
+	DUDInt32 FindJointIndex(DString name);
 //joint frame by id
-	bool AddJointKeyFrame(int32 jointid, int32 time, const DexMatrix4x4& matrix);
-	bool AddJointKeyFrame(int32 jointid, int32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, float32 radian);
-	bool AddJointKeyFrame(int32 jointid, int32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua);
+	bool AddJointKeyFrame(DInt32 jointid, DInt32 time, const DexMatrix4x4& matrix);
+	bool AddJointKeyFrame(DInt32 jointid, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, DFloat32 radian);
+	bool AddJointKeyFrame(DInt32 jointid, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua);
 	//某一帧，某个节点相对父亲节点，只有位移的话，调用这个接口,pos是相对于父joint的位移
-	bool AddJointKeyFrameTrans(int32 jointId, int32 time, const DexVector3& pos);
+	bool AddJointKeyFrameTrans(DInt32 jointId, DInt32 time, const DexVector3& pos);
 	//某一帧，某个节点相对父亲节点，只有缩放的话，调用这个接口,scale是相对于父joint的缩放
-	bool AddJointKeyFrameScale(int32 jointId, int32 time, const DexVector3& scale);
+	bool AddJointKeyFrameScale(DInt32 jointId, DInt32 time, const DexVector3& scale);
 	//某一帧，某个节点自身只有旋转的话，调用这个接口，节点没必要绕别的点旋转，任何绕别的点旋转的操作都可以转换到父亲节点自身的旋转
 	//axis:绕自身的哪个轴旋转
 	//radian:旋转的弧度
-	bool AddJointKeyFrameRotation(int32 jointId, int32 time, const DexVector3& axis, float32 radian);
-	bool AddJointKeyFrameRotation(int32 jointId, int32 time, const DexQuaternion& qua);
+	bool AddJointKeyFrameRotation(DInt32 jointId, DInt32 time, const DexVector3& axis, DFloat32 radian);
+	bool AddJointKeyFrameRotation(DInt32 jointId, DInt32 time, const DexQuaternion& qua);
 //joint frame by name
-	bool AddJointKeyFrame(string name, int32 time, const DexMatrix4x4& matrix);
-	bool AddJointKeyFrame(string name, int32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, float32 radian);
-	bool AddJointKeyFrame(string name, int32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua);
-	bool AddJointKeyFrameTrans(string name, int32 time, const DexVector3& pos);
-	bool AddJointKeyFrameScale(string name, int32 time, const DexVector3& scale);
-	bool AddJointKeyFrameRotation(string name, int32 time, const DexVector3& axis, float32 radian);
-	bool AddJointKeyFrameRotation(string name, int32 time, const DexQuaternion& qua);
+	bool AddJointKeyFrame(string name, DInt32 time, const DexMatrix4x4& matrix);
+	bool AddJointKeyFrame(string name, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, DFloat32 radian);
+	bool AddJointKeyFrame(string name, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua);
+	bool AddJointKeyFrameTrans(string name, DInt32 time, const DexVector3& pos);
+	bool AddJointKeyFrameScale(string name, DInt32 time, const DexVector3& scale);
+	bool AddJointKeyFrameRotation(string name, DInt32 time, const DexVector3& axis, DFloat32 radian);
+	bool AddJointKeyFrameRotation(string name, DInt32 time, const DexQuaternion& qua);
 
 //texture
-	bool SetTexture(int8 meshId, int8 textureId);
+	bool SetTexture(DInt8 meshId, DInt8 textureId);
 	bool AddTexture(DexTexture* tex);
-	int32 AddTexture(const char* filename);
-	int32 FindTexture(DString textureName);
+	DInt32 AddTexture(const char* filename);
+	DInt32 FindTexture(DString textureName);
 //material 
 	//添加material,返回新添加的material的index
-	int32 AddMaterial(const DexMaterial& material);
-	int32 FindMaterial(DString materialName);
+	DInt32 AddMaterial(const DexMaterial& material);
+	DInt32 FindMaterial(DString materialName);
 
 //vertex
 	void AddVertex(const DexVector3& pos);
 	//这里添加的顶点属于skinmesh，如果JointId=NULL,则绑定到根节点上
-	void AddVertex(const DexVector3& pos, int16* JointId, float* weight, int16 jointCount);
+	void AddVertex(const DexVector3& pos, DInt16* JointId, float* weight, DInt16 jointCount);
 	//直接向mesh添加顶点
-	void AddVertex(int8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv);
-	void AddVertex(int8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv, int16* JointId, float* weight, uint16 jointCount);
+	void AddVertex(DInt8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv);
+	void AddVertex(DInt8 meshId, const DexVector3& pos, const DexVector3& normal, const DexVector2& uv, DInt16* JointId, float* weight, DUInt16 jointCount);
 	//add triangle, for mesh,3个index是对应于mesh已经存在的顶点索引
-	void AddMeshTriangle(int8 meshId, int32 index0, int32 index1, int32 index2);
+	void AddMeshTriangle(DInt8 meshId, DInt32 index0, DInt32 index1, DInt32 index2);
 //render flag
-	bool GetRenderFlag(int16 flag);
-	void SetRenderFlag(int16 flag);
-	void SetJointScale(float32 fScale);
+	bool GetRenderFlag(DInt16 flag);
+	void SetRenderFlag(DInt16 flag);
+	void SetJointScale(DFloat32 fScale);
 //Render Order
-	void SetOrderInfo(const DVector<int32>& vector);//重置渲染順序
+	void SetOrderInfo(const DVector<DInt32>& vector);//重置渲染順序
 protected:
 //joint key frame
-	bool AddJointKeyFrame(Joint* joint, int32 time, const DexMatrix4x4& matrix);
-	bool AddJointKeyFrame(Joint* joint, int32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, float32 radian);
-	bool AddJointKeyFrame(Joint* joint, int32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua);
-	bool AddJointKeyFrameTrans(Joint* joint, int32 time, const DexVector3& pos);
-	bool AddJointKeyFrameScale(Joint* joint, int32 time, const DexVector3& scale);
-	bool AddJointKeyFrameRotation(Joint* joint, int32 time, const DexVector3& axis, float32 radian);
-	bool AddJointKeyFrameRotation(Joint* joint, int32 time, const DexQuaternion& qua);
+	bool AddJointKeyFrame(Joint* joint, DInt32 time, const DexMatrix4x4& matrix);
+	bool AddJointKeyFrame(Joint* joint, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, DFloat32 radian);
+	bool AddJointKeyFrame(Joint* joint, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexQuaternion& qua);
+	bool AddJointKeyFrameTrans(Joint* joint, DInt32 time, const DexVector3& pos);
+	bool AddJointKeyFrameScale(Joint* joint, DInt32 time, const DexVector3& scale);
+	bool AddJointKeyFrameRotation(Joint* joint, DInt32 time, const DexVector3& axis, DFloat32 radian);
+	bool AddJointKeyFrameRotation(Joint* joint, DInt32 time, const DexQuaternion& qua);
 
 protected:
 	//判断一个pos的顶点是否在skinmesh中
 	bool	   FindVertex(const DexVector3& pos);
 	//animation
-	bool UpdateOneTime(int32 delta);
-	bool UpdateLoop(int32 delta);
-	bool UpdateOneTimeBack(int32 delta);
-	bool UpdateLoopBack(int32 delta);
+	bool UpdateOneTime(DInt32 delta);
+	bool UpdateLoop(DInt32 delta);
+	bool UpdateOneTimeBack(DInt32 delta);
+	bool UpdateLoopBack(DInt32 delta);
 	virtual bool IsStaticModel();
 protected:
 	void RenderMesh();

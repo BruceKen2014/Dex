@@ -20,12 +20,12 @@ bool DexModelSkinMeshLoader::SupportType(const char* fileType)
 	return dexstricmp(fileType, ".dexmodel") == 0;
 }
 
-DexModelBase* DexModelSkinMeshLoader::LoadModel(const char* filename, int32 flag)
+DexModelBase* DexModelSkinMeshLoader::LoadModel(const char* filename, DInt32 flag)
 {
-	int64 Time = getTime()->GetTotalMillSeconds();
+	TIME_CHECK_START(Time);
 	DexMem mem;
 	mem.IniFromFile(filename);
-	getLog()->LogLine(log_ok, "load dex model %s...\n", filename);
+	DexLog::getSingleton()->LogLine(log_ok, "load dex model %s...", filename);
 	DexSkinMesh* pNewSkinMesh = DexNull;
 	if (flag == 1)
 		pNewSkinMesh = new DexSkinMeshFF;
@@ -46,23 +46,23 @@ DexModelBase* DexModelSkinMeshLoader::LoadModel(const char* filename, int32 flag
 	//joint
 	mem >> pNewSkinMesh->m_fJointScale;
 	ReadJoint(pNewSkinMesh, mem);
-	mem << pNewSkinMesh->m_iAnimateMaxTime;
-	mem << pNewSkinMesh->m_iAnimateStartTime;
-	mem << pNewSkinMesh->m_iAnimateEndTime;
+	mem >> pNewSkinMesh->m_iAnimateMaxTime;
+	mem >> pNewSkinMesh->m_iAnimateStartTime;
+	mem >> pNewSkinMesh->m_iAnimateEndTime;
 	//material
 	ReadMaterial(pNewSkinMesh, mem);
 
 	if (pNewSkinMesh == nullptr)
-		getLog()->LogLine(log_error, "load dex model can not find mesh !");
+		DexLog::getSingleton()->LogLine(log_error, "load dex model can not find mesh !");
 	else
 	{
-		Time = getTime()->GetTotalMillSeconds() - Time;
-		getLog()->LogLine(log_ok, "load dex model %s ok, use time %d ms", filename, Time);
+		TIME_CHECK_END(Time);
+		DexLog::getSingleton()->LogLine(log_ok, "load dex model %s ok, use time %d ms", filename, Time);
 	}
 	return pNewSkinMesh;
 }
 
-bool DexModelSkinMeshLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag)
+bool DexModelSkinMeshLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, DInt32 flag)
 {
 	DexMem mem; 
 	mem.SetMemoryFlag(true, 1024 * 1024 * 10);
@@ -203,9 +203,9 @@ void DexModelSkinMeshLoader::WriteJoint(DexSkinMesh::Joint* pJoint, DexMem& mem)
 	if (pJoint->m_pFather != DexNull)
 		mem << pJoint->m_pFather->id;
 	else
-		mem << (int16)-1;
+		mem << (DInt16)-1;
 	mem << pJoint->frame_matrix;
-	int32 keyFrames = pJoint->m_vecKeyFrames.size();
+	DInt32 keyFrames = pJoint->m_vecKeyFrames.size();
 	mem << keyFrames;
 	if (keyFrames != 0)
 		mem.Write(&pJoint->m_vecKeyFrames[0], keyFrames * sizeof(pJoint->m_vecKeyFrames[0]));
@@ -221,9 +221,9 @@ void DexModelSkinMeshLoader::ReadJoint(DexSkinMesh* pSkinMesh, DexMem& mem)
 	int JointCount = 0;
 	mem >> JointCount;
 	char JointName[128];
-	int16  JointId = 0;
-	int16  JointFatherId = 0;
-	int32  keyFrames = 0;
+	DInt16  JointId = 0;
+	DInt16  JointFatherId = 0;
+	DInt32  keyFrames = 0;
 	DexMatrix4x4 JointFrameMatrix;
 	for (int i = 0; i < JointCount; ++i)
 	{
@@ -245,11 +245,11 @@ void DexModelSkinMeshLoader::ReadJoint(DexSkinMesh* pSkinMesh, DexMem& mem)
 
 void DexModelSkinMeshLoader::WriteMaterial(DexSkinMesh* pSkinMesh, DexMem& mem)
 {
-	int32 materialCount = pSkinMesh->m_vecMaterials.size();
+	DInt32 materialCount = pSkinMesh->m_vecMaterials.size();
 	mem << materialCount;
 	if (materialCount != 0)
 		mem.Write(&pSkinMesh->m_vecMaterials[0], materialCount * sizeof(pSkinMesh->m_vecMaterials[0]));
-	int32 textureCount = pSkinMesh->m_vecTextures.size();
+	DInt32 textureCount = pSkinMesh->m_vecTextures.size();
 	mem << textureCount;
 	for (int i = 0; i < textureCount; ++i)
 		mem.Write((void*)pSkinMesh->m_vecTextures[i]->Name().c_str(), 128);
@@ -258,8 +258,8 @@ void DexModelSkinMeshLoader::WriteMaterial(DexSkinMesh* pSkinMesh, DexMem& mem)
 
 void DexModelSkinMeshLoader::ReadMaterial(DexSkinMesh* pSkinMesh, DexMem& mem)
 {
-	int32 materialCount = 0;
-	int32 textureCount = 0;
+	DInt32 materialCount = 0;
+	DInt32 textureCount = 0;
 	mem >> materialCount;
 	pSkinMesh->m_vecMaterials.resize(materialCount);
 	if (materialCount != 0)

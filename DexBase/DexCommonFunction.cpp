@@ -1,23 +1,23 @@
 
 #include "DexCommonFunction.h"
+#include "DexMemoryManager.h"
 
-
-string DexCommonFunction::int_to_str(int i)
+DString DexCommonFunction::int_to_str(int i)
 {
 	char ch[32];
 	sprintf(ch, "%d", i);
-	return string(ch);
+	return DString(ch);
 }
-string DexCommonFunction::float_to_str(float f)
+DString DexCommonFunction::float_to_str(float f)
 {
 	char ch[32];
 	sprintf(ch, "%.3f",  f);
-	return string(ch);
+	return DString(ch);
 }
 
 
 
-int DexCommonFunction::str_to_int(string str)
+int DexCommonFunction::str_to_int(DString str)
 {
 	return atoi(str.c_str());
 }
@@ -28,7 +28,7 @@ int DexCommonFunction::str_to_int(char* str)
 	return atoi(str);
 }
 
-float DexCommonFunction::str_to_float(string str)
+float DexCommonFunction::str_to_float(DString str)
 {
 	return atof(str.c_str());
 }
@@ -39,7 +39,7 @@ float DexCommonFunction::str_to_float(char* str)
 	return atof(str);
 }
 
-bool DexCommonFunction::str_to_bool(string str)
+bool DexCommonFunction::str_to_bool(DString str)
 {
 	if(str == "true")
 		return true;
@@ -63,7 +63,7 @@ bool DexCommonFunction::str_to_bool(char* str)
 	return true;
 }
 
-bool DexCommonFunction::strcat(string& ret, string str)
+bool DexCommonFunction::strcat(DString& ret, DString str)
 {
 	ret += str;
 	return true;
@@ -74,14 +74,14 @@ bool DexCommonFunction::strcat(char* ret, const char* str)
 	return true;
 }
 
-void DexCommonFunction::SplitStr(string str, char split_char, vector<string> &out)
+void DexCommonFunction::SplitStr(DString str, char split_char, DVector<DString> &out)
 {
 	char* pt = (char*)str.c_str();
 	char* begin = pt;
 	char* end = strchr(pt, split_char);
 	while(end != NULL)
 	{		
-		string temp;
+		DString temp;
 		temp.insert(0, begin, end - begin);
 		out.push_back(temp);
 		begin = end +1;
@@ -89,16 +89,53 @@ void DexCommonFunction::SplitStr(string str, char split_char, vector<string> &ou
 	}
 	if(end == NULL && begin != NULL)
 	{
-		string temp;
+		DString temp;
 		temp.insert(0, begin, pt + str.size() - begin);
 		out.push_back(temp);
 	}
 }
 
-string DexCommonFunction::D3DVector3toStr(const D3DXVECTOR3& vec, char split_char)
+void DexCommonFunction::DeleteStrSpace(DString& str)
 {
-	string str;
-	string temp;
+	DUDInt32 length = str.length();
+	char* tempString = DexMemoryManager::sGetMemoryManager()->allocateMemory(length + 1);
+	char* flag = tempString;
+	const char* ptr = str.c_str();
+	while (*ptr != '\0')
+	{
+		if (*ptr != ' ')
+			*flag = *ptr;
+		++flag;
+		++ptr;
+	}
+	*flag = '\0';
+	str.assign(tempString);
+	DexMemoryManager::sGetMemoryManager()->deallocateMemory((void*)tempString);
+}
+
+void DexCommonFunction::DeleteStrSpace(char* str)
+{
+	DUDInt32 length = dexstrlen(str);
+	if (length == 0)
+		return;
+	char* tempString = DexMemoryManager::sGetMemoryManager()->allocateMemory(length + 1);
+	char* flag = tempString;
+	const char* ptr = str;
+	while (*ptr != '\0')
+	{
+		if (*ptr != ' ')
+			*flag++ = *ptr;
+		++ptr;
+	}
+	*flag = '\0';
+	dexstrcpy(str, tempString);
+	DexMemoryManager::sGetMemoryManager()->deallocateMemory((void*)tempString);
+}
+
+DString DexCommonFunction::D3DVector3toStr(const D3DXVECTOR3& vec, char split_char)
+{
+	DString str;
+	DString temp;
 	temp = float_to_str(vec.x);
 	str += temp;
 	str.append(1, split_char);
@@ -111,9 +148,9 @@ string DexCommonFunction::D3DVector3toStr(const D3DXVECTOR3& vec, char split_cha
 	str += temp;
 	return str;
 }
-bool DexCommonFunction::StrToD3DVector3(string str, D3DXVECTOR3& vec, char split_char)
+bool DexCommonFunction::StrToD3DVector3(DString str, D3DXVECTOR3& vec, char split_char)
 {
-	std::vector<string> str_arr;
+	DVector<DString> str_arr;
 	SplitStr(str, split_char, str_arr);
 	if(str_arr.size() != 3)
 		return false;

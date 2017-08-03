@@ -13,7 +13,7 @@ class PalPlayerAttackState;
 /////======================state========================================
 class PalPlayerAttackStateMachine: public IDexStateMachine
 {
-	Dex_DeclareClass(PalPlayerAttackStateMachine,0)
+	Dex_DeclareClass(PalPlayerAttackStateMachine, IDexStateMachine, 0)
 public:
 	PalPlayerAttackStateMachine(PalPlayer* p);
 	virtual ~PalPlayerAttackStateMachine();
@@ -23,7 +23,7 @@ protected:
 };
 class PalPlayerAttackState: public IDexState
 {
-	Dex_DeclareClass(PalPlayerAttackState,0)
+	Dex_DeclareClass(PalPlayerAttackState, IDexState, 0)
 	friend class PalPlayerAttackStateTransition;
 protected:
 	PalPlayer* player;
@@ -37,7 +37,7 @@ public:
 //出生
 class PalPlayerAttackStateSpawn: public PalPlayerAttackState
 {
-	Dex_DeclareClass(PalPlayerAttackStateSpawn,0)
+	Dex_DeclareClass(PalPlayerAttackStateSpawn, PalPlayerAttackState,0)
 public:
 	PalPlayerAttackStateSpawn(PalPlayer* p);
 	virtual ~PalPlayerAttackStateSpawn();
@@ -51,7 +51,7 @@ public:
 //头像正在运动当中
 class PalPlayerAttackStateMarching: public PalPlayerAttackState
 {
-	Dex_DeclareClass(PalPlayerAttackStateMarching,0)
+	Dex_DeclareClass(PalPlayerAttackStateMarching, PalPlayerAttackState, 0)
 public:
 	PalPlayerAttackStateMarching(PalPlayer* p);
 	virtual ~PalPlayerAttackStateMarching();
@@ -65,7 +65,7 @@ public:
 //头像等待，如自己在施法的过程中
 class PalPlayerAttackStateWait: public PalPlayerAttackState
 {
-	Dex_DeclareClass(PalPlayerAttackStateWait,0)
+	Dex_DeclareClass(PalPlayerAttackStateWait, PalPlayerAttackState, 0)
 public:
 	PalPlayerAttackStateWait(PalPlayer* p);
 	virtual ~PalPlayerAttackStateWait();
@@ -83,7 +83,7 @@ public:
 //头像运动到最右边，进入准备攻击状态
 class PalPlayerAttackStateReady: public PalPlayerAttackState
 {
-	Dex_DeclareClass(PalPlayerAttackStateReady,0)
+	Dex_DeclareClass(PalPlayerAttackStateReady, PalPlayerAttackState, 0)
 public:
 	PalPlayerAttackStateReady(PalPlayer* p);
 	virtual ~PalPlayerAttackStateReady();
@@ -97,7 +97,7 @@ public:
 //选择攻击目标
 class PalPlayerAttackStateSelectTarget: public PalPlayerAttackState
 {
-	Dex_DeclareClass(PalPlayerAttackStateSelectTarget,0)
+	Dex_DeclareClass(PalPlayerAttackStateSelectTarget, PalPlayerAttackState, 0)
 public:
 	PalPlayerAttackStateSelectTarget(PalPlayer* p);
 	virtual ~PalPlayerAttackStateSelectTarget();
@@ -111,7 +111,7 @@ public:
 //选择技能 可攻击地方 可治疗己方 可选择远程或者近程技能
 class PalPlayerAttackStateSelectSkill: public PalPlayerAttackState
 {
-	Dex_DeclareClass(PalPlayerAttackStateSelectSkill,0)
+	Dex_DeclareClass(PalPlayerAttackStateSelectSkill, PalPlayerAttackState, 0)
 public:
 	PalPlayerAttackStateSelectSkill(PalPlayer* p);
 	virtual ~PalPlayerAttackStateSelectSkill();
@@ -125,7 +125,7 @@ public:
 //如果是近程技能 进入跑到目标身边状态
 class PalPlayerAttackStateRunToTarget: public PalPlayerAttackState
 {
-	Dex_DeclareClass(PalPlayerAttackStateRunToTarget,0)
+	Dex_DeclareClass(PalPlayerAttackStateRunToTarget, PalPlayerAttackState, 0)
 protected:
 	int run_time;
 	int run_count;
@@ -143,7 +143,7 @@ public:
 class PalPlayerAttackStatePlayAttackAnimation: public PalPlayerAttackState
 {
 	friend class PalPlayerAttackStateTransitionPlayAttackAniOK;
-	Dex_DeclareClass(PalPlayerAttackStatePlayAttackAnimation,0)
+	Dex_DeclareClass(PalPlayerAttackStatePlayAttackAnimation, PalPlayerAttackState,0)
 public:
 	PalPlayerAttackStatePlayAttackAnimation(PalPlayer* p);
 	virtual ~PalPlayerAttackStatePlayAttackAnimation();
@@ -157,7 +157,7 @@ public:
 //如果是近程技能 攻击后进入跑回状态
 class PalPlayerAttackStateRunBack: public PalPlayerAttackState
 {
-	Dex_DeclareClass(PalPlayerAttackStateRunBack,0)
+	Dex_DeclareClass(PalPlayerAttackStateRunBack, PalPlayerAttackState,0)
 protected:
 	int run_time;
 	int run_count;
@@ -175,7 +175,7 @@ public:
 //技能释放状态
 class PalPlayerAttackStateSkillPlaying: public PalPlayerAttackState
 {
-	Dex_DeclareClass(PalPlayerAttackStateSkillPlaying,0)
+	Dex_DeclareClass(PalPlayerAttackStateSkillPlaying, PalPlayerAttackState,0)
 public:
 	PalPlayerAttackStateSkillPlaying(PalPlayer* p);
 	virtual ~PalPlayerAttackStateSkillPlaying();

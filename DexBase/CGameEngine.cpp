@@ -67,7 +67,7 @@ D3DMULTISAMPLE_TYPE CGameEngine::GetSampleType(DEMO_SAMPLE_TYPE _type, D3DDEVTYP
 		return t;
 	return D3DMULTISAMPLE_NONE;
 }
-bool CGameEngine::Initialize(int32 width, int32 height, HWND hWnd, bool fullscreen, DEMO_SAMPLE_TYPE _type)
+bool CGameEngine::Initialize(DInt32 width, DInt32 height, HWND hWnd, bool fullscreen, DEMO_SAMPLE_TYPE _type)
 {
 	ShutDown();
 	m_window = hWnd;
@@ -219,7 +219,7 @@ void CGameEngine::StartRender(bool color, bool zbuffer, bool stencil)
 	if(!Check()) 
 		return;
 
-	uint32 buffers = 0;
+	DUDInt32 buffers = 0;
 	if(color) buffers |= D3DCLEAR_TARGET;
 	if(zbuffer) buffers |= D3DCLEAR_ZBUFFER;
 	if(stencil) buffers |= D3DCLEAR_STENCIL;
@@ -345,7 +345,7 @@ void CGameEngine::DisableLight()
 	m_device->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
-void CGameEngine::EnableLightId(int32 lightid)
+void CGameEngine::EnableLightId(DInt32 lightid)
 {
 	for( size_t i = 0; i < m_Lights.size(); i++)
 	{
@@ -354,14 +354,14 @@ void CGameEngine::EnableLightId(int32 lightid)
 	}
 }
 
-void CGameEngine::EnableLightIndex(int32 index)
+void CGameEngine::EnableLightIndex(DInt32 index)
 {
 	if(index < 0)
 		return;
 	m_device->LightEnable(index, TRUE);
 }
 
-void CGameEngine::DisableLightId(int32 lightid)
+void CGameEngine::DisableLightId(DInt32 lightid)
 {
 	for( size_t i = 0; i < m_Lights.size(); i++)
 	{
@@ -370,7 +370,7 @@ void CGameEngine::DisableLightId(int32 lightid)
 	}
 }
 
-void CGameEngine::DisableLightIndex(int32 index)
+void CGameEngine::DisableLightIndex(DInt32 index)
 {
 	if(index < 0)
 		return;

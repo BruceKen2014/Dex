@@ -134,7 +134,7 @@ public:
 		DString  created;
 		DString  modified;
 		DString  sUnitName;
-		float32  fUnit;
+		DFloat32  fUnit;
 		
 		EAxisUp  eAxisUp;
 		DaeAsset() :DaeBase(ECE_asset){ eAxisUp = EAU_Y; fUnit = 1.0f; }
@@ -144,8 +144,8 @@ public:
 	{
 		ESemantic semantic;
 		DString   source;
-		uint32	  offset;
-		uint32	  set; //for TEXCOORD attribute:"set"
+		DUDInt32	  offset;
+		DUDInt32	  set; //for TEXCOORD attribute:"set"
 		DString   flag0;
 	};
 	struct stInstanceMaterial
@@ -222,10 +222,10 @@ public:
 		DexColor  colorTransparent;
 		DexColor  colorReflective;
 		DaeDiffuse*  pDiffuse;
-		float32   fReflectivity;
-		float32	  fShininess;
-		float32   fTransparency;
-		float32   fIndexOfRefraction;
+		DFloat32   fReflectivity;
+		DFloat32	  fShininess;
+		DFloat32   fTransparency;
+		DFloat32   fIndexOfRefraction;
 		DaePhong() :DaeBase(ECE_phong){ pDiffuse = nullptr; fReflectivity = fShininess = fTransparency = fIndexOfRefraction = 0.0f; }
 		virtual ~DaePhong(){ if (pDiffuse != nullptr) delete pDiffuse; }
 	};
@@ -260,8 +260,8 @@ public:
 		DString		sId;
 		DString     sName;
 		DString     sFloatArrayId;
-		int32		iFloatArrayCount;
-		float64*	pFloatArrayValues;
+		DInt32		iFloatArrayCount;
+		DFloat64*	pFloatArrayValues;
 		DString		sNameArrayId;
 		DVector<DString>	vNamaArray;
 
@@ -277,8 +277,8 @@ public:
 	public:
 		DString sSource;
 		EAccessorType EAT_type;
-		uint32  iCount;
-		uint32  iStride;
+		DUDInt32  iCount;
+		DUDInt32  iStride;
 		DaeAccessor() :DaeBase(ECE_accessor){}
 		virtual ~DaeAccessor(){}
 	};
@@ -293,21 +293,21 @@ public:
 	class DaeTriangles :public DaeBase
 	{
 	public:
-		int32   iCount;
+		DInt32   iCount;
 		DString material;
 		DVector<stDaeInput> vInputs;
-		int32*  pData;
+		DInt32*  pData;
 		DaeTriangles() :DaeBase(ECE_triangle){ pData = nullptr; }
 		virtual ~DaeTriangles() { if (pData != nullptr) delete[]pData; }
 	};
 	class DaePolylist :public DaeBase
 	{
 	public:
-		int32   count;
+		DInt32   count;
 		DString material;
 		DVector<stDaeInput> vInputs;
-		int32*  p_vcountData;
-		int32*  pData;
+		DInt32*  p_vcountData;
+		DInt32*  pData;
 		DaePolylist() :DaeBase(ECE_polylist){ p_vcountData = pData = nullptr; }
 		virtual ~DaePolylist() { if (pData != nullptr) delete[]pData; if (p_vcountData != nullptr) delete[]p_vcountData; }
 	};
@@ -316,11 +316,11 @@ public:
 	public:
 		struct stPData
 		{
-			uint32 count;//顶点个数
-			uint32 pData[32]; //最多支持8个input,4个顶点，所以是8*4=32个数据
+			DUDInt32 count;//顶点个数
+			DUDInt32 pData[32]; //最多支持8个input,4个顶点，所以是8*4=32个数据
 			stPData(){ count = 0; memset(pData, 0, sizeof(pData)); }
 		};
-		int32   count;
+		DInt32   count;
 		DString material;
 		DVector<stDaeInput> inputs;
 		stPData*  pData;
@@ -332,16 +332,16 @@ public:
 	public:
 		struct stJointData
 		{
-			uint32 count;
-			uint32 index; //数据流中的起始index
+			DUDInt32 count;
+			DUDInt32 index; //数据流中的起始index
 		};
 		DString sSource;
 		DexMatrix4x4 mMatrix;
 		DVector<stDaeInput> vJointsInputs;
 		DVector<stDaeInput> vVertexWeightInputs;
-		uint32  iVertexWeightsCount; //一定是和geometry里面的顶点数量是一样的
+		DUDInt32  iVertexWeightsCount; //一定是和geometry里面的顶点数量是一样的
 		stJointData*  pVCountData; //for vcount
-		int32*  pData;    //for v
+		DInt32*  pData;    //for v
 		DVector<DaeSource*> vSources;
 		DaeSource*  pJointInvMatrix;
 		DaeSource*	pJointsName; //point to vSources. no need release
@@ -490,13 +490,13 @@ protected:
 	void	 parse_ambient(TiXmlNode* pXmlNode, DexColor& color);
 	DaeDiffuse* parse_diffuse(TiXmlNode* pXmlNode, DaePhong* father);
 	void	 parse_specular(TiXmlNode* pXmlNode, DexColor& color);
-	void	 parse_float(TiXmlNode* pXmlNode, float32& fValue);
-	void	 parse_shininess(TiXmlNode* pXmlNode, float32& fShininess);
+	void	 parse_float(TiXmlNode* pXmlNode, DFloat32& fValue);
+	void	 parse_shininess(TiXmlNode* pXmlNode, DFloat32& fShininess);
 	void	 parse_reflective(TiXmlNode* pXmlNode, DexColor& color);
-	void	 parse_reflectivity(TiXmlNode* pXmlNode, float32& fValue);
+	void	 parse_reflectivity(TiXmlNode* pXmlNode, DFloat32& fValue);
 	void	 parse_transparent(TiXmlNode* pXmlNode, DexColor& color);
-	void	 parse_transparency(TiXmlNode* pXmlNode, float32& fValue);
-	void	 parse_index_of_refraction(TiXmlNode* pXmlNode, float32& fValue);
+	void	 parse_transparency(TiXmlNode* pXmlNode, DFloat32& fValue);
+	void	 parse_index_of_refraction(TiXmlNode* pXmlNode, DFloat32& fValue);
 	DaeBase* parse_mesh(TiXmlNode* pXmlNode, DaeGeometry* father);
 	DaeBase* parse_vertices(TiXmlNode* pXmlNode, DaeMesh* father);
 	DaeBase* parse_triangle(TiXmlNode* pXmlNode, DaeMesh* father);
@@ -508,18 +508,18 @@ protected:
 protected:
 	stDaeInput& parse_input(TiXmlElement* pXmlElement, stDaeInput& input);
 	stInstanceMaterial& parse_instance_material(TiXmlElement* pXmlElement, stInstanceMaterial& instanceMaterial);
-	void str_to_float64_array(const char* str, float64* value, char splitChar=' ');
+	void str_to_float64_array(const char* str, DFloat64* value, char splitChar=' ');
 
 	/*把str里面的参数读进value中，每cycle个数据一个循环，并对一个循环中的第index个数据当flag个有效数据
-	str_to_int32_array("1 2 3 4 5 6 7 8 9", value, 3, 0, 2);
+	str_to_DInt32_array("1 2 3 4 5 6 7 8 9", value, 3, 0, 2);
 	则 value = {1,1,2,3,4,4,5,6,7,7,8,9};
 	*/
-	void str_to_int32_array(const char* str, int32** value, uint8 cycle = 3,uint8 index = 0, uint8 flag = 1);
+	void str_to_DInt32_array(const char* str, DInt32** value, DUInt8 cycle = 3,DUInt8 index = 0, DUInt8 flag = 1);
 	void TransVector3ByAxis(DexVector3& vec3); //根据坐标系对坐标法线等进行转换
 protected:
 	DaeCollada* m_pCollada;
 	bool		m_bFFXIIModel;
-	uint32		m_iJointCount;
+	DUDInt32		m_iJointCount;
 	//for ffxii model
 	DMap<DString, DString> m_MapJointName; 
 	DMap<DString, DexMatrix4x4> m_MapJointMatrix;
@@ -549,8 +549,8 @@ protected:
 	void         find_instance_material(DVector<stInstanceMaterial>& vec, stInstanceMaterial& material, DString materialSymbol);
 public:
 	virtual bool		  SupportType(const char* fileType);
-	virtual DexModelBase* LoadModel(const char* filename, int32 flag);
-	virtual bool		  SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int32 flag);
+	virtual DexModelBase* LoadModel(const char* filename, DInt32 flag);
+	virtual bool		  SaveModel(DexSkinMesh* pSkinMesh, const char* filename, DInt32 flag);
 
 	void LoadFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename);
 	bool ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename);//mws file

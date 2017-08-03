@@ -129,7 +129,7 @@ void CDexWidgetScrollBarV::Disable(bool child)
 
 }
 
-void CDexWidgetScrollBarV::SetLength(int16 length)
+void CDexWidgetScrollBarV::SetLength(DInt16 length)
 {
 	m_iLength = length;
 }

@@ -13,12 +13,12 @@ class PalFightHeadManager: public CDexObject
 	friend class PalGameStateBattleMain;
 private:
 	TlistFlighHead  m_listHead;
-	int16   m_xPos;
-	int16   m_yPos;
-	int16    m_iStartOffsetX;
-	int16    m_iStartOffsetY;
-	int16    m_iEndOffsetX;
-	int16    m_iEndOffsetY;
+	DInt16   m_xPos;
+	DInt16   m_yPos;
+	DInt16    m_iStartOffsetX;
+	DInt16    m_iStartOffsetY;
+	DInt16    m_iEndOffsetX;
+	DInt16    m_iEndOffsetY;
 	CDexWidgetImage* m_pBackImage;
 private:
 	PalFightHeadManager();

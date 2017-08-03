@@ -6,7 +6,7 @@
 
 class DexSkinMeshFF : public DexSkinMesh
 {
-	Dex_DeclareClass(DexSkinMeshFF, 0)
+	Dex_DeclareClass(DexSkinMeshFF, DexSkinMesh, 0)
 		
 	friend class DexModelDaeLoader;
 	friend class DexModelAniFileFF12ActLoader;
@@ -24,12 +24,12 @@ protected:
 	Joint*				 m_mwsRootJoint;
 	DMap<DString, stFFJoint> m_mapJoints;
 public:
-	Joint* FindMwsJoint(int32 index);
+	Joint* FindMwsJoint(DInt32 index);
 	Joint* FindMwsJoint(DString name);
-	Joint* AddMwsJoint(DString name, int32 index, DexSkinMesh::Joint* pFather, DexMatrix4x4 father_matrix);
+	Joint* AddMwsJoint(DString name, DInt32 index, DexSkinMesh::Joint* pFather, DexMatrix4x4 father_matrix);
 
 public:
-	virtual bool Update(int32 delta);
+	virtual bool Update(DInt32 delta);
 	virtual bool Render();
 
 };

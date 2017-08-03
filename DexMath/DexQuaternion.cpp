@@ -7,7 +7,7 @@ DexQuaternion::DexQuaternion()
 {
 	x = y = z = w = 0.0f;
 }
-DexQuaternion::DexQuaternion(float32* pValue)
+DexQuaternion::DexQuaternion(DFloat32* pValue)
 {
 	x = pValue[0]; 
 	y = pValue[1];
@@ -16,7 +16,7 @@ DexQuaternion::DexQuaternion(float32* pValue)
 }
 
 
-DexQuaternion::DexQuaternion(float32 _x, float32 _y, float32 _z, float32 _w)
+DexQuaternion::DexQuaternion(DFloat32 _x, DFloat32 _y, DFloat32 _z, DFloat32 _w)
 {
 	x = _x;
 	y = _y;
@@ -24,14 +24,14 @@ DexQuaternion::DexQuaternion(float32 _x, float32 _y, float32 _z, float32 _w)
 	w = _w;
 }
 
-DexQuaternion::DexQuaternion(const DexVector3& vec, float32 radian)
+DexQuaternion::DexQuaternion(const DexVector3& vec, DFloat32 radian)
 {
 	Set(vec, radian);
 }
 
-DexQuaternion DexQuaternion::Set(const DexVector3& vector, float32 radian)
+DexQuaternion DexQuaternion::Set(const DexVector3& vector, DFloat32 radian)
 {
-	float32 _sin = 0.0f;
+	DFloat32 _sin = 0.0f;
 	radian *= 0.5f;
 	DexVector3 temp(vector);
 	temp.Normalize();
@@ -43,7 +43,7 @@ DexQuaternion DexQuaternion::Set(const DexVector3& vector, float32 radian)
 	return *this;
 }
 
-DexQuaternion DexQuaternion::Set(float32 _x, float32 _y, float32 _z, float32 _w)
+DexQuaternion DexQuaternion::Set(DFloat32 _x, DFloat32 _y, DFloat32 _z, DFloat32 _w)
 {
 	x = _x;
 	y = _y;
@@ -52,13 +52,13 @@ DexQuaternion DexQuaternion::Set(float32 _x, float32 _y, float32 _z, float32 _w)
 	return *this;
 }
 
-DexQuaternion DexQuaternion::Set(float32 pitch, float32 yaw, float32 roll)
+DexQuaternion DexQuaternion::Set(DFloat32 pitch, DFloat32 yaw, DFloat32 roll)
 {
 	return *this;
 }
 DexQuaternion DexQuaternion::Normalize()
 {
-	float32 mag2 = x*x + y*y + z*z + w*w;
+	DFloat32 mag2 = x*x + y*y + z*z + w*w;
 	if (DexMath::Equal(mag2, 0.0f))
 	{
 		mag2 = DexMath::Sqrt(mag2);
@@ -73,16 +73,16 @@ DexQuaternion DexQuaternion::Normalize()
 DexMatrix4x4 DexQuaternion::GetMatrix() const
 {
 	
-	float32 x2 = x*x;
-	float32 y2 = y*y;
-	float32 z2 = z*z;
-	float32 xy = x*y;
-	float32 xz = x*z;
-	float32 yz = y*z;
-	float32 wx = w*x;
-	float32 wy = w*y;
-	float32 wz = w*z;
-	float32 value[16];
+	DFloat32 x2 = x*x;
+	DFloat32 y2 = y*y;
+	DFloat32 z2 = z*z;
+	DFloat32 xy = x*y;
+	DFloat32 xz = x*z;
+	DFloat32 yz = y*z;
+	DFloat32 wx = w*x;
+	DFloat32 wy = w*y;
+	DFloat32 wz = w*z;
+	DFloat32 value[16];
 	value[0] = 1.0f - 2.0f * (y2 + z2);
 	value[1] = 2.0f * (xy - wz);
 	value[2] = 2.0f * (xz + wy);
@@ -220,10 +220,10 @@ inline DexQuaternion DexQuaternion::operator*(const DexQuaternion& quaternion) c
 
 inline DexQuaternion& DexQuaternion::operator*=(const DexQuaternion& quaternion)
 {
-	float32 _x = x;
-	float32 _y = y;
-	float32 _z = z;
-	float32 _w = w;
+	DFloat32 _x = x;
+	DFloat32 _y = y;
+	DFloat32 _z = z;
+	DFloat32 _w = w;
 	x = _w * quaternion.x + _x * quaternion.w + _y * quaternion.z - _z * quaternion.y;
 	y = _w * quaternion.y + _y * quaternion.w + _z * quaternion.x - _x * quaternion.z;
 	z = _w * quaternion.z + _z * quaternion.w + _x * quaternion.y - _y * quaternion.x;
@@ -231,7 +231,7 @@ inline DexQuaternion& DexQuaternion::operator*=(const DexQuaternion& quaternion)
 	return *this;
 }
 
-inline DexQuaternion DexQuaternion::operator*(float32 value) const
+inline DexQuaternion DexQuaternion::operator*(DFloat32 value) const
 {
 	DexQuaternion ret;
 	ret.x = x * value;
@@ -241,7 +241,7 @@ inline DexQuaternion DexQuaternion::operator*(float32 value) const
 	return ret;
 }
 
-inline DexQuaternion& DexQuaternion::operator*=(float32 value)
+inline DexQuaternion& DexQuaternion::operator*=(DFloat32 value)
 {
 	x = x * value;
 	y = y * value;
@@ -250,7 +250,7 @@ inline DexQuaternion& DexQuaternion::operator*=(float32 value)
 	return *this;
 }
 
-inline DexQuaternion DexQuaternion::operator/(float32 div) const
+inline DexQuaternion DexQuaternion::operator/(DFloat32 div) const
 {
 	DexQuaternion ret;
 	if (DexMath::Equal(div, 0.0f))
@@ -264,7 +264,7 @@ inline DexQuaternion DexQuaternion::operator/(float32 div) const
 	return ret;
 }
 
-inline DexQuaternion& DexQuaternion::operator/=(float32 div) 
+inline DexQuaternion& DexQuaternion::operator/=(DFloat32 div) 
 {
 	if (DexMath::Equal(div, 0.0f))
 	{
@@ -277,7 +277,7 @@ inline DexQuaternion& DexQuaternion::operator/=(float32 div)
 	return *this;
 }
 
-inline DexQuaternion operator * (float32 value, const DexQuaternion& quaternion)
+inline DexQuaternion operator * (DFloat32 value, const DexQuaternion& quaternion)
 {
 	return DexQuaternion(value * quaternion.x,
 		value * quaternion.y,

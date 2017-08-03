@@ -20,14 +20,14 @@ extern int Lua_Scene_AddModel(lua_State* L);//只Add 靜態模型
 extern int Lua_Scene_SetPos(lua_State* L);
 class CDexScene:public CDexObject
 {
-	Dex_DeclareClass(CDexScene,1)
+	Dex_DeclareClass(CDexScene, CDexObject, 1)
 public:
 	CDexScene();
 	virtual ~CDexScene();
 
 protected:
 	//以下數據根據劇情不同，需要從腳本中動態加載
-	typedef std::map<int32,CDexSceneObject*> TMapObject;
+	typedef std::map<DInt32,CDexSceneObject*> TMapObject;
 	TMapObject  m_listObject;
 	TMapObject  m_listObjectAlpha;   //需要alpha排序的object	
 	bool m_bRender;

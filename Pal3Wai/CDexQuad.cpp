@@ -931,15 +931,15 @@ CDexQuadNodePool::~CDexQuadNodePool()
 
 void CDexQuadNodePool::CreateNode(int number)
 {	
-	int64 time1 = getTime()->GetTotalMillSeconds();
+	DInt64 time1 = getTime()->GetTotalMillSeconds();
 	for(int i = 0; i < number; i++)
 	{
 		CDexQuad::stQuadNode* newNode = new CDexQuad::stQuadNode;
 		m_nodeList.push_back(newNode);
 	}
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "四叉树申请%d个节点...，耗时%d ms", number, getTime()->GetTotalMillSeconds()- time1);
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "四叉树申请%d个节点...，耗时%d ms", number, getTime()->GetTotalMillSeconds()- time1);
+	DexLog::getSingleton()->EndLog();
 }
 
 void CDexQuadNodePool::Release()

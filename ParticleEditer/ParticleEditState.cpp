@@ -277,9 +277,9 @@ bool ParticalEditState::ApplyRes()
 
 	DexGameEngine::getEngine()->DoLuaFile("script\\scene1.lua");
 
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "particle editer init ok!\n");
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "particle editer init ok!\n");
+	DexLog::getSingleton()->EndLog();
 	D3DXVECTOR3 jingtian_pos =  g_pJingtian->getPosition();
 	float jingtian_y = g_pTerrain->GetHeight(jingtian_pos.x, jingtian_pos.z);
 	g_pJingtian->setPosition(CDexSceneObject::AXIS_Y, jingtian_y);
@@ -686,9 +686,9 @@ void ParticalEditState::OnEditTextUpdate(CEventHandler* sys, CDexObject* object,
 
 void ParticalEditState::OnEventClickTalkSystem(CEventHandler* sys, CDexObject* object,stEvent event)
 {
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "click");
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "click");
+	DexLog::getSingleton()->EndLog();
 }
 
 TestPanel::TestPanel()

@@ -8,7 +8,7 @@
 class CDexSceneObject;
 class DexSceneObjectAction: public CDexObject
 {
-	Dex_DeclareClass(DexSceneObjectAction,0)
+	Dex_DeclareClass(DexSceneObjectAction, CDexObject, 0)
 protected:
 	bool m_bCycle;      // «∑Ò—≠ª∑
 	bool m_bComplete;
@@ -38,7 +38,7 @@ public:
 
 class DexSceneObjectActionCatmull: public DexSceneObjectAction
 {
-	Dex_DeclareClass(DexSceneObjectActionCatmull, 10)
+	Dex_DeclareClass(DexSceneObjectActionCatmull, DexSceneObjectAction, 10)
 	friend class CDexSceneObject;
 public:
 	typedef struct
@@ -75,7 +75,7 @@ public:
 
 class DexSceneObjectActionRotate: public DexSceneObjectAction
 {
-	Dex_DeclareClass(DexSceneObjectActionRotate, 10)
+	Dex_DeclareClass(DexSceneObjectActionRotate, DexSceneObjectAction, 10)
 		friend class CDexSceneObject;
 	typedef enum
 	{

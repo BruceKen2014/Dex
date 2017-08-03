@@ -37,14 +37,14 @@ CDexModelX::~CDexModelX()
 
 bool CDexModelX::LoadModelFile(const char* filename)
 {
-	getLog()->BeginLog();
-	int64 mseconds = getTime()->GetTotalMillSeconds();
+	DexLog::getSingleton()->BeginLog();
+	DInt64 mseconds = getTime()->GetTotalMillSeconds();
 	if(FAILED(D3DXLoadMeshFromX(filename, D3DXMESH_SYSTEMMEM,
 		DexGameEngine::getEngine()->GetDevice(), NULL, &m_matBuffer, NULL,
 		&m_numMaterials, &m_model))) 
 	{
-		getLog()->Log(log_allert, "加载模型%s失败！",filename);
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_allert, "加载模型%s失败！",filename);
+		DexLog::getSingleton()->EndLog();
 		return false;
 	}
 	m_matList = new D3DMATERIAL9[m_numMaterials];
@@ -63,12 +63,12 @@ bool CDexModelX::LoadModelFile(const char* filename)
 		if(FAILED(D3DXCreateTextureFromFile(DexGameEngine::getEngine()->GetDevice(),
 			texname.c_str(), &m_textureList[i]))) 
 		{
-			getLog()->Log(log_allert, "model %s load texture %s failed ！\n",filename, texname.c_str());
+			DexLog::getSingleton()->Log(log_allert, "model %s load texture %s failed ！\n",filename, texname.c_str());
 			m_textureList[i] = NULL;
 		}
 	}
-	getLog()->Log(log_ok, "加载模型%s成功！用时:%d ms\n",filename, getTime()->GetTotalMillSeconds() - mseconds);
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "加载模型%s成功！用时:%d ms\n",filename, getTime()->GetTotalMillSeconds() - mseconds);
+	DexLog::getSingleton()->EndLog();
 	return true;
 }
 
@@ -141,7 +141,7 @@ bool DexAllocateHierarchy::AllocateName( LPCSTR Name, LPSTR *pNewName )
 //-----------------------------------------------------------------------------
 HRESULT DexAllocateHierarchy::GenerateGameSkinMesh(LPDIRECT3DDEVICE9 device, stDexMeshContainerEx *pMeshContainer)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	HRESULT hr = S_OK;
 
 	if (pMeshContainer->pSkinInfo == NULL)
@@ -163,7 +163,7 @@ HRESULT DexAllocateHierarchy::GenerateGameSkinMesh(LPDIRECT3DDEVICE9 device, stD
 	}
 	else
 	{
-		getLog()->Log(log_allert, ".X Animation file shader 錯誤！");
+		DexLog::getSingleton()->Log(log_allert, ".X Animation file shader 錯誤！");
 	}
 
 
@@ -471,10 +471,10 @@ HRESULT DexAllocateHierarchy::CreateMeshContainer(LPCSTR Name,
 				if( FAILED( D3DXCreateTextureFromFile( device, texname.c_str(),
 					&pMeshContainer->ppTextures[iMaterial] ) ) )
 				{
-					getLog()->BeginLog();
-					getLog()->Log(log_allert, "load model texture %s failed! \n", texname.c_str());
+					DexLog::getSingleton()->BeginLog();
+					DexLog::getSingleton()->Log(log_allert, "load model texture %s failed! \n", texname.c_str());
 					pMeshContainer->ppTextures[iMaterial] = NULL;
-					getLog()->EndLog();
+					DexLog::getSingleton()->EndLog();
 				}
 
 				// don't remember a pointer into the dynamic memory, just forget the name after loading
@@ -781,7 +781,7 @@ bool CDexModelXAni::LoadModelFile(const char* filename)
 {
 	HRESULT hr;
 
-	int64 mseconds = getTime()->GetTotalMillSeconds();
+	DInt64 mseconds = getTime()->GetTotalMillSeconds();
 	//从.X文件加载层次框架和动画数据
 	hr = D3DXLoadMeshHierarchyFromX(filename, D3DXMESH_MANAGED, DexGameEngine::getEngine()->GetDevice(), 
 		m_pAlloc, NULL, &m_pFrameRoot, &m_pAnimController);	  //最后一个参数：动画控制器
@@ -798,9 +798,9 @@ bool CDexModelXAni::LoadModelFile(const char* filename)
 		m_pAnimController->SetTrackAnimationSet(0, m_pAnimationSet1);
 		m_pAnimController->ResetTime();
 	}	
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "加载animation模型%s成功！用时:%d ms\n",filename, getTime()->GetTotalMillSeconds() - mseconds);
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "加载animation模型%s成功！用时:%d ms\n",filename, getTime()->GetTotalMillSeconds() - mseconds);
+	DexLog::getSingleton()->EndLog();
 	return true;
 
 }

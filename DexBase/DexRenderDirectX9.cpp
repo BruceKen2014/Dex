@@ -26,7 +26,7 @@ bool DexRenderDirectX9::InitShader()
 	return true;
 
 }
-void DexRenderDirectX9::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize)
+void DexRenderDirectX9::DrawPrimitive(DexPrimitivetType type, const void* vertexs, DInt32 vertexCount, const void* indices, DInt32 primitiveCount, DInt32 stridesize)
 {
 	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;
 	switch (type)
@@ -41,11 +41,11 @@ void DexRenderDirectX9::DrawPrimitive(DexPrimitivetType type, const void* vertex
 		break;
 	}
 	//DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, vertexs, sizeof(stVertex0));
-	//这里的D3DFMT_INDEX32，如果indices是int32整型数组的话，设置D3DFMT_INDEX32,如果是int16类型的整型数组的话，那么设置D3DFMT_INDEX16
+	//这里的D3DFMT_INDEX32，如果indices是DInt32整型数组的话，设置D3DFMT_INDEX32,如果是DInt16类型的整型数组的话，那么设置D3DFMT_INDEX16
 	DexGameEngine::getEngine()->GetDevice()->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
 }
 
-void DexRenderDirectX9::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize)
+void DexRenderDirectX9::DrawPrimitive(DexPrimitivetType type, const void* vertexs, DInt32 vertexCount, const void* indices, DInt32 primitiveCount, DInt32 fvf, DInt32 stridesize)
 {
 	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;
 	switch (type)
@@ -61,6 +61,6 @@ void DexRenderDirectX9::DrawPrimitive(DexPrimitivetType type, const void* vertex
 	}
 	DexGameEngine::getEngine()->GetDevice()->SetFVF((DWORD)fvf);
 	//DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, vertexs, sizeof(stVertex0));
-	//这里的D3DFMT_INDEX32，如果indices是int32整型数组的话，设置D3DFMT_INDEX32,如果是int16类型的整型数组的话，那么设置D3DFMT_INDEX16
+	//这里的D3DFMT_INDEX32，如果indices是DInt32整型数组的话，设置D3DFMT_INDEX32,如果是DInt16类型的整型数组的话，那么设置D3DFMT_INDEX16
 	DexGameEngine::getEngine()->GetDevice()->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
 }

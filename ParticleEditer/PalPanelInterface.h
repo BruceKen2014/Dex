@@ -5,7 +5,7 @@
 
 class PalPanelInterface:public CDexObject
 {
-	Dex_DeclareClass(PalPanelInterface,0)
+	Dex_DeclareClass(PalPanelInterface, CDexObject,0)
 public:
 	PalPanelInterface();
 	virtual ~PalPanelInterface();

@@ -9,7 +9,7 @@ class PalPlayer;
 class CDexWidgetImage;
 class PalFightHead:public CDexObject
 {
-	Dex_DeclareClass(PalFightHead,1)
+	Dex_DeclareClass(PalFightHead, CDexObject,1)
 private:
 	CDexWidgetImage* m_headImage;
 	float m_value; //当前头像进度 0 表示刚开始 1表示已经可以战斗

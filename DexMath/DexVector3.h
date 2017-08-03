@@ -76,10 +76,8 @@ inline DexVector3T<T>::DexVector3T()
 }
 
 template<typename T>
-inline DexVector3T<T>::DexVector3T(const DexVector3T<T>& vector3)
-{
-	memcpy(m, vector3.m, sizeof(vector3));
-}
+inline DexVector3T<T>::DexVector3T(const DexVector3T<T>& vector3) :DexVector3T(vector3.x, vector3.y, vector3.z)
+{}
 
 template<typename T>
 inline DexVector3T<T>::DexVector3T(T _x, T _y, T _z)
@@ -366,5 +364,5 @@ DexVector3T<T> operator* (T1 _value, const DexVector3T<T>& vector3)
 	return ret;
 }
 typedef DexVector3T<float>  DexVector3;
-typedef DexVector3T<int32>  DexVector3_int32;
+typedef DexVector3T<DInt32>  DexVector3_DInt32;
 #endif

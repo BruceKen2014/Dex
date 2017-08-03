@@ -292,12 +292,12 @@ bool CDexTerrain::SetTexture(const char* texname)
 
 bool CDexTerrain::InitFromFile(const char* filename)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	CommandScript* pScript = getComandScript();
 	if(!pScript->OpenScript(filename))
 	{
-		getLog()->Log(log_allert, "open terrain file %s failed!\n",filename );
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_allert, "open terrain file %s failed!\n",filename );
+		DexLog::getSingleton()->EndLog();
 		pScript->CloseScript();
 		return false;
 	}
@@ -316,8 +316,8 @@ bool CDexTerrain::InitFromFile(const char* filename)
 	}
 	_updateVertex();
 	pScript->CloseScript();
-	getLog()->Log(log_ok, "open terrain file%s successfully!\n",filename );
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "open terrain file%s successfully!\n",filename );
+	DexLog::getSingleton()->EndLog();
 
 	return true;
 }
@@ -325,13 +325,13 @@ bool CDexTerrain::InitFromFile(const char* filename)
 
 bool CDexTerrain::SaveToFile(const char* filename)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 
 	CFile* file = getFileHandler();
 	if(!file->CreateCFile((char*)filename))
 	{
-		getLog()->Log(log_allert, "save terrian file % failed£¡\n", filename);
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_allert, "save terrian file % failed£¡\n", filename);
+		DexLog::getSingleton()->EndLog();
 		return false;
 	}
 	for(int row = 0; row < Terrain_row; row++)
@@ -344,7 +344,7 @@ bool CDexTerrain::SaveToFile(const char* filename)
 		file->InBlankLine();
 	}
 	file->Close();
-	getLog()->Log(log_ok, "save terrian file %s successfully£¡\n", filename);
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "save terrian file %s successfully£¡\n", filename);
+	DexLog::getSingleton()->EndLog();
 	return true;
 }

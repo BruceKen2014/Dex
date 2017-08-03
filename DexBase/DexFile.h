@@ -18,19 +18,19 @@ public:
 public:
 	//read
 	bool OpenFile(const char* filename);
-	uint64 Read(void* buffer, uint64 offset, int64 count);
+	DUInt64 Read(void* buffer, DUInt64 offset, DInt64 count);
 	bool ReadLine(char* buffer); //返回值表明读完后文件是否结束
 	//write
 	bool NewFile(const char* filename);
-	void Write(void* buffer, uint64 count);
+	void Write(void* buffer, DUInt64 count);
 	bool Seek(DexFile_Seek seek, int offset);
 	//
 	void Close();
-	uint64 Tell();
-	uint64 Length();
-	uint64 ReCalLength();
+	DUInt64 Tell();
+	DUInt64 Length();
+	DUInt64 ReCalLength();
 private:
 	FILE* m_pFileHandle;
-	uint64 m_iLength;
+	DUInt64 m_iLength;
 };
 #endif

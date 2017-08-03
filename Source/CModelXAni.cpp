@@ -686,7 +686,7 @@ HRESULT CModelXAni::LoadXFile(const char* filename)
 {
 	HRESULT hr;
 
-	int64 mseconds = getTime()->GetTotalMillSeconds();
+	DInt64 mseconds = getTime()->GetTotalMillSeconds();
 	//从.X文件加载层次框架和动画数据
 	hr = D3DXLoadMeshHierarchyFromX(filename, D3DXMESH_MANAGED, m_device, 
 		m_pAlloc, NULL, &m_pFrameRoot, &m_pAnimController);	  //最后一个参数：动画控制器
@@ -712,9 +712,9 @@ HRESULT CModelXAni::LoadXFile(const char* filename)
 		m_pAnimController->SetTrackAnimationSet(0, m_pAnimationSet1);
 		m_pAnimController->ResetTime();
 	}	
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "加载模型%s成功！用时:%dms",filename, getTime()->GetTotalMillSeconds() - mseconds);
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "加载模型%s成功！用时:%dms",filename, getTime()->GetTotalMillSeconds() - mseconds);
+	DexLog::getSingleton()->EndLog();
 	return S_OK;
 
 }

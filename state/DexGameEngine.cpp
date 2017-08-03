@@ -2,6 +2,9 @@
 
 #include "DexGameEngine.h"
 #include "DexGameState.h"
+	#ifdef _DEX_PLATFORM_WINDOWS
+		#include <Psapi.h>  //for windows init module info
+	#endif
 // #include "../DexBase/DexCollideObject.h"
 // #include "../DexBase/CDexPartical.h"
 // #include "../DexBase/DexTerrain.h"
@@ -34,7 +37,6 @@
 /*目前的DexGameEngine特指windows engine，如果日后要在别的平台上开发，需要将engine抽象为基类
 实现windows派生类，然后再实现对应平台的派生类*/
 DexGameEngine* DexGameEngine::g_pGameEngine = NULL;
-CRITICAL_SECTION  g_cs;
 DexGameEngine::DexGameEngine()
 {
 	g_bFullscreen = false;
@@ -100,7 +102,6 @@ DWORD WINAPI LoadThread(LPVOID lpParam)
 {
 	while(1)
 	{
-		EnterCriticalSection(&g_cs);
 		if(DexGameEngine::getEngine()->GetLoadingState() != NULL)
 		{
 			if(DexGameEngine::getEngine()->GetLoading())
@@ -109,7 +110,14 @@ DWORD WINAPI LoadThread(LPVOID lpParam)
 				DexGameEngine::getEngine()->GetLoadingState()->Render();
 			}
 		}
-		LeaveCriticalSection(&g_cs);
+	}
+	return 0;
+}
+DWORD WINAPI LogThread(LPVOID lpParam)
+{
+	while (1)
+	{
+		DexLog::getSingleton()->DoLog();
 	}
 	return 0;
 }
@@ -136,6 +144,20 @@ IDexDevice* DexGameEngine::CreateDevice(DString deviceType)
 		g_pDevice->InitDevice(g_bFullscreen, g_iWindowWidth, g_iWinddowHeight, (void*)g_msgPro, NULL);
 	return g_pDevice;
 }
+bool DexGameEngine::InitModuleInfo()
+{
+#ifdef _DEX_PLATFORM_WINDOWS
+	MODULEINFO moduleInfo;
+	HANDLE processHandle = GetCurrentProcess();
+	HMODULE processModule = GetModuleHandle(NULL);
+	GetModuleInformation(processHandle, processModule, &moduleInfo, sizeof(moduleInfo));
+	g_stModuleInfo.iModuleAddress = (DEXWORD)moduleInfo.lpBaseOfDll;
+	g_stModuleInfo.iStartFunctionAddress = (DEXWORD)moduleInfo.EntryPoint;
+	g_stModuleInfo.iModuleSize = (DEXWORD)moduleInfo.SizeOfImage;
+	return true;
+#endif 
+	return false;
+}
 
 IDexDevice* DexGameEngine::GetDDevice()
 {
@@ -152,6 +174,10 @@ void DexGameEngine::SetHInstance(HINSTANCE instance)
 HINSTANCE DexGameEngine::GetHInstance()
 {
 	return ((IDexDeviceWindows*)g_pDevice)->GetHInstance();
+}
+DexGameEngine::stDexModuleInfo* DexGameEngine::GetModuleInfo()
+{
+	return &g_stModuleInfo;
 }
 bool DexGameEngine::GetLoading()
 {
@@ -173,18 +199,21 @@ void DexGameEngine::SetLoadingState(DexGameState* pLoadingState)
 	_SafeDelete(g_pLoadingState);
 	//創建加載界面線程
 	g_pLoadingState = pLoadingState;
-	//InitializeCriticalSection(&g_cs);
-	//g_LoadThread = CreateThread(NULL, 0, LoadThread, NULL, 0, &g_LoadThreadId);
+	//g_LoadThread = CreateThread(NULL, 0, LoadThread, NULL, CREATE_SUSPENDED, &g_LoadThreadId);
 
 }
 
 bool DexGameEngine::Initialize(int flag)
 {	
-/*	getLog()->EnableFontFrontHighLight();
-	getLog()->EnableBackColor(true);*/
-	getLog()->SetConsoleScreenSize(256, 1000);	  
+/*	DexLog::getSingleton()->EnableFontFrontHighLight();
+	DexLog::getSingleton()->EnableBackColor(true);*/
+	DexLog::getSingleton()->SetConsoleScreenSize(256, 1000);
+	CreateThread(NULL, 0, LogThread, NULL, 0, &g_LogThreadId);
+	
 	DexStreamFile::sCreateStreamFile();
 	DexMd5Generator::sCreateDexMd5Generator();
+	DEX_ENSURE_B_LOG(InitModuleInfo(), "init module failed!");
+	
 	srand(unsigned(time(0)));
 	L = lua_open();	   //创建接口指针
 	luaopen_base(L);   //加载基本库
@@ -424,7 +453,7 @@ void DexGameEngine::SetMaterial(const DexMaterial& material)
 	g_material.Power = material.power;
 	g_D3DDevice->SetMaterial(&g_material);
 }
-void DexGameEngine::SetTexture(int32 stage, CDexTex* texture)
+void DexGameEngine::SetTexture(DInt32 stage, CDexTex* texture)
 {
 	LPDIRECT3DTEXTURE9 dx_tex = NULL;
 	if (texture != NULL)
@@ -448,14 +477,14 @@ vertexs[6].m_pos = D3DXVECTOR3(-30.0f, 60, 30.0f); vertexs[6].m_color = getD3DCo
 vertexs[7].m_pos = D3DXVECTOR3(-30.0f, 60, -30.0f); vertexs[7].m_color = getD3DColor(DexColor(1.0f, 1.0f, 1.0f));
 test_primitive_vertex = (void*)malloc(sizeof(stVertex0) * 8);
 memcpy(test_primitive_vertex, vertexs, sizeof(stVertex0)*8);
-int32 indices[] = {0,1,4,1,5,4,2,3,6,6,3,7,0,4,3,3,4,7,1,2,5,2,6,5,1,0,3,1,3,2,4,5,7,7,5,6};//逆时针索引
+DInt32 indices[] = {0,1,4,1,5,4,2,3,6,6,3,7,0,4,3,3,4,7,1,2,5,2,6,5,1,0,3,1,3,2,4,5,7,7,5,6};//逆时针索引
 test_primitive_indice = (void*)malloc(sizeof(indices));
 memcpy(test_primitive_indice, indices, sizeof(indices));
 
 Render:
 DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 */
-void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize)
+void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, DInt32 vertexCount, const void* indices, DInt32 primitiveCount, DInt32 fvf, DInt32 stridesize)
 {
 	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;
 	switch (type)
@@ -471,11 +500,11 @@ void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, i
 	}
 	DexGameEngine::getEngine()->GetDevice()->SetFVF((DWORD)fvf);
 	//DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, vertexs, sizeof(stVertex0));
-	//这里的D3DFMT_INDEX32，如果indices是int32整型数组的话，设置D3DFMT_INDEX32,如果是int16类型的整型数组的话，那么设置D3DFMT_INDEX16
+	//这里的D3DFMT_INDEX32，如果indices是DInt32整型数组的话，设置D3DFMT_INDEX32,如果是DInt16类型的整型数组的话，那么设置D3DFMT_INDEX16
 	g_D3DDevice->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
 }
 
-void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize)
+void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, DInt32 vertexCount, const void* indices, DInt32 primitiveCount, DInt32 stridesize)
 {
 	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;
 	switch (type)
@@ -490,7 +519,7 @@ void DexGameEngine::DrawPrimitive(DexPrimitivetType type, const void* vertexs, i
 		break;
 	}
 	//DexGameEngine::getEngine()->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, vertexs, sizeof(stVertex0));
-	//这里的D3DFMT_INDEX32，如果indices是int32整型数组的话，设置D3DFMT_INDEX32,如果是int16类型的整型数组的话，那么设置D3DFMT_INDEX16
+	//这里的D3DFMT_INDEX32，如果indices是DInt32整型数组的话，设置D3DFMT_INDEX32,如果是DInt16类型的整型数组的话，那么设置D3DFMT_INDEX16
 	g_D3DDevice->DrawIndexedPrimitiveUP(d3d_primitive_type, 0, vertexCount, primitiveCount, indices, D3DFMT_INDEX32, vertexs, stridesize);
 }
 
@@ -498,7 +527,7 @@ DexModelBase* DexGameEngine::CreateModel(const char* filename, int flag)
 {
 	DexModelBase* ret = NULL;
 	const char* suffix = dexstrchr(filename, '.');
-	for (uint32 i = 0; i < vecModelLoader.size(); ++i)
+	for (DUDInt32 i = 0; i < vecModelLoader.size(); ++i)
 	{
 		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(suffix))
 		{
@@ -513,7 +542,7 @@ bool DexGameEngine::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int 
 {
 	bool ret = false;
 	const char* suffix = dexstrchr(filename, '.');
-	for (uint32 i = 0; i < vecModelLoader.size(); ++i)
+	for (DUDInt32 i = 0; i < vecModelLoader.size(); ++i)
 	{
 		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(suffix))
 		{
@@ -528,7 +557,7 @@ bool DexGameEngine::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int 
 bool DexGameEngine::ReadModelAnimation(DexSkinMesh* pDexSkinMesh, const char* filename)
 {
 	const char* suffix = dexstrchr(filename, '.');
-	for (uint32 i = 0; i < vecModelAniLoader.size(); ++i)
+	for (DUDInt32 i = 0; i < vecModelAniLoader.size(); ++i)
 	{
 		if (vecModelAniLoader[i] != NULL && vecModelAniLoader[i]->SupportType(suffix))
 		{
@@ -540,7 +569,7 @@ bool DexGameEngine::ReadModelAnimation(DexSkinMesh* pDexSkinMesh, const char* fi
 
 bool DexGameEngine::ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename)
 {
-	for (uint32 i = 0; i < vecModelLoader.size(); ++i)
+	for (DUDInt32 i = 0; i < vecModelLoader.size(); ++i)
 	{
 		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(".dae"))
 		{
@@ -642,7 +671,7 @@ void DexGameEngine::Update()
 	//计算帧数，和state没有关系，故在此计算
 	UpdateFps();
 	updateViewMatrix();
-	static int64 lastTickTime = 0;
+	static DInt64 lastTickTime = 0;
 	if(lastTickTime == 0)
 		lastTickTime = g_iCurrentTime;
 	int delta = g_iCurrentTime - lastTickTime;
@@ -761,9 +790,9 @@ case value1:\
 // 		case_value2value(DEXRS_INDEXEDVERTEXBLENDENABLE, d3dState, D3DRS_INDEXEDVERTEXBLENDENABLE)
 // 		case_value2value(DEXRS_BLENDOP, d3dState, D3DRS_BLENDOP)
 // 	default:
-// 		getLog()->BeginLog();
-// 		getLog()->Log(log_allert, "Dex调用了一个不支持的render state命令!");
-// 		getLog()->EndLog();
+// 		DexLog::getSingleton()->BeginLog();
+// 		DexLog::getSingleton()->Log(log_allert, "Dex调用了一个不支持的render state命令!");
+// 		DexLog::getSingleton()->EndLog();
 // 		return;
 // 	}
 // 	DWORD d3dValue;
@@ -872,7 +901,7 @@ void DexGameEngine::SetLightEnable(bool enable)
 	//g_D3DDevice->SetRenderState(D3DRS_LIGHTING, enable);
 }
 
-void DexGameEngine::SetLightIdEnable(int32 lightId, bool enable)
+void DexGameEngine::SetLightIdEnable(DInt32 lightId, bool enable)
 {
 	for (size_t i = 0; i < g_vecLight.size(); ++i)
 	{
@@ -886,7 +915,7 @@ void DexGameEngine::SetLightIdEnable(int32 lightId, bool enable)
 	//g_D3DDevice->LightEnable(lightId, enable);
 }
 
-DexLight* DexGameEngine::GetLight(int32 lightId)
+DexLight* DexGameEngine::GetLight(DInt32 lightId)
 {
 	for (size_t i = 0; i < g_vecLight.size(); ++i)
 	{
@@ -916,27 +945,27 @@ CCamera* DexGameEngine::getCamera()
 
 bool DexGameEngine::DoLuaFile(const char* filename)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	if(int error = luaL_dofile(L, filename) != 0)   //打开文件并编译
 	{	
-		getLog()->Log(log_allert, "DoLuaFile: %s error!\n", filename);
+		DexLog::getSingleton()->Log(log_allert, "DoLuaFile: %s error!", filename);
 		return false;
 	}
-	getLog()->Log(log_ok, "DoLuaFile: %s ok!\n", filename);
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "DoLuaFile: %s ok!", filename);
+	DexLog::getSingleton()->EndLog();
 	return true;
 }
 
 bool DexGameEngine::DoLuaString(const char* str)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	if(int error = luaL_dostring(L, str) != 0)   //執行一行
 	{	
-		getLog()->Log(log_allert, "DoLuaString: %s error!\n", str);
+		DexLog::getSingleton()->Log(log_allert, "DoLuaString: %s error!", str);
 		return false;
 	}
-	getLog()->Log(log_ok, "DoLuaString: %s ok!\n", str);
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "DoLuaString: %s ok!", str);
+	DexLog::getSingleton()->EndLog();
 	return true;
 }
 

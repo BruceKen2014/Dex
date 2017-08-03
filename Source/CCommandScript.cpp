@@ -169,7 +169,7 @@ long CommandScript::GetLongParam()
 	return atol(pIntString);
 }
 //------------------------------------------------------------------------------------------
-int64 CommandScript::GetLLongParam()
+DInt64 CommandScript::GetLLongParam()
 {
 	if(m_iCurrScriptLine >= m_iScriptLine)
 	{

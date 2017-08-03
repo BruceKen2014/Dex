@@ -30,10 +30,10 @@ bool DexModelAniFileFF12ActLoader::LoadAnimationFile(DexModelBase* pModel, const
 		pSkinMeshFF->m_vecMwsJoints[i]->m_vecKeyFrames.clear();
 
 	DexSkinMesh::Joint* pJoint = nullptr;
-	const int16  iMaxLineByte = 256;
-	const int16  iMaxJointNameByte = 64;
-	const int16  iFps = 1000 / 30; //每秒60帧
-	int16        iFrames = 0;//该动画有多少帧
+	const DInt16  iMaxLineByte = 256;
+	const DInt16  iMaxJointNameByte = 64;
+	const DInt16  iFps = 1000 / 30; //每秒60帧
+	DInt16        iFrames = 0;//该动画有多少帧
 	char tempData[iMaxLineByte];
 	char jointName[iMaxJointNameByte];
 	DexVector3 oldTranslate;
@@ -101,7 +101,7 @@ bool DexModelAniFileFF12ActLoader::LoadAnimationFile(DexModelBase* pModel, const
 			switch (tempData[0])
 			{
 			case '[':
-				for (int16 i = 1; i < iMaxJointNameByte; ++i)
+				for (DInt16 i = 1; i < iMaxJointNameByte; ++i)
 				{
 					if (tempData[i] == ']')
 					{

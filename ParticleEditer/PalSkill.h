@@ -92,7 +92,7 @@ class PalSkill:public CDexObject
 {//技能的攻击动作类型
 	friend class CPalSkillContainer;
 	friend class PalBatterContent;
-	Dex_DeclareClass(PalSkill,0)
+	Dex_DeclareClass(PalSkill, CDexObject, 0)
 protected:
 	stPlaSkill m_data;
 	int damage;
@@ -118,7 +118,7 @@ public:
 
 class CPalSkillContainer:public CDexObject
 {
-	Dex_DeclareClass(CPalSkillContainer,0)
+	Dex_DeclareClass(CPalSkillContainer, CDexObject, 0)
 
 		//不同的戰鬥人物的技能文件裡面有不同的技能ID，加載時傳ID給任務的skillcontainer，
 		//skillcontainer從擁有所有技能的skillmanager裡面加載數據

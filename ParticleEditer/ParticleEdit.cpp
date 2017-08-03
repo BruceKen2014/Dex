@@ -33,10 +33,10 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_DROPFILES:
 	{
 		HDROP hDrop = (HDROP)wParam;
-		uint32 nFileNum = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+		DUDInt32 nFileNum = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
 		char strFileName[128];
 		DVector<DString> FileNames;
-		for (uint32 i = 0; i < nFileNum; ++i)
+		for (DUDInt32 i = 0; i < nFileNum; ++i)
 		{
 			DragQueryFile(hDrop, i, strFileName, 128);
 			FileNames.push_back(strFileName);

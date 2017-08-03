@@ -11,7 +11,7 @@ const int Terrain_col = 200;
 class CDexTex;
 class CDexTerrain: public CDexSceneObject
 {
-	Dex_DeclareClass(CDexTerrain,2)
+	Dex_DeclareClass(CDexTerrain, CDexSceneObject, 2)
 public:
 	enum{  
 		TERRIAN_LINE,

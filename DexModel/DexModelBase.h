@@ -11,7 +11,7 @@
 class CDexTex;
 class DexModelBase:public CDexObject
 {
-	Dex_DeclareClass(DexModelBase, 0)
+	Dex_DeclareClass(DexModelBase, CDexObject, 0)
 public:
 	DexModelBase();
 	virtual ~DexModelBase();
@@ -23,11 +23,11 @@ protected:
 				那么最后就是黑色的。
 	默认为true,受光照影响
 	*/
-	uint8	    m_iLightFlag; //is it influenced by engine light
+	DUInt8	    m_iLightFlag; //is it influenced by engine light
 
 
 public:
-	void SetLightFlag(uint8 flag);
+	void SetLightFlag(DUInt8 flag);
 public:
 	virtual bool Update(int delta);
 	virtual bool Render();

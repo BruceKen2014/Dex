@@ -29,93 +29,13 @@ class IDexDevice;
 class DexTextureManager;
 class DexGameEngine
 {
-private:
-	static DexGameEngine*    g_pGameEngine;
-	IDexDevice*				 g_pDevice;
-	HWND			  g_hWnd;
-	HINSTANCE		  g_hInstance;
-	WNDPROC  g_msgPro; //外界传入为了初始化窗口调用
-	int               g_iIconRes;
-	std::string       g_strWindowName;
-	std::string       g_strWindowClass;
-	LPDIRECT3D9       g_D3D ;				//D3D
-	LPDIRECT3DDEVICE9 g_D3DDevice ;         //设备
-	
-	lua_State*		  L;
-	bool			  g_bFullscreen;
-	int               g_iWindowPosX;
-	int               g_iWindowPosY;
-	int               g_iWindowWidth;
-	int               g_iWinddowHeight;
-
-	HANDLE       g_LoadThread;    //加載資源時 顯示加載界面的線程
-	DWORD        g_LoadThreadId;  //
-
-	//以上变量游戏运行后就不必关心了
-
-	int               g_iFps;  
-	int				  g_iCounter;
-	int64			  g_iCurrentTime;
-	int64		      g_iLastTime;
-
-	CCamera*		  g_camera;
-	DexMem            g_mem;  //一个处理序列化的公共变量
-	int               g_iMouseX;
-	int               g_iMouseY;
-	int               g_iMouseXLastFrame;
-	int               g_iMouseYLastFrame;
-	bool              m_bRenderCollideMesh;
-	bool              m_bRenderNodeCube;
-	bool              m_bRenderActionRouteLine;    //object action 軌跡
-	bool              m_bRenderPieceEffectRoute;   //麵片軌跡 
-	bool              m_bLoading;
-	bool              m_bLightEffect; //是否开启灯光效果
-	bool              m_bLightEnable; //开启灯光效果后，灯光是否开启
-
-	std::map<string, DexGameState*> g_States;  //引擎管理多个游戏状态
-
-	DexGameState*     g_pCurrState;
-	DexGameState*     g_pLoadingState;
-	/*g_pGlobalVariable，只用于保存全局变量，引擎并不实现，这里只提供一个变量
-	  供其他state通过engine调用， 具体用g_pGlobalVariable的什么，引擎并不知道，内容由主程序实现
-	*/
-	DexGlobal*     g_pGlobalVariable;  
-	D3DMATERIAL9 g_material;  //用于给Mesh上材质 主要用于改变颜色
-	LPD3DXMESH  g_cube;   //辅助立方体 将这个立方体渲染出来 方便查看Node位置
-	LPD3DXMESH  g_sphere;
-	string         g_nextStateName;
-	DVector<IDexModelLoader*> vecModelLoader;
-	DVector<IDexModelAniFileLoader*> vecModelAniLoader;
-	DexTextureManager* g_TextureManager;
-	IDexRender*      m_pRender;
-	//light data
-	DVector<DexLight> g_vecLight;
-	DexColor		 g_ambientColor;
-	DexColor		 g_clearColor;
-	float			 g_pointLightData[100];
-	float			 g_DirLightData[100];
-	int				 g_lightDataSize;
-private:
-	DexGameEngine();
-	~DexGameEngine();
-	
-	void UpdateFps();
 public:
-	D3DXMATRIX g_projection;   
-	D3DXMATRIX g_ViewMatrix;
-	D3DXMATRIX g_worldMatrix;  //世界坐标矩阵
-
-	D3DXMATRIX g_scaleMatrix;
-	D3DXMATRIX g_transMatrix;
-	D3DXMATRIX g_rotateMatrix;
-
-	LPDIRECT3DTEXTURE9 m_pBufferFontTexture; //中间texture size 1024x1024用于将文字渲染上去
-											 //只渲染文字，所以不需要切换视图矩阵等参数
-	LPDIRECT3DSURFACE9 m_pBufferFontTextureSurface;
-	LPDIRECT3DSURFACE9 m_pBackSurface;  //最终渲染的Surface
-	DexRenderMode  m_RenderMode;
-public:
-
+	typedef struct _stDexModuleInfo
+	{
+		DEXWORD iModuleAddress;  //模块入口地址
+		DEXWORD iStartFunctionAddress; //入口函数地址
+		DEXWORD iModuleSize;     //模块大小
+	}stDexModuleInfo;
 public:
 	static DexGameEngine* getEngine()
 	{
@@ -132,11 +52,11 @@ public:
 		}
 	}
 public:
-	IDexDevice* CreateDevice(DString deviceType);
 	IDexDevice* GetDDevice();
 	HWND GetHwnd();
 	void SetHInstance(HINSTANCE instance);
 	HINSTANCE GetHInstance();
+    stDexModuleInfo* GetModuleInfo();
 	void SetWindowSize(int width, int height) { g_iWindowWidth = width; g_iWinddowHeight = height;}
 	void SetWIndowPos(int posX, int posY)     { g_iWindowPosX = posX; g_iWindowPosY = posY;}
 	void SetFullScreen(bool fullscreen)       { g_bFullscreen = fullscreen;}	  
@@ -196,12 +116,12 @@ public:
 	void SetWorldAmbient(const DexColor& color); //世界环境光，默认是黑色
 	void SetLightEffect(bool enable); //设置是否使用灯光效果
 	void SetLightEnable(bool enable);//控制全部灯光是否有效
-	void SetLightIdEnable(int32 lightId, bool enable);
+	void SetLightIdEnable(DInt32 lightId, bool enable);
 	void AddLight(const DexLight& light);
 	//const float* GetPointLightData()const;
-	DexLight* GetLight(int32 lightId);
+	DexLight* GetLight(DInt32 lightId);
 	bool GetLightEnable();
-	void CalculateLightData();//如果使用DexLight* GetLight(int32 lightId);改变灯光数据，需要手动调用此函数更新灯光数据
+	void CalculateLightData();//如果使用DexLight* GetLight(DInt32 lightId);改变灯光数据，需要手动调用此函数更新灯光数据
 
 	//render line cube sphere
 	void RenderCoorLines();
@@ -217,11 +137,11 @@ public:
 	void Render3DLine(const DexVector3& p, const DexVector3& vec, const DexColor& color1 = 0xffffffff, float length = 100, const DexColor& color2 = 0xffffffff);
 
 	void SetMaterial(const DexMaterial& material);
-	void SetTexture(int32 stage, CDexTex* texture);
+	void SetTexture(DInt32 stage, CDexTex* texture);
 	//for固定管线，需要设置FVF
-	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 fvf, int32 stridesize);
+	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, DInt32 vertexCount, const void* indices, DInt32 primitiveCount, DInt32 fvf, DInt32 stridesize);
 	//for shader，不需要设置FVF
-	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, int32 vertexCount, const void* indices, int32 primitiveCount, int32 stridesize);
+	void DrawPrimitive(DexPrimitivetType type, const void* vertexs, DInt32 vertexCount, const void* indices, DInt32 primitiveCount, DInt32 stridesize);
 	//本接口可以加载各种引擎支持的模型文件，包括引擎本身模型文件.dexmodel,加载.dexmodel以二进制数据读入，速度会很快，建议把其他模型文件用引擎工具MeshConvert转换为.dexmodel,然后加载转换后的二进制模型文件
 	DexModelBase* CreateModel(const char* filename, int flag=0);
 	bool SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int flag=0);
@@ -261,6 +181,97 @@ public:
 	//ray
 	void GetRay(int x, int y, stRay& ray);//x, y 屏幕上的點，得到射線
 	DexGUI::DexPoint GetXY(const D3DXVECTOR3& world_point);//傳入世界坐標 返回屏幕對應的屏幕坐標
+
+public:
+	D3DXMATRIX g_projection;
+	D3DXMATRIX g_ViewMatrix;
+	D3DXMATRIX g_worldMatrix;  //世界坐标矩阵
+
+	D3DXMATRIX g_scaleMatrix;
+	D3DXMATRIX g_transMatrix;
+	D3DXMATRIX g_rotateMatrix;
+	LPDIRECT3DTEXTURE9 m_pBufferFontTexture; //中间texture size 1024x1024用于将文字渲染上去
+	//只渲染文字，所以不需要切换视图矩阵等参数
+	LPDIRECT3DSURFACE9 m_pBufferFontTextureSurface;
+	LPDIRECT3DSURFACE9 m_pBackSurface;  //最终渲染的Surface
+	DexRenderMode  m_RenderMode;
+private:
+		DexGameEngine();
+		~DexGameEngine();
+private:
+	IDexDevice* CreateDevice(DString deviceType);
+	bool InitModuleInfo();
+	void UpdateFps();
+private:
+	static DexGameEngine*    g_pGameEngine;
+	IDexDevice*				 g_pDevice;
+	HWND			  g_hWnd;
+	HINSTANCE		  g_hInstance;
+	stDexModuleInfo   g_stModuleInfo;
+	WNDPROC  g_msgPro; //外界传入为了初始化窗口调用
+	int               g_iIconRes;
+	std::string       g_strWindowName;
+	std::string       g_strWindowClass;
+	LPDIRECT3D9       g_D3D;				//D3D
+	LPDIRECT3DDEVICE9 g_D3DDevice;         //设备
+
+	lua_State*		  L;
+	bool			  g_bFullscreen;
+	int               g_iWindowPosX;
+	int               g_iWindowPosY;
+	int               g_iWindowWidth;
+	int               g_iWinddowHeight;
+
+	HANDLE       g_LoadThread;    //加載資源時 顯示加載界面的線程
+	DWORD        g_LoadThreadId;
+
+	HANDLE       g_LogThread;
+	DWORD        g_LogThreadId;
+
+	//以上变量游戏运行后就不必关心了
+
+	int               g_iFps;
+	int				  g_iCounter;
+	DInt64			  g_iCurrentTime;
+	DInt64		      g_iLastTime;
+
+	CCamera*		  g_camera;
+	DexMem            g_mem;  //一个处理序列化的公共变量
+	int               g_iMouseX;
+	int               g_iMouseY;
+	int               g_iMouseXLastFrame;
+	int               g_iMouseYLastFrame;
+	bool              m_bRenderCollideMesh;
+	bool              m_bRenderNodeCube;
+	bool              m_bRenderActionRouteLine;    //object action 軌跡
+	bool              m_bRenderPieceEffectRoute;   //麵片軌跡 
+	bool              m_bLoading;
+	bool              m_bLightEffect; //是否开启灯光效果
+	bool              m_bLightEnable; //开启灯光效果后，灯光是否开启
+
+	std::map<string, DexGameState*> g_States;  //引擎管理多个游戏状态
+
+	DexGameState*     g_pCurrState;
+	DexGameState*     g_pLoadingState;
+	/*g_pGlobalVariable，只用于保存全局变量，引擎并不实现，这里只提供一个变量
+	供其他state通过engine调用， 具体用g_pGlobalVariable的什么，引擎并不知道，内容由主程序实现
+	*/
+	DexGlobal*     g_pGlobalVariable;
+	D3DMATERIAL9 g_material;  //用于给Mesh上材质 主要用于改变颜色
+	LPD3DXMESH  g_cube;   //辅助立方体 将这个立方体渲染出来 方便查看Node位置
+	LPD3DXMESH  g_sphere;
+	string         g_nextStateName;
+	DVector<IDexModelLoader*> vecModelLoader;
+	DVector<IDexModelAniFileLoader*> vecModelAniLoader;
+	DexTextureManager* g_TextureManager;
+	IDexRender*      m_pRender;
+	//light data
+	DVector<DexLight> g_vecLight;
+	DexColor		 g_ambientColor;
+	DexColor		 g_clearColor;
+	float			 g_pointLightData[100];
+	float			 g_DirLightData[100];
+	int				 g_lightDataSize;
 };
 //该define 必须由主程序调用
 #define DEXENGINE_INITGLOBAL(clas)  \

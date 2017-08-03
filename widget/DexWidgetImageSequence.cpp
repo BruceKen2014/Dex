@@ -117,12 +117,11 @@ bool CDexWidgetImageSequence::AddImage(string texname, const DexRect& rect, bool
 	temp->m_tex = getUiSrcMgrSingleton()->getUiTexFactory()->FindTex(texname.c_str());
 	if(temp->m_tex == NULL)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "CDexWidgetImageSequence::AddImageµ÷ÓÃÊ§°Ü£ºÎ´ÕÒµ½Í¼Æ¬%s", texname.c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "CDexWidgetImageSequence::AddImageµ÷ÓÃÊ§°Ü£ºÎ´ÕÒµ½Í¼Æ¬%s", texname.c_str());
+		DexLog::getSingleton()->EndLog();
 		return false;
 	}
-	temp->m_texname = texname;
 	if(rect.right == 0)
 	{
 		temp->m_srcArea = DexRect(0,0,temp->m_tex->GetWidth(), temp->m_tex->GetHeight());

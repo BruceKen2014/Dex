@@ -15,7 +15,7 @@ people更多是一种逻辑存在
 class CDexEffectInstance;
 class CPalPeople: public CDexSceneObjectModel
 {
-	Dex_DeclareClass(CPalPeople,0)
+	Dex_DeclareClass(CPalPeople, CDexSceneObjectModel,0)
 protected:
 	typedef list<CDexEffectInstance*>  TlistEffectInstance;
 	TlistEffectInstance m_listEffectInstance; //people身上挂的特效

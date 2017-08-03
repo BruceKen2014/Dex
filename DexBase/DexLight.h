@@ -32,20 +32,20 @@ public:
 	} DexLightType;
 public:
 	DexLightType    type;    
-	int32			id;      //灯光ID序号
+	DInt32			id;      //灯光ID序号
 	bool			enable;
 	DexColor	    diffuse;        
 	DexColor	    specular;       
 	DexColor	    ambient;      
 	DexVector3      position; //------------点光源---------聚光灯------------------------    
 	DexVector3      direction;//---------------------------聚光灯---------方向光---------   
-	float32         range;    //------------点光源---------聚光灯------------------------
-	float32         falloff;  //衰减-----------------------聚光灯------------------------
-	float32         attenuation0;     /* Constant attenuation */
-	float32         attenuation1;     /* Linear attenuation */
-	float32         attenuation2;     /* Quadratic attenuation */
-	float32         theta;    //---------------------------聚光灯光源内部锥体弧度角------
-	float32         phi;      //---------------------------聚光灯光源外部锥体弧度角------
+	DFloat32         range;    //------------点光源---------聚光灯------------------------
+	DFloat32         falloff;  //衰减-----------------------聚光灯------------------------
+	DFloat32         attenuation0;     /* Constant attenuation */
+	DFloat32         attenuation1;     /* Linear attenuation */
+	DFloat32         attenuation2;     /* Quadratic attenuation */
+	DFloat32         theta;    //---------------------------聚光灯光源内部锥体弧度角------
+	DFloat32         phi;      //---------------------------聚光灯光源外部锥体弧度角------
 	
 public:
 	DexLight() :type(DexLight_TOTAL), id(-1), diffuse(DEXCOLOR_WHITE), specular(DEXCOLOR_BLACK), 
@@ -62,7 +62,7 @@ public:
 		ambient = color;
 	}
 public:
-	void SetPointLight(const DexVector3& pos, float32 _range)
+	void SetPointLight(const DexVector3& pos, DFloat32 _range)
 	{
 		position = pos;
 		range = _range;
@@ -71,7 +71,7 @@ public:
 	{
 		direction = dir;
 	}
-	void SetSpotLight(const DexVector3& pos, const DexVector3& dir, float32 _range, float32 _fallof,
+	void SetSpotLight(const DexVector3& pos, const DexVector3& dir, DFloat32 _range, DFloat32 _fallof,
 		float _theta, float _phi)
 	{
 		position = pos;

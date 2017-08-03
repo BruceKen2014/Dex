@@ -34,34 +34,34 @@ void DexFile::Close()
 		fclose(m_pFileHandle);
 }
 
-uint64 DexFile::Tell()
+DUInt64 DexFile::Tell()
 {
-	uint64 ret = 0;
+	DUInt64 ret = 0;
 	if (m_pFileHandle == nullptr)
 		return ret;
 	ret = ftell(m_pFileHandle);
 	return ret;
 }
 
-uint64 DexFile::Length()
+DUInt64 DexFile::Length()
 {
 	return m_iLength;
 }
 
-uint64 DexFile::ReCalLength()
+DUInt64 DexFile::ReCalLength()
 {
 	if (m_pFileHandle == nullptr)
 		return 0;
-	uint32 curPos = ftell(m_pFileHandle);
+	DUDInt32 curPos = ftell(m_pFileHandle);
 	fseek(m_pFileHandle, 0, SEEK_END);
 	m_iLength = ftell(m_pFileHandle);
 	fseek(m_pFileHandle, curPos, SEEK_SET);
 	return m_iLength;
 }
 
-uint64 DexFile::Read(void* buffer, uint64 offset, int64 count)
+DUInt64 DexFile::Read(void* buffer, DUInt64 offset, DInt64 count)
 {
-	uint64 readOffset = offset > m_iLength ? m_iLength : offset;
+	DUInt64 readOffset = offset > m_iLength ? m_iLength : offset;
 	long long readCount = count == -1 ? m_iLength : count;
 	readCount = readCount > m_iLength ? m_iLength : readCount;
 	if (readOffset + readCount > m_iLength)
@@ -69,7 +69,7 @@ uint64 DexFile::Read(void* buffer, uint64 offset, int64 count)
 		readCount = m_iLength - readOffset;
 	}
 	fseek(m_pFileHandle, readOffset, SEEK_SET);
-	uint64 pos = ftell(m_pFileHandle);
+	DUInt64 pos = ftell(m_pFileHandle);
 	fread(buffer, 1, readCount, m_pFileHandle);
 	return readCount;
 }
@@ -89,7 +89,7 @@ bool DexFile::NewFile(const char* filename)
 	return true;
 }
 
-void DexFile::Write(void* buffer, uint64 count)
+void DexFile::Write(void* buffer, DUInt64 count)
 {
 	if (m_pFileHandle == nullptr)
 		return;

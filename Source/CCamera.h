@@ -17,7 +17,7 @@
 
 class CCamera:public CDexSceneObject
 {	
-	Dex_DeclareClass(CCamera,0)
+	Dex_DeclareClass(CCamera, CDexSceneObject, 0)
 public:
 	typedef enum
 	{ 

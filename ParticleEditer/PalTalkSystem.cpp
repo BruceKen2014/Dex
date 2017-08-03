@@ -101,7 +101,7 @@ bool CPalTalkSystem::Update(int delta)
 	if(!_IsCompleteThisSentence())
 	{
 		int length = m_words.length();
-		int64 thisTime = getTime()->GetTotalMillSeconds() ;
+		DInt64 thisTime = getTime()->GetTotalMillSeconds() ;
 		int wordPerSecond = 25;
 		if(thisTime- m_iLastTime > 1000/wordPerSecond)
 		{//Ã¿Ãë25¸öºº×Ö

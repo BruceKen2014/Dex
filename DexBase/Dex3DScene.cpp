@@ -273,10 +273,10 @@ bool CDexScene::registerObject(CDexSceneObject* object)
 		TMapObject::iterator ite= m_listObjectAlpha.find(object->getObjectId());
 		if(ite != m_listObjectAlpha.end())
 		{
-			getLog()->BeginLog();
+			DexLog::getSingleton()->BeginLog();
 			dex_log_current_f_l(log_error);
-			getLog()->Log(log_error, "CDexScene::registerObject试图注册一个已经存在于场景的object!");
-			getLog()->EndLog();
+			DexLog::getSingleton()->Log(log_error, "CDexScene::registerObject试图注册一个已经存在于场景的object!");
+			DexLog::getSingleton()->EndLog();
 			return false;
 		}
 		m_listObjectAlpha[object->getObjectId()] =  object;
@@ -286,10 +286,10 @@ bool CDexScene::registerObject(CDexSceneObject* object)
 		TMapObject::iterator ite= m_listObject.find(object->getObjectId());
 		if(ite != m_listObject.end())
 		{
-			getLog()->BeginLog();
+			DexLog::getSingleton()->BeginLog();
 			dex_log_current_f_l(log_error);
-			getLog()->Log(log_error, "CDexScene::registerObject试图注册一个已经存在于场景的object!");
-			getLog()->EndLog();
+			DexLog::getSingleton()->Log(log_error, "CDexScene::registerObject试图注册一个已经存在于场景的object!");
+			DexLog::getSingleton()->EndLog();
 			return false;
 		}
 		m_listObject[object->getObjectId()] =  object;
@@ -314,10 +314,10 @@ bool CDexScene::unRegisterObject(CDexSceneObject* object)
 		TMapObject::iterator ite= m_listObjectAlpha.find(object->getObjectId());
 		if(ite == m_listObjectAlpha.end())
 		{
-			getLog()->BeginLog();
+			DexLog::getSingleton()->BeginLog();
 			dex_log_current_f_l(log_allert);
-			getLog()->Log(log_allert, "CDexScene::unRegisterObject试图反注册一个不存在于场景的object!");
-			getLog()->EndLog();
+			DexLog::getSingleton()->Log(log_allert, "CDexScene::unRegisterObject试图反注册一个不存在于场景的object!");
+			DexLog::getSingleton()->EndLog();
 			return false;
 		}
 		m_listObjectAlpha.erase(ite);
@@ -327,10 +327,10 @@ bool CDexScene::unRegisterObject(CDexSceneObject* object)
 		TMapObject::iterator ite= m_listObject.find(object->getObjectId());
 		if(ite == m_listObject.end())
 		{
-			getLog()->BeginLog();
+			DexLog::getSingleton()->BeginLog();
 			dex_log_current_f_l(log_allert);
-			getLog()->Log(log_allert, "CDexScene::unRegisterObject试图反注册一个不存在于场景的object!");
-			getLog()->EndLog();
+			DexLog::getSingleton()->Log(log_allert, "CDexScene::unRegisterObject试图反注册一个不存在于场景的object!");
+			DexLog::getSingleton()->EndLog();
 			return false;
 		}
 		m_listObject.erase(ite);
@@ -461,12 +461,12 @@ bool CDexScene::LoadModelInit(const char* initfile)
 
 bool CDexScene::LoadCollideInit(const char* initfile)
 {
-	getLog()->BeginLog();
+	DexLog::getSingleton()->BeginLog();
 	CommandScript* pScript = getComandScript();
 	if(!pScript->OpenScript(initfile))
 	{
-		getLog()->Log(log_allert, "open scene collide init file %s failed!\n",initfile );
-		getLog()->EndLog();
+		DexLog::getSingleton()->Log(log_allert, "open scene collide init file %s failed!\n",initfile );
+		DexLog::getSingleton()->EndLog();
 		pScript->CloseScript();
 		return false;
 	}
@@ -499,8 +499,8 @@ bool CDexScene::LoadCollideInit(const char* initfile)
 		}
 	}
 	pScript->CloseScript();
-	getLog()->Log(log_ok, "open scene collide init file %s ok !\n ",initfile );
-	getLog()->EndLog();
+	DexLog::getSingleton()->Log(log_ok, "open scene collide init file %s ok !\n ",initfile );
+	DexLog::getSingleton()->EndLog();
 	return true;
 }
 

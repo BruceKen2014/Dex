@@ -17,6 +17,7 @@ protected:
 
 protected:
 	virtual void ShutDown();
+	void CalculateUv(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3);
 public:
 	CDexWidgetImage();
 	~CDexWidgetImage();

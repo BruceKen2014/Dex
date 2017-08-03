@@ -129,13 +129,12 @@ void CDexWidgetCheckBtn::SetCheckTex(string texname, const DexRect& rect /* = De
 	m_checkTex->m_tex = getUiSrcMgrSingleton()->getUiTexFactory()->FindTex(texname.c_str());
 	if(m_checkTex->m_tex == NULL)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "CDexWidgetImageSequence::AddImageµ÷ÓÃÊ§°Ü£ºÎ´ÕÒµ½Í¼Æ¬%s", texname.c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "CDexWidgetImageSequence::AddImageµ÷ÓÃÊ§°Ü£ºÎ´ÕÒµ½Í¼Æ¬%s", texname.c_str());
+		DexLog::getSingleton()->EndLog();
 		return;
 	}
 
-	m_checkTex->m_texname = texname;
 	if(rect.right == 0)
 	{
 		m_checkTex->m_srcArea = DexRect(0,0,m_checkTex->m_tex->GetWidth(), m_checkTex->m_tex->GetHeight());
@@ -150,12 +149,11 @@ void CDexWidgetCheckBtn::SetUnCheckTex(string texname, const DexRect& rect /* = 
 	m_uCheckTex->m_tex = getUiSrcMgrSingleton()->getUiTexFactory()->FindTex(texname.c_str());
 	if(m_uCheckTex->m_tex == NULL)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_allert, "CDexWidgetImageSequence::AddImageµ÷ÓÃÊ§°Ü£ºÎ´ÕÒµ½Í¼Æ¬%s", texname.c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_allert, "CDexWidgetImageSequence::AddImageµ÷ÓÃÊ§°Ü£ºÎ´ÕÒµ½Í¼Æ¬%s", texname.c_str());
+		DexLog::getSingleton()->EndLog();
 		return;
 	}
-	m_uCheckTex->m_texname = texname;
 	if(rect.right == 0)
 	{
 		m_uCheckTex->m_srcArea = DexRect(0,0,m_uCheckTex->m_tex->GetWidth(), m_uCheckTex->m_tex->GetHeight());

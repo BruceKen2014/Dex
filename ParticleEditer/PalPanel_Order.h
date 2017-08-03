@@ -9,7 +9,7 @@ class CDexWidgetImage;
 
 class PalPanel_Order: public PalPanelInterface
 {
-	Dex_DeclareClass(PalPanel_Order,0)
+	Dex_DeclareClass(PalPanel_Order, PalPanelInterface,0)
 protected:
 	CDexWidgetImage*  m_pImgOrderBack;
 	CDexWidgetButton* m_pBtnAttack; //¹¥

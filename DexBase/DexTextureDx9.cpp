@@ -30,7 +30,7 @@ bool DexTextureDx9::LoadTexture(DString filename, const DexColor& transcolor /*=
 		//_Message("º”‘ÿŒ∆¿Ì%s ß∞‹!",filename);
 		return false;
 	}
-	m_pData = (int8*)d3d9Tex;
+	m_pData = (DInt8*)d3d9Tex;
 	m_width = info.Width;
 	m_height = info.Height;
 	return true;

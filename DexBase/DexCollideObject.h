@@ -8,7 +8,7 @@
 
 class DexCollideObject: public CDexObject
 {
-	Dex_DeclareClass(DexCollideObject,0)
+	Dex_DeclareClass(DexCollideObject, CDexObject, 0)
 protected:
 	D3DXVECTOR3   m_pos;
 public:
@@ -28,7 +28,7 @@ public:
 };
 class DexCollideObjectBox: public DexCollideObject
 {
-	Dex_DeclareClass(DexCollideObjectBox,10)
+	Dex_DeclareClass(DexCollideObjectBox, DexCollideObject, 10)
 protected:
 	CBox* m_box;
 public:
@@ -52,7 +52,7 @@ public:
 };
 class DexCollideObjectSphere: public DexCollideObject
 {
-	Dex_DeclareClass(DexCollideObjectSphere, 10)
+	Dex_DeclareClass(DexCollideObjectSphere, DexCollideObject, 10)
 protected:
 	stBall  m_ball;
 public:

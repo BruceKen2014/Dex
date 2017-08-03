@@ -168,7 +168,7 @@ bool CEventSystem::sendEvent(stEvent event)
 {
 	if(m_mapEvent.find(event.id) == m_mapEvent.end())
 	{
-		getLog()->Log(log_allert, "事件系统发送了一个没有处理系统的事件");
+		DexLog::getSingleton()->Log(log_allert, "事件系统发送了一个没有处理系统的事件");
 		return false;
 	}
 	m_mapEvent[event.id]->Handle(NULL, event);

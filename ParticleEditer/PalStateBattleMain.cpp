@@ -19,6 +19,7 @@
 #include "DexStateCommonEvent.h"
 #include "DexBase/Dex3DScene.h"
 #include "DexBase/DexTextureManager.h"
+#include "DexBase/DexIni.h"
 #include "PalPlayer.h"
 #include "PalPlayerAttackState.h"
 #include "PalFightHeadManager.h"
@@ -29,6 +30,10 @@
 #include "PalPanel_Order.h"
 #include "PalPanel_SelectSkill.h"
 #include "../DexModel/DexModelSkinMeshLoader.h"
+#include "../widget/DexWidgetProgressBar.h"
+#include "../widget/DexWidget.h"
+#include "../widget/DexWidgetContainer.h"
+#include <Psapi.h>
 //#include "Pal2Global.h"
 
 
@@ -69,9 +74,9 @@ void PalGameStateBattleMain::InitVertexShader()
 	HRESULT hr = D3DXCompileShaderFromFile("VertexShader.fx", 0, 0, "SetColor", "vs_2_0", D3DXSHADER_DEBUG, &shaderBuffer, &errorBuffer, &BasicConstTable);
 	if (errorBuffer)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, (char*)(errorBuffer->GetBufferPointer()));
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, (char*)(errorBuffer->GetBufferPointer()));
+		DexLog::getSingleton()->EndLog();
 		errorBuffer->Release();
 	}
 	DexGameEngine::getEngine()->GetDevice()->CreateVertexShader((DWORD*)shaderBuffer->GetBufferPointer(), &BasicShader);
@@ -79,7 +84,7 @@ void PalGameStateBattleMain::InitVertexShader()
 	WVPMatrixHandle = BasicConstTable->GetConstantByName(0, "WVPMatrix");
 	ColorHandle = BasicConstTable->GetConstantByName(0, "color");
 }
-void PalGameStateBattleMain::UpdateVertexShader(int32 delta)
+void PalGameStateBattleMain::UpdateVertexShader(DInt32 delta)
 {
 	D3DXMATRIX matWorld, matView, matProj; 
 	DexMatrix4x4 worldMatrix;
@@ -131,9 +136,9 @@ void PalGameStateBattleMain::InitPixelShader()
 	//测试pixelshader的支持
 	if (caps.PixelShaderVersion < D3DPS_VERSION(1, 1))
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, "pixel shader version error!");
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, "pixel shader version error!");
+		DexLog::getSingleton()->EndLog();
 	}
 	ID3DXBuffer* shaderBuffer = NULL;
 	ID3DXBuffer* errorBuffer = NULL;
@@ -141,9 +146,9 @@ void PalGameStateBattleMain::InitPixelShader()
 	HRESULT hr = D3DXCompileShaderFromFile("tex2Shader.fx", 0, 0, "PS_Main", "ps_1_1", D3DXSHADER_DEBUG, &shaderBuffer, &errorBuffer, &pixelConstTable);
 	if (errorBuffer)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_error, (char*)(errorBuffer->GetBufferPointer()));
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_error, (char*)(errorBuffer->GetBufferPointer()));
+		DexLog::getSingleton()->EndLog();
 		errorBuffer->Release();
 	}
 	device->CreatePixelShader((DWORD*)shaderBuffer->GetBufferPointer(), &pixelShader);
@@ -165,7 +170,7 @@ void PalGameStateBattleMain::InitPixelShader()
 
 }
 
-void PalGameStateBattleMain::UpdatePixelShader(int32 delta)
+void PalGameStateBattleMain::UpdatePixelShader(DInt32 delta)
 {
 
 }
@@ -201,7 +206,10 @@ TlistPlayer PalGameStateBattleMain::getPlayers(EPlayerType type)
 	}
 	return m_listPlayers;
 }
+void testfunctionAddress()
+{
 
+}
 void PalGameStateBattleMain::setVisible(string type, bool visible)
 {
 	if(m_mapBattlePanels.find(type) == m_mapBattlePanels.end())
@@ -217,17 +225,29 @@ bool PalGameStateBattleMain::getVisible(string type)
 	return ret;
 }
 
-bool PalGameStateBattleMain::ApplyRes() 
+bool PalGameStateBattleMain::ApplyRes()
 {
-	
-	DexVector3 cameraPos(-200, 100.0f,-5.0f);
+	DexIni iniHandle;
+	DEX_ENSURE_B(iniHandle.readIniFile("ini/data.ini"));
+	int time = iniHandle.getInt("GameFailDelay", "time");
+	DString texture = iniHandle.getString("TerrainData", "texture");
+	int width = iniHandle.getInt("TerrainData", "cWidth");
+	DFloat32 posX = iniHandle.getFloat("TerrainData", "posx");
+	iniHandle.clearData();
+	iniHandle.writeData("map", "weather", "good");
+	iniHandle.writeData("map", "npcs", 20);
+	iniHandle.writeData("map", "height", 20.5f);
+
+	iniHandle.saveFile("ini/newFile.ini");
+
+	DexVector3 cameraPos(-200, 100.0f, -5.0f);
 	DexVector3 lookAtPos(0, 0, 0);
 	DexVector3 upDir(0.0f, 1.0f, 0.0f);
 	// Build view matrix.
 	m_pScene = new CDexScene;
 	DexGameEngine::getEngine()->LookAtLH(&cameraPos, &lookAtPos, &upDir);
 	DexGameEngine::getEngine()->setRendeCollideMesh(true);
-	
+
 	PalPanelInterface* panel = new PalPanel_Order;
 	panel->Initialize();
 	panel->setVisible(false);
@@ -235,23 +255,34 @@ bool PalGameStateBattleMain::ApplyRes()
 	panel = new PalPanel_SelectSkill;
 	panel->Initialize();
 	panel->setVisible(false);
+
 	m_mapBattlePanels[panel->getType()] = panel;
+
 	Test_AddJingtian();
 	//Test_AddEnemy1();
-	DexGameEngine::getEngine()->GetDevice()->CreateTexture(128,128,1,D3DUSAGE_RENDERTARGET,D3DFMT_A8R8G8B8, 
-		D3DPOOL_DEFAULT, & m_testTexture, NULL);
+	DexGameEngine::getEngine()->GetDevice()->CreateTexture(128, 128, 1, D3DUSAGE_RENDERTARGET, D3DFMT_A8R8G8B8,
+		D3DPOOL_DEFAULT, &m_testTexture, NULL);
 	m_testTexture->GetSurfaceLevel(0, &m_testSurface);
 	//D3DXMatrixPerspectiveFovLH(&m_testProjection,D3DX_PI/4.0f,1,1,100);
 	//DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_PROJECTION, & m_testProjectionOld);
-	DexGameEngine::getEngine()->GetDevice()->GetRenderTarget(0, & DexGameEngine::getEngine()->m_pBackSurface);
-	g_pImageBackgroud = (CDexWidgetImage*) getWidgetFactory()->createWidget(widget_image, "background111"); 
+	DexGameEngine::getEngine()->GetDevice()->GetRenderTarget(0, &DexGameEngine::getEngine()->m_pBackSurface);
+	g_pImageBackgroud = (CDexWidgetImage*)getWidgetFactory()->createWidget(widget_image, "background111");
 
 	g_pImageBackgroud->SetTexName("b23.png");
-	g_pImageBackgroud->SetPos(200,200);
+	g_pImageBackgroud->SetPos(200, 200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
-	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event); 
+	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
+	g_pImageBackgroud->setVisible(true);
+	g_pProgressBar = (DexWidgetProgressBar*)getWidgetFactory()->createWidget(widget_progressBar, "progressBar");
+	g_pProgressBar->SetProgressImage("image1.png", DexRectF(50, 26, 60, 29), "image1.png", DexRectF(50, 23, 60, 25));
+	g_pProgressBar->SetPos(210, 210);
+	g_pProgressBar->Resize(DexSize(200, 10));
+	g_pProgressBar->ModifyFlag(Minus_Flag, catch_event);
+
+	g_pImageBackgroud->GetChildrenContainer()->AddWidgetToBack(g_pProgressBar);
+
 	mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/alc0101_sky.mws");//mws dexmodel
-	//mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/alc1002_kabe.mws");
+																								  //mwsModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/mws/alc1002_kabe.mws");
 	mwsModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT | DEXRENDER_ENABLE_FOG);
 	mwsModel->SetRenderFlag(//SKINMESH_RENDER_JOINT | SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
 		SKINMESH_RENDER_MESH);
@@ -270,36 +301,36 @@ bool PalGameStateBattleMain::ApplyRes()
 	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/f0011/mws/f0011.mws");
 	DexGameEngine::getEngine()->ReadActInfoFxii(daeModel, "model/dae/f0011/mws/f0011_a.act");
 	*/
-	
+
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/c1004/c1004.dexmodel",1);//xml
 	//DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/c1004/c1004.mws");
 	//DexGameEngine::getEngine()->ReadModelAnimation(daeModel, "model/dae/c1004/act/mgc_4.act");
-	
-	
+
+
 	daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/monster/m1019/m1019.dexmodel", 1);
 	DexGameEngine::getEngine()->ReadFFSkeletonInfo(daeModel, "model/dae/monster/m1019/m1019.mws");
 	DexGameEngine::getEngine()->ReadModelAnimation(daeModel, "model/dae/monster/m1019/act/atk_m_1.act");
-	
+
 	//daeModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dae/weapon/mws/w0002.xml", 1);
 	daeModel->SetJointScale(0.01f);
 	//daeModel->SetAnimateType(SkinMeshAnimateType_Loop_Back);
 	daeModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT);// | DEXRENDER_ENABLE_FOG);
-	daeModel->SetRenderFlag(SKINMESH_RENDER_JOINT |SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
-		SKINMESH_RENDER_MESH );
+	daeModel->SetRenderFlag(SKINMESH_RENDER_JOINT | SKINMESH_RENDER_JOINT2JOINT | //SKINMESH_RENDER_VERTEX2JOINT|
+		SKINMESH_RENDER_MESH);
 	daeModel->SetAmbientColor(DexColor(200, 200, 200));
-	int32 order[24] = { 0, 1, 2, 9, 23, 12, 13, 17, 14, 21, 22, 20, 11, 15, 16, 19, 18, 3, 4, 5, 6, 7, 8, 10 };
-	DVector<int32> tempOrder(order, order + sizeof(order)/sizeof(order[0]));
+	DInt32 order[24] = { 0, 1, 2, 9, 23, 12, 13, 17, 14, 21, 22, 20, 11, 15, 16, 19, 18, 3, 4, 5, 6, 7, 8, 10 };
+	DVector<DInt32> tempOrder(order, order + sizeof(order) / sizeof(order[0]));
 	//daeModel->SetOrderInfo(tempOrder);
-	
+
 	objModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/obj/RYU.dexmodel");//obj
 	objModel->SetLightFlag(DEXRENDER_LIGHT_ENABLE | DEXRENDER_LIGHT_AMBIENT | DEXRENDER_LIGHT_POINT | DEXRENDER_ENABLE_FOG);
 	objModel->SetRenderFlag(SKINMESH_RENDER_MESH);
 	ms3d = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/ms3d/Model.ms3d"); //ms3d
 	ms3d->SetAnimateType(SkinMeshAnimateType_Loop);
 	ms3d->SetAnimateRatio(1.0f);
-	ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS );
+	ms3d->SetRenderFlag(SKINMESH_RENDER_ALL_FLAGS);
 	ms3d->SetLightFlag(DEXRENDER_LIGHT_ALL_ON | DEXRENDER_ENABLE_FOG);
-	DexMatrix4x4 world_matrix; 
+	DexMatrix4x4 world_matrix;
 
 	groundModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dexmodel/ground.dexmodeltext");//dexmodeltext
 
@@ -323,17 +354,25 @@ bool PalGameStateBattleMain::ApplyRes()
 	world_matrix.Translate(skin_pos);
 	testMesh->SetSceneNodeMatrix(world_matrix);
 	//ms3d->SetSceneNodeMatrix(world_matrix);
+
 	world_matrix.Identity();
 	world_matrix.Scale(1000.0f, 1000.0f, 1000.0f);
 	objModel->SetSceneNodeMatrix(world_matrix);
 	world_matrix.Identity();
 	world_matrix.Scale(10.0f, 10.0f, 10.0f);
 	world_matrix.Translate(-50.0f, 0.0f, 50.0f);
+
 	//daeModel->SetSceneNodeMatrix(world_matrix);
+
 	InitVertexShader();
 	InitPixelShader();
 	m_bApply = true;
-
+	
+	
+	DexGameEngine::stDexModuleInfo* moduleInfo = DexGameEngine::getEngine()->GetModuleInfo();
+	DexLog::getSingleton()->LogLine(log_error, " 模块地址 %X  程序入口地址:%X 大小%d 函数地址 %X", moduleInfo->iModuleAddress, moduleInfo->iStartFunctionAddress, moduleInfo->iModuleSize, testfunctionAddress);
+	//DInt32 offset = (void*)&(PalGameStateBattleMain::ApplyRes) - (DInt32)moduleInfo.EntryPoint;
+	//DexLog::getSingleton()->LogLine(log_error, "ApplyRes 地址%0X 偏移量:%0X", ApplyRes, 3);
 	return true;
 }
 bool PalGameStateBattleMain::Test_AddEnemy1()
@@ -425,6 +464,7 @@ void PalGameStateBattleMain::ReleaseRes()
 {
 	m_bApply = false;
 }
+const int testInt = 100;
 bool PalGameStateBattleMain::Update(int delta)
 {	
 	//light.attenuation0 = 1.0f;
@@ -469,7 +509,7 @@ bool PalGameStateBattleMain::Update(int delta)
 	mwsModel->Update(delta); 
 	static int testDelta = 16;
 	daeModel->Update(testDelta);
-	static int32 jointIndex = 14;
+	static DInt32 jointIndex = 14;
 	DexSkinMesh::Joint* pJoint = daeModel->FindJoint(jointIndex);
 	if (pJoint != nullptr)
 		daeWeaponModel->SetSceneNodeMatrix(pJoint->world_matrix);
@@ -480,6 +520,9 @@ bool PalGameStateBattleMain::Update(int delta)
 	UpdatePixelShader(delta);
 	groundModel->Update(delta);
 	testMesh->Update(delta/4);
+	static DFloat32 progressRadio = 0.0f;
+	progressRadio += 0.002f;
+	g_pProgressBar->SetProgress(progressRadio);
 	return true;
 	//getGlobal()->g_pJingtian->Update();
 }
@@ -549,7 +592,7 @@ void PalGameStateBattleMain::Render()
 	//matrix.RotateY(rotate/50);
 	//matrix.Translate(1.0f, 0.0f, 0.0f);
 	FILE* pFile = fopen("model/dae/test.txt", "rb");
-	const int16  iMaxLineByte = 2048;
+	const DInt16  iMaxLineByte = 2048;
 	char tempLineData[iMaxLineByte];
 	fgets(tempLineData, iMaxLineByte, pFile);
 	daeModel->iHideMeshIndex = atoi(tempLineData);
@@ -638,7 +681,7 @@ void PalGameStateBattleMain::Render()
 	//get2DDrawer()->Draw(m_testTexture);
 
 	//g_pImageBackgroud->getText()->SetTex(m_testTexture);
-	//g_pImageBackgroud->Render();
+	g_pImageBackgroud->Render();
 	get2DDrawer()->EndDraw2D();
 }
 void PalGameStateBattleMain::DrawPlayerBlood()

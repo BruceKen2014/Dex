@@ -24,9 +24,9 @@ void CDexGuiAction::ShutDown()
 {
 	if(m_owner != NULL)
 	{
-		getLog()->BeginLog();
-		getLog()->Log(log_ok, "控件%s销毁动作%s", m_owner->GetName().c_str() , m_name.c_str());
-		getLog()->EndLog();
+		DexLog::getSingleton()->BeginLog();
+		DexLog::getSingleton()->Log(log_ok, "控件%s销毁动作%s", m_owner->GetName().c_str() , m_name.c_str());
+		DexLog::getSingleton()->EndLog();
 	}
 
 }
@@ -87,16 +87,16 @@ void CDexGuiAction::ConstrainEnd()
 }
 void CDexGuiAction::BeforAction()
 {
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "动作%s开始",m_name.c_str());
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "动作%s开始",m_name.c_str());
+	DexLog::getSingleton()->EndLog();
 }
 
 void CDexGuiAction::AfterAction()
 {
-	getLog()->BeginLog();
-	getLog()->Log(log_ok, "动作%s结束",m_name.c_str());
-	getLog()->EndLog();
+	DexLog::getSingleton()->BeginLog();
+	DexLog::getSingleton()->Log(log_ok, "动作%s结束",m_name.c_str());
+	DexLog::getSingleton()->EndLog();
 	if(m_deleteSelf)
 		m_owner->EraseAction(this);
 }

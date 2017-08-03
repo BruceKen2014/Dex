@@ -336,9 +336,6 @@
     <ClInclude Include="state\DexGameState.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="DexCommonFunction.h">
-      <Filter>DexBase</Filter>
-    </ClInclude>
     <ClInclude Include="DexMath\DexMath.h">
       <Filter>DexMath</Filter>
     </ClInclude>
@@ -497,6 +494,24 @@
     </ClInclude>
     <ClInclude Include="DexModel\DexModelAniFileText.h">
       <Filter>DexModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexIni.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexCommonFunction.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexMemoryManager.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexWidgetProgressBar.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DDeque.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexSingleton.h">
+      <Filter>DexBase</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -788,9 +803,6 @@
     <ClCompile Include="state\DexGameState.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="DexCommonFunction.cpp">
-      <Filter>DexBase</Filter>
-    </ClCompile>
     <ClCompile Include="DexMath\DexMath.cpp">
       <Filter>DexMath</Filter>
     </ClCompile>
@@ -893,6 +905,16 @@
     <ClCompile Include="DexModel\DexModelAniFileText.cpp">
       <Filter>DexModel</Filter>
     </ClCompile>
+    <ClCompile Include="DexBase\DexIni.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexCommonFunction.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexMemoryManager.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexWidgetProgressBar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="Pal3Wai\DemoEx.h">

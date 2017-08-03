@@ -80,12 +80,12 @@ void CKeyboard::Update()
 	}
 }
 
-BOOL CKeyboard::KeyDown(uint32 key)
+BOOL CKeyboard::KeyDown(DUDInt32 key)
 {
 	return m_keys[key] & 0x80;
 }
 
-BOOL CKeyboard::KeyUp(uint32 key)
+BOOL CKeyboard::KeyUp(DUDInt32 key)
 {
 	//旧状态是按下而新状态不是按下，则此次行为是按键弹起
 	return (m_oldKeys[key] & 0x80) && !(m_keys[key] & 0x80);
@@ -466,14 +466,14 @@ void CInputSystem::Update(HWND hwnd)
 	   m_mouse->Update(hwnd);
 }
 //-----------------------------
-BOOL CInputSystem::KeyDown(uint32 key)
+BOOL CInputSystem::KeyDown(DUDInt32 key)
 {
 	if(m_keyboard == NULL)
 		return FALSE;
 	return m_keyboard->KeyDown(key);
 }
 
-BOOL CInputSystem::KeyUp(uint32 key)
+BOOL CInputSystem::KeyUp(DUDInt32 key)
 {
 	if(m_keyboard == NULL)
 		return FALSE;

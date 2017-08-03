@@ -15,7 +15,7 @@ public:
 	DexColor specular;
 	DexColor ambient;
 	DexColor emissive;
-	float32  power;
+	DFloat32  power;
 public:
 	DexMaterial()
 	{
@@ -27,7 +27,7 @@ public:
 		power = 1.0f;
 	};
 	DexMaterial(const DexColor& _diffuse, const DexColor& _specular, const DexColor& _ambient,
-		const DexColor& _emissive, float32  _power = 1.0f) :diffuse(_diffuse), specular(_specular),
+		const DexColor& _emissive, DFloat32  _power = 1.0f) :diffuse(_diffuse), specular(_specular),
 		ambient(_ambient), emissive(_emissive), power(_power)
 	{
 
@@ -35,7 +35,7 @@ public:
 	~DexMaterial(){};
 public:
 	void Set(const DexColor& _diffuse, const DexColor& _specular, const DexColor& _ambient,
-		const DexColor& _emissive, float32  _power = 1.0f)
+		const DexColor& _emissive, DFloat32  _power = 1.0f)
 	{
 		diffuse = _diffuse;
 		specular = _specular;

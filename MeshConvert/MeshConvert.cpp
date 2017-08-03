@@ -9,7 +9,7 @@
 #include <iostream>
 #include "../state/DexGameEngine.h"
 #include "../DexModel/DexSkinMesh.h"
-#include "../DexCommonFunction.h"
+#include "../DexBase/DexCommonFunction.h"
 #include "../DexBase/DexStreamFile.h"
 #include "../DexBase/DexMd5Generator.h"
 using namespace std;
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 					mem.ReadLine(lineInfo);
 					DVector<DString> tempVectorString;
 					SplitStr(lineInfo, ',', tempVectorString);
-					DVector<int32> tempVectorInt;
+					DVector<DInt32> tempVectorInt;
 					for (size_t i = 0; i < tempVectorString.size(); ++i)
 						tempVectorInt.push_back(DexCommonFunction::str_to_int(tempVectorString[i]));
 					pSkinMesh->SetOrderInfo(tempVectorInt);
@@ -116,7 +116,7 @@ int main(int argc, char* argv[])
 				mem.ReadLine(lineInfo);
 				DVector<DString> tempVectorString;
 				SplitStr(lineInfo, ',', tempVectorString);
-				DVector<int32> tempVectorInt;
+				DVector<DInt32> tempVectorInt;
 				for (size_t i = 0; i < tempVectorString.size(); ++i)
 					tempVectorInt.push_back(DexCommonFunction::str_to_int(tempVectorString[i]));
 				pSkinMesh->SetOrderInfo(tempVectorInt);

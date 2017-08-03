@@ -57,10 +57,7 @@ bool PalPanel_SelectSkill::Initialize()
 	m_pCheckBtnSoil->m_MouseLUp +=  UI_DELEGATE(this, PalPanel_SelectSkill, OnClickSkillSoil);
 	return true;
 }
-PalPanel_SelectSkill* PalPanel_SelectSkill::This(CEventHandler* sys)
-{
-	return (PalPanel_SelectSkill*)sys;
-}
+
 void PalPanel_SelectSkill::setVisible(bool visible)
 {
 	DEX_ENSURE(m_pImgOrderBack);
@@ -115,59 +112,64 @@ bool PalPanel_SelectSkill::Render()
 
 void PalPanel_SelectSkill::OnClickSkillWater(CEventHandler* sys, CDexObject* object,stEvent event)
 {
-	bool checked = This(sys)->m_pCheckBtnWater->GetChecked();
+	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
+	bool checked = pThis->m_pCheckBtnWater->GetChecked();
 	if(!checked)
 	{
-		This(sys)->m_pCheckBtnFire->SetChecked(false);
-		This(sys)->m_pCheckBtnThunder->SetChecked(false);
-		This(sys)->m_pCheckBtnWind->SetChecked(false);
-		This(sys)->m_pCheckBtnSoil->SetChecked(false);
+		pThis->m_pCheckBtnFire->SetChecked(false);
+		pThis->m_pCheckBtnThunder->SetChecked(false);
+		pThis->m_pCheckBtnWind->SetChecked(false);
+		pThis->m_pCheckBtnSoil->SetChecked(false);
 	}
 }
 
 void PalPanel_SelectSkill::OnClickSkillFire(CEventHandler* sys, CDexObject* object,stEvent event)
 {
-	bool checked = This(sys)->m_pCheckBtnFire->GetChecked();
+	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
+	bool checked = pThis->m_pCheckBtnFire->GetChecked();
 	if(!checked)
 	{
-		This(sys)->m_pCheckBtnWater->SetChecked(false);
-		This(sys)->m_pCheckBtnThunder->SetChecked(false);
-		This(sys)->m_pCheckBtnWind->SetChecked(false);
-		This(sys)->m_pCheckBtnSoil->SetChecked(false);
+		pThis->m_pCheckBtnWater->SetChecked(false);
+		pThis->m_pCheckBtnThunder->SetChecked(false);
+		pThis->m_pCheckBtnWind->SetChecked(false);
+		pThis->m_pCheckBtnSoil->SetChecked(false);
 	}
 }
 void PalPanel_SelectSkill::OnClickSkillThunder(CEventHandler* sys, CDexObject* object,stEvent event)
 {
-	bool checked = This(sys)->m_pCheckBtnThunder->GetChecked();
+	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
+	bool checked = pThis->m_pCheckBtnThunder->GetChecked();
 	if(!checked)
 	{
-		This(sys)->m_pCheckBtnWater->SetChecked(false);
-		This(sys)->m_pCheckBtnFire->SetChecked(false);
-		This(sys)->m_pCheckBtnWind->SetChecked(false);
-		This(sys)->m_pCheckBtnSoil->SetChecked(false);
+		pThis->m_pCheckBtnWater->SetChecked(false);
+		pThis->m_pCheckBtnFire->SetChecked(false);
+		pThis->m_pCheckBtnWind->SetChecked(false);
+		pThis->m_pCheckBtnSoil->SetChecked(false);
 	}
 }
 void PalPanel_SelectSkill::OnClickSkillWind(CEventHandler* sys, CDexObject* object,stEvent event)
 {
-	bool checked = This(sys)->m_pCheckBtnWind->GetChecked();
+	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
+	bool checked = pThis->m_pCheckBtnWind->GetChecked();
 	if(!checked)
 	{
-		This(sys)->m_pCheckBtnWater->SetChecked(false);
-		This(sys)->m_pCheckBtnFire->SetChecked(false);
-		This(sys)->m_pCheckBtnThunder->SetChecked(false);
-		This(sys)->m_pCheckBtnSoil->SetChecked(false);
+		pThis->m_pCheckBtnWater->SetChecked(false);
+		pThis->m_pCheckBtnFire->SetChecked(false);
+		pThis->m_pCheckBtnThunder->SetChecked(false);
+		pThis->m_pCheckBtnSoil->SetChecked(false);
 	}
 }
 
 void PalPanel_SelectSkill::OnClickSkillSoil(CEventHandler* sys, CDexObject* object,stEvent event)
 {
-	bool checked = This(sys)->m_pCheckBtnSoil->GetChecked();
+	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
+	bool checked = pThis->m_pCheckBtnSoil->GetChecked();
 	if(!checked)
 	{
-		This(sys)->m_pCheckBtnWater->SetChecked(false);
-		This(sys)->m_pCheckBtnFire->SetChecked(false);
-		This(sys)->m_pCheckBtnThunder->SetChecked(false);
-		This(sys)->m_pCheckBtnWind->SetChecked(false);
+		pThis->m_pCheckBtnWater->SetChecked(false);
+		pThis->m_pCheckBtnFire->SetChecked(false);
+		pThis->m_pCheckBtnThunder->SetChecked(false);
+		pThis->m_pCheckBtnWind->SetChecked(false);
 	}
 }
 

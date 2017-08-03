@@ -13,9 +13,9 @@
 
 class IDexShader:public CDexObject
 {
-	Dex_DeclareClass(IDexShader, 0)
+	Dex_DeclareClass(IDexShader, CDexObject, 0)
 protected:
-	uint8	m_iLightFlag; //ตฦนโ
+	DUInt8	m_iLightFlag; //ตฦนโ
 	//DexMaterial m_Material;
 	DexVector4 m_colorAmbient; //rgba
 
