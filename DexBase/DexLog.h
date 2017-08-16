@@ -47,9 +47,9 @@ enum DexLogType
 
 	 //字体颜色高亮
 class CFile;
-class DexLog
+class DexLog final
 {
-	DECLARE_SINGLETON(DexLog)
+	SINGLETON_DECLARE(DexLog)
 public:
 	//w可理解为控制台一行可以容纳的字符数 h可理解为控制台可记录的行数 超过h行的打印将覆盖之前的记录
 	void SetConsoleScreenSize(int w, int h);  //设置控制台缓存
@@ -77,9 +77,6 @@ protected:
 	void LogOK(char* msg);
 	void LogAllert(char* msg);
 	void LogError(char* msg);
-protected:
-	DexLog();
-	~DexLog();
 private:
 	bool m_OpenFontBack;  //是否开启控制台背景色的打印功能
 	bool m_BackHighLight; //背景是否高亮

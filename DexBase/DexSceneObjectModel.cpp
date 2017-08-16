@@ -38,7 +38,7 @@ CDexModelX::~CDexModelX()
 bool CDexModelX::LoadModelFile(const char* filename)
 {
 	DexLog::getSingleton()->BeginLog();
-	DInt64 mseconds = getTime()->GetTotalMillSeconds();
+	DInt64 mseconds = DexTime::getSingleton()->GetTotalMillSeconds();
 	if(FAILED(D3DXLoadMeshFromX(filename, D3DXMESH_SYSTEMMEM,
 		DexGameEngine::getEngine()->GetDevice(), NULL, &m_matBuffer, NULL,
 		&m_numMaterials, &m_model))) 
@@ -67,7 +67,7 @@ bool CDexModelX::LoadModelFile(const char* filename)
 			m_textureList[i] = NULL;
 		}
 	}
-	DexLog::getSingleton()->Log(log_ok, "加载模型%s成功！用时:%d ms\n",filename, getTime()->GetTotalMillSeconds() - mseconds);
+	DexLog::getSingleton()->Log(log_ok, "加载模型%s成功！用时:%d ms\n",filename, DexTime::getSingleton()->GetTotalMillSeconds() - mseconds);
 	DexLog::getSingleton()->EndLog();
 	return true;
 }
@@ -781,7 +781,7 @@ bool CDexModelXAni::LoadModelFile(const char* filename)
 {
 	HRESULT hr;
 
-	DInt64 mseconds = getTime()->GetTotalMillSeconds();
+	DInt64 mseconds = DexTime::getSingleton()->GetTotalMillSeconds();
 	//从.X文件加载层次框架和动画数据
 	hr = D3DXLoadMeshHierarchyFromX(filename, D3DXMESH_MANAGED, DexGameEngine::getEngine()->GetDevice(), 
 		m_pAlloc, NULL, &m_pFrameRoot, &m_pAnimController);	  //最后一个参数：动画控制器
@@ -799,7 +799,7 @@ bool CDexModelXAni::LoadModelFile(const char* filename)
 		m_pAnimController->ResetTime();
 	}	
 	DexLog::getSingleton()->BeginLog();
-	DexLog::getSingleton()->Log(log_ok, "加载animation模型%s成功！用时:%d ms\n",filename, getTime()->GetTotalMillSeconds() - mseconds);
+	DexLog::getSingleton()->Log(log_ok, "加载animation模型%s成功！用时:%d ms\n",filename, DexTime::getSingleton()->GetTotalMillSeconds() - mseconds);
 	DexLog::getSingleton()->EndLog();
 	return true;
 

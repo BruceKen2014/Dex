@@ -1,14 +1,14 @@
 #ifndef _PAL_PANEL_INTERFACE_H
 #define _PAL_PANEL_INTERFACE_H
 
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 
-class PalPanelInterface:public CDexObject
+class DexPanelInterface:public DexObject
 {
-	Dex_DeclareClass(PalPanelInterface, CDexObject,0)
+	Dex_DeclareClass(DexPanelInterface, DexObject,0)
 public:
-	PalPanelInterface();
-	virtual ~PalPanelInterface();
+	DexPanelInterface();
+	virtual ~DexPanelInterface();
 
 public:
 	virtual bool Initialize() = 0;

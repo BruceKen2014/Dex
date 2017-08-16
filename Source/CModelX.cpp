@@ -16,7 +16,7 @@ CModelX::CModelX(LPDIRECT3DDEVICE9 device, char* filename):CModel()
 	//m_posX = m_posY = m_posZ = 0;
 	//m_scaleX = m_scaleY = m_scaleZ = 1.0f;
 	//m_rotateX = m_rotateY = m_rotateZ = 0.0f;
-	DInt64 mseconds = getTime()->GetTotalMillSeconds();
+	DInt64 mseconds = DexTime::getSingleton()->GetTotalMillSeconds();
 	if(FAILED(D3DXLoadMeshFromX(filename, D3DXMESH_SYSTEMMEM,
 		m_device, NULL, &m_matBuffer, NULL,
 		&m_numMaterials, &m_model))) 
@@ -28,7 +28,7 @@ CModelX::CModelX(LPDIRECT3DDEVICE9 device, char* filename):CModel()
 		return ;
 	}
 	DexLog::getSingleton()->BeginLog();
-	DexLog::getSingleton()->Log(log_ok, "加载模型%s成功！用时:%dms",filename, getTime()->GetTotalMillSeconds() - mseconds);
+	DexLog::getSingleton()->Log(log_ok, "加载模型%s成功！用时:%dms",filename, DexTime::getSingleton()->GetTotalMillSeconds() - mseconds);
 	DexLog::getSingleton()->EndLog();
 	m_matList = new D3DMATERIAL9[m_numMaterials];
 	m_textureList  = new LPDIRECT3DTEXTURE9[m_numMaterials];

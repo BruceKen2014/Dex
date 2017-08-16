@@ -44,7 +44,7 @@ CPackTaskCompress::CPackTaskCompress()
 	m_bSuccess = false;
 	m_bUse = false;
 }
-void CPackTaskCompress::Initialize(char* pDestBuffer, DUDInt32 iDestSize, char* pSrcBuffer, DUDInt32 iSrcSize)
+void CPackTaskCompress::Initialize(char* pDestBuffer, DUInt32 iDestSize, char* pSrcBuffer, DUInt32 iSrcSize)
 {
 	m_pDestBuffer = pDestBuffer;
 	m_iDestSize = iDestSize;

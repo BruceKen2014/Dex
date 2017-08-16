@@ -34,6 +34,9 @@
     <Filter Include="DexModel">
       <UniqueIdentifier>{c5a575df-29cf-4c44-9901-f628c78d8a71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EnginePanel">
+      <UniqueIdentifier>{be5a6e1a-078f-42d0-b72f-f757123cacb6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pal3Wai\CBloodFlag.h">
@@ -97,9 +100,6 @@
       <Filter>DexBase</Filter>
     </ClInclude>
     <ClInclude Include="DexBase\CDexDraw2D.h">
-      <Filter>DexBase</Filter>
-    </ClInclude>
-    <ClInclude Include="DexBase\CDexObject.h">
       <Filter>DexBase</Filter>
     </ClInclude>
     <ClInclude Include="DexBase\CDexPartical.h">
@@ -513,6 +513,21 @@
     <ClInclude Include="DexBase\DexSingleton.h">
       <Filter>DexBase</Filter>
     </ClInclude>
+    <ClInclude Include="DexBase\DexEngineCommandPanel.h">
+      <Filter>EnginePanel</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexObject.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="widget\DexPanelInterface.h">
+      <Filter>widget</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexCommand.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DexBase\DexVirtualKey.h">
+      <Filter>DexBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Pal3Wai\CBloodLabel.cpp">
@@ -579,9 +594,6 @@
       <Filter>DexBase</Filter>
     </ClCompile>
     <ClCompile Include="DexBase\CDexDraw2D.cpp">
-      <Filter>DexBase</Filter>
-    </ClCompile>
-    <ClCompile Include="DexBase\CDexObject.cpp">
       <Filter>DexBase</Filter>
     </ClCompile>
     <ClCompile Include="DexBase\CDexPartical.cpp">
@@ -915,6 +927,18 @@
       <Filter>DexBase</Filter>
     </ClCompile>
     <ClCompile Include="widget\DexWidgetProgressBar.cpp" />
+    <ClCompile Include="DexBase\DexObject.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
+    <ClCompile Include="widget\DexPanelInterface.cpp">
+      <Filter>widget</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexEngineCommandPanel.cpp">
+      <Filter>EnginePanel</Filter>
+    </ClCompile>
+    <ClCompile Include="DexBase\DexCommand.cpp">
+      <Filter>DexBase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="Pal3Wai\DemoEx.h">

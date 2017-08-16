@@ -5,7 +5,7 @@
 #define CDEX_DRAW_2D_H
 
 #include "typedefine.h"
-#include "../DexBase/CDexObject.h"
+#include "../DexBase/DexObject.h"
 #include "../widget/DexGuiStruct.h"
 #include <map>
 #include <string>
@@ -85,9 +85,9 @@ using namespace DexGUI;
 using namespace std;
 class CModel;
 class CMyFont;
-class CDexDraw2DOrth:public CDexObject
+class CDexDraw2DOrth:public DexObject
 {
-	Dex_DeclareClass(CDexDraw2DOrth, CDexObject,0)
+	Dex_DeclareClass(CDexDraw2DOrth, DexObject,0)
 public:
 	static const stEvent g_moveCamera;//();
 protected:

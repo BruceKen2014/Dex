@@ -2,7 +2,7 @@
 #ifndef _DEXGAMESTATE_H
 #define _DEXGAMESTATE_H
 
-#include "../DexBase/CDexObject.h"
+#include "../DexBase/DexObject.h"
 #include "../DexBase/DexDVector.h"
 #include "../DexBase/DexString.h"
 class DexGlobal
@@ -10,9 +10,9 @@ class DexGlobal
 
 };
 class CDexScene;
-class DexGameState: public CDexObject
+class DexGameState: public DexObject
 {
-	Dex_DeclareClass(DexGameState, CDexObject, 1)
+	Dex_DeclareClass(DexGameState, DexObject, 1)
 protected:
     /*该state对应的资源是否已经申请，在切换state的时候，要将state资源释放掉，用此变量标志是否申请了资源,
 	*/

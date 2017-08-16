@@ -67,7 +67,7 @@ void PalPlayer::UpdateAttackAnimationTimeCount()
 {
 	if(m_iAttackAnimationTimeCount < m_attackAnimationTime)
 	{
-		m_iAttackAnimationTimeCount += getTime()->getDeltaTime();
+		m_iAttackAnimationTimeCount += DexTime::getSingleton()->getDeltaTime();
 		if(m_iAttackAnimationTimeCount > m_attackAnimationTime)
 		{
 			getAniModel()->SetAnimation(m_standIndex);

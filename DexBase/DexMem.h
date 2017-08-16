@@ -42,7 +42,7 @@ public:
 	//friend DexMem& operator >> (short args);
 	//friend DexMem& operator >> (char args);
 	//friend DexMem& operator >> (string args);
-	void SetMemoryFlag(bool selfMemory = true, DUDInt32 size = 0, void* buffer = DexNull);
+	void SetMemoryFlag(bool selfMemory = true, DUInt32 size = 0, void* buffer = DexNull);
 	void* GetData()		{return m_data;}
 	void  GetData(int offset, int size, DexMem& _out); //从指定偏移处取出指定长度的数据到_out中
 	int   GetLength()	{return (int)m_length;}
@@ -102,8 +102,6 @@ public:
    直接调用mem<<param 或 mem<<param 即可，因为<< >>会直接对内存进行操作
 2、不能对char*类型进行<< >> 操作 因为sizeof去的结构为4 是一个指针的大小，从而字符串操作
    会失败，必须用ReadString WriteString
-3、不能对string进行<< >> 也不能用ReadString WriteString，因为string的sizeof会随着string
-   当前的字节数而改变
 */
 
 #endif

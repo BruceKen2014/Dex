@@ -7,7 +7,7 @@
 #include "DexWidget.h"
 
 
-class CDexWidgetLabel: public CDexWidget
+class CDexWidgetLabel: public DexWidget
 {
 protected:
 	DInt16    m_iTextSize;

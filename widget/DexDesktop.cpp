@@ -21,22 +21,22 @@ CDexDesktop::~CDexDesktop()
 
 }
 
-CDexWidget* CDexDesktop::getDragingWgt()
+DexWidget* CDexDesktop::getDragingWgt()
 {
 	return m_dragingWgt;
 }
 
-void CDexDesktop::SetDragingWgt(CDexWidget* wgt)
+void CDexDesktop::SetDragingWgt(DexWidget* wgt)
 {
 	m_dragingWgt = wgt;
 }
 
-CDexWidget* CDexDesktop::getFocusWgt()
+DexWidget* CDexDesktop::getFocusWgt()
 {
 	return m_focusWidget;
 }
 
-void CDexDesktop::SetFocusWgt(CDexWidget* wgt)
+void CDexDesktop::SetFocusWgt(DexWidget* wgt)
 {
 	DexLog::getSingleton()->BeginLog();
 	if(m_focusWidget != NULL)
@@ -54,31 +54,31 @@ void CDexDesktop::SetFocusWgt(CDexWidget* wgt)
 	DexLog::getSingleton()->EndLog();
 }
 
-CDexWidget* CDexDesktop::getSelectWgt()
+DexWidget* CDexDesktop::getSelectWgt()
 {
 	return m_selectWidget;
 }
 
-void CDexDesktop::SetSelectWgt(CDexWidget* wgt)
+void CDexDesktop::SetSelectWgt(DexWidget* wgt)
 {
 	m_selectWidget = wgt;
 }
 
-CDexWidget* CDexDesktop::getInputWgt()
+DexWidget* CDexDesktop::getInputWgt()
 {
 	return m_inputWidget;
 }
 
-void CDexDesktop::SetInputWgt(CDexWidget* wgt)
+void CDexDesktop::SetInputWgt(DexWidget* wgt)
 {
 	m_inputWidget = wgt;
 }
 
-CDexWidget* CDexDesktop::getRootWidget()
+DexWidget* CDexDesktop::getRootWidget()
 {
 	return m_pRootWidget;
 }
-void CDexDesktop::SetRootWidget(CDexWidget* wgt)
+void CDexDesktop::SetRootWidget(DexWidget* wgt)
 {
 	m_pRootWidget = wgt;
 }
@@ -94,7 +94,10 @@ void CDexDesktop::SetUiEvent(bool b)
 
 void CDexDesktop::OnKeyDown(char key_code)
 {
-
+	DEX_ENSURE(m_selectWidget);
+	stEvent event;
+	event.push_args(stArgs(key_code));
+	m_selectWidget->OnKeyDown(event);
 }
 
 void CDexDesktop::OnKeyUp(char key_code)
@@ -104,10 +107,10 @@ void CDexDesktop::OnKeyUp(char key_code)
 
 void CDexDesktop::OnKeyChar(char ch)
 {
-	DEX_ENSURE(m_focusWidget);
+	DEX_ENSURE(m_selectWidget);
 	stEvent event;
 	event.push_args(stArgs(ch));
-	m_focusWidget->OnKeyChar(event);
+	m_selectWidget->OnKeyChar(event);
 }
 
 CDexDesktop* getDesktop()

@@ -80,12 +80,12 @@ void CKeyboard::Update()
 	}
 }
 
-BOOL CKeyboard::KeyDown(DUDInt32 key)
+BOOL CKeyboard::KeyDown(DUInt32 key)
 {
 	return m_keys[key] & 0x80;
 }
 
-BOOL CKeyboard::KeyUp(DUDInt32 key)
+BOOL CKeyboard::KeyUp(DUInt32 key)
 {
 	//旧状态是按下而新状态不是按下，则此次行为是按键弹起
 	return (m_oldKeys[key] & 0x80) && !(m_keys[key] & 0x80);
@@ -197,8 +197,9 @@ void CMouse::Update(HWND hwnd)
 		{//鼠标未移动 为左键事件
 			_event.name = string(EVENT_NAME_MOUSE_L_DOWN);
 			_event.id = EVENT_ID_MOUSE_L_DOWN;	 
+			_event.push_args(stArgs(m_xPos));
 			_event.push_args(stArgs(m_yPos));
-			//getDesktop()->SetUiEvent(true); //目前测试opengl，因为2D目前依然采用DX，所以暂时先把UI注掉
+			getDesktop()->SetUiEvent(true); //目前测试opengl，因为2D目前依然采用DX，所以暂时先把UI注掉
 			NotifyEvent(_event);
 		}
 		else
@@ -293,7 +294,7 @@ void CMouse::Update(HWND hwnd)
 		_event.id = EVENT_ID_MOUSE_MOVE;
 		_event.push_args(stArgs(m_xPos));
 		_event.push_args(stArgs(m_yPos));
-		//getDesktop()->SetUiEvent(true);
+		getDesktop()->SetUiEvent(true);
 		NotifyEvent(_event);
 	}
 	m_iDeltaX = m_xPos - m_xPrePos;
@@ -466,14 +467,14 @@ void CInputSystem::Update(HWND hwnd)
 	   m_mouse->Update(hwnd);
 }
 //-----------------------------
-BOOL CInputSystem::KeyDown(DUDInt32 key)
+BOOL CInputSystem::KeyDown(DUInt32 key)
 {
 	if(m_keyboard == NULL)
 		return FALSE;
 	return m_keyboard->KeyDown(key);
 }
 
-BOOL CInputSystem::KeyUp(DUDInt32 key)
+BOOL CInputSystem::KeyUp(DUInt32 key)
 {
 	if(m_keyboard == NULL)
 		return FALSE;

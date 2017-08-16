@@ -37,7 +37,7 @@ PalPanel_SelectSkill::~PalPanel_SelectSkill()
 
 bool PalPanel_SelectSkill::Initialize()
 {
-	m_pImgOrderBack = (CDexWidgetImage* )getWidgetFactory()->useWidget("skill_back");
+	m_pImgOrderBack = (DexWidgetImage* )getWidgetFactory()->useWidget("skill_back");
 
 	m_pCheckBtnWater = (CDexWidgetCheckBtn* )getWidgetFactory()->useWidget("skill_back.skill_water");
 	m_pCheckBtnFire = (CDexWidgetCheckBtn* )getWidgetFactory()->useWidget("skill_back.skill_fire");
@@ -72,7 +72,7 @@ bool PalPanel_SelectSkill::getVisible()
 
 bool PalPanel_SelectSkill::Update(int delta)
 {
-	//int delta = getTime()->getDeltaTime();
+	//int delta = DexTime::getSingleton()->getDeltaTime();
 	m_pImgOrderBack->Update(delta);
 	//CDexWidgetLabel*label =(CDexWidgetLabel*) getWidgetFactory()->createWidget(widget_label, "testLabel");
 	//UI_DROP_REF(label);
@@ -85,7 +85,7 @@ bool PalPanel_SelectSkill::Update(int delta)
 	//CDexWidgetEditBox* eidtbox =(CDexWidgetEditBox*) getWidgetFactory()->createWidget(widget_editbox, "testEditBox");
 	//UI_DROP_REF(eidtbox);
 	//eidtbox->getArgs().i_member = 100;
-	return PalPanelInterface::Update(delta);
+	return DexPanelInterface::Update(delta);
 }
 
 void PalPanel_SelectSkill::OnTimer(const stTimer& timer)
@@ -110,7 +110,7 @@ bool PalPanel_SelectSkill::Render()
 	return true;
 }
 
-void PalPanel_SelectSkill::OnClickSkillWater(CEventHandler* sys, CDexObject* object,stEvent event)
+void PalPanel_SelectSkill::OnClickSkillWater(CEventHandler* sys, DexObject* object,stEvent event)
 {
 	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
 	bool checked = pThis->m_pCheckBtnWater->GetChecked();
@@ -123,7 +123,7 @@ void PalPanel_SelectSkill::OnClickSkillWater(CEventHandler* sys, CDexObject* obj
 	}
 }
 
-void PalPanel_SelectSkill::OnClickSkillFire(CEventHandler* sys, CDexObject* object,stEvent event)
+void PalPanel_SelectSkill::OnClickSkillFire(CEventHandler* sys, DexObject* object,stEvent event)
 {
 	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
 	bool checked = pThis->m_pCheckBtnFire->GetChecked();
@@ -135,7 +135,7 @@ void PalPanel_SelectSkill::OnClickSkillFire(CEventHandler* sys, CDexObject* obje
 		pThis->m_pCheckBtnSoil->SetChecked(false);
 	}
 }
-void PalPanel_SelectSkill::OnClickSkillThunder(CEventHandler* sys, CDexObject* object,stEvent event)
+void PalPanel_SelectSkill::OnClickSkillThunder(CEventHandler* sys, DexObject* object,stEvent event)
 {
 	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
 	bool checked = pThis->m_pCheckBtnThunder->GetChecked();
@@ -147,7 +147,7 @@ void PalPanel_SelectSkill::OnClickSkillThunder(CEventHandler* sys, CDexObject* o
 		pThis->m_pCheckBtnSoil->SetChecked(false);
 	}
 }
-void PalPanel_SelectSkill::OnClickSkillWind(CEventHandler* sys, CDexObject* object,stEvent event)
+void PalPanel_SelectSkill::OnClickSkillWind(CEventHandler* sys, DexObject* object,stEvent event)
 {
 	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
 	bool checked = pThis->m_pCheckBtnWind->GetChecked();
@@ -160,7 +160,7 @@ void PalPanel_SelectSkill::OnClickSkillWind(CEventHandler* sys, CDexObject* obje
 	}
 }
 
-void PalPanel_SelectSkill::OnClickSkillSoil(CEventHandler* sys, CDexObject* object,stEvent event)
+void PalPanel_SelectSkill::OnClickSkillSoil(CEventHandler* sys, DexObject* object,stEvent event)
 {
 	PalPanel_SelectSkill* pThis = (PalPanel_SelectSkill*)sys;
 	bool checked = pThis->m_pCheckBtnSoil->GetChecked();
@@ -173,7 +173,7 @@ void PalPanel_SelectSkill::OnClickSkillSoil(CEventHandler* sys, CDexObject* obje
 	}
 }
 
-void PalPanel_SelectSkill::OnClickSelectSkill(CEventHandler* sys, CDexObject* object,stEvent event)
+void PalPanel_SelectSkill::OnClickSelectSkill(CEventHandler* sys, DexObject* object,stEvent event)
 {
 }
 

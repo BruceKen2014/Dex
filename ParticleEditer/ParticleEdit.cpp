@@ -13,6 +13,7 @@
 #include "PalStateBattleMain.h"
 #include "PalOpenglTestScene.h"
 #include "../DexBase/DexStreamFile.h"
+#include "PalCommand.h"
 
 LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -30,13 +31,18 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			getDesktop()->OnKeyChar(char(wParam));
 			break;
 		}
+	case WM_KEYDOWN:
+		{
+			getDesktop()->OnKeyDown(char(wParam));
+			break;
+		}
 	case WM_DROPFILES:
 	{
 		HDROP hDrop = (HDROP)wParam;
-		DUDInt32 nFileNum = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+		DUInt32 nFileNum = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
 		char strFileName[128];
 		DVector<DString> FileNames;
-		for (DUDInt32 i = 0; i < nFileNum; ++i)
+		for (DUInt32 i = 0; i < nFileNum; ++i)
 		{
 			DragQueryFile(hDrop, i, strFileName, 128);
 			FileNames.push_back(strFileName);
@@ -61,7 +67,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevhInst, LPSTR cmdLine, int show
 	DexGameEngine::getEngine()->SetIcon(IDI_ICON1);
 	DexGameEngine::getEngine()->SetMsgPro(MsgProc);
 	DexGameEngine::getEngine()->SetFullScreen(false);
-	
+	InitPalCommand();
+	MEMORYSTATUSEX memoryStatus;
+	memoryStatus.dwLength = sizeof(memoryStatus);
+	GlobalMemoryStatusEx(&memoryStatus);
+
 
 	int testDevice = 0; 
 	DexGameEngine::getEngine()->Initialize(testDevice);

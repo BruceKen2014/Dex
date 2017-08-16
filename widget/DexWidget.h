@@ -3,17 +3,18 @@
 #ifndef DEX_WIDGET_H
 #define DEX_WIDGET_H
 
-
 //#include "CTexture.h"
 #include <list>
 #include <string>
 #include "../DexBase/typedefine.h"
 #include "../DexBase/CReference.h"
 #include "../DexBase/CDelegate.h"
-#include "../DexBase/CDexObject.h"
+#include "../DexBase/DexObject.h"
 #include "../Source/CTexture.h"
 #include "DexGuiStruct.h"
 #include "../DexMath/DexVector2.h"
+#include "../DexBase/DexVirtualKey.h"
+
 
 #define UI_ADD_REF(p)    _ADDREF(p)
 #define UI_DROP_REF(p)   _REDUCEREF(p)
@@ -76,18 +77,15 @@ namespace DexGUI
 			UI_DROP_REF(m_tex);
 		}
 	};
-	enum EVirtualKey
-	{
-		EVK_BACK = 8,
-		EVK_ENTER = 13,
-	};
+
 }
 using namespace DexGUI;
 
 class CDexGuiAction;
 class CDexWidgetContainer;
-class CDexWidget:public CRefCount, public CDexObject
+class DexWidget:public CRefCount, public DexObject
 {
+	Dex_DeclareClass(DexWidget, DexObject, 0)
 	friend class CDexWidgetContainer;
 public:
 	CEventDispather  m_MouseMove;
@@ -117,7 +115,7 @@ protected:
 	bool	    m_visible;	        //是否可见
 	bool        m_mask;             //是否开启蒙板
 	bool        m_mouseOn;          //鼠标是否停留在上面
-	int         m_maskColor;        //蒙板颜色
+	DexColor    m_maskColor;        //蒙板颜色
 	int         m_initAlpha;        //初始透明度 无论之后如果更改透明度 该值都不变
 	int         m_alpha;            //透明度
 	int		    m_flag;				//接受哪些鼠标事件 如果不接受鼠标事件 则置为mouse_none
@@ -136,13 +134,14 @@ protected:
 
 protected:
 	list<CDexGuiAction*> m_actions;
-	CDexWidget* m_father;       //父widget
-	CDexWidget* m_left_sibling; //同一层级的上个widget
-	CDexWidget* m_right_sibling; //同一层级的下个widget
+	DexWidget* m_father;       //父widget
+	DexWidget* m_left_sibling; //同一层级的上个widget
+	DexWidget* m_right_sibling; //同一层级的下个widget
 	CDexWidgetContainer* m_children;
 
 public:
-	virtual void OnKeyChar(stEvent event);
+	virtual void OnKeyChar(stEvent event); //处理字符按键
+	virtual void OnKeyDown(stEvent event); //处理字符以外的按键
 protected:
 	//子类重载以下方法进行特殊处理
 	virtual bool OnMouseMove(stEvent event);//返回值表明是否真正對事件進行了處理
@@ -178,8 +177,8 @@ protected:
 	bool CheckPointIn(const DexPoint& pt); //判断一点是否落在控件内
 	void ReCalculateUV(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3, const DexRectF& srcRect, const DexRectF& clipRect);//控件被裁减之后，重新计算裁减矩形对应的uv
 public:
-	CDexWidget();
-	virtual ~CDexWidget();
+	DexWidget();
+	virtual ~DexWidget();
 public:
 
 	void Show();
@@ -229,21 +228,22 @@ public:
 	string    GetName();
 	bool GetEable();
 	bool GetFlag(int flag);
-	CDexWidget* GetFather();
+	DexWidget* GetFather();
 	int  GetWidgetFlag();
 	void SetWidgetFlag(int flag);
 	void SetId(int id);
 	void SetName(string name);
-	void SetFather(CDexWidget* widget);
+	void SetFather(DexWidget* widget);
 	void SetPos(const DexPoint& pos);  //设置新坐标
 	void SetPos(const DexPointF& pos); 
 	void SetPos(int x, int y);
 	void setFatherOffset(float x, float y);
 	DexPointF getFatherOffset();
 	void OpenMask(bool open);
-	void SetMaskColor(UCHAR r, UCHAR g, UCHAR b);	
-	void SetMaskAlpha(UCHAR a); 
-	void SetMaskColor(UCHAR r, UCHAR g, UCHAR b, UCHAR a); 
+	void SetMaskColor(DUChar r, DUChar g, DUChar b);
+	void SetMaskAlpha(DUChar a);
+	void SetMaskColor(const DexColor& color);
+	void SetMaskColor(DUChar r, DUChar g, DUChar b, DUChar a);
  
 	//用初始透明度来重置自身的alpha childeren：是否让子控件重置子控件的透明度
 	//void ResetAlphaByInitAlpha(bool children);
@@ -257,8 +257,9 @@ public:
 	void Scale(float x, float y, bool scaleChild = false, bool changePos = false);
 	virtual void Resize(const DexSize& size, bool resizeChild = false);  //重新设置尺寸大小 设为虚函数 各子类可能要进行不同的处理
 	virtual void Resize(const DexSizeF& size, bool resizeChild = false);
-	void SetRightSibling(CDexWidget* widget) { m_right_sibling = widget;};
-	void SetLeftSibling(CDexWidget* widget) { m_left_sibling = widget;};
+	virtual void Resize(DInt32 width, DInt32 height, DBool resizeChild = false);
+	void SetRightSibling(DexWidget* widget) { m_right_sibling = widget;};
+	void SetLeftSibling(DexWidget* widget) { m_left_sibling = widget;};
 public:
 };
 

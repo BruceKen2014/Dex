@@ -16,12 +16,14 @@ class CDexScene;
 class PalFightHeadManager;
 class PalBatterContent;
 class PalNumberManager;
-class PalPanelInterface;
+class DexPanelInterface;
 class PalBattleStateMachine;
-class CDexWidgetImage;
+class DexWidgetImage;
 class DexModelBase;
 class DexSkinMesh;
 class DexWidgetProgressBar;
+class DexWidgetEditBox;
+
 class PalGameStateBattleMain: public DexGameState
 {
 	Dex_DeclareClass(PalGameStateBattleMain, DexGameState, 1)
@@ -37,7 +39,7 @@ public:
 		FIGHT_SELECT_ORDER, //选取指令阶段
 		FIGHT_SELECT_TARGET,  //选取目标阶段
 		FIGHT_ATTACKING,    //正在攻击阶段（包括自己攻击敌人和敌人攻击自己）
-		FIGHT_SKILLING,     //施展法术阶段	 、
+		FIGHT_SKILLING,     //施展法术阶段	
 		FIGHT_LOSE,         //战斗失败
 		FIGHT_WIN,           //胜利
 	} EBattleStateStage;
@@ -47,7 +49,7 @@ protected:
 	PalFightHeadManager* m_pFightHeadManager;
 	PalNumberManager*    m_pNumberManager;
 	PalBatterContent*   m_pBattleSkillContent;
-	std::map<string, PalPanelInterface*> m_mapBattlePanels;
+	std::map<string, DexPanelInterface*> m_mapBattlePanels;
 	typedef list<PalPlayer*> TlistPlayer;
 	TlistPlayer   m_listEnemies;
 	TlistPlayer   m_listPlayers;
@@ -70,7 +72,7 @@ protected:
 	LPDIRECT3DSURFACE9 m_testSurface;
 	LPDIRECT3DSURFACE9 m_testBufferSurface;
 	D3DXMATRIX m_testProjection, m_testProjectionOld;
-	CDexWidgetImage* g_pImageBackgroud;
+	DexWidgetImage* g_pImageBackgroud;
 	DexWidgetProgressBar* g_pProgressBar;
 protected:
 	//vertex shader
@@ -108,6 +110,7 @@ public:
 	void DrawPlayerBlood();
 	void setVisible(string type, bool visible);
 	bool getVisible(string type);
+	void SetBackImageVisible(DBool visible);
 	TlistPlayer getPlayers(EPlayerType type);
 	//virtual void OnEvent(stEvent event);
 	virtual bool ApplyRes() ;  
@@ -134,5 +137,5 @@ public:
 
 	bool AddEnemy(PalPlayer* player);
 };
-
+extern PalGameStateBattleMain* pTestGlobal;
 #endif

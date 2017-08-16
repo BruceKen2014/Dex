@@ -762,7 +762,7 @@ void LuaRegisterFun(lua_State *L)
 }
 void GetFps()
 {
-	g_currentTime = getTime()->GetTotalMillSeconds();
+	g_currentTime = DexTime::getSingleton()->GetTotalMillSeconds();
 	if(g_currentTime - g_lastTime > 1000.0f)
 	{
 		g_lastTime = g_currentTime;

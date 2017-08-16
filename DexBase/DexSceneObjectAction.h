@@ -3,12 +3,12 @@
 #define _DEX_SCENE_OBJECT_ACTIOIN_H
 
 #include "typedefine.h"
-#include "CDexObject.h"
+#include "DexObject.h"
 
 class CDexSceneObject;
-class DexSceneObjectAction: public CDexObject
+class DexSceneObjectAction: public DexObject
 {
-	Dex_DeclareClass(DexSceneObjectAction, CDexObject, 0)
+	Dex_DeclareClass(DexSceneObjectAction, DexObject, 0)
 protected:
 	bool m_bCycle;      // «∑Ò—≠ª∑
 	bool m_bComplete;

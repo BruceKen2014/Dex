@@ -1,20 +1,20 @@
 
 
 
-#include "CDexObject.h"
+#include "DexObject.h"
 #include "typedefine.h"
 #include "DexObjectFactory.h"
 
-CDexObject::CDexObject()
+DexObject::DexObject()
 {
 	m_iObjectId = CDexObjectFactroy::getObjectFactory()->getObjectId();
 	m_bUpdate = true;
 	m_bObjectValid = false;
 }
-CDexObject::~CDexObject()
+DexObject::~DexObject()
 {
 }
-bool CDexObject::AddTimer(int id, int interval)
+bool DexObject::AddTimer(int id, int interval)
 {
 	for(std::list<stTimer>::iterator it = m_timers.begin(); it != m_timers.end(); it++)
 	{
@@ -25,32 +25,32 @@ bool CDexObject::AddTimer(int id, int interval)
 	return true;
 }
 
-void CDexObject::SetUpdate(bool update)
+void DexObject::SetUpdate(bool update)
 {
 	m_bUpdate = update;
 }
 
-void CDexObject::SetValid(bool valid)
+void DexObject::SetValid(bool valid)
 {
 	m_bObjectValid = valid;
 }
 
-void CDexObject::Release()
+void DexObject::Release()
 {
 	CDexObjectFactroy::getObjectFactory()->allocateObject(this);
 }
 
-bool CDexObject::GetValid()
+bool DexObject::GetValid()
 {
 	return m_bObjectValid;
 }
 
-DInt32 CDexObject::getObjectId()
+DInt32 DexObject::getObjectId()
 {
 	return m_iObjectId;
 }
 
-bool CDexObject::RemoveTimer(int id)
+bool DexObject::RemoveTimer(int id)
 {
 	for(std::list<stTimer>::iterator it = m_timers.begin(); it != m_timers.end(); it++)
 	{
@@ -63,39 +63,40 @@ bool CDexObject::RemoveTimer(int id)
 	return false;
 }
 
-void CDexObject::Reset()
+void DexObject::Reset()
 {
 	m_bUpdate = true;
 	m_bObjectValid = false;
 	m_timers.clear();
 }
 
-bool CDexObject::Update(int delta)
+bool DexObject::Update(int delta)
 {
 	if(!m_bUpdate)
 		return false;
-	for(std::list<stTimer>::iterator it = m_timers.begin(); it != m_timers.end(); it++)
+	foreach(TlistTimer, it, m_timers)
 	{
-		(*it).delay += delta;
-		if((*it).delay >= (*it).interval)
+		stTimer& timer = (*it);
+		timer.delay += delta;
+		if (timer.delay >= timer.interval)
 		{
-			OnTimer(*it);
-			(*it).delay = 0;
+			OnTimer(timer);
+			timer.delay = 0;
 		}
 	}
 	return true;
 }
 
-void CDexObject::OnTimer(const stTimer& timer)
+void DexObject::OnTimer(const stTimer& timer)
 {
 
 }
 
-DInt32 CDexObject::Size() const
+DInt32 DexObject::Size() const
 {//继承类要计算自己的size大小
 	return sizeof(stTimer)*m_timers.size() + sizeof(m_iObjectId)+sizeof(m_bUpdate)+sizeof(m_bObjectValid)+sizeof(m_param);
 }
-bool CDexObject::ArchiveIn(DexMem& mem)
+bool DexObject::ArchiveIn(DexMem& mem)
 {
 	size_t timer_size = 0 ;
 	mem>>timer_size;
@@ -108,7 +109,7 @@ bool CDexObject::ArchiveIn(DexMem& mem)
 	mem>>m_bUpdate;
 	return true;
 }
-bool CDexObject::ArchiveOut(DexMem& mem) const
+bool DexObject::ArchiveOut(DexMem& mem) const
 {
 	mem<<m_timers.size();
 	foreach_const(TlistTimer, ite, m_timers)
@@ -118,7 +119,7 @@ bool CDexObject::ArchiveOut(DexMem& mem) const
 	mem<<m_bUpdate;
 	return true;
 }
-bool CDexObject::Archive(DexMem& mem, bool mode)
+bool DexObject::Archive(DexMem& mem, bool mode)
 {
 	if(mode == DexMem::MEM_READ)
 	{
@@ -128,7 +129,7 @@ bool CDexObject::Archive(DexMem& mem, bool mode)
 		return ArchiveOut(mem);
 }
 
-stArgs& CDexObject::getArgs()
+stArgs& DexObject::getArgs()
 {
 	return m_param;
 }

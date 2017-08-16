@@ -97,7 +97,7 @@ void DexCommonFunction::SplitStr(DString str, char split_char, DVector<DString> 
 
 void DexCommonFunction::DeleteStrSpace(DString& str)
 {
-	DUDInt32 length = str.length();
+	DUInt32 length = str.length();
 	char* tempString = DexMemoryManager::sGetMemoryManager()->allocateMemory(length + 1);
 	char* flag = tempString;
 	const char* ptr = str.c_str();
@@ -115,7 +115,7 @@ void DexCommonFunction::DeleteStrSpace(DString& str)
 
 void DexCommonFunction::DeleteStrSpace(char* str)
 {
-	DUDInt32 length = dexstrlen(str);
+	DUInt32 length = dexstrlen(str);
 	if (length == 0)
 		return;
 	char* tempString = DexMemoryManager::sGetMemoryManager()->allocateMemory(length + 1);

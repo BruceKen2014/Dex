@@ -19,9 +19,9 @@ class DexStateCommontEvent_KeyUp: public IDexStateTransition
 {
 	Dex_DeclareClass(DexStateCommontEvent_KeyUp, IDexStateTransition, 0)
 protected:
-	DUDInt32 m_iKeyId;
+	DUInt32 m_iKeyId;
 public:
-	DexStateCommontEvent_KeyUp(DUDInt32 iKeyId,IDexState* state);
+	DexStateCommontEvent_KeyUp(DUInt32 iKeyId,IDexState* state);
 	virtual ~DexStateCommontEvent_KeyUp();
 public:
 	virtual bool IsTrue();

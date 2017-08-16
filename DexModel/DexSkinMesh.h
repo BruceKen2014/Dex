@@ -162,33 +162,33 @@ class DexSkinMesh: public DexModelBase
 		void   DestroyLineIndices();
 		DInt32* CreateLineIndices();
 
-		DUDInt32 GetVertexCount()	const;
+		DUInt32 GetVertexCount()	const;
 		void*  GetVertexBuffer();
-		DUDInt32 GetIndiceCount() const;
+		DUInt32 GetIndiceCount() const;
 		void*  GetIndiceBuffer();
 
-		DUDInt32 GetLineIndiceCount() const;
+		DUInt32 GetLineIndiceCount() const;
 		void*  GetLineIndiceBuffer();
 	public:
 		//用于debug normal
 		void DestroyNormalBuffer();
 		void CreateNormalBuffer();
-		DUDInt32 GetNormalBufferCount()	const;
+		DUInt32 GetNormalBufferCount()	const;
 		void*  GetNormalBuffer();
-		DUDInt32 GetNormalIndiceCount() const;
+		DUInt32 GetNormalIndiceCount() const;
 		void*  GetNormalIndiceBuffer();
 	public:
 		//debug vertex to joint
 		void DestroyVertexToJointlBuffer();
 		void CreateVertexToJointBuffer(const DVector<Joint*>& vecJoints);
-		DUDInt32 GetVertexToJointBufferCount()	const;
+		DUInt32 GetVertexToJointBufferCount()	const;
 		void*  GetVertexToJointBuffer();
-		DUDInt32 GetVertexToJointIndiceCount() const;
+		DUInt32 GetVertexToJointIndiceCount() const;
 		void*  GetVertexToJointIndiceBuffer();
 	public:
 
 		//返回新插入顶点的index
-		DUDInt32 AddVertex(const DexVector3& pos, const DexVector3& normal, float u, float v);
+		DUInt32 AddVertex(const DexVector3& pos, const DexVector3& normal, float u, float v);
 		void   AddVertexIndice(const DInt32& index);
 	};
 protected:
@@ -286,7 +286,7 @@ public:
 	//这里传入的是在父节点中的相对矩阵，传入要计算根据此计算mesh空间矩阵
 	Joint* AddJoint(string name, string father_name, const DexMatrix4x4& father_matrix);
 	Joint* FindJoint(string name);
-	DUDInt32 FindJointIndex(DString name);
+	DUInt32 FindJointIndex(DString name);
 //joint frame by id
 	bool AddJointKeyFrame(DInt32 jointid, DInt32 time, const DexMatrix4x4& matrix);
 	bool AddJointKeyFrame(DInt32 jointid, DInt32 time, const DexVector3& pos, const DexVector3& scale, const DexVector3& axis, DFloat32 radian);

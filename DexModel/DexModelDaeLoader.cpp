@@ -832,7 +832,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 			pSkin->iVertexWeightsCount = atoi(pXmlAttribute->Value());
 			TiXmlNode* pXmlVertexChildNode = pXmlChildNode->FirstChild();
 			//vertex_weight下面有input也有vcount等
-			DUDInt32 i_VCount = 0;
+			DUInt32 i_VCount = 0;
 			while (pXmlVertexChildNode != nullptr)
 			{
 				pXmlElement = pXmlVertexChildNode->ToElement();
@@ -868,7 +868,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_skin(TiXmlNode* pXmlNode, D
 					const char* pt = pXmlElement->GetText();
 					char tempValue[32];
 					DUInt8 tempValueIndex = 0; //for tempValue
-					DUDInt32 valueIndex = 0; //for value
+					DUInt32 valueIndex = 0; //for value
 					while (pt != nullptr && *pt != '\0')
 					{
 						tempValue[tempValueIndex] = *pt;
@@ -1537,7 +1537,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polylist(TiXmlNode* pXmlNod
 		pXmlAttribute = pXmlAttribute->Next();
 	}
 	//解析input & vcount & p
-	DUDInt32 p_pCount = 0;
+	DUInt32 p_pCount = 0;
 	DUInt8  real_input_counts = 0;
 	DUInt8  polylist_input_count = 0;
 	DUInt8  vertex_index = 0;
@@ -1572,7 +1572,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polylist(TiXmlNode* pXmlNod
 			const char* pt = pXmlElement->GetText();
 			char tempValue[32];
 			DUInt8 tempValueIndex = 0; //for tempValue
-			DUDInt32 valueIndex = 0; //for value
+			DUInt32 valueIndex = 0; //for value
 			while (pt != nullptr && *pt != '\0')
 			{
 				tempValue[tempValueIndex] = *pt;
@@ -1634,7 +1634,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polygons(TiXmlNode* pXmlNod
 	}
 	//解析input & p
 	bool beginParseP = false;
-	DUDInt32 pIndex = 0;
+	DUInt32 pIndex = 0;
 	while (pXmlChildNode != nullptr)
 	{
 		pXmlElement = pXmlChildNode->ToElement();
@@ -1655,7 +1655,7 @@ DexModelDaeLoader::DaeBase* DexModelDaeLoader::parse_polygons(TiXmlNode* pXmlNod
 			const char* pt = pXmlElement->GetText();
 			char tempValue[32];
 			DUInt8 tempValueIndex = 0; //for tempValue
-			DUDInt32 valueIndex = 0; //for value
+			DUInt32 valueIndex = 0; //for value
 			while (pt != nullptr && *pt != '\0')
 			{
 				tempValue[tempValueIndex] = *pt;
@@ -2013,7 +2013,7 @@ void DexModelDaeLoader::str_to_float64_array(const char* str, DFloat64* value, c
 	const char* pt = str;
 	char tempValue[32];
 	DUInt8 tempValueIndex = 0; //for tempValue
-	DUDInt32 valueIndex = 0; //for value
+	DUInt32 valueIndex = 0; //for value
 	DVector<DFloat32> testVector;
 	while (pt != nullptr && *pt != '\0')
 	{
@@ -2040,8 +2040,8 @@ void DexModelDaeLoader::str_to_DInt32_array(const char* str, DInt32** value, DUI
 	const char* pt = str;
 	char tempValue[32];
 	DUInt8 tempValueIndex = 0; //for tempValue
-	DUDInt32 valueIndex = 0; //for value
-	DUDInt32 iCycleIndex = 0;
+	DUInt32 valueIndex = 0; //for value
+	DUInt32 iCycleIndex = 0;
 	while (pt != nullptr && *pt != '\0')
 	{
 		tempValue[tempValueIndex] = *pt;
@@ -2232,7 +2232,7 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshStatic(DaeNode* pStaticMeshNode)
 						break;
 					}
 				}
-				DUDInt32 iValueIndex = 0;
+				DUInt32 iValueIndex = 0;
 				for (DInt32 i = 0; i < pTriangle->iCount; ++i)
 				{//一次性读取3个顶点
 					for (DInt32 j = 0; j < 3; ++j)
@@ -2544,8 +2544,8 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 							break;
 						}
 					}
-					DUDInt32 iValueIndex = 0;
-					DUDInt32 iVertexWeightInputSize = pController->pSkin->vVertexWeightInputs.size();
+					DUInt32 iValueIndex = 0;
+					DUInt32 iVertexWeightInputSize = pController->pSkin->vVertexWeightInputs.size();
 					for (DInt32 i = 0; i < pTriangle->iCount; ++i)
 					{//一次性读取3个顶点
 						for (DInt32 j = 0; j < 3; ++j)
@@ -2591,16 +2591,16 @@ DexSkinMesh* DexModelDaeLoader::create_SkinMeshAni(DaeNode* pAniMeshNode)
 								if (iVertexWeightInputSize == 2)
 								{//默认vertex weight 里面是joint 的index 和 weight
 									//geometry里有多少个顶点，skin vertex weight 就有多少count，
-									DUDInt32 iJointCount = pController->pSkin->pVCountData[index.m_iPosIndex].count; //该顶点受影响的关节点数量
-									DUDInt32 iJointDataIndex = pController->pSkin->pVCountData[index.m_iPosIndex].index;
+									DUInt32 iJointCount = pController->pSkin->pVCountData[index.m_iPosIndex].count; //该顶点受影响的关节点数量
+									DUInt32 iJointDataIndex = pController->pSkin->pVCountData[index.m_iPosIndex].index;
 
-									for (DUDInt32 joint = 0; joint < iJointCount; ++joint)
+									for (DUInt32 joint = 0; joint < iJointCount; ++joint)
 									{
 										//默认是index在前 weight在后
-										DUDInt32 iNameIndex = pController->pSkin->pData[iVertexWeightInputSize * joint + iJointDataIndex];
+										DUInt32 iNameIndex = pController->pSkin->pData[iVertexWeightInputSize * joint + iJointDataIndex];
 										if (iNameIndex < DexSkinMesh::sGetMaxJointCount())
 										{
-											DUDInt32 iWeightIndex = pController->pSkin->pData[iVertexWeightInputSize * joint + iJointDataIndex + 1];
+											DUInt32 iWeightIndex = pController->pSkin->pData[iVertexWeightInputSize * joint + iJointDataIndex + 1];
 											DString JointName = pController->pSkin->pJointsName->vNamaArray[iNameIndex];
 											DInt32 iJointIndex = pDexSkinMesh->FindJointIndex(JointName);
 											float  fJointWeight = pController->pSkin->pJointsWeight->pFloatArrayValues[iWeightIndex];
@@ -3006,7 +3006,7 @@ bool DexModelDaeLoader::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, 
 void DexModelDaeLoader::LoadFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char* filename)
 {
 	DexLog::getSingleton()->LogLine(log_ok, "load ff map %s...", filename);
-	DInt64 Time = getTime()->GetTotalMillSeconds();
+	DInt64 Time = DexTime::getSingleton()->GetTotalMillSeconds();
 	TiXmlDocument Xml(filename);
 	Xml.LoadFile();
 	DexSkinMesh* pSkinMesh = nullptr;
@@ -3066,7 +3066,7 @@ void DexModelDaeLoader::LoadFFMap(DVector<DexSkinMesh*>& vecSkinMesh, const char
 		DexLog::getSingleton()->LogLine(log_error, "load dae model can not find mesh !");
 	else
 	{
-		Time = getTime()->GetTotalMillSeconds() - Time;
+		Time = DexTime::getSingleton()->GetTotalMillSeconds() - Time;
 		DexLog::getSingleton()->LogLine(log_ok, "load dae model %s ok, use time %d ms", filename, Time);
 	}
 }

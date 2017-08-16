@@ -32,8 +32,8 @@ public:
 	  ~CKeyboard();
 
 	  void Update();
-	  BOOL KeyUp(DUDInt32 key);
-	  BOOL KeyDown(DUDInt32 key);
+	  BOOL KeyUp(DUInt32 key);
+	  BOOL KeyDown(DUInt32 key);
 
 	  int  KeyDown();
 	  int  KeyUp();
@@ -153,8 +153,8 @@ public:
 		return g_InputSystem; 
 	}
 	void Update(HWND hwnd);
-	BOOL KeyUp(DUDInt32 key);
-	BOOL KeyDown(DUDInt32 key);
+	BOOL KeyUp(DUInt32 key);
+	BOOL KeyDown(DUInt32 key);
 	long GetMouseXPos() ;
 	long GetMouseYPos() ;
 	long GetMouseXDPos();

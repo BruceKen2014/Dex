@@ -7,11 +7,11 @@
 #ifndef _DEX_MODEL_BASE_H_
 #define _DEX_MODEL_BASE_H_
 
-#include "../DexBase/CDexObject.h"
+#include "../DexBase/DexObject.h"
 class CDexTex;
-class DexModelBase:public CDexObject
+class DexModelBase:public DexObject
 {
-	Dex_DeclareClass(DexModelBase, CDexObject, 0)
+	Dex_DeclareClass(DexModelBase, DexObject, 0)
 public:
 	DexModelBase();
 	virtual ~DexModelBase();

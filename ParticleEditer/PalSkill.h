@@ -4,7 +4,7 @@
 #include <map>
 
 #include "DexBase/CDelegate.h"
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 #include "PalTypeDefine.h"
 
 using namespace std;
@@ -88,11 +88,11 @@ namespace space_skill
 using namespace space_skill;
 class CDexEffectInstance;
 //暂定多人攻击技能都是远程技能 因为暂时无法确定多个目标的情况下如果是近程技能的话到底要跑向那个敌人
-class PalSkill:public CDexObject
+class PalSkill:public DexObject
 {//技能的攻击动作类型
 	friend class CPalSkillContainer;
 	friend class PalBatterContent;
-	Dex_DeclareClass(PalSkill, CDexObject, 0)
+	Dex_DeclareClass(PalSkill, DexObject, 0)
 protected:
 	stPlaSkill m_data;
 	int damage;
@@ -116,9 +116,9 @@ public:
 	void AddDamageKey(int time, int damage);//test
 };
 
-class CPalSkillContainer:public CDexObject
+class CPalSkillContainer:public DexObject
 {
-	Dex_DeclareClass(CPalSkillContainer, CDexObject, 0)
+	Dex_DeclareClass(CPalSkillContainer, DexObject, 0)
 
 		//不同的戰鬥人物的技能文件裡面有不同的技能ID，加載時傳ID給任務的skillcontainer，
 		//skillcontainer從擁有所有技能的skillmanager裡面加載數據

@@ -2,13 +2,13 @@
 #ifndef _PAL_FIGHT_HEADMANAGER_H
 #define _PAL_FIGHT_HEADMANAGER_H
 
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 #include "widget/DexGuiStruct.h"
 
 #include "PalTypeDefine.h"
 class PalPlayer;
-class CDexWidgetImage;
-class PalFightHeadManager: public CDexObject
+class DexWidgetImage;
+class PalFightHeadManager: public DexObject
 {
 	friend class PalGameStateBattleMain;
 private:
@@ -19,7 +19,7 @@ private:
 	DInt16    m_iStartOffsetY;
 	DInt16    m_iEndOffsetX;
 	DInt16    m_iEndOffsetY;
-	CDexWidgetImage* m_pBackImage;
+	DexWidgetImage* m_pBackImage;
 private:
 	PalFightHeadManager();
 	~PalFightHeadManager();

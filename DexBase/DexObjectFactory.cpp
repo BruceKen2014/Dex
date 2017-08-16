@@ -8,6 +8,7 @@
 #include "DexSceneObjectFlower.h"
 #include "DexTerrain.h"
 #include "CDexPartical.h"
+#include "DexEngineCommandPanel.h"
 #include "DexLog.h"
 
 
@@ -40,7 +41,6 @@ CDexObjectFactroy::CDexObjectFactroy()
  void CDexObjectFactroy::Initialize()
  {
 	 int init_count= 0;
-	DexLog::getSingleton()->BeginLog();
 	//scene object action
 	registerObject(DexSceneObjectActionCatmull);
 	registerObject(DexSceneObjectActionRotate);
@@ -58,18 +58,19 @@ CDexObjectFactroy::CDexObjectFactroy()
 	registerObject(CDexModelX);
 	registerObject(CDexModelXAni);
 	registerObject(CDexModelFactory);
-	DexLog::getSingleton()->EndLog();
+	//ui
+	registerObject(DexPanelCommand);
  }
 CDexObjectFactroy::~CDexObjectFactroy()
 {
 
 }
 
-CDexObject* CDexObjectFactroy::queryObject(std::string classType)
+DexObject* CDexObjectFactroy::queryObject(std::string classType)
 {
 	if(g_Objects.find(classType) != g_Objects.end())
 	{//π§èS÷–”–åç¿˝
-		foreach(std::list<CDexObject*>, ite, g_Objects[classType])
+		foreach(std::list<DexObject*>, ite, g_Objects[classType])
 		{
 			if(!(*ite)->GetValid())
 			{
@@ -84,19 +85,17 @@ CDexObject* CDexObjectFactroy::queryObject(std::string classType)
 	return createObject(classType);
 }
 
-void CDexObjectFactroy::allocateObject(CDexObject* object)
+void CDexObjectFactroy::allocateObject(DexObject* object)
 {
 	DEX_ENSURE(object != NULL);
-	DexLog::getSingleton()->BeginLog();
 	string type = object->getType();
 	if(g_Objects.find(object->getType()) == g_Objects.end())
 	{
-		DexLog::getSingleton()->Log(log_allert, "object factory allocate a unknown object %s, now delete it! \n",type.c_str());
+		DexLog::getSingleton()->LogLine(log_allert, "object factory allocate a unknown object %s, now delete it! \n", type.c_str());
 		_SafeDelete(object);
-		DexLog::getSingleton()->EndLog();
 		return;
 	};
-	foreach(std::list<CDexObject*>, ite, g_Objects[type])
+	foreach(std::list<DexObject*>, ite, g_Objects[type])
 	{
 		if((*ite) == object)
 		{
@@ -104,26 +103,23 @@ void CDexObjectFactroy::allocateObject(CDexObject* object)
 			{
 				_SafeDelete(*ite);
 				g_Objects[type].erase(ite);
-				DexLog::getSingleton()->Log(log_ok, "object factory allocate  object %s ok , two many objects , now delete it!\n",type.c_str());
-				DexLog::getSingleton()->EndLog();
+				DexLog::getSingleton()->LogLine(log_ok, "object factory allocate  object %s ok , two many objects , now delete it!\n", type.c_str());
 			}
 			else
 			{
 				(*ite)->Reset();
-				DexLog::getSingleton()->Log(log_ok, "object factory allocate  object %s ok\n",type.c_str());
-				DexLog::getSingleton()->EndLog();
+				DexLog::getSingleton()->LogLine(log_ok, "object factory allocate  object %s ok\n", type.c_str());
 			}
 			return;
 		}
 	}
-	DexLog::getSingleton()->Log(log_allert, "object factory allocater find a wild object %s ! now delete it!\n",type.c_str());
+	DexLog::getSingleton()->LogLine(log_allert, "object factory allocater find a wild object %s ! now delete it!\n",type.c_str());
 	_SafeDelete(object);
-	DexLog::getSingleton()->EndLog();
 }
 
-CDexObject* CDexObjectFactroy::createObject(std::string classType)
+DexObject* CDexObjectFactroy::createObject(std::string classType)
 {
-	CDexObject* object = NULL;
+	DexObject* object = NULL;
 	DexLog::getSingleton()->BeginLog();
 	//scene object action
 	check_new_object(DexSceneObjectActionCatmull);
@@ -141,6 +137,7 @@ CDexObject* CDexObjectFactroy::createObject(std::string classType)
 	check_new_object(CDexModelX);
 	check_new_object(CDexModelXAni);
 	check_new_object(CDexModelFactory);
+	check_new_object(DexPanelCommand);
 create_over:
 	if(object == NULL)
 	{

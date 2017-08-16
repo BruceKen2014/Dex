@@ -35,7 +35,7 @@ PalFightHeadManager::~PalFightHeadManager()
 
 bool PalFightHeadManager::Init()
 {
-	m_pBackImage = (CDexWidgetImage*)getWidgetFactory()->createWidget(DexGUI::widget_image, "flag_back_image");
+	m_pBackImage = (DexWidgetImage*)getWidgetFactory()->createWidget(DexGUI::widget_image, "flag_back_image");
 	
 	
 	m_pBackImage->SetTexName("image1.png");
@@ -63,7 +63,7 @@ bool PalFightHeadManager::AddFightHead(PalPlayer* player)
 
 bool PalFightHeadManager::Update()
 {
-	int delta = getTime()->getDeltaTime();
+	int delta = DexTime::getSingleton()->getDeltaTime();
 	m_pBackImage->Update(delta);
 	foreach(TlistFlighHead, ite, m_listHead)
 	{

@@ -25,7 +25,7 @@ DexModelBase* DexModelSkinMeshTextLoader::LoadModel(const char* filename, DInt32
 {
 	DexMem mem;
 	DEX_ENSURE_P(mem.IniFromFile(filename));
-	DInt64 Time = getTime()->GetTotalMillSeconds();
+	DInt64 Time = DexTime::getSingleton()->GetTotalMillSeconds();
 	DexLog::getSingleton()->LogLine(log_ok, "load dex text model %s...", filename);
 	DexSkinMesh* pDexSkinMesh = new DexSkinMesh;
 	const DInt16  iMaxLineByte = 2048;
@@ -61,7 +61,7 @@ DexModelBase* DexModelSkinMeshTextLoader::LoadModel(const char* filename, DInt32
 		else
 			continue;
 	}
-	Time = getTime()->GetTotalMillSeconds() - Time;
+	Time = DexTime::getSingleton()->GetTotalMillSeconds() - Time;
 	DexLog::getSingleton()->LogLine(log_ok, "load dex text model %s ok, use time %d ms", filename, Time);
 	return pDexSkinMesh;
 }
@@ -80,7 +80,7 @@ void DexModelSkinMeshTextLoader::ReadMaterials(DexMem* pMem, DexSkinMesh* pSkinM
 		pMem->ReadLine(pBuffer);
 		DexMaterial material;
 		DVector<DString> vecStr;
-		DUDInt32 index = 0;
+		DUInt32 index = 0;
 		DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
 		strcpy_s(material.name, vecStr[index++].c_str());
 		DexColor color;
@@ -118,7 +118,7 @@ void DexModelSkinMeshTextLoader::ReadJoints(DexMem* pMem, DexSkinMesh* pSkinMesh
 	for (DInt32 j = 0; j < jointCount; ++j)
 	{
 		pMem->ReadLine(pBuffer);
-		DUDInt32 index = 1;
+		DUInt32 index = 1;
 		DVector<DString> vecStr;
 		DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
 		DInt32 fatherId = getInt;
@@ -146,7 +146,7 @@ void DexModelSkinMeshTextLoader::ReadVertex(DexMem* pMem, DVector<DexSkinMesh::s
 	for (DInt32 v = 0; v < vertexCount; ++v)
 	{
 		pMem->ReadLine(pBuffer);
-		DUDInt32 index = 0;
+		DUInt32 index = 0;
 		DVector<DString> vecStr;
 		DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
 		DexSkinMesh::stMeshVertex vertex;
@@ -171,7 +171,7 @@ void DexModelSkinMeshTextLoader::ReadMeshes(DexMem* pMem, DexSkinMesh* pSkinMesh
 	for (int m = 0; m < meshCount; ++m)
 	{
 		pMem->ReadLine(pBuffer);
-		DUDInt32 index = 1;
+		DUInt32 index = 1;
 		DVector<DString> vecStr;
 		DexCommonFunction::SplitStr(pBuffer, ',', vecStr);
 		DInt32 meshId = getInt;

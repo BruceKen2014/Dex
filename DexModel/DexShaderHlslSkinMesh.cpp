@@ -110,7 +110,7 @@ void DexShaderHlslSkinMesh::Render()
 	pFxEffect->SetRawValue(m_handleDirectionLightData, &m_directionLight, 0, sizeof(m_directionLight));
 
 	pFxEffect->SetTechnique(m_handleTech);
-	DUDInt32 pass = 0;
+	DUInt32 pass = 0;
 	pFxEffect->Begin(&pass, 0);
 	//for (int i = skinMesh->m_vecMeshs.size()-1; i >=0; --i)
 	for (size_t i = 0; i < skinMesh->m_vecMeshs.size(); ++i)
@@ -133,7 +133,7 @@ void DexShaderHlslSkinMesh::Render()
 				skinMesh->m_vecMeshs[i]->CreateLineIndices();
 			}
 			pFxEffect->SetTexture(m_handleTex0, NULL);
-			for (DUDInt32 p = 0; p < pass; ++p)
+			for (DUInt32 p = 0; p < pass; ++p)
 			{
 				pFxEffect->BeginPass(p);
 				DexGameEngine::getEngine()->GetRender()->DrawPrimitive(DexPT_LINELIST, skinMesh->m_vecMeshs[i]->GetVertexBuffer(),
@@ -186,7 +186,7 @@ void DexShaderHlslSkinMesh::Render()
 			{
 				pFxEffect->SetTexture(0, NULL);
 			}
-			for (DUDInt32 p = 0; p < pass; ++p)
+			for (DUInt32 p = 0; p < pass; ++p)
 			{
 				pFxEffect->BeginPass(p);
 				DexGameEngine::getEngine()->GetRender()->DrawPrimitive(DexPT_TRIANGLELIST, skinMesh->m_vecMeshs[i]->GetVertexBuffer(),

@@ -2,7 +2,7 @@
 #ifndef _PAL_BATTLE_STATE_TRANSITION_H
 #define _PAL_BATTLE_STATE_TRANSITION_H
 
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 
 #include "IDexState.h"
 /////======================state transition========================================

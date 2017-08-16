@@ -329,13 +329,16 @@ public:
 };
 extern map<string, CExprDo*> g_ExprMap;
 
+//声明命令类
 #define ADDEXPRFUN(name)	class CExprDo_##name :public CExprDo \
 {						\
 public:		\
 	CExprDo_##name() { string m_name = #name; g_ExprMap[m_name] = this ;}; \
 	virtual void Handle(stExpStackValue value1[], int valueCount, stExpStackValue& retValue) ;	 \
 };	
-
+//实例化命令变量
+#define DECLARE_COMMAND(command)\
+	CExprDo_##command * command = new CExprDo_##command
 //计算后缀表达式的值
 extern void ExcuteExp(const char* str);
 

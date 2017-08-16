@@ -144,8 +144,8 @@ public:
 	{
 		ESemantic semantic;
 		DString   source;
-		DUDInt32	  offset;
-		DUDInt32	  set; //for TEXCOORD attribute:"set"
+		DUInt32	  offset;
+		DUInt32	  set; //for TEXCOORD attribute:"set"
 		DString   flag0;
 	};
 	struct stInstanceMaterial
@@ -277,8 +277,8 @@ public:
 	public:
 		DString sSource;
 		EAccessorType EAT_type;
-		DUDInt32  iCount;
-		DUDInt32  iStride;
+		DUInt32  iCount;
+		DUInt32  iStride;
 		DaeAccessor() :DaeBase(ECE_accessor){}
 		virtual ~DaeAccessor(){}
 	};
@@ -316,8 +316,8 @@ public:
 	public:
 		struct stPData
 		{
-			DUDInt32 count;//顶点个数
-			DUDInt32 pData[32]; //最多支持8个input,4个顶点，所以是8*4=32个数据
+			DUInt32 count;//顶点个数
+			DUInt32 pData[32]; //最多支持8个input,4个顶点，所以是8*4=32个数据
 			stPData(){ count = 0; memset(pData, 0, sizeof(pData)); }
 		};
 		DInt32   count;
@@ -332,14 +332,14 @@ public:
 	public:
 		struct stJointData
 		{
-			DUDInt32 count;
-			DUDInt32 index; //数据流中的起始index
+			DUInt32 count;
+			DUInt32 index; //数据流中的起始index
 		};
 		DString sSource;
 		DexMatrix4x4 mMatrix;
 		DVector<stDaeInput> vJointsInputs;
 		DVector<stDaeInput> vVertexWeightInputs;
-		DUDInt32  iVertexWeightsCount; //一定是和geometry里面的顶点数量是一样的
+		DUInt32  iVertexWeightsCount; //一定是和geometry里面的顶点数量是一样的
 		stJointData*  pVCountData; //for vcount
 		DInt32*  pData;    //for v
 		DVector<DaeSource*> vSources;
@@ -519,7 +519,7 @@ protected:
 protected:
 	DaeCollada* m_pCollada;
 	bool		m_bFFXIIModel;
-	DUDInt32		m_iJointCount;
+	DUInt32		m_iJointCount;
 	//for ffxii model
 	DMap<DString, DString> m_MapJointName; 
 	DMap<DString, DexMatrix4x4> m_MapJointMatrix;

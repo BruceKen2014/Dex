@@ -1,7 +1,7 @@
 
 #ifndef _PALGAMESTATE_BATTLE_BASE_H
 #define _PALGAMESTATE_BATTLE_BASE_H
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 
 #include "IDexState.h"
 class PalBattleStateBase;

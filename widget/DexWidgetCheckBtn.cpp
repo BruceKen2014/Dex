@@ -27,18 +27,18 @@ void CDexWidgetCheckBtn::ShutDown()
 {
 	_SafeDelete(m_checkTex);
 	_SafeDelete(m_uCheckTex);
-	CDexWidget::ShutDown();
+	DexWidget::ShutDown();
 }
 bool CDexWidgetCheckBtn::OnMouseLUp(stEvent event)
 {
-	bool ret = CDexWidget::OnMouseLUp(event);
+	bool ret = DexWidget::OnMouseLUp(event);
 	m_checked = m_checked ? 0 : 1;
 	return ret;
 }
 
 bool CDexWidgetCheckBtn::Update(int delta)
 {
-	DEX_ENSURE_B(CDexWidget::Update(delta));
+	DEX_ENSURE_B(DexWidget::Update(delta));
 	return true;
 }
 

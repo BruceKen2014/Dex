@@ -2,7 +2,7 @@
 
 #ifndef _I_DEX_DEVICE_H
 #define _I_DEX_DEVICE_H
-#include "CDexObject.h"
+#include "DexObject.h"
 #include "DexColor.h"
 #include "DexPrimitive.h"
 #include "../DexMath/DexMatrix.h"
@@ -85,9 +85,9 @@ typedef enum _eDEXRENDERSTATE
 #define DEXFVF_POSITION			   0x00000001
 #define DEXFVF_NORMAL			   0x00000002
 #define DEXFVF_TEXTURE0			   0x00000004
-class IDexDevice:public CDexObject
+class IDexDevice:public DexObject
 {
-	Dex_DeclareClass(IDexDevice, CDexObject, 0)
+	Dex_DeclareClass(IDexDevice, DexObject, 0)
 public:
 	IDexDevice();
 	virtual ~IDexDevice();
@@ -96,7 +96,7 @@ public:
 	virtual bool SetTransform(DEXTRANSFORMSTATETYPE transformStateType, const DexMatrix4x4* matrix) = 0;
 	virtual bool SetRenderState(eDEXRENDERSTATE eRenderState, DInt64 value) = 0;
 	virtual bool SetFVF(DInt64 iFVF) = 0;
-	virtual bool DrawPrimitiveUp(DexPrimitivetType eType, DUDInt32 iPrimitiveCount, const void* pVertexStreamData, DUDInt32 iVertexStreamStride) = 0;
+	virtual bool DrawPrimitiveUp(DexPrimitivetType eType, DUInt32 iPrimitiveCount, const void* pVertexStreamData, DUInt32 iVertexStreamStride) = 0;
 	virtual bool Clear(DInt64 flags, const DexColor& color, DFloat32 fZ, DInt64 sStencil) = 0;
 	virtual bool BeginScene() = 0;
 	virtual bool EndScene() = 0;

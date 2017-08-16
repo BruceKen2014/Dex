@@ -163,7 +163,7 @@ private:
 		bool isShape();
 	}stMwsTree;
 protected:
-	DUDInt32 iMwsVersion;
+	DUInt32 iMwsVersion;
 
 	DUInt16 iVertexCount;
 	DUInt16 iNormalCount;

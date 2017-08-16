@@ -32,7 +32,7 @@ PalPanel_Order::~PalPanel_Order()
 
 bool PalPanel_Order::Initialize()
 {
-	m_pImgOrderBack = (CDexWidgetImage* )getWidgetFactory()->useWidget("order_back");
+	m_pImgOrderBack = (DexWidgetImage* )getWidgetFactory()->useWidget("order_back");
 	m_pBtnAttack = (CDexWidgetButton* )getWidgetFactory()->useWidget("order_back.attack");
 	m_pBtnSkill = (CDexWidgetButton* )getWidgetFactory()->useWidget("order_back.skill");
 	m_pBtnAttack->m_MouseLUp +=  UI_DELEGATE(this, PalPanel_Order, OnClickAttack);
@@ -55,7 +55,7 @@ bool PalPanel_Order::getVisible()
 bool PalPanel_Order::Update(int delta)
 {
 	m_pImgOrderBack->Update(delta);
-	return PalPanelInterface::Update(delta);
+	return DexPanelInterface::Update(delta);
 }
 
 bool PalPanel_Order::Render()
@@ -67,14 +67,14 @@ bool PalPanel_Order::Render()
 	return true;
 }
 
-void PalPanel_Order::OnClickAttack(CEventHandler* sys, CDexObject* object,stEvent event)
+void PalPanel_Order::OnClickAttack(CEventHandler* sys, DexObject* object,stEvent event)
 {
 	PalPlayer* player = PalGameStateBattleMain::getBattleMain()->getCurrOperationPlayer();
 	DEX_ENSURE(player != NULL);
 	player->setCurrSkill(player->getSkillContainer()->getSlashSkill());
 }
 
-void PalPanel_Order::OnClickSkill(CEventHandler* sys, CDexObject* object,stEvent event)
+void PalPanel_Order::OnClickSkill(CEventHandler* sys, DexObject* object,stEvent event)
 {
 	setVisible(false);
 	PalGameStateBattleMain::getBattleMain()->setVisible(PalPanel_SelectSkill::getClassType(),true);

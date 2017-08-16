@@ -2,6 +2,7 @@
 
 #ifndef CDEXTIME_H
 #define CDEXTIME_H
+#include "DexSingleton.h"
 
 typedef struct 
 {
@@ -17,8 +18,9 @@ typedef struct
 	signed __int64 totalSeconds;
 	signed __int64 totalMillSeconds;
 }stTime;
-class CDexTime
+class DexTime final
 {
+	SINGLETON_DECLARE(DexTime)
 public:
 	typedef enum
 	{
@@ -45,13 +47,7 @@ public:
 		TIME_NOVEMBER,
 		TIME_DECEMBER
 	}EDEX_MONTH;
-	stTime m_time;
-private:
-	int m_iDelta;
-	float m_fTimeScale;
-	signed __int64 m_iGameBeginTick;
 public:
-	CDexTime();
 	void  UpdateTime();
 	int getDeltaTimeReal(); //取得实际的每次游戏循环deltatime
 	int getDeltaTime();//取得游戏循环时间 乘以timescale
@@ -64,9 +60,13 @@ public:
 public:
 	void BeginGameCycle();//在游戏的一切渲染与逻辑等之前调用
 	void EndGameCycle();//在游戏的一切渲染与逻辑等之后调用
+	stTime& getTime();
+private:
+	stTime m_time;
+	int m_iDelta;
+	float m_fTimeScale;
+	signed __int64 m_iGameBeginTick;
 };
-
-extern CDexTime* getTime();
 
 class DexTimeCheck
 {
@@ -77,8 +77,8 @@ public:
 	DexTimeCheck(signed __int64& param);
 	~DexTimeCheck();
 };
-#define TIME_CHECK_START(value)		signed __int64 value = getTime()->GetTotalMillSeconds()
-#define TIME_CHECK_END(value)					   value = getTime()->GetTotalMillSeconds() - value
+#define TIME_CHECK_START(value)		signed __int64 value = DexTime::getSingleton()->GetTotalMillSeconds()
+#define TIME_CHECK_END(value)					   value = DexTime::getSingleton()->GetTotalMillSeconds() - value
 /*
 关于time check的使用：
 如果变量只在当前生命期内使用，那么使用TIME_CHECK_START & TIME_CHECK_END，如果要跨生命期使用，则使用DexTimeCheck

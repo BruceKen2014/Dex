@@ -10,7 +10,7 @@
 #include "DexDesktop.h"
 
 
-CDexWidgetEditBox::CDexWidgetEditBox()
+DexWidgetEditBox::DexWidgetEditBox()
 {
 	m_type = widget_editbox;
 	m_iOffsetX = 0;
@@ -20,21 +20,24 @@ CDexWidgetEditBox::CDexWidgetEditBox()
 	m_iTickInterval = 0;
 	m_bShowCursor = true;
 	m_BackImage = new stUiImage;
+	m_iInputCharIndex = 0;
+	m_iTextSize = 15;
+	m_textColor = DEXCOLOR_BLACK;
 }
-CDexWidgetEditBox::~CDexWidgetEditBox()
+DexWidgetEditBox::~DexWidgetEditBox()
 {
 
 }
 
-void CDexWidgetEditBox::ShutDown()
+void DexWidgetEditBox::ShutDown()
 {
 	_SafeDelete(m_BackImage);
-	CDexWidget::ShutDown();
+	DexWidget::ShutDown();
 }
 
-bool CDexWidgetEditBox::Update(int delta)
+bool DexWidgetEditBox::Update(int delta)
 {
-	DEX_ENSURE_B(CDexWidget::Update(delta));
+	DEX_ENSURE_B(DexWidget::Update(delta));
 	m_iTickInterval += delta;
 	if(m_iTickInterval > m_iCursorTickSpeed)
 	{
@@ -47,7 +50,7 @@ bool CDexWidgetEditBox::Update(int delta)
 	return true;
 }
 
-void CDexWidgetEditBox::RenderThis()
+void DexWidgetEditBox::RenderThis()
 {
 	if(m_BackImage != NULL && m_BackImage->m_tex != NULL)
 	{
@@ -77,62 +80,83 @@ void CDexWidgetEditBox::RenderThis()
 	
 		get2DDrawer()->Draw(m_BackImage->m_tex->GetTexPt());
 	}
-
-		//文字
+	
+	//文字
 	string retText = m_strText;
-	if(m_bShowCursor && getDesktop()->getFocusWgt() == this)
-		retText.append(1, '|');
+	if (getDesktop()->getSelectWgt() == this)
+	{
+		if (m_bShowCursor)
+			retText.insert(m_iInputCharIndex, 1, '|');
+		else
+			retText.insert(m_iInputCharIndex, 1, ' ');
+	}
+
+	get2DDrawer()->SetTextSize(m_iTextSize);
+	get2DDrawer()->SetTextColor(m_textColor);
 	get2DDrawer()->DrawString(m_rect.left + m_iOffsetX, m_rect.top + m_iOffsetY, (TCHAR*)retText.c_str());
 }
-void CDexWidgetEditBox::Enable(bool child)
+void DexWidgetEditBox::Enable(bool child)
 {
 }
 
-void CDexWidgetEditBox::Disable(bool child)
+void DexWidgetEditBox::Disable(bool child)
 {
 }
 
-void CDexWidgetEditBox::SetStartOffset(DInt16 iOffsetX, DInt16 iOffsetY)
+void DexWidgetEditBox::SetStartOffset(DInt16 iOffsetX, DInt16 iOffsetY)
 {
 	m_iOffsetX = iOffsetX;
 	m_iOffsetY = iOffsetY;
 }
 
-void CDexWidgetEditBox::SetStartOffsetX(DInt16 iOffsetX)
+void DexWidgetEditBox::SetStartOffsetX(DInt16 iOffsetX)
 {
 	m_iOffsetX = iOffsetX;
 }
 
-void CDexWidgetEditBox::SetStartOffsetY(DInt16 iOffsetY)
+void DexWidgetEditBox::SetStartOffsetY(DInt16 iOffsetY)
 {
 	m_iOffsetY = iOffsetY;
 }
 
-DInt16 CDexWidgetEditBox::GetStartOffsetX()
+DInt16 DexWidgetEditBox::GetStartOffsetX()
 {
 	return m_iOffsetX;
 }
 
-DInt16 CDexWidgetEditBox::GetStartOffsetY()
+DInt16 DexWidgetEditBox::GetStartOffsetY()
 {
 	return m_iOffsetY;
 }
 
-string CDexWidgetEditBox::GetEditText()
+string DexWidgetEditBox::GetEditText()
 {
 	return m_strText;
 }
 
-void CDexWidgetEditBox::SetText(string text)
+
+void DexWidgetEditBox::SetTextSize(DInt16 size)
 {
-	m_strText = text;
+	m_iTextSize = size;
 }
 
-void CDexWidgetEditBox::ClearText()
+void DexWidgetEditBox::SetTextColor(const DexColor& color)
+{
+	m_textColor = color;
+}
+
+void DexWidgetEditBox::SetText(string text)
+{
+	m_strText = text;
+	m_iInputCharIndex = m_strText.length();
+}
+
+void DexWidgetEditBox::ClearText()
 {
 	m_strText.clear();
+	m_iInputCharIndex = 0;
 }
-void CDexWidgetEditBox::SetBackImage(char* filename, const DexRect& rect, bool mirro)
+void DexWidgetEditBox::SetBackImage(char* filename, const DexRect& rect, bool mirro)
 {
 	m_BackImage->m_tex = getUiSrcMgrSingleton()->getUiTexFactory()->FindTex(filename);
 	if(m_BackImage->m_tex == NULL)
@@ -151,32 +175,45 @@ void CDexWidgetEditBox::SetBackImage(char* filename, const DexRect& rect, bool m
 	m_BackImage->m_Mirro = mirro;
 }
 
-void CDexWidgetEditBox::OnKeyChar(stEvent event)
+void DexWidgetEditBox::OnKeyChar(stEvent event)
 {
-	stArgs ch;
-	event.pop_args(ch);
+	stArgs ch = event.back_args();
 	if(ch.i_member == EVK_BACK)
 	{
 		if(m_strText.size() != 0)
 		{
-			//最后一个字是是否是汉字（好像是汉字的话 就是由两个负数编码的？）
-			if(m_strText.at(m_strText.size() - 1) < 0)
+			//是否是汉字（好像是汉字的话 就是由两个负数编码的？）
+			if (m_strText.at(m_iInputCharIndex - 1) < 0 && m_strText.size() >= 2)
 			{//
-				if(m_strText.size() >= 2)
-					m_strText.erase(m_strText.size()-2, 2);
+				m_iInputCharIndex -= 2;
+				m_strText.erase(m_iInputCharIndex - 1, 2); //-2 再 -1
 			}
 			else
-				m_strText.erase(m_strText.size()-1, 1);
+				m_strText.erase(--m_iInputCharIndex, 1); //删除光标之前的字符
 		}
-		m_DisTextChange.Handle(this, stEvent());
+		m_DisTextChange.Handle(this, event);
 	}
 	else if(ch.i_member == EVK_ENTER)
 	{
-		m_DisTextUpdate.Handle(this, stEvent());
+		m_DisTextUpdate.Handle(this, event);
 	}
 	else
 	{
-		m_strText.append(1, (TCHAR)ch.i_member);
-		m_DisTextChange.Handle(this, stEvent());
+		m_strText.insert(m_iInputCharIndex++, 1, (TCHAR)ch.i_member);
+		m_DisTextChange.Handle(this, event);
 	}
+}
+
+void DexWidgetEditBox::OnKeyDown(stEvent event)
+{
+	stArgs ch = event.back_args();
+	if (ch.i_member == EVK_LEFT)
+	{
+		m_iInputCharIndex = --m_iInputCharIndex < 0 ? 0 : m_iInputCharIndex;
+	}
+	else if (ch.i_member == EVK_RIGHT)
+	{
+		m_iInputCharIndex = ++m_iInputCharIndex > m_strText.length() ? m_strText.length() : m_iInputCharIndex;
+	}
+	m_DisMiscKey.Handle(this, event);
 }

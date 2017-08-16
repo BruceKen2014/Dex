@@ -18,7 +18,7 @@
 //m_backImage->SetInitAlpha(100);
 //m_backImage->SetMaskColor(0,0,255,100);
 //m_backImage->ModifyFlag(Add_Flag, DexGUI::mouse_r_drag);
-CDexWidgetImage::CDexWidgetImage()
+DexWidgetImage::DexWidgetImage()
 {
 	m_pImg = DexNull;
 	m_tex = NULL;
@@ -26,16 +26,16 @@ CDexWidgetImage::CDexWidgetImage()
 	m_type = widget_image;
 }
 
-CDexWidgetImage::~CDexWidgetImage()
+DexWidgetImage::~DexWidgetImage()
 {
 }
 
-void CDexWidgetImage::ShutDown()
+void DexWidgetImage::ShutDown()
 {
-	CDexWidget::ShutDown();
+	DexWidget::ShutDown();
 }
 
-void CDexWidgetImage::CalculateUv(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3)
+void DexWidgetImage::CalculateUv(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3)
 {
 	uv0.x = (float)m_srcArea.left / (float)m_tex->GetWidth();
 	uv0.y = (float)m_srcArea.top / (float)m_tex->GetHeight();
@@ -53,13 +53,13 @@ void CDexWidgetImage::CalculateUv(DexVector2& uv0, DexVector2& uv1, DexVector2& 
 	}
 }
 
-bool CDexWidgetImage::Update(int delta)
+bool DexWidgetImage::Update(int delta)
 {
-	DEX_ENSURE_B(CDexWidget::Update(delta));
+	DEX_ENSURE_B(DexWidget::Update(delta));
 	return true;
 }
 
-void CDexWidgetImage::RenderThis()
+void DexWidgetImage::RenderThis()
 {
 	DEX_ENSURE(m_tex);
 	DexVector2 v1, v2, v3, v4;
@@ -84,7 +84,7 @@ void CDexWidgetImage::RenderThis()
 	
 	get2DDrawer()->Draw(m_tex->GetTexPt());
 }
-void CDexWidgetImage::SetTexName(string texname)
+void DexWidgetImage::SetTexName(string texname)
 {
 	m_texname = texname;
 	m_tex = getUiSrcMgrSingleton()->getUiTexFactory()->FindTex(m_texname.c_str());
@@ -92,11 +92,11 @@ void CDexWidgetImage::SetTexName(string texname)
 	m_rect = DexRectF(0,0,m_tex->GetWidth(), m_tex->GetHeight());
 	m_srcArea = m_rect;
 }
-void CDexWidgetImage::SetTexRes(const DexRectF& rect)
+void DexWidgetImage::SetTexRes(const DexRectF& rect)
 {
 	m_srcArea = rect;
 }
-void CDexWidgetImage::SetTexRes(const DexRect& rect)
+void DexWidgetImage::SetTexRes(const DexRect& rect)
 {
 	m_srcArea.left = rect.left;
 	m_srcArea.right = rect.right;
@@ -104,7 +104,7 @@ void CDexWidgetImage::SetTexRes(const DexRect& rect)
 	m_srcArea.bottom = rect.bottom;
 }
 
-void CDexWidgetImage::SetMirro(bool mirro)
+void DexWidgetImage::SetMirro(bool mirro)
 {
 	m_Mirro = mirro;
 }

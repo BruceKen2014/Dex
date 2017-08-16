@@ -1,0 +1,85 @@
+
+
+#ifndef _DEX_VIRTUAL_KEY_H
+#define _DEX_VIRTUAL_KEY_H
+
+#include <winuser.h>
+
+//暂时只列这些，待续
+enum EVirtualKey
+{
+	EVK_BACK = VK_BACK, //backspace
+	EVK_TAB  = VK_TAB,
+	EVK_ENTER = VK_RETURN,
+
+	EVK_LEFT = VK_LEFT,
+	EVK_RIGHT = VK_RIGHT,
+	EVK_UP = VK_UP,
+	EVK_DOWN = VK_DOWN, 
+
+	EVK_0 = 0x30,
+	EVK_1 = 0x31,
+	EVK_2 = 0x32,
+	EVK_3 = 0x33,
+	EVK_4 = 0x34,
+	EVK_5 = 0x35,
+	EVK_6 = 0x36,
+	EVK_7 = 0x37,
+	EVK_8 = 0x38,
+	EVK_9 = 0x39,
+
+	EVK_A = 0x41,
+	EVK_B = 0x42,
+	EVK_C = 0x43,
+	EVK_D = 0x44,
+	EVK_E = 0x45,
+	EVK_F = 0x46,
+	EVK_G = 0x47,
+	EVK_H = 0x48,
+	EVK_I = 0x49,
+	EVK_J = 0x4A,
+	EVK_K = 0x4B,
+	EVK_L = 0x4C,
+	EVK_M = 0x4D,
+	EVK_N = 0x4E,
+	EVK_O = 0x4F,
+	EVK_P = 0x50,
+	EVK_Q = 0x51,
+	EVK_R = 0x52,
+	EVK_S = 0x53,
+	EVK_T = 0x54,
+	EVK_U = 0x55,
+	EVK_V = 0x56,
+	EVK_W = 0x57,
+	EVK_X = 0x58,
+	EVK_Y = 0x59,
+	EVK_Z = 0x5A,
+	//小键盘
+	EVK_NUMPAD0 = VK_NUMPAD0,
+	EVK_NUMPAD1 = VK_NUMPAD1,
+	EVK_NUMPAD2 = VK_NUMPAD2,
+	EVK_NUMPAD3 = VK_NUMPAD3,
+	EVK_NUMPAD4 = VK_NUMPAD4,
+	EVK_NUMPAD5 = VK_NUMPAD5,
+	EVK_NUMPAD6 = VK_NUMPAD6,
+	EVK_NUMPAD7 = VK_NUMPAD7,
+	EVK_NUMPAD8 = VK_NUMPAD8,
+	EVK_NUMPAD9 = VK_NUMPAD9,
+
+	EVK_F1 = VK_F1,
+	EVK_F2 = VK_F2,
+	EVK_F3 = VK_F3,
+	EVK_F4 = VK_F4,
+	EVK_F5 = VK_F5,
+	EVK_F6 = VK_F6,
+	EVK_F7 = VK_F7,
+	EVK_F8 = VK_F8,
+	EVK_F9 = VK_F9,
+	EVK_F10 = VK_F10,
+	EVK_F11 = VK_F11,
+	EVK_F12 = VK_F12,
+
+	EVK_PERIOD = VK_OEM_PERIOD, // '.'
+	EVK_COMMA = VK_OEM_COMMA, // ','
+};
+#endif 

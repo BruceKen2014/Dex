@@ -78,9 +78,6 @@
     <ClCompile Include="IDexState.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="PalPanelInterface.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="DexStateCommonEvent.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
@@ -89,6 +86,9 @@
     </ClCompile>
     <ClCompile Include="PalOpenglTestScene.cpp">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PalCommand.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,9 +155,6 @@
     <ClInclude Include="IDexState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PalPanelInterface.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="DexStateCommonEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -165,6 +162,9 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="PalOpenglTestScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PalCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,7 +3,7 @@
 #ifndef _PAL_PEOPLE_H
 #define _PAL_PEOPLE_H
 
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 #include "DexBase/DexSceneObjectModel.h"
 /*
 关于这里游戏中人物是继承模型还是包含模型,暂时两种方法没发现什么大的功能差距。从现实角度，人当然是一个模型，

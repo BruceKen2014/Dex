@@ -36,7 +36,7 @@ void DexMem::Reset()
 	m_length = 0;
 }
 
-void DexMem::SetMemoryFlag(bool selfMemory /* = true */, DUDInt32 size /* = 0 */, void* buffer /* = DexNull */)
+void DexMem::SetMemoryFlag(bool selfMemory /* = true */, DUInt32 size /* = 0 */, void* buffer /* = DexNull */)
 {
 	m_bMemory = selfMemory;
 	m_iMemorySize = size;

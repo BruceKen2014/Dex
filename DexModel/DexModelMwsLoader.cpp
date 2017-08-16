@@ -43,7 +43,7 @@ void DexModelMwsLoader::stMwsTree::buildMatrix()
 
 	if (pFather != nullptr)
 		matrix = matrix * pFather->matrix;
-	for (DUDInt32 i = 0; i < children.size(); ++i)
+	for (DUInt32 i = 0; i < children.size(); ++i)
 		children[i]->buildMatrix();
 }
 
@@ -688,7 +688,7 @@ bool DexModelMwsLoader::SupportType(const char* fileType)
 DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, DInt32 flag)
 {
 	DexLog::getSingleton()->LogLine(log_ok, "load mws model %s...", filename);
-	DInt64 Time = getTime()->GetTotalMillSeconds();
+	DInt64 Time = DexTime::getSingleton()->GetTotalMillSeconds();
 	bool ret = readModelData(filename);
 	DEX_ENSURE_P(ret);
 	buildTree();
@@ -717,7 +717,7 @@ DexModelBase* DexModelMwsLoader::LoadModel(const char* filename, DInt32 flag)
 	}
 
 	freeModelData();
-	Time = getTime()->GetTotalMillSeconds() - Time;
+	Time = DexTime::getSingleton()->GetTotalMillSeconds() - Time;
 	DexLog::getSingleton()->LogLine(log_ok, "load mws model %s ok, use time %d ms", filename, Time);
 	return pDexSkinMesh;
 }

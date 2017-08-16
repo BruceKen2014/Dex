@@ -453,9 +453,9 @@ void TransVector(D3DXVECTOR3& vec, const D3DXMATRIX& matrix)
 
 void CDexParticalEmit::_UpdateNormal(int delta, const D3DXVECTOR3& cam_pos)
 {
-	if(getTime()->GetTotalMillSeconds() - m_iCreateLastParticalTime > m_createInterval)
+	if(DexTime::getSingleton()->GetTotalMillSeconds() - m_iCreateLastParticalTime > m_createInterval)
 	{
-		m_iCreateLastParticalTime = getTime()->GetTotalMillSeconds(); 
+		m_iCreateLastParticalTime = DexTime::getSingleton()->GetTotalMillSeconds(); 
 		CDexPartical* partical = NULL;
 		partical = getParticalPool()->GetPartical();
 		_InitParticalData(partical);
@@ -471,7 +471,7 @@ void CDexParticalEmit::_UpdateExplode(int delta, const D3DXVECTOR3& cam_pos)
 	while(count > 0)
 	{
 		count--;
-		m_iCreateLastParticalTime = getTime()->GetTotalMillSeconds(); 
+		m_iCreateLastParticalTime = DexTime::getSingleton()->GetTotalMillSeconds(); 
 		CDexPartical* partical = NULL;
 		partical = getParticalPool()->GetPartical();
 		_InitParticalData(partical);
@@ -492,9 +492,9 @@ void CDexParticalEmit::_UpdateFrameNormal(int delta, const D3DXVECTOR3& cam_pos)
 		}
 	}
 	DEX_ENSURE(find);
-	if(getTime()->GetTotalMillSeconds() - m_iCreateLastParticalTime > m_createInterval)
+	if(DexTime::getSingleton()->GetTotalMillSeconds() - m_iCreateLastParticalTime > m_createInterval)
 	{
-		m_iCreateLastParticalTime = getTime()->GetTotalMillSeconds(); 
+		m_iCreateLastParticalTime = DexTime::getSingleton()->GetTotalMillSeconds(); 
 		CDexPartical* partical = NULL;
 		partical = getParticalPool()->GetPartical();
 		_InitParticalData(partical);
@@ -1342,20 +1342,20 @@ CDexClassParticalPool::~CDexClassParticalPool()
 
 void CDexClassParticalPool::CreatePartical(int iCount)
 {		
-	DInt64 time1 = getTime()->GetTotalMillSeconds();
+	DInt64 time1 = DexTime::getSingleton()->GetTotalMillSeconds();
 	for(int i = 0 ; i < iCount; i++)
 	{
 		CDexPartical* partical = new CDexPartical;
 		m_particalListFree.push_back(partical);
 	}
 	DexLog::getSingleton()->BeginLog();
-	DexLog::getSingleton()->Log(log_ok, "申请%d个粒子...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
+	DexLog::getSingleton()->Log(log_ok, "申请%d个粒子...，耗时%d ms", iCount, DexTime::getSingleton()->GetTotalMillSeconds()- time1);
 	DexLog::getSingleton()->EndLog();
 }
 
 void CDexClassParticalPool::FreePartical(int iCount)
 {
-	DInt64 time1 = getTime()->GetTotalMillSeconds();
+	DInt64 time1 = DexTime::getSingleton()->GetTotalMillSeconds();
 	int i = 0;
 	foreach(std::list<CDexPartical*>, ite, m_particalListFree)
 	{	 
@@ -1374,7 +1374,7 @@ void CDexClassParticalPool::FreePartical(int iCount)
 		}
 	}
 	DexLog::getSingleton()->BeginLog();
-	DexLog::getSingleton()->Log(log_ok, "释放%d个粒子...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
+	DexLog::getSingleton()->Log(log_ok, "释放%d个粒子...，耗时%d ms", iCount, DexTime::getSingleton()->GetTotalMillSeconds()- time1);
 	DexLog::getSingleton()->EndLog();
 }
 
@@ -1759,20 +1759,20 @@ CDexPiecePool::~CDexPiecePool()
 
 void CDexPiecePool::CreatePiece(int iCount)
 {		
-	DInt64 time1 = getTime()->GetTotalMillSeconds();
+	DInt64 time1 = DexTime::getSingleton()->GetTotalMillSeconds();
 	for(int i = 0 ; i < iCount; i++)
 	{
 		CDexPieceEffectInstance::stPiece * piece = new CDexPieceEffectInstance::stPiece;
 		m_listFreePiece.push_back(piece);
 	}
 	DexLog::getSingleton()->BeginLog();
-	DexLog::getSingleton()->Log(log_ok, "申请%d个面片...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
+	DexLog::getSingleton()->Log(log_ok, "申请%d个面片...，耗时%d ms", iCount, DexTime::getSingleton()->GetTotalMillSeconds()- time1);
 	DexLog::getSingleton()->EndLog();
 }
 
 void CDexPiecePool::FreePiece(int iCount)
 {
-	DInt64 time1 = getTime()->GetTotalMillSeconds();
+	DInt64 time1 = DexTime::getSingleton()->GetTotalMillSeconds();
 	int i = 0;
 	foreach(std::list<CDexPieceEffectInstance::stPiece *>, ite, m_listFreePiece)
 	{	 
@@ -1791,7 +1791,7 @@ void CDexPiecePool::FreePiece(int iCount)
 		}
 	}
 	DexLog::getSingleton()->BeginLog();
-	DexLog::getSingleton()->Log(log_ok, "释放%d个面片...，耗时%d ms", iCount, getTime()->GetTotalMillSeconds()- time1);
+	DexLog::getSingleton()->Log(log_ok, "释放%d个面片...，耗时%d ms", iCount, DexTime::getSingleton()->GetTotalMillSeconds()- time1);
 	DexLog::getSingleton()->EndLog();
 }
 

@@ -14,7 +14,7 @@
 #include "DexWidgetFactory.h"
 
 
-CDexWidget::CDexWidget()
+DexWidget::DexWidget()
 {
 	m_bClipByParent = true;
 	m_enable = true;
@@ -37,12 +37,12 @@ CDexWidget::CDexWidget()
 	CInputSystem::GetInputSingleton().RegisterMouseListener(this);
 }
 
-CDexWidget::~CDexWidget()
+DexWidget::~DexWidget()
 {
 	_SafeDelete(m_children);
 }
 
-void CDexWidget::ShutDown()
+void DexWidget::ShutDown()
 {
 	CInputSystem::GetInputSingleton().UnRegisterMouseListener(this);
 
@@ -63,21 +63,21 @@ void CDexWidget::ShutDown()
 	DexLog::getSingleton()->EndLog();
 	getWidgetFactory()->removeWidget(m_name);
 }
-void CDexWidget::Show()
+void DexWidget::Show()
 {
 	m_visible = true;
 }
-void CDexWidget::Hide()
+void DexWidget::Hide()
 {
 	m_visible = false;
 }
 
-bool CDexWidget::GetFocus() const
+bool DexWidget::GetFocus() const
 {
 	return getDesktop()->getFocusWgt() == this;
 }
 
-void CDexWidget::SetFocus(bool focus)
+void DexWidget::SetFocus(bool focus)
 {
 	if(focus)
 	{
@@ -92,12 +92,12 @@ void CDexWidget::SetFocus(bool focus)
 	}
 }
 
-bool CDexWidget::GetSelect() const
+bool DexWidget::GetSelect() const
 {
 	return getDesktop()->getSelectWgt() == this;
 }
 
-void CDexWidget::SetSelect(bool select)
+void DexWidget::SetSelect(bool select)
 {
 	if(select)
 	{
@@ -112,9 +112,9 @@ void CDexWidget::SetSelect(bool select)
 	}
 }
 
-bool CDexWidget::Update(int delta)
+bool DexWidget::Update(int delta)
 {
-	DEX_ENSURE_B(CDexObject::Update(delta));
+	DEX_ENSURE_B(DexObject::Update(delta));
 	for(list<CDexGuiAction*>::iterator it = m_actions.begin();
 		it != m_actions.end();)
 	{
@@ -147,15 +147,15 @@ bool CDexWidget::Update(int delta)
 
 	}
 	m_children->Update(delta);
-	return CDexObject::Update(delta);
+	return DexObject::Update(delta);
 }
 
-void CDexWidget::Create()
+void DexWidget::Create()
 {
 
 }
 
-void CDexWidget::Render()
+void DexWidget::Render()
 {
 	DEX_ENSURE(GetVisible());
 	RenderThis();
@@ -165,16 +165,16 @@ void CDexWidget::Render()
 		RenderMask();
 	m_children->Render();
 }
-void CDexWidget::RenderThis()
+void DexWidget::RenderThis()
 {
 }
-bool CDexWidget::CheckPointIn(const DexPoint& pt)
+bool DexWidget::CheckPointIn(const DexPoint& pt)
 {
 	return pt.x >= m_rect.left && pt.x <= m_rect.right
 		&& pt.y >= m_rect.top  && pt.y <= m_rect.bottom;
 }
 
-void CDexWidget::ReCalculateUV(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3, const DexRectF& srcRect, const DexRectF& clipRect)
+void DexWidget::ReCalculateUV(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3, const DexRectF& srcRect, const DexRectF& clipRect)
 {
 	DEX_ENSURE(m_bClipByParent);
 	/*
@@ -224,7 +224,7 @@ void CDexWidget::ReCalculateUV(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2
 	uv3.y = uv2.y;
 }
 
-void CDexWidget::EraseAction(CDexGuiAction* action)
+void DexWidget::EraseAction(CDexGuiAction* action)
 {
 	foreach(list<CDexGuiAction*>, it, m_actions)
 	{
@@ -237,7 +237,7 @@ void CDexWidget::EraseAction(CDexGuiAction* action)
 		}
 	}
 }
-void CDexWidget::StopMoveAction()
+void DexWidget::StopMoveAction()
 {
 	foreach(list<CDexGuiAction*>, it, m_actions)
 	{
@@ -248,7 +248,7 @@ void CDexWidget::StopMoveAction()
 	}
 }
 
-bool CDexWidget::OnMouseMove(stEvent event)
+bool DexWidget::OnMouseMove(stEvent event)
 { 
 	bool ret = false;
 	stArgs posX, posY; 
@@ -276,7 +276,7 @@ bool CDexWidget::OnMouseMove(stEvent event)
 	return ret;
 }
 
-void CDexWidget::OnMouseMoveIn(stEvent event)
+void DexWidget::OnMouseMoveIn(stEvent event)
 {
 	m_mouseOn = true;
 	SetFocus(true);
@@ -285,14 +285,14 @@ void CDexWidget::OnMouseMoveIn(stEvent event)
 	if(m_mouseOnSoundFilename != "")
 		CSound::getSoundSingleton().Play((char*)m_mouseOnSoundFilename.c_str(), 1);
 }
-void CDexWidget::OnMouseMoveOut(stEvent event)
+void DexWidget::OnMouseMoveOut(stEvent event)
 {
 	m_mouseOn = false;
 	SetFocus(false);
 	m_MouseMoveOut.Handle(this, event);
 	//getDesktop()->SetUiEvent(false);// 并不截獲移出事件，因為移出去后，它的上層父親可以繼續響應
 }
-bool CDexWidget::OnMouseLUp(stEvent event)
+bool DexWidget::OnMouseLUp(stEvent event)
 {
 	m_MouseLUp.Handle(this, event);
 	getDesktop()->SetUiEvent(false);
@@ -301,7 +301,7 @@ bool CDexWidget::OnMouseLUp(stEvent event)
 	DexLog::getSingleton()->EndLog();
 	return true;
 }
-void CDexWidget::OnMouseLDown(stEvent event)
+void DexWidget::OnMouseLDown(stEvent event)
 {	
 	SetSelect(true);
 	m_MouseLDown.Handle(this, event);
@@ -312,53 +312,57 @@ void CDexWidget::OnMouseLDown(stEvent event)
 	//DexLog::getSingleton()->Log(log_ok, "控件%s处理鼠标左键按下事件", m_name.c_str());
 	//DexLog::getSingleton()->EndLog();
 }
-void CDexWidget::OnMouseRUp(stEvent event)
+void DexWidget::OnMouseRUp(stEvent event)
 {
 	m_MouseRUp.Handle(this, event);
 	getDesktop()->SetUiEvent(false);
 }
-void CDexWidget::OnMouseRDown(stEvent event)
+void DexWidget::OnMouseRDown(stEvent event)
 {
 	m_MouseRDown.Handle(this, event);
 	getDesktop()->SetUiEvent(false);
 }
-void CDexWidget::OnMouseMUp(stEvent event)
+void DexWidget::OnMouseMUp(stEvent event)
 {
 	m_MouseMUp.Handle(this, event);
 	getDesktop()->SetUiEvent(false);
 }
-void CDexWidget::OnMouseMDown(stEvent event)
+void DexWidget::OnMouseMDown(stEvent event)
 {
 	m_MouseMDown.Handle(this, event);
 	getDesktop()->SetUiEvent(false);
 }
-void CDexWidget::OnMouseWheelFront(stEvent event)
+void DexWidget::OnMouseWheelFront(stEvent event)
 {
 	m_MouseWheelFront.Handle(this, event);
 	getDesktop()->SetUiEvent(false);
 }
-void CDexWidget::OnMouseWheelBack(stEvent event)
+void DexWidget::OnMouseWheelBack(stEvent event)
 {
 	m_MouseWheelBack.Handle(this, event);
 	getDesktop()->SetUiEvent(false);
 }
-void CDexWidget::OnMouseLDrag(stEvent event)
+void DexWidget::OnMouseLDrag(stEvent event)
 {	
 	m_MouseLDrag.Handle(this, event);
 	getDesktop()->SetDragingWgt(this);
 }
-void CDexWidget::OnMouseRDrag(stEvent event)
+void DexWidget::OnMouseRDrag(stEvent event)
 {
 	m_MouseRDrag.Handle(this, event);
 	getDesktop()->SetDragingWgt(this);
 }
 
-void CDexWidget::OnKeyChar(stEvent event)
+void DexWidget::OnKeyDown(stEvent event)
+{
+
+}
+void DexWidget::OnKeyChar(stEvent event)
 {
 
 }
 
-bool CDexWidget::MouseMoveValid(stEvent event)
+bool DexWidget::MouseMoveValid(stEvent event)
 {	
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -367,7 +371,7 @@ bool CDexWidget::MouseMoveValid(stEvent event)
 	
 	return true;
 }
-bool CDexWidget::MouseLUpValid(stEvent event)
+bool DexWidget::MouseLUpValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -378,7 +382,7 @@ bool CDexWidget::MouseLUpValid(stEvent event)
 	event.pop_args(posX);
 	return CheckPointIn(DexPoint(posX.i_member, posY.i_member));
 }
-bool CDexWidget::MouseLDownValid(stEvent event)
+bool DexWidget::MouseLDownValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -395,7 +399,7 @@ bool CDexWidget::MouseLDownValid(stEvent event)
 	event.pop_args(posX);
 	return CheckPointIn(DexPoint(posX.i_member, posY.i_member));
 }
-bool CDexWidget::MouseRUpValid(stEvent event)
+bool DexWidget::MouseRUpValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -406,7 +410,7 @@ bool CDexWidget::MouseRUpValid(stEvent event)
 	event.pop_args(posX);
 	return CheckPointIn(DexPoint(posX.i_member, posY.i_member));
 }
-bool CDexWidget::MouseRDownValid(stEvent event)
+bool DexWidget::MouseRDownValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -417,7 +421,7 @@ bool CDexWidget::MouseRDownValid(stEvent event)
 	event.pop_args(posX);
 	return CheckPointIn(DexPoint(posX.i_member, posY.i_member));
 }
-bool CDexWidget::MouseMUpValid(stEvent event)
+bool DexWidget::MouseMUpValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -428,7 +432,7 @@ bool CDexWidget::MouseMUpValid(stEvent event)
 	event.pop_args(posX);
 	return CheckPointIn(DexPoint(posX.i_member, posY.i_member));
 }
-bool CDexWidget::MouseMDownValid(stEvent event)
+bool DexWidget::MouseMDownValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -439,7 +443,7 @@ bool CDexWidget::MouseMDownValid(stEvent event)
 	event.pop_args(posX);
 	return CheckPointIn(DexPoint(posX.i_member, posY.i_member));
 }
-bool CDexWidget::MouseWheelFrontValid(stEvent event)
+bool DexWidget::MouseWheelFrontValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -450,7 +454,7 @@ bool CDexWidget::MouseWheelFrontValid(stEvent event)
 	event.pop_args(posX);
 	return CheckPointIn(DexPoint(posX.i_member, posY.i_member));
 }
-bool CDexWidget::MouseWheelBackValid(stEvent event)
+bool DexWidget::MouseWheelBackValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -461,7 +465,7 @@ bool CDexWidget::MouseWheelBackValid(stEvent event)
 	event.pop_args(posX);
 	return CheckPointIn(DexPoint(posX.i_member, posY.i_member));
 }
-bool CDexWidget::MouseLDragValid(stEvent event)
+bool DexWidget::MouseLDragValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -473,7 +477,7 @@ bool CDexWidget::MouseLDragValid(stEvent event)
 	event.pop_args(posX);
 	return CheckPointIn(DexPoint(posX.i_member, posY.i_member));
 }
-bool CDexWidget::MouseRDragValid(stEvent event)
+bool DexWidget::MouseRDragValid(stEvent event)
 {
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); 
 	DEX_ENSURE_B(GetVisible());
@@ -489,7 +493,7 @@ bool CDexWidget::MouseRDragValid(stEvent event)
 
 
 
-bool CDexWidget::OnEvent(stEvent event)
+bool DexWidget::OnEvent(stEvent event)
 {
 	bool visible = GetVisible();
 	DEX_ENSURE_B(getDesktop()->getUiEvent()); //确保有事件可以处理
@@ -615,68 +619,73 @@ bool CDexWidget::OnEvent(stEvent event)
 	}
 	return deal;
 }
-bool CDexWidget::EventValid(stEvent event)
+bool DexWidget::EventValid(stEvent event)
 {
 	return false;
 }
-void CDexWidget::RenderRect()
+void DexWidget::RenderRect()
 {
-	get2DDrawer()->DrawRectLine(DexRect(m_rect.left, m_rect.top, m_rect.right, m_rect.bottom), 0xffff0000);
+	if (getDesktop()->getSelectWgt() == this)
+		get2DDrawer()->DrawRectLine(DexRect(m_rect.left, m_rect.top, m_rect.right, m_rect.bottom), DEXCOLOR_RED);
+	else if (getDesktop()->getFocusWgt() == this)
+		get2DDrawer()->DrawRectLine(DexRect(m_rect.left, m_rect.top, m_rect.right, m_rect.bottom), DEXCOLOR_YELLOW);
+	else
+		get2DDrawer()->DrawRectLine(DexRect(m_rect.left, m_rect.top, m_rect.right, m_rect.bottom), DEXCOLOR_GREEN);
 }
-void CDexWidget::RenderMask()
+void DexWidget::RenderMask()
 {
 	get2DDrawer()->SetRectColor(m_maskColor);
 	get2DDrawer()->DrawRect(m_rect);
 }
 
-int CDexWidget::GetId()
+int DexWidget::GetId()
 {
 	return m_id;
 }
-DexPointF CDexWidget::GetPos()
+DexPointF DexWidget::GetPos()
 {
 	return DexPointF(m_rect.left, m_rect.top);
 }
 
-DexRectF CDexWidget::GetArea()
+DexRectF DexWidget::GetArea()
 {
 	if(m_bClipByParent && m_father != NULL)
 		return m_rectAfterClip;
 	return m_rect;
 }
 
-DexRectF CDexWidget::GetAreaReal()
+DexRectF DexWidget::GetAreaReal()
 {
 	return m_rect;
 }
 
-bool CDexWidget::GetVisible()
+bool DexWidget::GetVisible()
 {
 	if(m_father != NULL && !m_father->GetVisible()) //递归到最上层 
 		return false;
 	return m_visible;
 }
 
-void CDexWidget::SetClipByParent(bool clipByParent)
+void DexWidget::SetClipByParent(bool clipByParent)
 {
 	m_bClipByParent = clipByParent;
 }
 
-bool CDexWidget::GetClipByParent()
+bool DexWidget::GetClipByParent()
 {
 	return m_bClipByParent;
 }
 
-void CDexWidget::setVisible(bool visible)
+void DexWidget::setVisible(bool visible)
 {
 	m_visible = visible;
 }
 
-CDexWidgetContainer* CDexWidget::GetChildrenContainer() 
+CDexWidgetContainer* DexWidget::GetChildrenContainer() 
 {
 	return m_children;
 }
-void CDexWidget::AddAction(CDexGuiAction* action)
+void DexWidget::AddAction(CDexGuiAction* action)
 {
 	DEX_ENSURE(action);
 	action->SetOwner(this);
@@ -685,7 +694,7 @@ void CDexWidget::AddAction(CDexGuiAction* action)
 	DexLog::getSingleton()->Log(log_ok, "控件%s添加动作%s", m_name.c_str(), action->GetName().c_str());
 	DexLog::getSingleton()->EndLog();
 }
-void CDexWidget::ModifyFlag( EModiFyType i_o, int flag )
+void DexWidget::ModifyFlag( EModiFyType i_o, int flag )
 {
 	if(i_o == Add_Flag)
 	{
@@ -697,33 +706,33 @@ void CDexWidget::ModifyFlag( EModiFyType i_o, int flag )
 			m_flag = m_flag^flag;
 	}
 }
-void CDexWidget::Enable(bool child)
+void DexWidget::Enable(bool child)
 {
 	ModifyFlag(Add_Flag, catch_event);
 	if(child)
 		m_children->Enable(true);
 }
-void CDexWidget::Disable(bool child)
+void DexWidget::Disable(bool child)
 {
 	ModifyFlag(Minus_Flag, catch_event);
 	if(child)
 		m_children->Disable(true);
 }
 
-void CDexWidget::setMouseOnFilename(string filename)
+void DexWidget::setMouseOnFilename(string filename)
 {
 	m_mouseOnSoundFilename = filename;
 }
-void CDexWidget::setMouseDownFilename(string filename)
+void DexWidget::setMouseDownFilename(string filename)
 {
 	m_mouseDownSoundFilename = filename;
 }
-void CDexWidget::setMouseDownUnvalid(string filename)
+void DexWidget::setMouseDownUnvalid(string filename)
 {
 	m_mouseDownUnvalid = filename;
 }
 
-void CDexWidget::setDrawFlag(EDraw_Flag flag)
+void DexWidget::setDrawFlag(EDraw_Flag flag)
 {
 	m_Drawflag = flag;
 	switch(flag)
@@ -737,66 +746,66 @@ void CDexWidget::setDrawFlag(EDraw_Flag flag)
 	}
 }
 
-float CDexWidget::GetWidth()
+float DexWidget::GetWidth()
 {
 	return m_rect.right - m_rect.left;
 }
 
-float CDexWidget::GetHeight()
+float DexWidget::GetHeight()
 {
 	return m_rect.bottom - m_rect.top;
 }
 
-void CDexWidget::SetRotate(float rotate)
+void DexWidget::SetRotate(float rotate)
 {
 	m_rotate = rotate;
 }
-float CDexWidget::GetRotate()
+float DexWidget::GetRotate()
 {
 	return m_rotate;
 }
 
-DexPointF CDexWidget::GetSize()
+DexPointF DexWidget::GetSize()
 {
 	return DexPointF(GetWidth(), GetHeight());
 }
 
-string CDexWidget::GetName()
+string DexWidget::GetName()
 {
 	return m_name;
 }
-bool CDexWidget::GetEable()
+bool DexWidget::GetEable()
 {
 	return GetFlag(catch_event);
 }
-bool CDexWidget::GetFlag(int flag)
+bool DexWidget::GetFlag(int flag)
 {
 	return m_flag & flag;
 }
 
-CDexWidget* CDexWidget::GetFather()
+DexWidget* DexWidget::GetFather()
 {
 	return m_father;
 }
-int CDexWidget::GetWidgetFlag()
+int DexWidget::GetWidgetFlag()
 {
 	return m_flag;
 }
 
-void CDexWidget::SetWidgetFlag(int flag)
+void DexWidget::SetWidgetFlag(int flag)
 {
 	m_flag = flag;
 }
-void CDexWidget::SetId(int id)
+void DexWidget::SetId(int id)
 {
 	m_id = id;
 }
-void CDexWidget::SetName(string name)
+void DexWidget::SetName(string name)
 { 
 	m_name = name;
 }
 
-void CDexWidget::SetFather(CDexWidget* widget) 
+void DexWidget::SetFather(DexWidget* widget) 
 { 
 	DEX_ENSURE(widget);
 	m_father = widget;
@@ -804,7 +813,7 @@ void CDexWidget::SetFather(CDexWidget* widget)
 	m_offFatherPos =  GetPos() - m_father->GetPos();
 }
 
-void CDexWidget::SetPos(const DexPoint& pos)
+void DexWidget::SetPos(const DexPoint& pos)
 {
 	DexPointF temp;
 	temp.x = pos.x;
@@ -815,7 +824,7 @@ void CDexWidget::SetPos(const DexPoint& pos)
 		m_offFatherPos =  GetPos() - m_father->GetPos();
 	EDSetPos.Handle(this, stEvent());
 }
-void CDexWidget::SetPos(const DexPointF& pos)
+void DexWidget::SetPos(const DexPointF& pos)
 {
 	DexPointF delta = pos - GetPos();
 	OffSet(delta);
@@ -824,7 +833,7 @@ void CDexWidget::SetPos(const DexPointF& pos)
 	EDSetPos.Handle(this, stEvent());
 }
 
-void CDexWidget::setFatherOffset(float x, float y)
+void DexWidget::setFatherOffset(float x, float y)
 {
 	m_offFatherPos.x = x;
 	m_offFatherPos.y = y;
@@ -837,54 +846,52 @@ void CDexWidget::setFatherOffset(float x, float y)
 	m_children->Offset(DexPointF(x,y));
 }
 
-DexPointF CDexWidget::getFatherOffset()
+DexPointF DexWidget::getFatherOffset()
 {
 	return m_offFatherPos;
 }
 
-void CDexWidget::SetPos(int x, int y)
+void DexWidget::SetPos(int x, int y)
 {
 	SetPos(DexPoint(x, y));
 }
 
-void CDexWidget::OpenMask(bool open)
+void DexWidget::OpenMask(bool open)
 {
 	m_mask = open;
 }
 
-void CDexWidget::SetMaskColor(UCHAR r, UCHAR g, UCHAR b)
+void DexWidget::SetMaskColor(DUChar r, DUChar g, DUChar b)
 {
-	m_maskColor = m_maskColor & 0xff00ffff;
-	m_maskColor |= r<<16;
-	m_maskColor = m_maskColor & 0xffff00ff;
-	m_maskColor |= g<<8;
-	m_maskColor = m_maskColor & 0xffffff00;
-	m_maskColor |= b;
+	m_maskColor.Set(r,g,b);
 }
 
-void CDexWidget::SetMaskAlpha(UCHAR a)
+void DexWidget::SetMaskAlpha(DUChar a)
 {
-	m_maskColor = m_maskColor & 0x00ffffff;
-	m_maskColor |= a<<24;
+	m_maskColor.a = a;
 }
 
-void CDexWidget::SetMaskColor(UCHAR r, UCHAR g, UCHAR b, UCHAR a/* =125 */)
+void DexWidget::SetMaskColor(const DexColor& color)
+{
+	m_maskColor = color;
+}
+void DexWidget::SetMaskColor(DUChar r, DUChar g, DUChar b, DUChar a/* =125 */)
 {
 	SetMaskAlpha(a);
 	SetMaskColor(r,g,b);
 }
 
-void CDexWidget::SetInitAlpha(int alpha)
+void DexWidget::SetInitAlpha(int alpha)
 {
 	m_initAlpha = alpha;
 	SetAlpha(m_initAlpha);
 }
 
-int CDexWidget::GetInitAlpha()
+int DexWidget::GetInitAlpha()
 {
 	return m_initAlpha;
 }
-void CDexWidget::SetAlpha(int alpha, bool children)
+void DexWidget::SetAlpha(int alpha, bool children)
 {
 	if(alpha > 255)
 		alpha = 255;
@@ -896,12 +903,12 @@ void CDexWidget::SetAlpha(int alpha, bool children)
 		m_children->OnFatherSetAlpha(alpha);
 }
 
-int CDexWidget::GetOnlyAlpha()
+int DexWidget::GetOnlyAlpha()
 {
 	return m_alpha>>24;
 }
 
-void CDexWidget::OffSet(const DexPoint& delta)
+void DexWidget::OffSet(const DexPoint& delta)
 {
 	m_rect.left += delta.x;
 	m_rect.right += delta.x;
@@ -913,7 +920,7 @@ void CDexWidget::OffSet(const DexPoint& delta)
 	m_children->Offset(delta);
 }
 
-void CDexWidget::OffSet(const DexPointF& delta)
+void DexWidget::OffSet(const DexPointF& delta)
 {
 	m_rect.left += delta.x;
 	m_rect.right += delta.x;
@@ -922,7 +929,7 @@ void CDexWidget::OffSet(const DexPointF& delta)
 	//本widget设置到指定位置之后，还要将本widget下的所有子widget都进行相应的平移
 	m_children->Offset(delta);
 }
-void CDexWidget::Scale(float x, float y, bool scaleChild, bool changePos)
+void DexWidget::Scale(float x, float y, bool scaleChild, bool changePos)
 {
 	if(changePos)
 	{
@@ -952,7 +959,12 @@ void CDexWidget::Scale(float x, float y, bool scaleChild, bool changePos)
 
 	Resize(DexSize(new_width, new_height), scaleChild);
 }
-void CDexWidget::Resize(const DexSize& size, bool resizeChild)
+void DexWidget::Resize(const DexSize& size, bool resizeChild)
+{
+	Resize(DexSizeF(size.w, size.h), resizeChild);
+}
+
+void DexWidget::Resize(const DexSizeF& size, bool resizeChild)
 {
 	float old_width = m_rect.right - m_rect.left;
 	float old_height = m_rect.bottom - m_rect.top;
@@ -972,22 +984,7 @@ void CDexWidget::Resize(const DexSize& size, bool resizeChild)
 	EDResize.Handle(this, stEvent());
 }
 
-void CDexWidget::Resize(const DexSizeF& size, bool resizeChild)
+void DexWidget::Resize(DInt32 width, DInt32 height, DBool resizeChild /* = false */)
 {
-	float old_width = m_rect.right - m_rect.left;
-	float old_height = m_rect.bottom - m_rect.top;
-	//m_rect.right = m_rect.left + old_width + size.x;
-	//m_rect.bottom = m_rect.top + old_height + size.y;
-	float xScale = size.w/old_width;
-	float yScale = size.h/old_height;
-	m_rect.right = m_rect.left + size.w;
-	m_rect.bottom = m_rect.top + size.h;
-	if(resizeChild)
-	{//父控件设置大小如果影响子控件，则子控件在改变尺寸的同时
-		//要根据自身原来的pos进行一定的平移 使得整个看上去是整体缩放的
-		if(old_width != 0 && old_height != 0)
-			m_children->Scale(xScale, yScale);
-	}
-	m_rectAfterClip = m_rect;
-	EDResize.Handle(this, stEvent());
+	Resize(DexSizeF(width, height), resizeChild);
 }

@@ -2,16 +2,16 @@
 #ifndef _PAL_PANEL_ORDER_H
 #define _PAL_PANEL_ORDER_H
 
-#include "PalPanelInterface.h"
+#include "widget/DexPanelInterface.h"
 
 class CDexWidgetButton;
-class CDexWidgetImage;
+class DexWidgetImage;
 
-class PalPanel_Order: public PalPanelInterface
+class PalPanel_Order: public DexPanelInterface
 {
-	Dex_DeclareClass(PalPanel_Order, PalPanelInterface,0)
+	Dex_DeclareClass(PalPanel_Order, DexPanelInterface,0)
 protected:
-	CDexWidgetImage*  m_pImgOrderBack;
+	DexWidgetImage*  m_pImgOrderBack;
 	CDexWidgetButton* m_pBtnAttack; //π•
 	CDexWidgetButton* m_pBtnDefence;//∑¿
 	CDexWidgetButton* m_pBtnSkill;  // ı
@@ -31,7 +31,7 @@ public:
 	virtual bool getVisible();
 	virtual bool Update(int delta);
 	virtual bool Render();
-	void OnClickAttack(CEventHandler* sys, CDexObject* object,stEvent event); 
-	void OnClickSkill(CEventHandler* sys, CDexObject* object,stEvent event);
+	void OnClickAttack(CEventHandler* sys, DexObject* object,stEvent event); 
+	void OnClickSkill(CEventHandler* sys, DexObject* object,stEvent event);
 };
 #endif

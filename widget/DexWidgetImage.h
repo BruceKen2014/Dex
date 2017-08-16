@@ -4,7 +4,7 @@
 #include "DexWidget.h"
 
 class CDexTex;
-class CDexWidgetImage: public CDexWidget
+class DexWidgetImage: public DexWidget
 {
 protected:
 	stUiImage* m_pImg;
@@ -19,8 +19,8 @@ protected:
 	virtual void ShutDown();
 	void CalculateUv(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3);
 public:
-	CDexWidgetImage();
-	~CDexWidgetImage();
+	DexWidgetImage();
+	~DexWidgetImage();
 
 public:
 	virtual bool Update(int delta);

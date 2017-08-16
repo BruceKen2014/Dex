@@ -6,7 +6,7 @@
 #include "CListener.h"
 //using namespace std;
 class CEventHandler;
-class CDexObject;
+class DexObject;
 class CDelegate
 {
 public:
@@ -14,12 +14,12 @@ public:
 	virtual ~CDelegate();
 
 public:
-	virtual void Handle(CDexObject* object, stEvent event) = 0;
+	virtual void Handle(DexObject* object, stEvent event) = 0;
 };
 class CDelegateG:public CDelegate
 {//挂接全局函数
 public:
-	typedef void  (*EventCallBack)(CDexObject*,stEvent);
+	typedef void  (*EventCallBack)(DexObject*,stEvent);
 	EventCallBack m_fun;
 public:
 	CDelegateG();
@@ -28,13 +28,13 @@ public:
 
 public:
 	CDelegateG& operator = (const CDelegateG& dgt);
-	virtual void Handle(CDexObject* object,stEvent event);
+	virtual void Handle(DexObject* object,stEvent event);
 
 };
 class CDelegateM:public CDelegate
 {//挂接成员函数
 public:
-	typedef void  (CEventHandler::*EventCallBack)(CEventHandler* sys, CDexObject*, stEvent);
+	typedef void  (CEventHandler::*EventCallBack)(CEventHandler* sys, DexObject*, stEvent);
 	CEventHandler* m_gameSys; //处理事件的系统
 	EventCallBack  m_fun;	  //系统内函数  
 
@@ -55,7 +55,7 @@ public:
 	}*/;
 	CDelegateM& operator = (const CDelegateM& dgt);
 
-	void Handle(CDexObject* object,stEvent event);
+	void Handle(DexObject* object,stEvent event);
 };
 
 class CEventDispather
@@ -69,7 +69,7 @@ public:
 	~CEventDispather();
 
 public:
-	void Handle(CDexObject* object,stEvent& event);
+	void Handle(DexObject* object,stEvent& event);
 	CEventDispather& operator += (CDelegate* dlg);
 	void Add(CDelegate* dlg); //效果等同重载的+=
 };

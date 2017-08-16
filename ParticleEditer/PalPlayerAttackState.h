@@ -3,7 +3,7 @@
 #ifndef _PAL_PLAYER_ATTACK_STATE_H
 #define _PAL_PLAYER_ATTACK_STATE_H
 #include "DexBase/CDelegate.h"
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 
 #include "IDexState.h"
 

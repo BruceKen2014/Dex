@@ -2,21 +2,21 @@
 
 #pragma once
 #include "../DexBase/typedefine.h"
-#include "../DexBase/CDexObject.h"
+#include "../DexBase/DexObject.h"
 
-class CDexWidget;
+class DexWidget;
 //桌面
-class CDexDesktop:public CDexObject
+class CDexDesktop:public DexObject
 {
 protected:
-	CDexWidget*  m_dragingWgt;  //正在拖拽的控件 一定被select 一定被focus
+	DexWidget*  m_dragingWgt;  //正在拖拽的控件 一定被select 一定被focus
 	
 	//select wdiget可能和focus不是同一widget，如先点击一个label，那么这个label被select，然后鼠标移动到
 	//一个image上面，此时focus了image，但并未select这个image
-	CDexWidget*  m_selectWidget; 
-	CDexWidget*  m_focusWidget; //focus 指的是鼠标所悬停的目标
-	CDexWidget*  m_inputWidget;
-	CDexWidget*  m_pRootWidget;
+	DexWidget*  m_selectWidget; 
+	DexWidget*  m_focusWidget; //focus 指的是鼠标所悬停的目标
+	DexWidget*  m_inputWidget;
+	DexWidget*  m_pRootWidget;
 	bool         m_uiEvent;      //是否有mouse事件可处理
 
 	DInt64        m_lastKeyTime;  //上次处理按键信息的时间
@@ -31,17 +31,17 @@ public:
 	void Render();
 	virtual bool OnEvent(stEvent event);
 public:
-	CDexWidget* getDragingWgt() ;
-	void SetDragingWgt(CDexWidget* wgt);
-	CDexWidget* getFocusWgt() ;
-	void SetFocusWgt(CDexWidget* wgt);
-	CDexWidget* getSelectWgt() ;
-	void SetSelectWgt(CDexWidget* wgt);
-	CDexWidget* getInputWgt() ;
-	void SetInputWgt(CDexWidget* wgt);
+	DexWidget* getDragingWgt() ;
+	void SetDragingWgt(DexWidget* wgt);
+	DexWidget* getFocusWgt() ;
+	void SetFocusWgt(DexWidget* wgt);
+	DexWidget* getSelectWgt() ;
+	void SetSelectWgt(DexWidget* wgt);
+	DexWidget* getInputWgt() ;
+	void SetInputWgt(DexWidget* wgt);
 
-	CDexWidget* getRootWidget();
-	void SetRootWidget(CDexWidget* wgt);
+	DexWidget* getRootWidget();
+	void SetRootWidget(DexWidget* wgt);
 
 	bool        getUiEvent();
 	void	SetUiEvent(bool b);

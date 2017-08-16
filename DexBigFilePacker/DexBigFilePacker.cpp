@@ -128,7 +128,7 @@ bool SaveBigFile(const char* filename)
 	typedef map<DexMd5, DexBigFileHandle::stDexBigFileContent*> mapContent;
 	mapContent contents;
 	DexBigFileHandle::stDexBigFileHeader header;
-	DUDInt32 iBlockSize = DexBigFileHandle::s_iBlockSize;
+	DUInt32 iBlockSize = DexBigFileHandle::s_iBlockSize;
 	vector<DexBigFileHandle::stDexBigFileBlock> vecBlocks;
 	char* readCache = new char[iBlockSize];
 	char* writeCache = new char[iBlockSize];
@@ -136,19 +136,19 @@ bool SaveBigFile(const char* filename)
 	header.count = g_vecFileName.size();
 	bigFile.Write(&header, sizeof(header));
 	
-	DUDInt32 iContentByte = sizeof(DexBigFileHandle::stDexBigFileContent);
+	DUInt32 iContentByte = sizeof(DexBigFileHandle::stDexBigFileContent);
 	uint64 time = GetTickCount64();
 	//write content file data
-	DUDInt32 destSize = 0;
+	DUInt32 destSize = 0;
 	float ratio = 0.0f;
-	DUDInt32 startIndex = 0;
+	DUInt32 startIndex = 0;
 	uint64 fileOffset = 0;
 	uint64 fileSize = 0;
-	DUDInt32 fileBlockCount = 0;
-	DUDInt32 tailByte = 0;
-	DUDInt32 writeLength = 0;
-	DUDInt32 BigFileBlockCount = 0;
-	DUDInt32 zlibSrcLength = 0;
+	DUInt32 fileBlockCount = 0;
+	DUInt32 tailByte = 0;
+	DUInt32 writeLength = 0;
+	DUInt32 BigFileBlockCount = 0;
+	DUInt32 zlibSrcLength = 0;
 	uint64 bigFileCompressLength = 0;
 	uint64 bigFileSrcLength = 0;
 	DexBigFileHandle::stDexBigFileBlock block;
@@ -177,7 +177,7 @@ bool SaveBigFile(const char* filename)
 			newContent->iBlockCount = fileBlockCount;
 			newContent->iOrigionSize = fileSize;
 			contents[md5] = newContent;
-			for (DUDInt32 b = 0; b < fileBlockCount; ++b)
+			for (DUInt32 b = 0; b < fileBlockCount; ++b)
 			{
 				writeLength = iBlockSize;
 				if (b == fileBlockCount - 1 && tailByte != 0)
@@ -221,7 +221,7 @@ bool SaveBigFile(const char* filename)
 		bigFile.Write(pContent, iContentByte);
 	}
 	//write block info
-	DUDInt32 blockCount = vecBlocks.size();
+	DUInt32 blockCount = vecBlocks.size();
 	if (blockCount != 0)
 		bigFile.Write(&vecBlocks[0], blockCount * sizeof(vecBlocks[0]));
 	//写入block数量
@@ -253,7 +253,7 @@ bool MultiThreadSaveBigFile(const char* filename)
 	typedef map<DexMd5, DexBigFileHandle::stDexBigFileContent*> mapContent;
 	mapContent contents;
 	DexBigFileHandle::stDexBigFileHeader header;
-	DUDInt32 iBlockSize = DexBigFileHandle::s_iBlockSize;
+	DUInt32 iBlockSize = DexBigFileHandle::s_iBlockSize;
 	vector<DexBigFileHandle::stDexBigFileBlock> vecBlocks;
 	char* readCache = new char[iBlockSize];
 	char* writeCache = new char[iBlockSize];
@@ -261,19 +261,19 @@ bool MultiThreadSaveBigFile(const char* filename)
 	header.count = g_vecFileName.size();
 	bigFile.Write(&header, sizeof(header));
 
-	DUDInt32 iContentByte = sizeof(DexBigFileHandle::stDexBigFileContent);
+	DUInt32 iContentByte = sizeof(DexBigFileHandle::stDexBigFileContent);
 	uint64 time = GetTickCount64();
 	//write content file data
-	DUDInt32 destSize = 0;
+	DUInt32 destSize = 0;
 	float ratio = 0.0f;
-	DUDInt32 startIndex = 0;
+	DUInt32 startIndex = 0;
 	uint64 fileOffset = 0;
 	uint64 fileSize = 0;
-	DUDInt32 fileBlockCount = 0;
-	DUDInt32 tailByte = 0;
-	DUDInt32 writeLength = 0;
-	DUDInt32 BigFileBlockCount = 0;
-	DUDInt32 zlibSrcLength = 0;
+	DUInt32 fileBlockCount = 0;
+	DUInt32 tailByte = 0;
+	DUInt32 writeLength = 0;
+	DUInt32 BigFileBlockCount = 0;
+	DUInt32 zlibSrcLength = 0;
 	uint64 bigFileCompressLength = 0;
 	uint64 bigFileSrcLength = 0;
 	DexBigFileHandle::stDexBigFileBlock block;
@@ -303,7 +303,7 @@ bool MultiThreadSaveBigFile(const char* filename)
 			newContent->iBlockCount = fileBlockCount;
 			newContent->iOrigionSize = fileSize;
 			contents[md5] = newContent;
-			for (DUDInt32 b = 0; b < fileBlockCount; ++b)
+			for (DUInt32 b = 0; b < fileBlockCount; ++b)
 			{
 				writeLength = iBlockSize;
 				if (b == fileBlockCount - 1 && tailByte != 0)
@@ -337,7 +337,7 @@ bool MultiThreadSaveBigFile(const char* filename)
 		bigFile.Write(pContent, iContentByte);
 	}
 	//write block info
-	DUDInt32 blockCount = g_taskManager.vecBlocks.size();
+	DUInt32 blockCount = g_taskManager.vecBlocks.size();
 	if (blockCount != 0)
 		bigFile.Write(&g_taskManager.vecBlocks[0], blockCount * sizeof(g_taskManager.vecBlocks[0]));
 	//写入block数量

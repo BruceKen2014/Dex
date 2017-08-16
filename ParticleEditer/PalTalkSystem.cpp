@@ -55,10 +55,10 @@ CPalTalkSystem::~CPalTalkSystem()
 
 bool CPalTalkSystem::Initialize()
 {
-	m_pBackImage = (CDexWidgetImage* )getWidgetFactory()->findWidget("TalkBackground");
-	m_headArray[EH_JINGTIAN] = (CDexWidgetImage* )getWidgetFactory()->findWidget("TalkBackground.jingtian");
-	m_headArray[EH_JINGJING] = (CDexWidgetImage* )getWidgetFactory()->findWidget("TalkBackground.jingjing");
-	m_headArray[EH_ZHULONG] = (CDexWidgetImage* )getWidgetFactory()->findWidget("TalkBackground.zhulong");
+	m_pBackImage = (DexWidgetImage* )getWidgetFactory()->findWidget("TalkBackground");
+	m_headArray[EH_JINGTIAN] = (DexWidgetImage* )getWidgetFactory()->findWidget("TalkBackground.jingtian");
+	m_headArray[EH_JINGJING] = (DexWidgetImage* )getWidgetFactory()->findWidget("TalkBackground.jingjing");
+	m_headArray[EH_ZHULONG] = (DexWidgetImage* )getWidgetFactory()->findWidget("TalkBackground.zhulong");
 	m_pPilot = (CDexWidgetLabel* )getWidgetFactory()->findWidget("TalkBackground.label");
 	m_pClickToContinue = (CDexWidgetImageSequence* )getWidgetFactory()->findWidget("TalkBackground.continue");
 	m_pPilot->SetText("");
@@ -96,12 +96,12 @@ void CPalTalkSystem::registerLuaFunction(lua_State* L)
 }
 bool CPalTalkSystem::Update(int delta)
 {
-	DEX_ENSURE_B(CDexObject::Update(delta));
+	DEX_ENSURE_B(DexObject::Update(delta));
 	m_pBackImage->Update(delta);
 	if(!_IsCompleteThisSentence())
 	{
 		int length = m_words.length();
-		DInt64 thisTime = getTime()->GetTotalMillSeconds() ;
+		DInt64 thisTime = DexTime::getSingleton()->GetTotalMillSeconds() ;
 		int wordPerSecond = 25;
 		if(thisTime- m_iLastTime > 1000/wordPerSecond)
 		{//Ã¿Ãë25¸öºº×Ö

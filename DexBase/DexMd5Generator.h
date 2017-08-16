@@ -31,7 +31,7 @@ typedef struct
 }MD5_CTX;
 
 typedef void(WINAPI* MD5Init_Type)(MD5_CTX* context);
-typedef void(WINAPI* MD5Update_Type)(MD5_CTX* content, unsigned char* input, DUDInt32 inlen);
+typedef void(WINAPI* MD5Update_Type)(MD5_CTX* content, unsigned char* input, DUInt32 inlen);
 typedef void(WINAPI* MD5Final_Type)(MD5_CTX* context);
 
 class DexMd5Generator

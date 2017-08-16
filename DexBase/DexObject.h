@@ -29,9 +29,9 @@ public:												\
 	virtual int         getInst() const { return count;}  \
 	static std::string getClassType()   { return #Object;} \
 	static int         getClassInst()   { return count;}
-class CDexObject:public CListener, public CEventSender, public CEventHandler
+class DexObject:public CListener, public CEventSender, public CEventHandler
 {
-	Dex_DeclareClass(CDexObject, CDexObject, 0)
+	Dex_DeclareClass(DexObject, DexObject, 0)
 protected:
 	typedef std::list<stTimer> TlistTimer;
 	TlistTimer m_timers;
@@ -40,8 +40,8 @@ protected:
 	bool        m_bObjectValid;  // «∑Ò”––ß
 	stArgs       m_param;
 public:
-	CDexObject();
-	virtual ~CDexObject();
+	DexObject();
+	virtual ~DexObject();
 public:
 	bool AddTimer(int id, int interval);
 	bool RemoveTimer(int id);

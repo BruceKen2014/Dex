@@ -51,7 +51,7 @@ void CDexWidgetScrollBarV::ShutDown()
 
 bool CDexWidgetScrollBarV::Update(int delta)
 {
-	DEX_ENSURE_B(CDexWidget::Update(delta));
+	DEX_ENSURE_B(DexWidget::Update(delta));
 	if(m_pTopBtn != NULL)
 		m_pTopBtn->Update(delta);
 	if(m_pBottomBtn != NULL)
@@ -89,17 +89,17 @@ void CDexWidgetScrollBarV::RenderThis()
 	get2DDrawer()->SetRotate(m_rotate);
 	//get2DDrawer()->DrawImage(&m_backImage, m_rect, m_alpha);
 }
-void CDexWidgetScrollBarV::OnClickTopBtn(CDexObject* object,stEvent event)
+void CDexWidgetScrollBarV::OnClickTopBtn(DexObject* object,stEvent event)
 {
 
 }
 
-void CDexWidgetScrollBarV::OnClickBottomBtn(CDexObject* object,stEvent event)
+void CDexWidgetScrollBarV::OnClickBottomBtn(DexObject* object,stEvent event)
 {
 
 }
 
-void CDexWidgetScrollBarV::OnDragHandleBtn(CDexObject* object,stEvent event)
+void CDexWidgetScrollBarV::OnDragHandleBtn(DexObject* object,stEvent event)
 {
 	DexRectF rect = m_pHandleBtn->GetArea();
 	DexPointF pnt;
@@ -115,7 +115,7 @@ void CDexWidgetScrollBarV::OnDragHandleBtn(CDexObject* object,stEvent event)
 	m_fCurrValue = (pnt.y - m_pTopBtn->GetArea().bottom)/m_pHandleBtn->GetHeight();
 }
 
-void CDexWidgetScrollBarV::OnResize(CDexObject* object,stEvent event)
+void CDexWidgetScrollBarV::OnResize(DexObject* object,stEvent event)
 {
 
 }

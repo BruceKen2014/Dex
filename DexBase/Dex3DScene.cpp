@@ -181,7 +181,7 @@ void CDexScene::_sortAlphaObject()
 
 bool CDexScene::Update(int delta)
 {
-	DEX_ENSURE_B(CDexObject::Update(delta));
+	DEX_ENSURE_B(DexObject::Update(delta));
 	_sortAlphaObject();
 	{
 		foreach(TMapObject, ite, m_listObject)
@@ -235,7 +235,7 @@ void CDexScene::Reset()
 	m_clearColor = DexColor(0.5f, 0.5f, 0.5f, 1.0f);
 	m_bAddObject = NULL;
 	m_pTerrain = NULL;
-	CDexObject::Reset();
+	DexObject::Reset();
 	{
 		foreach(TListCollideObject, ite, m_listCollideObject)
 		{

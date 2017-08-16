@@ -21,19 +21,19 @@ class CDexPieceEffectInstance;
 class CDexSceneObjectFlower;
 class CDexScene;
 
-class CDexObject;
-class CDexWidgetEditBox;
+class DexObject;
+class DexWidgetEditBox;
 
 class CDexModelXAni;
 class TestPanel;
 
-class CDexWidgetImage;
+class DexWidgetImage;
 class CDexWidgetImageSequence;
 class CLoadingState: public DexGameState
 {
 	Dex_DeclareClass(CLoadingState, DexGameState,1)
 public:
-	CDexWidgetImage*         g_pImageBackgroud;
+	DexWidgetImage*         g_pImageBackgroud;
 	CDexWidgetImageSequence* g_pImage;
 
 public:
@@ -81,7 +81,7 @@ protected:
 	DexSceneObjectActionCatmull* action ;
 	CDexTerrain* g_pTerrain;
 
-	CDexWidgetEditBox* m_editBox;
+	DexWidgetEditBox* m_editBox;
 
 	D3DXVECTOR3 g_TerrainClickPoint;
 	int g_currRow;
@@ -111,9 +111,9 @@ public:
 	virtual void  MouseRUp(int xPos, int yPos);
 	virtual void  KeyUp();
 	virtual void  KeyDown();
-	void OnEditTextUpdate(CEventHandler* sys, CDexObject* object,stEvent event);
+	void OnEditTextUpdate(CEventHandler* sys, DexObject* object,stEvent event);
 
-	void OnEventClickTalkSystem(CEventHandler* sys, CDexObject* object,stEvent event);//测试事件系统
+	void OnEventClickTalkSystem(CEventHandler* sys, DexObject* object,stEvent event);//测试事件系统
 
 	void SetApply(bool apply) { m_bApply = apply;}
 	bool NeedApply()		  { return m_bApply;}
@@ -131,8 +131,8 @@ public:
 	TestPanel();
 	virtual ~TestPanel();
 	ParticalEditState* m_State;
-	CDexWidgetEditBox* m_editBox;
-	void OnEditTextUpdate(CDexObject* object,stEvent event);
+	DexWidgetEditBox* m_editBox;
+	void OnEditTextUpdate(DexObject* object,stEvent event);
 
 	bool Init();
 	void Render();

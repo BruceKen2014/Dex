@@ -2,11 +2,11 @@
 #ifndef _I_DEX_STATE_H
 #define _I_DEX_STATE_H
 #include <vector>
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 class IDexState;
-class IDexStateTransition:public CDexObject
+class IDexStateTransition:public DexObject
 {
-	Dex_DeclareClass(IDexStateTransition, CDexObject, 0)
+	Dex_DeclareClass(IDexStateTransition, DexObject, 0)
 protected:
 	IDexState* m_transitionState;
 	std::vector<stArgs> m_vecEventArgs; //属于事件本身的参数
@@ -25,9 +25,9 @@ public:
 	void PushArgs(const stArgs& args);
 	std::vector<stArgs> GetArgs();
 };
-class IDexState:public CDexObject
+class IDexState:public DexObject
 {
-	Dex_DeclareClass(IDexState, CDexObject,0)
+	Dex_DeclareClass(IDexState, DexObject,0)
 protected:
 	std::list<IDexStateTransition*> m_listTrans;
 public:
@@ -40,9 +40,9 @@ public:
 	virtual IDexState* Update();
 };
 
-class IDexStateMachine: public CDexObject
+class IDexStateMachine: public DexObject
 {
-	Dex_DeclareClass(IDexStateMachine, CDexObject,0)
+	Dex_DeclareClass(IDexStateMachine, DexObject,0)
 public:
 	IDexStateMachine();
 	virtual ~IDexStateMachine();

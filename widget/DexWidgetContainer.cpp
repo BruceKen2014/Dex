@@ -25,7 +25,7 @@ CDexWidgetContainer::~CDexWidgetContainer()
 void CDexWidgetContainer::Hide()
 {
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		wdt->Hide();  
@@ -35,7 +35,7 @@ void CDexWidgetContainer::Hide()
 void CDexWidgetContainer::Update(int delta)
 {
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		wdt->Update(delta);  
@@ -46,7 +46,7 @@ void CDexWidgetContainer::Render()
 {
 	//渲染 按从前到后渲染的原则(因为后面的总会覆盖前面的)
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		wdt->Render();  
@@ -56,7 +56,7 @@ void CDexWidgetContainer::Render()
 void CDexWidgetContainer::Enable(bool child /* = false */)
 {
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		wdt->Enable(child);  
@@ -66,7 +66,7 @@ void CDexWidgetContainer::Enable(bool child /* = false */)
 void CDexWidgetContainer::Disable(bool child /* = false */)
 {
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		wdt->Disable(child);  
@@ -78,7 +78,7 @@ bool CDexWidgetContainer::OnEvent(stEvent event)
 	//事件处理 按从后到前的原则(因为后面的总会比前面的先接触到事件)
 	DEX_ENSURE_B(m_WidgetList.size() != 0);
 	bool deal = false;
-	CDexWidget* wdt = m_WidgetList.back();
+	DexWidget* wdt = m_WidgetList.back();
 	do 
 	{
 		deal = wdt->OnEvent(event);  
@@ -94,7 +94,7 @@ bool CDexWidgetContainer::OnEvent(stEvent event)
 void CDexWidgetContainer::OnFatherSetAlpha(int alpha)
 {
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		float alphaPercent = ((float)wdt->GetInitAlpha())/wdt->GetFather()->GetInitAlpha();
@@ -106,7 +106,7 @@ void CDexWidgetContainer::OnFatherSetAlpha(int alpha)
 void CDexWidgetContainer::Offset(const DexGUI::DexPoint& delta)
 {
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		wdt->OffSet(delta);  
@@ -117,7 +117,7 @@ void CDexWidgetContainer::Offset(const DexGUI::DexPoint& delta)
 void CDexWidgetContainer::Offset(const DexGUI::DexPointF& delta)
 {
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		wdt->OffSet(delta);  
@@ -128,14 +128,14 @@ void CDexWidgetContainer::Offset(const DexGUI::DexPointF& delta)
 void CDexWidgetContainer::Scale(float x, float y)
 {
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		wdt->Scale(x, y, true, true);  
 		wdt = wdt->m_right_sibling;
 	} while (wdt != NULL);
 }
-void CDexWidgetContainer::SetOnwer(CDexWidget* onwer)
+void CDexWidgetContainer::SetOnwer(DexWidget* onwer)
 {
 	m_onwer = onwer;
 }
@@ -144,7 +144,7 @@ void CDexWidgetContainer::_UpdateTotalCounts()
 {
 	m_totalCount = 0;
 	DEX_ENSURE(m_WidgetList.size() != 0);
-	CDexWidget* wdt = m_WidgetList.front();
+	DexWidget* wdt = m_WidgetList.front();
 	do 
 	{
 		m_totalCount ++;  //本身要加一次
@@ -168,7 +168,7 @@ int CDexWidgetContainer::GetTotalWidgetCount()
 	return m_totalCount;
 }
 
-void CDexWidgetContainer::AddWidgetToFront(CDexWidget* widget)
+void CDexWidgetContainer::AddWidgetToFront(DexWidget* widget)
 {
 	DEX_ENSURE(widget);
 	//UI_ADD_REF(widget); 
@@ -183,7 +183,7 @@ void CDexWidgetContainer::AddWidgetToFront(CDexWidget* widget)
 	_UpdateTotalCounts();
 }
 
-void CDexWidgetContainer::AddWidgetToBack(CDexWidget* widget, bool asChild)
+void CDexWidgetContainer::AddWidgetToBack(DexWidget* widget, bool asChild)
 {
 	DEX_ENSURE(widget);
 	//UI_ADD_REF(widget);
@@ -198,7 +198,7 @@ void CDexWidgetContainer::AddWidgetToBack(CDexWidget* widget, bool asChild)
 	_UpdateTotalCounts();
 }
 
-void CDexWidgetContainer::InsertWidgetFront(CDexWidget* wait_insert, int id)
+void CDexWidgetContainer::InsertWidgetFront(DexWidget* wait_insert, int id)
 {
 	DEX_ENSURE(wait_insert);
 	wait_insert->SetFather(m_onwer);
@@ -208,11 +208,11 @@ void CDexWidgetContainer::InsertWidgetFront(CDexWidget* wait_insert, int id)
 	}
 	else
 	{
-		foreach( std::list<CDexWidget*>, it, m_WidgetList)
+		foreach( std::list<DexWidget*>, it, m_WidgetList)
 		{
 			if((*it)->GetId() == id)
 			{
-				CDexWidget* left = (*it)->m_left_sibling;
+				DexWidget* left = (*it)->m_left_sibling;
 				m_WidgetList.insert(it, wait_insert);
 				//插入之后要解决之前节点和本节点的前后匹配问题
 				(*it)->SetLeftSibling(wait_insert);
@@ -225,7 +225,7 @@ void CDexWidgetContainer::InsertWidgetFront(CDexWidget* wait_insert, int id)
 	_UpdateTotalCounts();
 
 }
-void CDexWidgetContainer::InsertWidgetBack(CDexWidget* wait_insert, int id)
+void CDexWidgetContainer::InsertWidgetBack(DexWidget* wait_insert, int id)
 {
 	DEX_ENSURE(wait_insert);
 	wait_insert->SetFather(m_onwer);
@@ -235,7 +235,7 @@ void CDexWidgetContainer::InsertWidgetBack(CDexWidget* wait_insert, int id)
 	}
 	else
 	{
-		foreach( std::list<CDexWidget*>, it, m_WidgetList)
+		foreach( std::list<DexWidget*>, it, m_WidgetList)
 		{
 			if((*it)->GetId() == id)
 			{//找到了 由于是在这之后插入 因此还要it++一次
@@ -246,7 +246,7 @@ void CDexWidgetContainer::InsertWidgetBack(CDexWidget* wait_insert, int id)
 				}
 				else
 				{
-					CDexWidget* left = (*it)->m_left_sibling;
+					DexWidget* left = (*it)->m_left_sibling;
 					m_WidgetList.insert(it, wait_insert);
 					//插入之后要解决之前节点和本节点的前后匹配问题
 					(*it)->SetLeftSibling(wait_insert);

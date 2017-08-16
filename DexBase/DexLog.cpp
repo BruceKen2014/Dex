@@ -13,6 +13,7 @@
 #define LOG_THREAD  //启用专用线程输出log
 
 using namespace std;
+SINGLETON_IMPLEMENT(DexLog, DexLog)
 DexLog::DexLog() :m_bLogFile(true)
 {
 #ifdef DEX_LOG
@@ -37,8 +38,8 @@ DexLog::DexLog() :m_bLogFile(true)
 
 	m_logFile = new CFile;
 	char filename[64];
-	sprintf(filename, "log/%d-%d-%d-%d-%d-%d.log", getTime()->m_time.year, getTime()->m_time.month, getTime()->m_time.day, 
-		getTime()->m_time.hour, getTime()->m_time.minute, getTime()->m_time.second);
+	sprintf(filename, "log/%d-%d-%d-%d-%d-%d.log", DexTime::getSingleton()->getTime().year, DexTime::getSingleton()->getTime().month, DexTime::getSingleton()->getTime().day,
+		DexTime::getSingleton()->getTime().hour, DexTime::getSingleton()->getTime().minute, DexTime::getSingleton()->getTime().second);
 	m_logFile->CreateCFile(filename);
 	m_eventMutex = CreateEvent(NULL, FALSE, TRUE, NULL);
 #endif
@@ -199,7 +200,7 @@ void DexLog::BeginLog()
 #ifdef DEX_LOG
 #ifdef LOG_THREAD
 	WaitForSingleObject(m_eventMutex, DEXINFINITE);
-	m_logTasks.push_front(log_begin);
+	m_logTasks.emplace_front(log_begin);
 	SetEvent(m_eventMutex);
 #else
 	m_logByte = 0;
@@ -209,8 +210,8 @@ void DexLog::BeginLog()
 void DexLog::LogTime()
 {
 	char str[128];
-	sprintf(str, "[%d-%d-%d-%d:%d:%d]", getTime()->m_time.year, getTime()->m_time.month, getTime()->m_time.day,
-		getTime()->m_time.hour, getTime()->m_time.minute, getTime()->m_time.second);
+	sprintf(str, "[%d-%d-%d-%d:%d:%d]", DexTime::getSingleton()->getTime().year, DexTime::getSingleton()->getTime().month, DexTime::getSingleton()->getTime().day,
+		DexTime::getSingleton()->getTime().hour, DexTime::getSingleton()->getTime().minute, DexTime::getSingleton()->getTime().second);
 	m_logByte += strlen(str);
 	cout << str;
 	if (m_bLogFile)
@@ -254,7 +255,7 @@ void DexLog::Log(DexLogType log_type, char* msg, ...)
 	va_end(v_p);
 
 	WaitForSingleObject(m_eventMutex,DEXINFINITE);
-	m_logTasks.push_front({ log_type, szText });
+	m_logTasks.emplace_front(log_type, szText);
 	SetEvent(m_eventMutex);
 #else
 	va_list v_p;
@@ -290,9 +291,9 @@ void DexLog::LogLine(DexLogType log_type, char* msg, ...)
 	va_end(v_p);
 
 	WaitForSingleObject(m_eventMutex, DEXINFINITE);
-	m_logTasks.push_front(log_begin);
-	m_logTasks.push_front({ log_type, szText });
-	m_logTasks.push_front(log_end);
+	m_logTasks.emplace_front(log_begin);
+	m_logTasks.emplace_front(log_type, szText);
+	m_logTasks.emplace_front(log_end);
 	SetEvent(m_eventMutex);
 #else
 	BeginLog();
@@ -323,7 +324,7 @@ void DexLog::EndLog()
 #ifdef DEX_LOG
 #ifdef LOG_THREAD
 	WaitForSingleObject(m_eventMutex, DEXINFINITE);
-	m_logTasks.push_front(log_end);
+	m_logTasks.emplace_front(log_end);
 	SetEvent(m_eventMutex);
 #else
 	if (m_bLogFile)

@@ -4,29 +4,34 @@
 #include <time.h>
 #include "CDexTime.h"
 
-CDexTime::CDexTime()
+
+SINGLETON_IMPLEMENT(DexTime, DexTime)
+DexTime::DexTime()
 {
 	m_iDelta = 0;
 	m_fTimeScale = 1.0f;
 	UpdateTime();
 }
-int CDexTime::getDeltaTime()
+DexTime::~DexTime()
+{
+}
+int DexTime::getDeltaTime()
 {
 	return m_iDelta * m_fTimeScale;
 }
-int CDexTime::getDeltaTimeReal()
+int DexTime::getDeltaTimeReal()
 {
 	return m_iDelta;
 }
-float CDexTime::getTimeScale()
+float DexTime::getTimeScale()
 {
 	return m_fTimeScale;
 }
-void CDexTime::setTimeScale(float timeScale)
+void DexTime::setTimeScale(float timeScale)
 {
 	m_fTimeScale = timeScale;
 }
-void CDexTime::UpdateTime()
+void DexTime::UpdateTime()
 {
 	timeb   tp;
 	ftime(&tp);	
@@ -47,41 +52,38 @@ void CDexTime::UpdateTime()
 	m_time.weekday = temp->tm_wday;
 }
 
-void CDexTime::PrintInfo()
+void DexTime::PrintInfo()
 {
 }
 
-signed __int64 CDexTime::GetTotalMillSeconds()
+signed __int64 DexTime::GetTotalMillSeconds()
 {
 	return m_time.totalMillSeconds;
 }
 
-void CDexTime::BeginGameCycle()
+void DexTime::BeginGameCycle()
 {
 	UpdateTime();
 	m_iGameBeginTick = m_time.totalMillSeconds;
 }
 
-void CDexTime::EndGameCycle()
+void DexTime::EndGameCycle()
 {
 	UpdateTime();
 	m_iDelta = m_time.totalMillSeconds - m_iGameBeginTick;
 }
 
-CDexTime* getTime()
+stTime& DexTime::getTime()
 {
-	static CDexTime* g_time = new CDexTime;
-	g_time->UpdateTime();
-	return g_time;
+	return m_time;
 }
-
 
 DexTimeCheck::DexTimeCheck(signed __int64& param) :m_pParam(param)
 {
-	m_iTick = getTime()->GetTotalMillSeconds();
+	m_iTick = DexTime::getSingleton()->GetTotalMillSeconds();
 }
 
 DexTimeCheck::~DexTimeCheck()
 {
-	m_pParam = getTime()->GetTotalMillSeconds() - m_iTick;
+	m_pParam = DexTime::getSingleton()->GetTotalMillSeconds() - m_iTick;
 }

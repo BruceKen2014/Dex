@@ -43,7 +43,7 @@ void CDexGuiAction::SetDeleteSelf(bool deleteSelf)
 
 bool CDexGuiAction::Update(int delta)
 {
-	DEX_ENSURE_B(CDexObject::Update(delta));
+	DEX_ENSURE_B(DexObject::Update(delta));
 	m_iAlreadDelta += delta;
 	UpdateThis(delta);
 	if(m_complete)
@@ -101,7 +101,7 @@ void CDexGuiAction::AfterAction()
 		m_owner->EraseAction(this);
 }
 
-void CDexGuiAction::SetOwner(CDexWidget* owner)
+void CDexGuiAction::SetOwner(DexWidget* owner)
 {
 	m_owner = owner;
 }
@@ -396,7 +396,7 @@ void CDexGuiActionMove::AfterAction()
 	CDexGuiAction::AfterAction();
 	//m_owner->SetWidgetFlag(m_oldFlag);
 }
-void CDexGuiActionMove::SetOwner(CDexWidget* owner)
+void CDexGuiActionMove::SetOwner(DexWidget* owner)
 {
 	DEX_ENSURE(owner);
 	CDexGuiAction::SetOwner(owner);
@@ -577,7 +577,7 @@ void CDexGuiActionSizeChange::OnTimer(const stTimer& timer)
 		//m_owner->Resize(m_currSize, m_changeChildren);	
 		//if(abs(m_currSize.x - m_destSize.x) < abs(xDelta))
 		//{//尺寸更改完成
-		//	m_tempTime = getTime()->GetTotalMillSeconds() - m_tempTime;
+		//	m_tempTime = DexTime::getSingleton()->GetTotalMillSeconds() - m_tempTime;
 		//	m_owner->Resize(m_destSize, m_changeChildren);
 		//	m_complete = true;
 		//}
@@ -585,7 +585,7 @@ void CDexGuiActionSizeChange::OnTimer(const stTimer& timer)
 	}
 }
 
-void CDexGuiActionSizeChange::SetOwner(CDexWidget* owner)
+void CDexGuiActionSizeChange::SetOwner(DexWidget* owner)
 {
 	DEX_ENSURE(owner);
 	CDexGuiAction::SetOwner(owner);
@@ -754,7 +754,7 @@ void CDexGuiActionAlphaChange::UpdateAlphaChangeTime()
 	}
 }
 
-void CDexGuiActionAlphaChange::SetOwner(CDexWidget* owner)
+void CDexGuiActionAlphaChange::SetOwner(DexWidget* owner)
 {
 	DEX_ENSURE(owner);
 	CDexGuiAction::SetOwner(owner);

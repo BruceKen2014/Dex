@@ -24,7 +24,7 @@
 
 CLoadingState::CLoadingState()
 {
-	g_pImageBackgroud = (CDexWidgetImage*) getWidgetFactory()->createWidget(widget_image, "background"); 
+	g_pImageBackgroud = (DexWidgetImage*) getWidgetFactory()->createWidget(widget_image, "background"); 
 	g_pImageBackgroud->Resize(DexSize(800, 600));
 	g_pImageBackgroud->SetPos(0,0);
 	g_pImageBackgroud->SetTexName("b23.png");
@@ -134,7 +134,7 @@ bool ParticalEditState::ApplyRes()
 	D3DXMATRIX localRotateMatrix;
 	D3DXMATRIX localScaleMatrix;
 	DexGameEngine::getEngine()->setRenderPieceEffectRoute(true);
-	m_editBox = (CDexWidgetEditBox*) getWidgetFactory()->createWidget(widget_editbox, "editbox"); 
+	m_editBox = (DexWidgetEditBox*) getWidgetFactory()->createWidget(widget_editbox, "editbox"); 
 	m_editBox->m_DisTextUpdate += UI_DELEGATE(this, ParticalEditState, OnEditTextUpdate);
 	m_editBox->SetBackImage("22y.png", DexRect(345, 666, 650, 695));
 	m_editBox->SetStartOffset(20, 5);
@@ -675,7 +675,7 @@ void ParticalEditState::KeyDown()
 	
 }
 
-void ParticalEditState::OnEditTextUpdate(CEventHandler* sys, CDexObject* object,stEvent event)
+void ParticalEditState::OnEditTextUpdate(CEventHandler* sys, DexObject* object,stEvent event)
 {
 	ParticalEditState* system = (ParticalEditState*)sys;
 	string str = system->m_editBox->GetEditText();
@@ -684,7 +684,7 @@ void ParticalEditState::OnEditTextUpdate(CEventHandler* sys, CDexObject* object,
 	DexGameEngine::getEngine()->DoLuaString(str.c_str());
 }
 
-void ParticalEditState::OnEventClickTalkSystem(CEventHandler* sys, CDexObject* object,stEvent event)
+void ParticalEditState::OnEventClickTalkSystem(CEventHandler* sys, DexObject* object,stEvent event)
 {
 	DexLog::getSingleton()->BeginLog();
 	DexLog::getSingleton()->Log(log_ok, "click");
@@ -717,6 +717,6 @@ void TestPanel::Render()
 		m_editBox->Render();
 }
 
-void TestPanel::OnEditTextUpdate(CDexObject* object,stEvent event)
+void TestPanel::OnEditTextUpdate(DexObject* object,stEvent event)
 {
 }

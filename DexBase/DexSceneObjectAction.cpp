@@ -32,7 +32,7 @@ void DexSceneObjectAction::Reset()
 
 bool DexSceneObjectAction::Update(int delta)
 {
-	DEX_ENSURE_B(CDexObject::Update(delta));
+	DEX_ENSURE_B(DexObject::Update(delta));
 	DEX_ENSURE_B(m_pSceneObject);
 	return true;
 }
@@ -69,7 +69,7 @@ void DexSceneObjectAction::bindSceneObject(CDexSceneObject* object)
 
 bool DexSceneObjectAction::ArchiveIn(DexMem& mem)
 {
-	DEX_ENSURE_B(CDexObject::ArchiveIn(mem));
+	DEX_ENSURE_B(DexObject::ArchiveIn(mem));
 	mem>>m_bCycle;
 	mem>>m_bComplete;
 	mem>>m_bRender;
@@ -77,7 +77,7 @@ bool DexSceneObjectAction::ArchiveIn(DexMem& mem)
 }
 bool DexSceneObjectAction::ArchiveOut(DexMem& mem) const
 {
-	DEX_ENSURE_B(CDexObject::ArchiveOut(mem));
+	DEX_ENSURE_B(DexObject::ArchiveOut(mem));
 	mem<<m_bCycle;
 	mem<<m_bComplete;
 	mem<<m_bRender;

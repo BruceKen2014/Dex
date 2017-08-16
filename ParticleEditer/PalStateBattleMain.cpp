@@ -37,7 +37,7 @@
 //#include "Pal2Global.h"
 
 
-
+PalGameStateBattleMain* pTestGlobal = DexNull;
 PalGameStateBattleMain::PalGameStateBattleMain()
 {
 	m_pCurrOperationPlayer = NULL;
@@ -61,6 +61,7 @@ PalGameStateBattleMain::PalGameStateBattleMain()
 	m_pBattleMainMachine->AddState(selectTarget);
 
 	m_pBattleMainMachine->setCurrState(labelMove->getType());
+	pTestGlobal = this;
 }
 PalGameStateBattleMain::~PalGameStateBattleMain()
 {
@@ -225,6 +226,10 @@ bool PalGameStateBattleMain::getVisible(string type)
 	return ret;
 }
 
+void PalGameStateBattleMain::SetBackImageVisible(DBool visible)
+{
+	g_pImageBackgroud->setVisible(visible);
+}
 bool PalGameStateBattleMain::ApplyRes()
 {
 	DexIni iniHandle;
@@ -248,7 +253,7 @@ bool PalGameStateBattleMain::ApplyRes()
 	DexGameEngine::getEngine()->LookAtLH(&cameraPos, &lookAtPos, &upDir);
 	DexGameEngine::getEngine()->setRendeCollideMesh(true);
 
-	PalPanelInterface* panel = new PalPanel_Order;
+	DexPanelInterface* panel = new PalPanel_Order;
 	panel->Initialize();
 	panel->setVisible(false);
 	m_mapBattlePanels[panel->getType()] = panel;
@@ -266,13 +271,14 @@ bool PalGameStateBattleMain::ApplyRes()
 	//D3DXMatrixPerspectiveFovLH(&m_testProjection,D3DX_PI/4.0f,1,1,100);
 	//DexGameEngine::getEngine()->GetDevice()->GetTransform(D3DTS_PROJECTION, & m_testProjectionOld);
 	DexGameEngine::getEngine()->GetDevice()->GetRenderTarget(0, &DexGameEngine::getEngine()->m_pBackSurface);
-	g_pImageBackgroud = (CDexWidgetImage*)getWidgetFactory()->createWidget(widget_image, "background111");
+	g_pImageBackgroud = (DexWidgetImage*)getWidgetFactory()->createWidget(widget_image, "background111");
 
 	g_pImageBackgroud->SetTexName("b23.png");
 	g_pImageBackgroud->SetPos(200, 200);
 	g_pImageBackgroud->Resize(DexSize(300, 300));
-	g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
-	g_pImageBackgroud->setVisible(true);
+	g_pImageBackgroud->ModifyFlag(Add_Flag, DexGUI::mouse_move);
+	//g_pImageBackgroud->ModifyFlag(Minus_Flag, catch_event);
+	g_pImageBackgroud->setVisible(false);
 	g_pProgressBar = (DexWidgetProgressBar*)getWidgetFactory()->createWidget(widget_progressBar, "progressBar");
 	g_pProgressBar->SetProgressImage("image1.png", DexRectF(50, 26, 60, 29), "image1.png", DexRectF(50, 23, 60, 25));
 	g_pProgressBar->SetPos(210, 210);
@@ -332,6 +338,7 @@ bool PalGameStateBattleMain::ApplyRes()
 	ms3d->SetLightFlag(DEXRENDER_LIGHT_ALL_ON | DEXRENDER_ENABLE_FOG);
 	DexMatrix4x4 world_matrix;
 
+
 	groundModel = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dexmodel/ground.dexmodeltext");//dexmodeltext
 
 	testMesh = (DexSkinMesh*)DexGameEngine::getEngine()->CreateModel("model/dexmodel/cube.dexmodeltext");//dexmodeltext 
@@ -367,7 +374,6 @@ bool PalGameStateBattleMain::ApplyRes()
 	InitVertexShader();
 	InitPixelShader();
 	m_bApply = true;
-	
 	
 	DexGameEngine::stDexModuleInfo* moduleInfo = DexGameEngine::getEngine()->GetModuleInfo();
 	DexLog::getSingleton()->LogLine(log_error, " 模块地址 %X  程序入口地址:%X 大小%d 函数地址 %X", moduleInfo->iModuleAddress, moduleInfo->iStartFunctionAddress, moduleInfo->iModuleSize, testfunctionAddress);
@@ -495,7 +501,7 @@ bool PalGameStateBattleMain::Update(int delta)
 		//	
 		//}
 	}
-	for(std::map<string, PalPanelInterface*>::iterator ite = m_mapBattlePanels.begin();
+	for(std::map<string, DexPanelInterface*>::iterator ite = m_mapBattlePanels.begin();
 		 ite != m_mapBattlePanels.end(); ++ite)
 	{
 		if(ite->second != NULL)
@@ -535,8 +541,8 @@ void PalGameStateBattleMain::BeginRender()
 	//
 	//DexGameEngine::getEngine()->GetDevice()->EndScene();
 	//D3DXSaveTextureToFile("11.jpg",D3DXIFF_JPG,m_testTexture,NULL);
-	DexGameEngine::getEngine()->GetDevice()->SetRenderTarget(0, DexGameEngine::getEngine()->m_pBackSurface);
-	DexGameEngine::getEngine()->GetDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, getD3DColor(m_pScene->getClearColor()), 1.0f, 0);
+	//DexGameEngine::getEngine()->GetDevice()->SetRenderTarget(0, DexGameEngine::getEngine()->m_pBackSurface);
+	//DexGameEngine::getEngine()->GetDevice()->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, getD3DColor(m_pScene->getClearColor()), 1.0f, 0);
 
 }
 void PalGameStateBattleMain::Render()
@@ -632,7 +638,7 @@ void PalGameStateBattleMain::Render()
 	//DexGameEngine::getEngine()->DrawPrimitive(DexPT_TRIANGLELIST, test_primitive_vertex, 8, test_primitive_indice, 12, sizeof(stVertex0));
 	//getGlobal()->g_pJingtian->Render();
 	get2DDrawer()->BeginDraw2D();
-	for(std::map<string, PalPanelInterface*>::iterator ite = m_mapBattlePanels.begin();
+	for(std::map<string, DexPanelInterface*>::iterator ite = m_mapBattlePanels.begin();
 		 ite != m_mapBattlePanels.end(); ++ite)
 	{
 		if(ite->second != NULL)

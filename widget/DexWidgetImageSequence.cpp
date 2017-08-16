@@ -46,11 +46,11 @@ void CDexWidgetImageSequence::ShutDown()
 			it = m_ImageVec.begin();
 		}
 	}
-	CDexWidget::ShutDown();
+	DexWidget::ShutDown();
 }
 bool CDexWidgetImageSequence::Update(int delta)
 {
-	DEX_ENSURE_B(CDexWidget::Update(delta));
+	DEX_ENSURE_B(DexWidget::Update(delta));
 	DEX_ENSURE_B(!m_stop);
 	m_currPast += delta;
 	if(m_currPast >= m_interval)

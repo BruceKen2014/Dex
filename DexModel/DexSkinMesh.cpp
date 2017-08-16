@@ -170,7 +170,7 @@ void DexSkinMesh::DexMesh::DestroyNormalBuffer()
 	m_vecDebugNormalBuffer.clear();
 	m_vecDebugNormalIndices.clear();
 }
-DUDInt32 DexSkinMesh::DexMesh::GetNormalBufferCount() const
+DUInt32 DexSkinMesh::DexMesh::GetNormalBufferCount() const
 {
 	return m_vecDebugNormalBuffer.size();
 }
@@ -180,7 +180,7 @@ void* DexSkinMesh::DexMesh::GetNormalBuffer()
 	DEX_ENSURE_P(m_vecDebugNormalBuffer.size() != 0);
 	return (void*)&m_vecDebugNormalBuffer[0];
 }
-DUDInt32 DexSkinMesh::DexMesh::GetNormalIndiceCount() const
+DUInt32 DexSkinMesh::DexMesh::GetNormalIndiceCount() const
 {
 	return m_vecDebugNormalIndices.size();
 }
@@ -193,7 +193,7 @@ void* DexSkinMesh::DexMesh::GetNormalIndiceBuffer()
 
 void DexSkinMesh::DexMesh::CreateVertexToJointBuffer(const DVector<Joint*>& vecJoints)
 {
-	DUDInt32 iVertexSize = m_vecVertexsBuffer.size();
+	DUInt32 iVertexSize = m_vecVertexsBuffer.size();
 	for (size_t i = 0; i < iVertexSize; ++i)
 	{
 		stMeshVertex temp;
@@ -230,7 +230,7 @@ void DexSkinMesh::DexMesh::DestroyVertexToJointlBuffer()
 	m_vecDebugVertexToJointBuffer.clear();
 	m_vecDebugVertexToJointIndices.clear();
 }
-DUDInt32 DexSkinMesh::DexMesh::GetVertexToJointBufferCount() const
+DUInt32 DexSkinMesh::DexMesh::GetVertexToJointBufferCount() const
 {
 	return m_vecDebugVertexToJointBuffer.size();
 }
@@ -240,7 +240,7 @@ void* DexSkinMesh::DexMesh::GetVertexToJointBuffer()
 	DEX_ENSURE_P(m_vecDebugVertexToJointBuffer.size() != 0);
 	return (void*)&m_vecDebugVertexToJointBuffer[0];
 }
-DUDInt32 DexSkinMesh::DexMesh::GetVertexToJointIndiceCount() const
+DUInt32 DexSkinMesh::DexMesh::GetVertexToJointIndiceCount() const
 {
 	return m_vecDebugVertexToJointIndices.size();
 }
@@ -251,7 +251,7 @@ void* DexSkinMesh::DexMesh::GetVertexToJointIndiceBuffer()
 	return (void*)&m_vecDebugVertexToJointIndices[0];
 }
 
-DUDInt32 DexSkinMesh::DexMesh::GetVertexCount() const
+DUInt32 DexSkinMesh::DexMesh::GetVertexCount() const
 {
 	return m_vecVertexsBuffer.size();
 }
@@ -261,7 +261,7 @@ void* DexSkinMesh::DexMesh::GetVertexBuffer()
 	DEX_ENSURE_P(m_vecVertexsBuffer.size() != 0);
 	return (void*)&m_vecVertexsBuffer[0];
 }
-DUDInt32 DexSkinMesh::DexMesh::GetIndiceCount() const
+DUInt32 DexSkinMesh::DexMesh::GetIndiceCount() const
 {
 	return m_vecIndices.size();
 }
@@ -271,7 +271,7 @@ void* DexSkinMesh::DexMesh::GetIndiceBuffer()
 	DEX_ENSURE_P(m_vecIndices.size() != 0);
 	return (void*)&m_vecIndices[0];
 }
-DUDInt32 DexSkinMesh::DexMesh::GetLineIndiceCount() const
+DUInt32 DexSkinMesh::DexMesh::GetLineIndiceCount() const
 {
 	return m_vecLineIndices.size();
 }
@@ -281,9 +281,9 @@ void* DexSkinMesh::DexMesh::GetLineIndiceBuffer()
 	DEX_ENSURE_P(m_vecLineIndices.size() != 0);
 	return (void*)&m_vecLineIndices[0];
 }
-DUDInt32 DexSkinMesh::DexMesh::AddVertex(const DexVector3& pos, const DexVector3& normal, float u, float v)
+DUInt32 DexSkinMesh::DexMesh::AddVertex(const DexVector3& pos, const DexVector3& normal, float u, float v)
 {
-	DUDInt32 ret = 0;
+	DUInt32 ret = 0;
 	DexVector3 Normal(normal);
 	Normal.Normalize();
 	bool find = false;
@@ -668,7 +668,7 @@ void DexSkinMesh::SetMeshVertexs(DInt8 meshId, void* vertexs, DInt32 count)
 	mesh->m_vecVertexsBuffer.clear();
 	mesh->m_vecVertexsBuffer.resize(count);
 	memcpy(&mesh->m_vecVertexsBuffer[0], vertexs, sizeof(stMeshVertex)*count);
-	//for (DUDInt32 i = 0; i < count; ++i)
+	//for (DUInt32 i = 0; i < count; ++i)
 	//	mesh->m_vecVertexs.push_back(((stVertex3*)vertexs)[i]);
 }
 void DexSkinMesh::SetMeshIndices(DInt8 meshId, void* indics, DInt32 count)
@@ -678,7 +678,7 @@ void DexSkinMesh::SetMeshIndices(DInt8 meshId, void* indics, DInt32 count)
 	mesh->m_vecIndices.clear();
 	mesh->m_vecIndices.resize(count);
 	memcpy(&mesh->m_vecIndices[0], indics, sizeof(DInt32)*count);
-	//for (DUDInt32 i = 0; i < count; ++i)
+	//for (DUInt32 i = 0; i < count; ++i)
 	//	mesh->m_vecIndices.push_back(((DInt32*)indics)[i]);
 }
 
@@ -851,9 +851,9 @@ DexSkinMesh::Joint* DexSkinMesh::FindJoint(string name)
 	return ret;
 }
 
-DUDInt32 DexSkinMesh::FindJointIndex(DString name)
+DUInt32 DexSkinMesh::FindJointIndex(DString name)
 {
-	DUDInt32 ret = -1;
+	DUInt32 ret = -1;
 	for (size_t i = 0; i < m_vecJoints.size(); ++i)
 	{
 		if (m_vecJoints[i] != NULL && m_vecJoints[i]->str_name == name)
@@ -1262,7 +1262,7 @@ void DexSkinMesh::SetJointScale(DFloat32 fScale)
 
 void DexSkinMesh::SetOrderInfo(const DVector<DInt32>& vector)
 {
-	DUDInt32 size = m_vecMeshs.size();
+	DUInt32 size = m_vecMeshs.size();
 	DEX_ENSURE(size == vector.size());//二者必須相等
 	DVector<DexMesh*> tempVecMeshs;
 	for (size_t i = 0; i < size; ++i)

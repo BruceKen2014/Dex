@@ -1,6 +1,6 @@
 #pragma  once
 #include "DexBase/typedefine.h"
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 #include "Source/CTexture.h"
 #include "DexBase/CIni.h"
 
@@ -76,7 +76,7 @@ public:
 };
 
 
-class PalNumberManager: public CDexObject
+class PalNumberManager: public DexObject
 {
 protected:
 	std::list<PalNumberAni*>  g_listNumbers;

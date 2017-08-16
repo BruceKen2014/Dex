@@ -9,7 +9,7 @@
 #include <vector>
 //Õº∆¨–Ú¡–
 class CDexTex;
-class CDexWidgetImageSequence: public CDexWidget
+class CDexWidgetImageSequence: public DexWidget
 {
 protected:
 	 typedef std::vector<stUiImage*>  TImageVec;

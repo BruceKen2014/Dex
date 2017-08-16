@@ -33,6 +33,12 @@
 #include "../DexModel/DexModelSkinMeshTextLoader.h"
 #include "../DexModel/DexModelAniFileFF12ActLoader.h"
 #include "../DexModel/DexModelAniFileText.h"
+#include "../widget/DexWidgetFactory.h"
+#include "../widget/DexWidgetEditBox.h"
+#include "../DexBase/DexEngineCommandPanel.h"
+#include "../DexBase/CDexDraw2D.h"
+#include "../Expression/DexScriptMgr.h"
+#include "../DexBase/DexCommand.h"
 
 /*目前的DexGameEngine特指windows engine，如果日后要在别的平台上开发，需要将engine抽象为基类
 实现windows派生类，然后再实现对应平台的派生类*/
@@ -79,6 +85,7 @@ DexGameEngine::DexGameEngine()
 	g_material.Power = 0;
 	m_RenderMode = DexRenderMode_TRIANGLE;
 	m_pRender = DexNull;
+	g_strCommandLine.append(GetCommandLine());
 	vecModelLoader.push_back(new DexModelMs3dLoader);
 	vecModelLoader.push_back(new DexModelObjLoader);
 	vecModelLoader.push_back(new DexModelDaeLoader);
@@ -155,6 +162,8 @@ bool DexGameEngine::InitModuleInfo()
 	g_stModuleInfo.iStartFunctionAddress = (DEXWORD)moduleInfo.EntryPoint;
 	g_stModuleInfo.iModuleSize = (DEXWORD)moduleInfo.SizeOfImage;
 	return true;
+#else
+#pragma warning("implement module info on this platform!")
 #endif 
 	return false;
 }
@@ -247,6 +256,10 @@ bool DexGameEngine::Initialize(int flag)
 		CreateDevice(DexDeviceOpenGLWindows::getClassType());
 	}
 	g_pDevice->SetRenderState(DEXRENDERSTATE_LIGHTING, FALSE); 
+	g_pCommandPanel = Dex_QueryObject(DexPanelCommand);
+	g_pCommandPanel->Initialize();
+	InitCommand();
+	g_pScriptMgr = new CDexScriptMgr;
 	g_TextureManager = DexTextureManager::GetManager();
 	return true;
 }
@@ -527,7 +540,7 @@ DexModelBase* DexGameEngine::CreateModel(const char* filename, int flag)
 {
 	DexModelBase* ret = NULL;
 	const char* suffix = dexstrchr(filename, '.');
-	for (DUDInt32 i = 0; i < vecModelLoader.size(); ++i)
+	for (DUInt32 i = 0; i < vecModelLoader.size(); ++i)
 	{
 		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(suffix))
 		{
@@ -542,7 +555,7 @@ bool DexGameEngine::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int 
 {
 	bool ret = false;
 	const char* suffix = dexstrchr(filename, '.');
-	for (DUDInt32 i = 0; i < vecModelLoader.size(); ++i)
+	for (DUInt32 i = 0; i < vecModelLoader.size(); ++i)
 	{
 		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(suffix))
 		{
@@ -557,7 +570,7 @@ bool DexGameEngine::SaveModel(DexSkinMesh* pSkinMesh, const char* filename, int 
 bool DexGameEngine::ReadModelAnimation(DexSkinMesh* pDexSkinMesh, const char* filename)
 {
 	const char* suffix = dexstrchr(filename, '.');
-	for (DUDInt32 i = 0; i < vecModelAniLoader.size(); ++i)
+	for (DUInt32 i = 0; i < vecModelAniLoader.size(); ++i)
 	{
 		if (vecModelAniLoader[i] != NULL && vecModelAniLoader[i]->SupportType(suffix))
 		{
@@ -569,7 +582,7 @@ bool DexGameEngine::ReadModelAnimation(DexSkinMesh* pDexSkinMesh, const char* fi
 
 bool DexGameEngine::ReadFFSkeletonInfo(DexSkinMesh* pDexSkinMesh, DString filename)
 {
-	for (DUDInt32 i = 0; i < vecModelLoader.size(); ++i)
+	for (DUInt32 i = 0; i < vecModelLoader.size(); ++i)
 	{
 		if (vecModelLoader[i] != NULL && vecModelLoader[i]->SupportType(".dae"))
 		{
@@ -622,7 +635,7 @@ void DexGameEngine::SetCurrState(string state_name)
 
 void DexGameEngine::UpdateFps()
 {
-	g_iCurrentTime = getTime()->GetTotalMillSeconds();
+	g_iCurrentTime = DexTime::getSingleton()->GetTotalMillSeconds();
 	if(g_iCurrentTime - g_iLastTime > 1000.0f)
 	{
 		g_iLastTime = g_iCurrentTime;
@@ -635,9 +648,28 @@ void DexGameEngine::UpdateFps()
 	}
 }
 
+void DexGameEngine::KeyUp()
+{
+	if (CInputSystem::GetInputSingleton().KeyUp(DIK_F1))
+	{
+		g_pCommandPanel->setVisible(!g_pCommandPanel->getVisible());
+	}
+}
+
 void DexGameEngine::CalculateLightData()
 {
 }
+
+DBool DexGameEngine::FindCommandArgus(const DChar* str)
+{
+	return g_strCommandLine.find(str) != DString::npos;
+}
+
+DString DexGameEngine::GetCommandString()
+{
+	return g_strCommandLine;
+}
+
 void DexGameEngine::Run()
 {
 	MSG msg; 
@@ -658,10 +690,10 @@ void DexGameEngine::Run()
 		//EnterCriticalSection(&g_cs);
 		//if(!m_bLoading)
 		//{
-		getTime()->BeginGameCycle();
+		DexTime::getSingleton()->BeginGameCycle();
 		Update();
 		Render();
-		getTime()->EndGameCycle();
+		DexTime::getSingleton()->EndGameCycle();
 		//}
 		//LeaveCriticalSection(&g_cs);
 	}
@@ -711,9 +743,10 @@ void DexGameEngine::Update()
 	{
 		g_pCurrState->MouseRUp(g_iMouseX, g_iMouseY);
 	}
-	
+	g_pScriptMgr->Run(delta);
 	getCamera()->Update(delta);
-	
+	g_pCommandPanel->Update(delta);
+	KeyUp();
 	g_pCurrState->KeyUp();
 	g_pCurrState->KeyDown();
 	g_pCurrState->Update(delta);
@@ -731,11 +764,14 @@ void DexGameEngine::Render()
 	DEX_ENSURE(g_pCurrState);
 	g_pDevice->BeginScene();
 
-	g_pDevice->Clear(DEXCLEAR_TARGET | DEXCLEAR_ZBUFFER, DexColor(125,125,125), 1.0, 0);
+	g_pDevice->Clear(DEXCLEAR_TARGET | DEXCLEAR_ZBUFFER, g_clearColor, 1.0, 0);
 	g_pCurrState->BeginRender();
 	g_pCurrState->Render();
 	g_pCurrState->EndRender();
 
+	get2DDrawer()->BeginDraw2D();
+	g_pCommandPanel->Render();
+	get2DDrawer()->EndDraw2D();
 	g_pDevice->EndScene();
 }
 
@@ -743,7 +779,25 @@ void DexGameEngine::SetRenderMode(DexRenderMode mode)
 {
 	m_RenderMode = mode;
 }
+DInt16 DexGameEngine::GetWindowWidth()
+{
+	return g_iWindowWidth;
+}
 
+DInt16 DexGameEngine::GetWindowHeight()
+{
+	return g_iWinddowHeight;
+}
+
+void DexGameEngine::InitCommand()
+{
+	DECLARE_COMMAND(SetClearColor);
+}
+
+void DexGameEngine::ExecCommand(DString command)
+{
+	g_pScriptMgr->AddCommand(command);
+}
 DexRenderMode DexGameEngine::GetRenderMode()
 {
 	return m_RenderMode;
@@ -753,6 +807,11 @@ void DexGameEngine::OnDragFiles(const DVector<DString>& FileNames)
 {
 	DEX_ENSURE(g_pCurrState != DexNull);
 	g_pCurrState->OnDragFiles(FileNames);
+}
+
+void DexGameEngine::SetClearColor(DFloat32 r, DFloat32 g, DFloat32 b)
+{
+	g_clearColor.Set(r,g,b,1.0f);
 }
 
 #define case_value2value(value1, para, value2) \

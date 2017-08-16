@@ -5,7 +5,7 @@
 #include "DexWidget.h"
 
 
-class CDexWidgetCheckBtn: public CDexWidget
+class CDexWidgetCheckBtn: public DexWidget
 {
 protected:
 	stUiImage*  m_checkTex;  //—°÷–Œ∆¿Ì

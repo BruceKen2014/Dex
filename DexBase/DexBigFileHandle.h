@@ -15,10 +15,10 @@ public:
 typedef struct _stDexBigFileContent
 {
 		   DexMd5 md5Key;  //16 byte
-		   DUDInt32  iBlockIndex;
-		   DUDInt32  iBlockCount;
-		   DUDInt32  iOrigionSize;
-		   DUDInt32  dummy;
+		   DUInt32  iBlockIndex;
+		   DUInt32  iBlockCount;
+		   DUInt32  iOrigionSize;
+		   DUInt32  dummy;
 		   _stDexBigFileContent()
 		   {
 			   iBlockCount = 0;
@@ -30,14 +30,14 @@ typedef struct _stDexBigFileContent
 }stDexBigFileContent;
 typedef struct _stDexBigFileHeader
 {
-	 DUDInt32 count;
-	 DUDInt32 blockCount;
+	 DUInt32 count;
+	 DUInt32 blockCount;
      _stDexBigFileHeader() :count(0), blockCount(0){};
 }stDexBigFileHeader;
 typedef struct _stDexBigFileBlock
 {
 	DUInt64 iByteOffset;
-	DUDInt32  iBlockSize;
+	DUInt32  iBlockSize;
 	bool	bCompress;
 	
 	_stDexBigFileBlock() :bCompress(true), iBlockSize(0), iByteOffset(0){};
@@ -55,7 +55,7 @@ public:
 	bool OpenFile(const char* filename);
 	DUInt64 FileSize();
 	void CloseFile();
-	DUDInt32 ContentCount();
+	DUInt32 ContentCount();
 	void ClearContent();
 public:
 	DexBigFileHandle();

@@ -6,7 +6,7 @@
 #include <map>
 #include <list>
 
-class CDexObject;
+class DexObject;
 
 /*
 object factory 是所有object的老家，所有object从这里出生，生命的最后会回到这里，
@@ -23,15 +23,15 @@ private:
 private:
 	static CDexObjectFactroy* g_pObjectFactory;
 	int    g_iObjectCount;
-	typedef std::map<std::string, std::list<CDexObject*>> TMapObject; //string為類名 list是已創建的該類的實例鏈錶
+	typedef std::map<std::string, std::list<DexObject*>> TMapObject; //string為類名 list是已創建的該類的實例鏈錶
 	TMapObject g_Objects;
 	void Initialize();  
 private:
-	CDexObject* createObject(std::string classType);
+	DexObject* createObject(std::string classType);
 public:
 	static CDexObjectFactroy* getObjectFactory();
-	CDexObject* queryObject(std::string classType);
-	void allocateObject(CDexObject* object);
+	DexObject* queryObject(std::string classType);
+	void allocateObject(DexObject* object);
 	DInt32 getObjectId();
 };
 

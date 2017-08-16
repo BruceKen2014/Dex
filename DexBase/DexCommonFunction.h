@@ -33,6 +33,14 @@ public:
 	static bool   StrToD3DVector3(DString str, D3DXVECTOR3& vec, char split_char = ';');
 	//函数功能：取得文件名中的路径，如传入filename如model/x.obj,传出path如model/
 	static DString&   getFilePath(DString filename, DString& path);
-
+	template<typename T>
+	static inline T& clip(T& _value, const T& _small, const T& _big);
 };
+template<typename T>
+inline T& DexCommonFunction::clip(T& _value, const T& _small, const T& _big)
+{
+	if (_value <_small) _value = _small;
+	else if (_value >_big)   _value = _big;
+	return _value;
+}
 #endif

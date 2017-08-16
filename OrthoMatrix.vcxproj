@@ -166,11 +166,13 @@
   <ItemGroup>
     <ClInclude Include="DexBase\DDeque.h" />
     <ClInclude Include="DexBase\DexBigFileHandle.h" />
+    <ClInclude Include="DexBase\DexCommand.h" />
     <ClInclude Include="DexBase\DexCommonFunction.h" />
     <ClInclude Include="DexBase\DexCompiler.h" />
     <ClInclude Include="DexBase\DexDefine.h" />
     <ClInclude Include="DexBase\DexDeviceDirectx9.h" />
     <ClInclude Include="DexBase\DexDeviceOpenGLWindows.h" />
+    <ClInclude Include="DexBase\DexEngineCommandPanel.h" />
     <ClInclude Include="DexBase\DexFile.h" />
     <ClInclude Include="DexBase\DexIni.h" />
     <ClInclude Include="DexBase\DexList.h" />
@@ -181,6 +183,7 @@
     <ClInclude Include="DexBase\DexTextureDx9.h" />
     <ClInclude Include="DexBase\DexTextureManager.h" />
     <ClInclude Include="DexBase\DexTextureNull.h" />
+    <ClInclude Include="DexBase\DexVirtualKey.h" />
     <ClInclude Include="DexBase\IDexDevice.h" />
     <ClInclude Include="DexBase\DexDMap.h" />
     <ClInclude Include="DexBase\DexLight.h" />
@@ -247,7 +250,7 @@
     <ClInclude Include="Pal3Wai\PalScriptFun.h" />
     <ClInclude Include="DexBase\CDelegate.h" />
     <ClInclude Include="DexBase\CDexDraw2D.h" />
-    <ClInclude Include="DexBase\CDexObject.h" />
+    <ClInclude Include="DexBase\DexObject.h" />
     <ClInclude Include="DexBase\CDexPartical.h" />
     <ClInclude Include="DexBase\CDexTime.h" />
     <ClInclude Include="DexBase\CEventHandler.h" />
@@ -330,6 +333,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </CustomBuildStep>
     <ClInclude Include="widget\DexWidgetProgressBar.h" />
+    <ClInclude Include="widget\DexPanelInterface.h" />
     <ClInclude Include="xml\tinystr.h" />
     <ClInclude Include="xml\tinyxml.h" />
     <ClInclude Include="state\DexGameEngine.h" />
@@ -337,9 +341,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DexBase\DexBigFileHandle.cpp" />
+    <ClCompile Include="DexBase\DexCommand.cpp" />
     <ClCompile Include="DexBase\DexCommonFunction.cpp" />
     <ClCompile Include="DexBase\DexDeviceDirectx9.cpp" />
     <ClCompile Include="DexBase\DexDeviceOpenGLWindows.cpp" />
+    <ClCompile Include="DexBase\DexEngineCommandPanel.cpp" />
     <ClCompile Include="DexBase\DexFile.cpp" />
     <ClCompile Include="DexBase\DexIni.cpp" />
     <ClCompile Include="DexBase\DexMd5Generator.cpp" />
@@ -398,7 +404,7 @@
     <ClCompile Include="Pal3Wai\PalScriptFun.cpp" />
     <ClCompile Include="DexBase\CDelegate.cpp" />
     <ClCompile Include="DexBase\CDexDraw2D.cpp" />
-    <ClCompile Include="DexBase\CDexObject.cpp" />
+    <ClCompile Include="DexBase\DexObject.cpp" />
     <ClCompile Include="DexBase\CDexPartical.cpp" />
     <ClCompile Include="DexBase\CDexTime.cpp" />
     <ClCompile Include="DexBase\CEventHandler.cpp" />
@@ -470,6 +476,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='DebugLib|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="widget\DexPanelInterface.cpp" />
     <ClCompile Include="xml\tinystr.cpp" />
     <ClCompile Include="xml\tinyxml.cpp" />
     <ClCompile Include="xml\tinyxmlerror.cpp" />

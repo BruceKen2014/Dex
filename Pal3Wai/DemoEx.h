@@ -260,7 +260,7 @@ void  ReleaseFight();
 void IniMesh();
 void HandleMesh();
 void RenderLightMesh();
-void  InterfaceUiOkButton(CDexObject* object, stEvent event)
+void  InterfaceUiOkButton(DexObject* object, stEvent event)
 {
 	_Message("确定按钮接受到消息，正在处理！");
 }

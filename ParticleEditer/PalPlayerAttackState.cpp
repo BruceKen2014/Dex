@@ -311,7 +311,7 @@ IDexState* PalPlayerAttackStateRunToTarget::Update()
 {
 	D3DXVECTOR3 pos = player->getStandOriginPosition();
 	D3DXVECTOR3 target_pos = (player->getTargets().front())->getStandOriginPosition();
-	run_count += getTime()->getDeltaTime();
+	run_count += DexTime::getSingleton()->getDeltaTime();
 	run_count = run_count > run_time ? run_time:run_count;
 	float percent = float(run_count)/run_time;
 	D3DXVECTOR3 new_pos = pos + (target_pos - pos)*percent;
@@ -376,7 +376,7 @@ IDexState* PalPlayerAttackStateRunBack::Update()
 {
 	D3DXVECTOR3 pos = player->getStandOriginPosition();
 	D3DXVECTOR3 target_pos = (player->getTargets().front())->getStandOriginPosition();
-	run_count += getTime()->getDeltaTime();
+	run_count += DexTime::getSingleton()->getDeltaTime();
 	run_count = run_count > run_time ? run_time:run_count;
 	float percent = float(run_count)/run_time;
 	D3DXVECTOR3 new_pos = target_pos + (pos - target_pos)*percent;
@@ -406,6 +406,6 @@ IDexState* PalPlayerAttackStateSkillPlaying::Update()
 	//DEX_ENSURE_P(player);
 	//PalSkill* skill = player->getCurrSkill();
 	//DEX_ENSURE_P(skill != NULL);
-	//skill->Update(getTime()->getDeltaTime());
+	//skill->Update(DexTime::getSingleton()->getDeltaTime());
 	return PalPlayerAttackState::Update();
 }

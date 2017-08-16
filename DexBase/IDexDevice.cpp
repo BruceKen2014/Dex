@@ -2,7 +2,7 @@
 
 #include "IDexDevice.h"
 
-IDexDevice::IDexDevice() :CDexObject()
+IDexDevice::IDexDevice() :DexObject()
 {
 
 }

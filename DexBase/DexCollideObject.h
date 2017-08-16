@@ -4,11 +4,11 @@
 
 #include "../Geometry/CBall.h"
 #include "../Geometry/CBox.h"
-#include "CDexObject.h"
+#include "DexObject.h"
 
-class DexCollideObject: public CDexObject
+class DexCollideObject: public DexObject
 {
-	Dex_DeclareClass(DexCollideObject, CDexObject, 0)
+	Dex_DeclareClass(DexCollideObject, DexObject, 0)
 protected:
 	D3DXVECTOR3   m_pos;
 public:

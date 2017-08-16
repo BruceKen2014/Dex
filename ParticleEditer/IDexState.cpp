@@ -193,5 +193,5 @@ bool IDexStateMachine::Update()
 			setCurrState(nextState);
 		}
 	}
-	return Super::Update(getTime()->getDeltaTime());
+	return Super::Update(DexTime::getSingleton()->getDeltaTime());
 }

@@ -4,17 +4,17 @@
 #ifndef _PAL_TALK_SYSTEM_H
 #define _PAL_TALK_SYSTEM_H 
 
-#include "DexBase/CDexObject.h"
-class CDexWidgetImage;
+#include "DexBase/DexObject.h"
+class DexWidgetImage;
 class CDexWidgetLabel;
 class CDexWidgetImageSequence;
 #define MAX_WORDS_LENGTH 1024
 
 extern int Lua_Talk_Wait(lua_State* L);
 extern int Lua_Talk_Say(lua_State* L);
-class CPalTalkSystem:CDexObject
+class CPalTalkSystem:DexObject
 {
-	Dex_DeclareClass(CPalTalkSystem, CDexObject,1)
+	Dex_DeclareClass(CPalTalkSystem, DexObject,1)
 public:
 	typedef enum EHead
 	{
@@ -36,8 +36,8 @@ private:
 	short m_iWaitingTime; //脚本暂停的时间
 	DInt64 m_iLastTime;
 	bool			  m_bShowLeftHead;
-	CDexWidgetImage*  m_headArray[EH_TOTAL];
-	CDexWidgetImage*  m_pBackImage;//背景图
+	DexWidgetImage*  m_headArray[EH_TOTAL];
+	DexWidgetImage*  m_pBackImage;//背景图
 	CDexWidgetLabel*  m_pPilot;  //对话label
 	CDexWidgetImageSequence* m_pClickToContinue;
 

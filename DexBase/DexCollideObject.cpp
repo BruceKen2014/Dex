@@ -22,14 +22,14 @@ DexCollideObject::~DexCollideObject()
 
  bool DexCollideObject::ArchiveIn(DexMem& mem)
  {
-	 DEX_ENSURE_B(CDexObject::ArchiveIn(mem));
+	 DEX_ENSURE_B(DexObject::ArchiveIn(mem));
 	 //mem>>m_pos;
 	 return true;
  }
 
  bool DexCollideObject::ArchiveOut(DexMem& mem) const
  {
-	 DEX_ENSURE_B(CDexObject::ArchiveOut(mem));
+	 DEX_ENSURE_B(DexObject::ArchiveOut(mem));
 	//mem<<m_pos;
 	 return true;
  }

@@ -15,21 +15,21 @@ class CDexWidgetLabel;
 class CTestPanel:public CEventHandler
 {
 protected:
-	CDexWidgetImage*  m_backImage;
-	CDexWidgetImage*  m_image1;
-	CDexWidgetImage*  m_image2;
+	DexWidgetImage*  m_backImage;
+	DexWidgetImage*  m_image1;
+	DexWidgetImage*  m_image2;
 	CDexWidgetButton* m_btn1;
 	CDexWidgetButton* m_btn2;
 	CDexWidgetLabel*  m_label;
 	CDexWidgetLabel*  m_label2;
-	CDexWidgetEditBox* m_editBox;
+	DexWidgetEditBox* m_editBox;
 	CDexWidgetImageSequence* m_imagesequence;
 	CDexWidgetCheckBtn*  m_checkBtn1;
 	//CDexWidgetScrollBarV*  m_scrollV;
 	DInt16 g_iMouseLX, g_iMouseLY;
 	bool  g_bInTriangle;
 
-	CDexWidget* m_focusWidget;
+	DexWidget* m_focusWidget;
 
 	DexPoint g_PntA;
 	DexPoint g_PntB;
@@ -46,8 +46,8 @@ public:
 
 public:
 	void OnMouseLDown(int mouse_x, int mouse_y);
-	void OnClickBtn(CEventHandler* sys, CDexObject* object, stEvent event);
-	void OnClickBtn2(CEventHandler* sys,CDexObject* object,stEvent event);
-	void OnEditTextChange(CEventHandler* sys,CDexObject* object,stEvent event);
-	void OnEditTextUpdate(CEventHandler* sys,CDexObject* object,stEvent event);
+	void OnClickBtn(CEventHandler* sys, DexObject* object, stEvent event);
+	void OnClickBtn2(CEventHandler* sys,DexObject* object,stEvent event);
+	void OnEditTextChange(CEventHandler* sys,DexObject* object,stEvent event);
+	void OnEditTextUpdate(CEventHandler* sys,DexObject* object,stEvent event);
 };

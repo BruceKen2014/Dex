@@ -30,7 +30,7 @@ CDelegateG::~CDelegateG()
 }
 
 
-void CDelegateG::Handle(CDexObject* object, stEvent event )
+void CDelegateG::Handle(DexObject* object, stEvent event )
 {
 	if(m_fun != NULL)
 		m_fun(object, event);
@@ -64,7 +64,7 @@ CDelegateM& CDelegateM::operator=( const CDelegateM& dgt )
 	m_fun = dgt.m_fun;
 	return *this;
 }
-void CDelegateM::Handle(CDexObject* object, stEvent event )
+void CDelegateM::Handle(DexObject* object, stEvent event )
 {
 	if(m_gameSys != NULL && m_fun != NULL)
 	{
@@ -92,7 +92,7 @@ CEventDispather::~CEventDispather()
 	}
 }
 
-void CEventDispather::Handle(CDexObject* object,stEvent& event)
+void CEventDispather::Handle(DexObject* object,stEvent& event)
 {
 	for(std::list<CDelegate*>::iterator it = m_delegates.begin(); it != m_delegates.end(); it++)
 	{

@@ -24,12 +24,12 @@ CDexWidgetLabel::~CDexWidgetLabel()
 
 void CDexWidgetLabel::ShutDown()
 {
-	CDexWidget::ShutDown();
+	DexWidget::ShutDown();
 }
 
 bool CDexWidgetLabel::Update(int delta)
 {
-	DEX_ENSURE_B(CDexWidget::Update(delta));
+	DEX_ENSURE_B(DexWidget::Update(delta));
 	return true;
 }
 
@@ -123,12 +123,12 @@ void CDexWidgetLabel::RenderThis()
 }
 void CDexWidgetLabel::Enable(bool child)
 {
-	CDexWidget::Enable(child);
+	DexWidget::Enable(child);
 }
 
 void CDexWidgetLabel::Disable(bool child)
 {
-	CDexWidget::Disable(child);
+	DexWidget::Disable(child);
 }
 string CDexWidgetLabel::GetText()
 {

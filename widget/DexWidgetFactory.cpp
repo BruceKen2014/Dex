@@ -14,7 +14,7 @@ CDexWidgetFactory::~CDexWidgetFactory()
 
 }
 
-CDexWidget* CDexWidgetFactory::createWidget(EWidgetType type, string name)
+DexWidget* CDexWidgetFactory::createWidget(EWidgetType type, string name)
 {
 	TWidgetMap::iterator ite = m_WidgetMap.find(name);
 	if(ite != m_WidgetMap.end())
@@ -24,12 +24,12 @@ CDexWidget* CDexWidgetFactory::createWidget(EWidgetType type, string name)
 		DexLog::getSingleton()->EndLog();
 		return ite->second;
 	}
-	CDexWidget* ret = NULL;
+	DexWidget* ret = NULL;
 	switch(type)
 	{
 	case widget_image:
 		{
-			ret = new CDexWidgetImage();
+			ret = new DexWidgetImage();
 			break;
 		}
 	case widget_image_sequence:
@@ -49,7 +49,7 @@ CDexWidget* CDexWidgetFactory::createWidget(EWidgetType type, string name)
 		}
 	case widget_editbox:
 		{
-			ret = new CDexWidgetEditBox();
+			ret = new DexWidgetEditBox();
 			break;
 		}
 	case widget_scrollbar_v:
@@ -90,7 +90,7 @@ bool CDexWidgetFactory::removeWidget(string name)
 		DexLog::getSingleton()->Log(log_allert, "试图移除一个不存在的widget%s", name.c_str());
 		return false;
 	}
-	CDexWidget* widget = m_WidgetMap[name];	
+	DexWidget* widget = it->second;
 	_SafeDelete(widget);
 	m_WidgetMap.erase(it);
 	return true;
@@ -103,7 +103,7 @@ bool CDexWidgetFactory::loadWidgetsFromXml(const char* xmlName)
 	return true;
 }
 
-CDexWidget* CDexWidgetFactory::findWidget(string name)
+DexWidget* CDexWidgetFactory::findWidget(string name)
 {
 	if(m_WidgetMap.find(name) != m_WidgetMap.end())
 	{
@@ -115,9 +115,9 @@ CDexWidget* CDexWidgetFactory::findWidget(string name)
 	return NULL;
 }
 
-CDexWidget* CDexWidgetFactory::useWidget(string name)
+DexWidget* CDexWidgetFactory::useWidget(string name)
 {
-	CDexWidget* widget = findWidget(name);
+	DexWidget* widget = findWidget(name);
 	if(widget != NULL)
 	{
 		UI_ADD_REF(widget);
@@ -125,7 +125,7 @@ CDexWidget* CDexWidgetFactory::useWidget(string name)
 	}
 	return NULL;
 }
-CDexWidget* CDexWidgetFactory::parseButton(TiXmlAttribute* att, CDexWidget* father)
+DexWidget* CDexWidgetFactory::parseButton(TiXmlAttribute* att, DexWidget* father)
 {
 	CDexWidgetButton* button = NULL;
 	while(att != NULL)
@@ -220,15 +220,15 @@ CDexWidget* CDexWidgetFactory::parseButton(TiXmlAttribute* att, CDexWidget* fath
 	}
 	return button;
 }
-CDexWidget* CDexWidgetFactory::parseImage(TiXmlAttribute* att, CDexWidget* father)
+DexWidget* CDexWidgetFactory::parseImage(TiXmlAttribute* att, DexWidget* father)
 {
-	CDexWidgetImage* image = NULL;
+	DexWidgetImage* image = NULL;
 	while(att != NULL)
 	{
 		if(strcmp(att->Name(), "name") == 0)
 		{//第一个属性必须是name
 			
-			image = (CDexWidgetImage*)parseAttributeName(att, widget_image, father);
+			image = (DexWidgetImage*)parseAttributeName(att, widget_image, father);
 			if(image== NULL)
 				return NULL;
 		}
@@ -269,7 +269,7 @@ CDexWidget* CDexWidgetFactory::parseImage(TiXmlAttribute* att, CDexWidget* fathe
 	}
 	return image;
 }
-CDexWidget* CDexWidgetFactory::parseImageSequence(TiXmlAttribute* att, CDexWidget* father /* = NULL */)
+DexWidget* CDexWidgetFactory::parseImageSequence(TiXmlAttribute* att, DexWidget* father /* = NULL */)
 {
 	CDexWidgetImageSequence* image_sequence = NULL;
 	while(att != NULL)
@@ -330,7 +330,7 @@ CDexWidget* CDexWidgetFactory::parseImageSequence(TiXmlAttribute* att, CDexWidge
 	}
 	return image_sequence;
 }
-CDexWidget* CDexWidgetFactory::parseCheckButton(TiXmlAttribute* att, CDexWidget* father)
+DexWidget* CDexWidgetFactory::parseCheckButton(TiXmlAttribute* att, DexWidget* father)
 {
 	CDexWidgetCheckBtn* check_button = NULL;
 	while(att != NULL)
@@ -393,7 +393,7 @@ CDexWidget* CDexWidgetFactory::parseCheckButton(TiXmlAttribute* att, CDexWidget*
 	}
 	return check_button;
 }
-CDexWidget* CDexWidgetFactory::parseLabel(TiXmlAttribute* att, CDexWidget* father)
+DexWidget* CDexWidgetFactory::parseLabel(TiXmlAttribute* att, DexWidget* father)
 {
 	CDexWidgetLabel* label = NULL;
 	while(att != NULL)
@@ -439,7 +439,7 @@ CDexWidget* CDexWidgetFactory::parseLabel(TiXmlAttribute* att, CDexWidget* fathe
 	}
 	return label;
 }
-void CDexWidgetFactory::parseBaseWidget(CDexWidget* widget, TiXmlAttribute* att)
+void CDexWidgetFactory::parseBaseWidget(DexWidget* widget, TiXmlAttribute* att)
 {//暂时设定size属性必须在offset属性之前
 	if(strcmp(att->Name(), "visible") == 0)
 	{
@@ -474,14 +474,14 @@ void CDexWidgetFactory::parseBaseWidget(CDexWidget* widget, TiXmlAttribute* att)
 		parseAttributeMouseEvent(widget, att);
 	}
 }
-CDexWidget* CDexWidgetFactory::parseAttributeName(TiXmlAttribute* att,EWidgetType type, CDexWidget* father /* = NULL */)
+DexWidget* CDexWidgetFactory::parseAttributeName(TiXmlAttribute* att,EWidgetType type, DexWidget* father /* = NULL */)
 {
 	string name;
 	if(father != NULL)
 		name = father->GetName() +  "." + string(att->Value());
 	else
 		name = string(att->Value());
-	CDexWidget* widget = createWidget(type, name);
+	DexWidget* widget = createWidget(type, name);
 	if(widget == NULL)
 		return NULL;
 	if(father != NULL)
@@ -490,11 +490,11 @@ CDexWidget* CDexWidgetFactory::parseAttributeName(TiXmlAttribute* att,EWidgetTyp
 	}
 	return widget;
 }
-void CDexWidgetFactory::parseAttributeVisible(CDexWidget* widget, TiXmlAttribute* att)
+void CDexWidgetFactory::parseAttributeVisible(DexWidget* widget, TiXmlAttribute* att)
 {//visible="1"
 	widget->setVisible(atoi(att->Value()));
 }
-void CDexWidgetFactory::parseAttributeSize(CDexWidget* widget, TiXmlAttribute* att)
+void CDexWidgetFactory::parseAttributeSize(DexWidget* widget, TiXmlAttribute* att)
 {//size="200,300"
 	string str(att->Value());
 	vector<string> out_str;
@@ -513,7 +513,7 @@ void CDexWidgetFactory::parseAttributeSize(CDexWidget* widget, TiXmlAttribute* a
 		widget->Resize(DexSizeF(width, height));
 	}
 }
-void CDexWidgetFactory::parseAttributePos(CDexWidget* widget, TiXmlAttribute* att)
+void CDexWidgetFactory::parseAttributePos(DexWidget* widget, TiXmlAttribute* att)
 {//pos="200,200"
 	string str(att->Value());
 	vector<string> out_str;
@@ -533,7 +533,7 @@ void CDexWidgetFactory::parseAttributePos(CDexWidget* widget, TiXmlAttribute* at
 	}
 
 }
-void CDexWidgetFactory::parseAttributeOffset(CDexWidget* widget, TiXmlAttribute* att)
+void CDexWidgetFactory::parseAttributeOffset(DexWidget* widget, TiXmlAttribute* att)
 {//offset="2.0f,2.0f"
 	string str(att->Value());
 	vector<string> out_str;
@@ -553,12 +553,12 @@ void CDexWidgetFactory::parseAttributeOffset(CDexWidget* widget, TiXmlAttribute*
 	}
 
 }
-void CDexWidgetFactory::parseAttributeMask(CDexWidget* widget, TiXmlAttribute* att)
+void CDexWidgetFactory::parseAttributeMask(DexWidget* widget, TiXmlAttribute* att)
 {//mask="1"
 	int bMask = CDexFun::str_to_int(att->Value());
 	widget->OpenMask(bMask);
 }
-void CDexWidgetFactory::parseAttributeMaskColor(CDexWidget* widget, TiXmlAttribute* att)
+void CDexWidgetFactory::parseAttributeMaskColor(DexWidget* widget, TiXmlAttribute* att)
 {//maskcolor="0,0,255,100"
 	string str(att->Value());
 	vector<string> out_str;
@@ -578,12 +578,12 @@ void CDexWidgetFactory::parseAttributeMaskColor(CDexWidget* widget, TiXmlAttribu
 		widget->SetMaskColor(r,g,b,a);
 	}
 }
-void CDexWidgetFactory::parseAttributeAlpha(CDexWidget* widget, TiXmlAttribute* att)
+void CDexWidgetFactory::parseAttributeAlpha(DexWidget* widget, TiXmlAttribute* att)
 {//alpha="255"
 	int alpha = CDexFun::str_to_int(att->Value());
 	widget->SetInitAlpha(alpha);
 }
-void CDexWidgetFactory::parseAttributeMouseEvent(CDexWidget* widget, TiXmlAttribute* att)
+void CDexWidgetFactory::parseAttributeMouseEvent(DexWidget* widget, TiXmlAttribute* att)
 {//flag="mouse_l_down,mouse_l_up"
 	string str(att->Value());
 	vector<string> out_str;
@@ -644,9 +644,9 @@ void CDexWidgetFactory::parseAttributeMouseEvent(CDexWidget* widget, TiXmlAttrib
 		}
 	}
 }
-bool CDexWidgetFactory::parseXmlNode(TiXmlNode* node, int stage, CDexWidget* father)
+bool CDexWidgetFactory::parseXmlNode(TiXmlNode* node, int stage, DexWidget* father)
 {
-	CDexWidget* this_node = NULL; //本次解析到的node
+	DexWidget* this_node = NULL; //本次解析到的node
 	switch(node->Type())
 	{
 	case TiXmlNode::TINYXML_DECLARATION:

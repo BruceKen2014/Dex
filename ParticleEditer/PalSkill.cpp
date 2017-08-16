@@ -60,7 +60,7 @@ void PalSkill::SkillEnd()
 
 bool PalSkill::Update(int delta)
 {
-	DEX_ENSURE_B(CDexObject::Update(delta));
+	DEX_ENSURE_B(DexObject::Update(delta));
 	//if(skill_count == 0)
 	//{
 	//	stEvent event;
@@ -68,7 +68,7 @@ bool PalSkill::Update(int delta)
 	//	onSkillBegin.Handle(this,event);
 	//}
 	//DEX_ENSURE_B(skill_count < skill_time);
-	//skill_count += getTime()->getDeltaTime();
+	//skill_count += DexTime::getSingleton()->getDeltaTime();
 	//for(std::map<int, stDamageKey>::iterator ite = m_data.damageKey.begin();
 	//	ite!= m_data.damageKey.end(); ++ite)
 	//{
@@ -232,7 +232,7 @@ void PalBatterContent::Update()
 			{
 				OnSkillBegin(content);
 			}
-			content->skill_count += getTime()->getDeltaTime();
+			content->skill_count += DexTime::getSingleton()->getDeltaTime();
 			for(std::map<int, stDamageKey>::iterator ite2 = (content->skill->m_data.damageKey).begin();
 				ite2 != (content->skill->m_data.damageKey).end(); ++ite2)
 			{

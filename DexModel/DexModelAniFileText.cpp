@@ -29,7 +29,7 @@ bool DexModelAniFileTextLoader::LoadAnimationFile(DexModelBase* pModel, const ch
 	DexMem mem;
 	DEX_ENSURE_B(mem.IniFromFile(filename));
 	DexLog::getSingleton()->LogLine(log_ok, "load dex model animation text file: %s...", filename);
-	DInt64 Time = getTime()->GetTotalMillSeconds();
+	DInt64 Time = DexTime::getSingleton()->GetTotalMillSeconds();
 
 	const DInt16  iMaxLineByte = MAX_LINE_BYTE;
 	char tempLineData[iMaxLineByte];
@@ -49,7 +49,7 @@ bool DexModelAniFileTextLoader::LoadAnimationFile(DexModelBase* pModel, const ch
 			}
 		}
 	}
-	Time = getTime()->GetTotalMillSeconds() - Time;
+	Time = DexTime::getSingleton()->GetTotalMillSeconds() - Time;
 	DexLog::getSingleton()->LogLine(log_ok, "load dex model animation text file:%s ok, use time %d ms", filename, Time);
 	return true;
 }

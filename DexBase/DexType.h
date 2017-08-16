@@ -3,7 +3,8 @@
 #define _DEX_TYPE_H
 #include "DexCompiler.h"
 
-using DChar    =    char		 ;
+using DChar	   =    char;
+using DUChar   =	unsigned char;
 using DBool    =    bool;
 using DByte	   =	unsigned char;
 using DInt8    =	signed char  ;
@@ -11,15 +12,17 @@ using DUInt8   =	unsigned char;
 using DInt16   =	signed short;
 using DUInt16  =	unsigned short;
 using DInt32   =	signed int;
-using DUDInt32  =	 unsigned int;
+using DUInt32  =	unsigned int;
 using DInt64   =	signed __int64;
 using DUInt64  =	unsigned __int64;
 using DFloat32 =	float;
 using DFloat64 =	double;
-using DWORD	   =	unsigned long;
+
+#define DTRUE  true
+#define DFALS  false
 #define DEXINFINITE            0xFFFFFFFF
 #ifdef _DEX_PLATFORM_WIN32
-using DEXWORD = DUDInt32;
+using DEXWORD = DUInt32;
 #else
 using DEXWORD = DUInt64;
 #endif

@@ -7,7 +7,7 @@
 class CDexTex;
 class CDexWidgetButton;
 //ÊúÖ±¹ö¶¯Ìõ
-class CDexWidgetScrollBarV: public CDexWidget
+class CDexWidgetScrollBarV: public DexWidget
 {
 protected:
 	stUiImage  m_backImage;
@@ -30,10 +30,10 @@ protected:
 	virtual void ShutDown();
 	
 protected:
-	void OnClickTopBtn(CDexObject* object, stEvent event);
-	void OnClickBottomBtn(CDexObject* object,stEvent event);
-	void OnDragHandleBtn(CDexObject* object,stEvent event);
-	void OnResize(CDexObject* object,stEvent event);
+	void OnClickTopBtn(DexObject* object, stEvent event);
+	void OnClickBottomBtn(DexObject* object,stEvent event);
+	void OnDragHandleBtn(DexObject* object,stEvent event);
+	void OnResize(DexObject* object,stEvent event);
 
 public:
 	CDexWidgetScrollBarV();

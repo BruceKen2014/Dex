@@ -15,7 +15,7 @@ enum EBtnState
 	btn_count
 };
 class CDexTex;
-class CDexWidgetButton: public CDexWidget
+class CDexWidgetButton: public DexWidget
 {
 protected:
 	string    m_texnames[btn_count];

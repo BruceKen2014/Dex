@@ -16,7 +16,7 @@
 #include "../DexBase/CInput.h"
 #include "../DexBase/CDelegate.h"
 #include "../DexBase/CListener.h"
-#include "../DexBase/CDexObject.h"
+#include "../DexBase/DexObject.h"
 
 #include "CTextureMove.h"
 #include "CMyFont.h"
@@ -77,7 +77,7 @@ enum
 
 //=============================================================================
 //CGui:GUI基类
-class CGui:public CDexObject// CListener
+class CGui:public DexObject// CListener
 {
 	//TODO,在基类中加入声音文件等成员变量，用声音单例类进行播放
 	//在相应事件时根据声音bool标识来决定是否要播放音效文件

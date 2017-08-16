@@ -81,7 +81,7 @@ void CDexSceneObject::_updateCurrMatrix()
 
 bool CDexSceneObject::Update(int delta)
 {
-	DEX_ENSURE_B(CDexObject::Update(delta));
+	DEX_ENSURE_B(DexObject::Update(delta));
 	//update matrix
 	D3DXMatrixMultiply(&m_finalMatrix, &m_localMatrix , &m_currMatrix);
 	D3DXMatrixMultiply(&g_transMatrix, &m_collideLocalMatrix , &m_currMatrix);
@@ -150,7 +150,7 @@ bool CDexSceneObject::Render()
 
 void CDexSceneObject::Reset()
 {
-	CDexObject::Reset();
+	DexObject::Reset();
 	{
 		foreach(TlistObjectActions, ite, m_listActions)
 		{
@@ -512,7 +512,7 @@ DexCollideObject* CDexSceneObject::getCollideObject()
 
 bool CDexSceneObject::ArchiveIn(DexMem& mem)
 {
-	DEX_ENSURE_B(CDexObject::ArchiveIn(mem));
+	DEX_ENSURE_B(DexObject::ArchiveIn(mem));
 	mem>>m_localMatrix;
 	mem>>m_currMatrix;
 	//mem>>m_finalMatrix;
@@ -549,7 +549,7 @@ bool CDexSceneObject::ArchiveIn(DexMem& mem)
 }
 bool CDexSceneObject::ArchiveOut(DexMem& mem) const
 {
-	DEX_ENSURE_B(CDexObject::ArchiveOut(mem));
+	DEX_ENSURE_B(DexObject::ArchiveOut(mem));
 	mem<<m_localMatrix;
 	mem<<m_currMatrix;
 	//mem<<m_finalMatrix;

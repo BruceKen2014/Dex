@@ -4,7 +4,7 @@
 #define _DEX_SCENE_H
 
 #include <map>
-#include "CDexObject.h"
+#include "DexObject.h"
 #include "DexColor.h"
 
 class CDexSceneObject;
@@ -18,9 +18,9 @@ extern int Lua_Scene_AddEffect(lua_State* L);
 extern int Lua_Scene_AddFlower(lua_State* L);
 extern int Lua_Scene_AddModel(lua_State* L);//Ö»Add ìo‘BÄ£ÐÍ
 extern int Lua_Scene_SetPos(lua_State* L);
-class CDexScene:public CDexObject
+class CDexScene:public DexObject
 {
-	Dex_DeclareClass(CDexScene, CDexObject, 1)
+	Dex_DeclareClass(CDexScene, DexObject, 1)
 public:
 	CDexScene();
 	virtual ~CDexScene();

@@ -52,7 +52,7 @@ DUInt64 DexFile::ReCalLength()
 {
 	if (m_pFileHandle == nullptr)
 		return 0;
-	DUDInt32 curPos = ftell(m_pFileHandle);
+	DUInt32 curPos = ftell(m_pFileHandle);
 	fseek(m_pFileHandle, 0, SEEK_END);
 	m_iLength = ftell(m_pFileHandle);
 	fseek(m_pFileHandle, curPos, SEEK_SET);

@@ -11,9 +11,9 @@
 extern const D3DXVECTOR3 g_objIniDirection; //所有object的默認方向均為(0,0,-1)
 class DexCollideObject;
 class CDexScene;
-class CDexSceneObject: public CDexObject
+class CDexSceneObject: public DexObject
 {
-	Dex_DeclareClass(CDexSceneObject, CDexObject, 0)
+	Dex_DeclareClass(CDexSceneObject, DexObject, 0)
 	friend class CDexScene;
 public:
 	typedef enum 

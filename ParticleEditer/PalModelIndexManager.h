@@ -2,9 +2,9 @@
 
 
 
-class CPalModelIndexManager: public CDexObject
+class CPalModelIndexManager: public DexObject
 {
-	Dex_DeclareClass(CPalModelIndexManager, CDexObject,0)
+	Dex_DeclareClass(CPalModelIndexManager, DexObject,0)
 protected:
 	CPalModelIndexManager* g_pModelIndexManager;
 };

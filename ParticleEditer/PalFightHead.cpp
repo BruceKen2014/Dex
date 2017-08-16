@@ -10,7 +10,7 @@ PalFightHead::PalFightHead(PalPlayer* player)
 	m_value = 0.0f;
 	player->setHeadFlag(this);
 	const stPalPlayerData* data = m_pPlayer->getPlayerData();
-	m_headImage = (CDexWidgetImage*)getWidgetFactory()->createWidget(DexGUI::widget_image, "");
+	m_headImage = (DexWidgetImage*)getWidgetFactory()->createWidget(DexGUI::widget_image, "");
 
 
 	m_headImage->SetTexName(data->headImageName);
@@ -29,8 +29,8 @@ PalPlayer* PalFightHead::getPlayer()
 
 bool PalFightHead::Update()
 {
-	int delta_time = getTime()->getDeltaTime();
-	CDexObject::Update(delta_time);
+	int delta_time = DexTime::getSingleton()->getDeltaTime();
+	DexObject::Update(delta_time);
 	m_headImage->Update(delta_time);
 	return true;
 }

@@ -346,7 +346,7 @@ void GameRender()
 	g_D3DDevice->SetTransform(D3DTS_PROJECTION, &g_projection);
 
 	
-	DInt64 tempTime = getTime()->GetTotalMillSeconds() ;
+	DInt64 tempTime = DexTime::getSingleton()->GetTotalMillSeconds() ;
 	if(g_lastTickTime == 0)
 		g_lastTickTime = tempTime;
 	g_delta = tempTime - g_lastTickTime;

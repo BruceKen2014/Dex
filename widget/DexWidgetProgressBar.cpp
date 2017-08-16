@@ -1,6 +1,7 @@
 #include "DexWidgetProgressBar.h"
 #include "..\DexBase\CDexDraw2D.h"
 #include "CDexUiSrcMgr.h"
+#include "..\DexBase\DexCommonFunction.h"
 
 
 
@@ -21,7 +22,7 @@ void DexWidgetProgressBar::ShutDown()
 {
 	m_pBackImage = DexNull;
 	m_pFrontImage = DexNull;
-	CDexWidget::ShutDown();
+	Super::ShutDown();
 }
 void DexWidgetProgressBar::CalculateImageUv(DexVector2& uv0, DexVector2& uv1, DexVector2& uv2, DexVector2& uv3, const DexRectF& rect, CDexTex* pImage)
 {
@@ -36,7 +37,7 @@ void DexWidgetProgressBar::CalculateImageUv(DexVector2& uv0, DexVector2& uv1, De
 }
 bool DexWidgetProgressBar::Update(int delta)
 {
-	DEX_ENSURE_B(CDexWidget::Update(delta));
+	DEX_ENSURE_B(Super::Update(delta));
 	m_rectProgress = m_rect;
 	if (m_eProgressType == EPBT_L2R)
 		m_rectProgress.right = m_rectProgress.left + m_rect.getWidth() * m_fProgress;
@@ -124,7 +125,7 @@ void DexWidgetProgressBar::SetProgressBarType(EProgressBarType type)
 void DexWidgetProgressBar::SetProgress(DFloat32 fProgress)
 {
 	m_fProgress = fProgress;
-	DEX_CLIP(m_fProgress, 0.0f, 1.0f);
+	DexCommonFunction::clip(m_fProgress, 0.0f, 1.0f);
 }
 void DexWidgetProgressBar::SetProgressImage(DString backImageName, const DexRectF& backSrcRect, DString FrontImageName, const DexRectF& FrontSrcRect)
 {

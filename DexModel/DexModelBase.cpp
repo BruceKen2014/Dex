@@ -17,7 +17,7 @@ DexModelBase::~DexModelBase()
 
 bool DexModelBase::Update(int delta)
 {
-	return CDexObject::Update(delta);
+	return DexObject::Update(delta);
 }
 
 bool DexModelBase::Render()

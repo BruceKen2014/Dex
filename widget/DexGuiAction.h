@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "..\DexBase\CDexObject.h"
+#include "..\DexBase\DexObject.h"
 #include "DexGuiStruct.h"
-class CDexWidget;
+class DexWidget;
 using namespace DexGUI;
 #define ACTION_MOVE_TIMER 100  //移动timer ID 100ms改变一次移动速度
 #define ACTION_SIZE_TIMER 101  //尺寸更改timer ID
@@ -18,13 +18,13 @@ enum EUiActionType
 	EAT_ALPHA,   //alpha改变action
 	EAT_ROTATE,  //rotate action
 };
-class CDexGuiAction:public CDexObject
+class CDexGuiAction:public DexObject
 {
 protected:
 	EUiActionType m_type;
 	int           m_actionId;
 	string      m_name;  //动作名称（方便调试查看）
-	CDexWidget* m_owner;
+	DexWidget* m_owner;
 	bool        m_valid;   //动作是否有效
 	bool        m_complete; //动作是否完成
 	bool        m_deleteSelf;  //complete之后是否删除自己
@@ -53,7 +53,7 @@ public:
 	bool GetComplete();
 	void SetDeleteSelf(bool deleteSelf);
 	virtual bool GetWidgetHandle() = 0;
-	virtual void SetOwner(CDexWidget* owner);
+	virtual void SetOwner(DexWidget* owner);
 };
 
 
@@ -105,7 +105,7 @@ protected:
 	void         CalParam();  //计算参数
 public:
 	virtual void OnTimer(const stTimer& timer);
-	virtual void SetOwner(CDexWidget* owner); //只能通过设置绑定控件时设定m_startPos
+	virtual void SetOwner(DexWidget* owner); //只能通过设置绑定控件时设定m_startPos
 	void SetMoveType(EGuiMoveType type);
 	void SetMoveParamType(EGuiMoveParamType type);
 	void SetDestPos(DexPoint desPos);
@@ -170,7 +170,7 @@ protected:
 	virtual void ShutDown();
 public:
 	virtual void OnTimer(const stTimer& timer);
-	virtual void SetOwner(CDexWidget* owner); //只能通过设置绑定控件时设定m_startRect
+	virtual void SetOwner(DexWidget* owner); //只能通过设置绑定控件时设定m_startRect
 	void SetDestSize(DexPointF desSize);
 	void SetDestSize(DexPoint desSize);
 	void SetDestSize(int sizeX, int sizeY);
@@ -221,7 +221,7 @@ protected:
 
 	void UpdateAlphaChangeTime();
 public:
-	virtual void SetOwner(CDexWidget* owner);
+	virtual void SetOwner(DexWidget* owner);
 	void SetAlphaChangeType(EAlphaType type);
 	void SetAlphaTop(int alpha);
 	void SetAlphaLow(int alpha);

@@ -23,7 +23,7 @@ DexMemoryManager::~DexMemoryManager()
 
 }
 
-char* DexMemoryManager::allocateMemory(DUDInt32 size)
+char* DexMemoryManager::allocateMemory(DUInt32 size)
 {
 	return (char*)malloc(sizeof(char)*size);
 }

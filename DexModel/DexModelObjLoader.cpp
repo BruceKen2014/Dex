@@ -31,7 +31,7 @@ DexModelBase* DexModelObjLoader::LoadModel(const char* filename, DInt32 flag)
 	//否则就会找不到material文件，导致丢失material数据
 	m_strFilePath = DexCommonFunction::getFilePath(filename, m_strFilePath);
 	DexLog::getSingleton()->BeginLog();
-	DInt64 Time = getTime()->GetTotalMillSeconds();
+	DInt64 Time = DexTime::getSingleton()->GetTotalMillSeconds();
 	DexLog::getSingleton()->Log(log_ok, "load obj model %s...", filename);
 	//TODO 把model加入object工程，采用query机制
 	DexSkinMesh* skinMesh = new DexSkinMesh();
@@ -40,7 +40,7 @@ DexModelBase* DexModelObjLoader::LoadModel(const char* filename, DInt32 flag)
 	DInt8* pBuffer = NULL;
 	DInt8* pBufferCurr = NULL;
 	DInt8* pBufferEnd = NULL;
-	DUDInt32 fileSize = 0;
+	DUInt32 fileSize = 0;
 	FILE* pFile = fopen(filename, "rb");
 	if (pFile == NULL)
 	{
@@ -233,7 +233,7 @@ DexModelBase* DexModelObjLoader::LoadModel(const char* filename, DInt32 flag)
 	}
 	skinMesh->CalculateVertex();
 	delete[] pBuffer;
-	Time = getTime()->GetTotalMillSeconds() - Time;
+	Time = DexTime::getSingleton()->GetTotalMillSeconds() - Time;
 	DexLog::getSingleton()->Log(log_ok, "load obj model %s ok, use time %d ms", filename, Time);
 	DexLog::getSingleton()->EndLog();
 	return skinMesh;
@@ -249,7 +249,7 @@ bool DexModelObjLoader::readMaterial(const char* filename, DVector<ObjMaterial>&
 	DInt8* pBuffer = NULL;
 	DInt8* pBufferCurr = NULL;
 	DInt8* pBufferEnd = NULL;
-	DUDInt32 fileSize = 0;
+	DUInt32 fileSize = 0;
 	FILE* pFile = fopen(filename, "rb");
 	if (pFile == NULL)
 	{

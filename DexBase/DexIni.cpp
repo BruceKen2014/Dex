@@ -8,7 +8,7 @@
 
 void DexIni::stIniFieldData::AddData(DString key, DString value)
 {
-	DEX_ENSURE(data.find(key) == data.end());
+	//DEX_ENSURE(data.find(key) == data.end()); insert会进行存在检查，这句是不必要的
 	data.insert(make_pair(key, value));
 }
 DexIni::DexIni()
@@ -27,7 +27,7 @@ bool DexIni::readIniFile(DString filename)
 	DEX_ENSURE_B(mem.IniFromFile(filename.c_str()));
 	char lineData[1024];
 	stIniFieldData* pFieldData = DexNull;
-	DUDInt32 lineIndex = 0;
+	DUInt32 lineIndex = 0;
 	while (!mem.End())
 	{
 		++lineIndex;
@@ -80,27 +80,27 @@ bool DexIni::readIniFile(DString filename)
 
 DString DexIni::getString(DString field, DString key) const
 {
-	InitMap::const_iterator ite = m_data.find(field);
+	auto ite = m_data.find(field);
 	DEX_ENSURE_S(ite != m_data.end());
-	DMapStrStr::const_iterator ite2 = ite->second.data.find(key);
+	auto ite2 = ite->second.data.find(key);
 	DEX_ENSURE_S(ite2 != ite->second.data.end());
 	return (ite2->second);
 }
 
 DInt32 DexIni::getInt(DString field, DString key) const
 {
-	InitMap::const_iterator ite = m_data.find(field);
+	auto ite = m_data.find(field);
 	DEX_ENSURE_I(ite != m_data.end());
-	DMapStrStr::const_iterator ite2 = ite->second.data.find(key);
+	auto ite2 = ite->second.data.find(key);
 	DEX_ENSURE_I(ite2 != ite->second.data.end());
 	return DexCommonFunction::str_to_int(ite2->second);
 }
 
 DFloat32 DexIni::getFloat(DString field, DString key) const
 {
-	InitMap::const_iterator ite = m_data.find(field);
+	auto ite = m_data.find(field);
 	DEX_ENSURE_F(ite != m_data.end());
-	DMapStrStr::const_iterator ite2 = ite->second.data.find(key);
+	auto ite2 = ite->second.data.find(key);
 	DEX_ENSURE_F(ite2 != ite->second.data.end());
 	return DexCommonFunction::str_to_float(ite2->second);
 }

@@ -8,9 +8,9 @@
 
 
 //========================================model interface====================================
-class CDextModel: public CDexObject
+class CDextModel: public DexObject
 {
-	Dex_DeclareClass(CDextModel, CDexObject, 0)
+	Dex_DeclareClass(CDextModel, DexObject, 0)
 public:
 	CDextModel();
 	virtual ~CDextModel();
@@ -130,9 +130,9 @@ public:
 };
 
 //========================================model factory==============================================
-class CDexModelFactory:public CDexObject
+class CDexModelFactory:public DexObject
 {
-	Dex_DeclareClass(CDexModelFactory, CDexObject, 1)
+	Dex_DeclareClass(CDexModelFactory, DexObject, 1)
 	friend class CDexObjectFactroy;
 private:
 	typedef std::map<string, CDextModel*> TMapModel;

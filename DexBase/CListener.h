@@ -72,7 +72,7 @@ public:
 	_stEvent(string nm, int Id):name(nm), id(Id){}
 	void push_args(stArgs arg)
 	{
-		args.push_back(arg);
+		args.emplace_back(arg);
 	}
 	void pop_args(stArgs& arg)
 	{
@@ -81,6 +81,17 @@ public:
 			arg = args.back();
 		    args.pop_back();
 		}
+	}
+	size_t args_count()
+	{
+		return args.size();
+	}
+	stArgs back_args()
+	{
+		stArgs ret;
+		if (!args.empty())
+			ret = args.back();
+		return ret;
 	}
 }stEvent;
 

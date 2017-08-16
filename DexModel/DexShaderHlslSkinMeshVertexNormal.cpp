@@ -63,14 +63,14 @@ void DexShaderHlslSkinMeshVertexNormal::Render()
 
 	DexGameEngine::getEngine()->setDexVertexDecl(m_pDeclaration);
 	pFxEffect->SetTechnique(TechHandle);
-	DUDInt32 pass = 0;
+	DUInt32 pass = 0;
 	pFxEffect->Begin(&pass, 0);
 	for (size_t i = 0; i < skinMesh->m_vecMeshs.size(); ++i)
 	{
 		if (skinMesh->m_vecMeshs[i] == NULL)
 			continue;
 		//pFxEffect->SetTexture(Tex0Handle, NULL);
-		for (DUDInt32 p = 0; p < pass; ++p)
+		for (DUInt32 p = 0; p < pass; ++p)
 		{
 			pFxEffect->BeginPass(p);
 			DexGameEngine::getEngine()->DrawPrimitive(DexPT_LINELIST, skinMesh->m_vecMeshs[i]->GetNormalBuffer(),

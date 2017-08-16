@@ -7,7 +7,7 @@
 #include "..\DexBase\DexBigFileHandle.h"
 typedef unsigned long long uint64;
 typedef long long DInt64;
-typedef unsigned int DUDInt32;
+typedef unsigned int DUInt32;
 typedef int DInt32;
 const int g_iBuffSize = 1024 * 64;
 using namespace std;
@@ -38,13 +38,13 @@ class CPackTaskCompress :CPackTask
 public:
 	char*  m_pSrcBuffer;
 	char*  m_pDestBuffer;
-	DUDInt32 m_iSrcSize;
-	DUDInt32 m_iDestSize;
-	DUDInt32 m_iRetSize;
+	DUInt32 m_iSrcSize;
+	DUInt32 m_iDestSize;
+	DUInt32 m_iRetSize;
 	bool   m_bSuccess;
 public:
 	CPackTaskCompress();
-	void Initialize(char* pDestBuffer, DUDInt32 iDestSize, char* pSrcBuffer, DUDInt32 iSrcSize);
+	void Initialize(char* pDestBuffer, DUInt32 iDestSize, char* pSrcBuffer, DUInt32 iSrcSize);
 	virtual bool Exe();
 };
 class CPackTaskWrite :CPackTask
@@ -71,8 +71,8 @@ public:
 	uint64   m_iOffset; //read offset
 	DInt64    m_iCount;  //read count
 	//for compress
-	DUDInt32 m_iSrcSize;  
-	DUDInt32 m_iDestSize;
+	DUInt32 m_iSrcSize;  
+	DUInt32 m_iDestSize;
 	bool   m_bSuccess;
 	//
 	string m_fileName;

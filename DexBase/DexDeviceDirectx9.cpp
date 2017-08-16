@@ -189,7 +189,7 @@ bool DexDeviceDirectx9::SetFVF(DInt64 iFVF)
 	return true;
 }
 
-bool DexDeviceDirectx9::DrawPrimitiveUp(DexPrimitivetType eType, DUDInt32 iPrimitiveCount, const void* pVertexStreamData, DUDInt32 iVertexStreamStride)
+bool DexDeviceDirectx9::DrawPrimitiveUp(DexPrimitivetType eType, DUInt32 iPrimitiveCount, const void* pVertexStreamData, DUInt32 iVertexStreamStride)
 {
 	D3DPRIMITIVETYPE d3d_primitive_type = D3DPT_LINELIST;
 	switch (eType)
@@ -237,9 +237,9 @@ bool DexDeviceDirectx9::Clear(DInt64 flags, const DexColor& color, DFloat32 fZ, 
 	if (flags & DEXCLEAR_STENCIL)
 		dxFlag |= D3DCLEAR_STENCIL;
 	if (flags & DEXCLEAR_TARGET)
-		dxFlag |= D3DCLEAR_STENCIL;
+		dxFlag |= D3DCLEAR_TARGET;
 	if (flags & DEXCLEAR_ZBUFFER)
-		dxFlag |= D3DCLEAR_STENCIL;
+		dxFlag |= D3DCLEAR_ZBUFFER;
 	g_D3DDevice->Clear(0, DexNull, dxFlag, getD3DColor(color), fZ, sStencil);
 	return true;
 }

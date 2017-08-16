@@ -211,7 +211,7 @@ bool DexDeviceOpenGLWindows::SetFVF(DInt64 iFVF)
 {
 	return true;
 }
-bool DexDeviceOpenGLWindows::DrawPrimitiveUp(DexPrimitivetType eType, DUDInt32 iPrimitiveCount, const void* pVertexStreamData, DUDInt32 iVertexStreamStride)
+bool DexDeviceOpenGLWindows::DrawPrimitiveUp(DexPrimitivetType eType, DUInt32 iPrimitiveCount, const void* pVertexStreamData, DUInt32 iVertexStreamStride)
 {
 	if (eType == DexPT_LINELIST)
 	{

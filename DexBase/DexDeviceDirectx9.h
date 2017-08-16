@@ -21,7 +21,7 @@ public:
 	virtual bool SetTransform(DEXTRANSFORMSTATETYPE transformStateType, const DexMatrix4x4* matrix);
 	virtual bool SetRenderState(eDEXRENDERSTATE eRenderState, DInt64 value);
 	virtual bool SetFVF(DInt64 iFVF);
-	virtual bool DrawPrimitiveUp(DexPrimitivetType eType, DUDInt32 iPrimitiveCount, const void* pVertexStreamData, DUDInt32 iVertexStreamStride);
+	virtual bool DrawPrimitiveUp(DexPrimitivetType eType, DUInt32 iPrimitiveCount, const void* pVertexStreamData, DUInt32 iVertexStreamStride);
 	virtual bool Clear(DInt64 flags, const DexColor& color, DFloat32 fZ, DInt64 sStencil);
 	virtual bool BeginScene();
 	virtual bool EndScene();

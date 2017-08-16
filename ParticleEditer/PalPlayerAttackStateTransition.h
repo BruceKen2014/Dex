@@ -1,6 +1,6 @@
 #ifndef _PAL_PLAYER_ATTACK_STATE_TRANSITION_H
 #define _PAL_PLAYER_ATTACK_STATE_TRANSITION_H
-#include "DexBase/CDexObject.h"
+#include "DexBase/DexObject.h"
 #include "IDexState.h"
 
 class PalPlayer;

@@ -117,7 +117,7 @@ bool DexModelMs3dLoader::SupportType(const char* fileType)
 DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, DInt32 flag)
 {
 	DexLog::getSingleton()->BeginLog();
-	DInt64 Time = getTime()->GetTotalMillSeconds();
+	DInt64 Time = DexTime::getSingleton()->GetTotalMillSeconds();
 	DexLog::getSingleton()->LogLine(log_ok, "load ms3d %s...", filename);
 	//TODO 把model加入object工程，采用query机制
 	DexSkinMesh* skinMesh = new DexSkinMesh();
@@ -159,7 +159,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, DInt32 flag)
 		return NULL;
 	}// "Unhandled file version. Only Milkshape3D Version 1.3 and 1.4 is supported." );
 
-	DUDInt32 nVertices = *(DInt16*)pPtr;  //顶点个数
+	DUInt32 nVertices = *(DInt16*)pPtr;  //顶点个数
 	pPtr += sizeof(DInt16);
 
 	MS3DVertex *pVertex = (MS3DVertex*)pPtr;
@@ -193,7 +193,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, DInt32 flag)
 			//检测三角形的三个顶点是否可在当前mesh中查找到，需要匹配pos normal uv
 			for (int point = 0; point < 3; ++point)
 			{
-				DUDInt32 iPosIndex = Triangles[triangleIndex].m_vertexIndices[point];
+				DUInt32 iPosIndex = Triangles[triangleIndex].m_vertexIndices[point];
 				tempPos.Set(pVertex[iPosIndex].m_vertex);
 				tempPos.z *= -1;
 				tempNormal.Set(Triangles[triangleIndex].m_vertexNormals[point]);
@@ -375,9 +375,9 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, DInt32 flag)
 		pPtr += sizeof(subVersion);
 		for (int i = 0; i < 4; ++i)
 		{
-			DUDInt32 numComment = *(DUDInt32*)pPtr;
+			DUInt32 numComment = *(DUInt32*)pPtr;
 			pPtr += sizeof(numComment);
-			for (DUDInt32 j = 0; j < numComment; ++j)
+			for (DUInt32 j = 0; j < numComment; ++j)
 			{
 				// according to scorpiomidget this field does
 				// not exist for model comments. So avoid to
@@ -425,7 +425,7 @@ DexModelBase* DexModelMs3dLoader::LoadModel(const char* filename, DInt32 flag)
 	skinMesh->SetAnimateTime(minAniTime * 1000, AniTime * 1000);
 	//skinMesh->CalculateVertex();
 
-	Time = getTime()->GetTotalMillSeconds() - Time;
+	Time = DexTime::getSingleton()->GetTotalMillSeconds() - Time;
 	DexLog::getSingleton()->Log(log_ok, "load ms3d %s ok, use time %d ms", filename, Time);
 	DexLog::getSingleton()->EndLog();
 	return skinMesh;

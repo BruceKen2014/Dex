@@ -23,7 +23,7 @@ Dex引擎引用计数文件
 class CRefCount
 {
 protected:
-	DUDInt32 m_count;
+	DUInt32 m_count;
 
 public:
 	CRefCount();
@@ -33,7 +33,7 @@ protected:
 	virtual void ShutDown() = 0;   //不允许外界调用，只能由自身在释放自己时调用
 public:	
 	void AddRef();
-	DUDInt32 GetRefCount() { return m_count;}; //被引用了多少次
+	DUInt32 GetRefCount() { return m_count;}; //被引用了多少次
 	void ReduceRef();
 };
 

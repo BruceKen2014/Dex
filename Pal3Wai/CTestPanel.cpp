@@ -35,9 +35,9 @@ bool CTestPanel::Init()
 {
 	//return 1;
 	getWidgetFactory()->loadWidgetsFromXml("ini\\ui.xml");
-	m_backImage = (CDexWidgetImage* )getWidgetFactory()->findWidget("background");
-	m_image1 = (CDexWidgetImage* )getWidgetFactory()->findWidget("background.image1");
-	m_image2 = (CDexWidgetImage* )getWidgetFactory()->findWidget("background.image2");
+	m_backImage = (DexWidgetImage* )getWidgetFactory()->findWidget("background");
+	m_image1 = (DexWidgetImage* )getWidgetFactory()->findWidget("background.image1");
+	m_image2 = (DexWidgetImage* )getWidgetFactory()->findWidget("background.image2");
 
 	CDexGuiActionRotate *rotate = new CDexGuiActionRotate;
 	m_image2->AddAction(rotate);
@@ -66,7 +66,7 @@ bool CTestPanel::Init()
 	m_imagesequence = (CDexWidgetImageSequence*) getWidgetFactory()->findWidget("background.lovelygirl");
 	m_checkBtn1 = (CDexWidgetCheckBtn*) getWidgetFactory()->findWidget("background.check"); 
 
-	m_editBox = (CDexWidgetEditBox*) getWidgetFactory()->createWidget(widget_editbox, "editbox"); 
+	m_editBox = (DexWidgetEditBox*) getWidgetFactory()->createWidget(widget_editbox, "editbox"); 
 	m_editBox->SetBackImage("22y.png", DexRect(345, 666, 650, 695));
 	m_editBox->SetStartOffset(20, 5);
 	m_editBox->Resize(DexSize(300, 30));
@@ -180,7 +180,7 @@ void CTestPanel::OnMouseLDown(int mouse_x, int mouse_y)
 {
 }
 
-void CTestPanel::OnClickBtn2(CEventHandler* sys,CDexObject* object, stEvent event)
+void CTestPanel::OnClickBtn2(CEventHandler* sys,DexObject* object, stEvent event)
 {	
 	bool visible = ! m_backImage->GetVisible();
 	m_backImage->setVisible(visible);
@@ -277,15 +277,15 @@ void CTestPanel::OnClickBtn2(CEventHandler* sys,CDexObject* object, stEvent even
 	//	i = true;
 	//}
 }
-void CTestPanel::OnClickBtn(CEventHandler* sys,CDexObject* object, stEvent event)
+void CTestPanel::OnClickBtn(CEventHandler* sys,DexObject* object, stEvent event)
 {
 }
 
-void CTestPanel::OnEditTextChange(CEventHandler* sys,CDexObject* object, stEvent event)
+void CTestPanel::OnEditTextChange(CEventHandler* sys,DexObject* object, stEvent event)
 {
 	//_Message("editbox chars change!");
 }
-void CTestPanel::OnEditTextUpdate(CEventHandler* sys,CDexObject* object, stEvent event)
+void CTestPanel::OnEditTextUpdate(CEventHandler* sys,DexObject* object, stEvent event)
 {
 	vector<string> coord;
 	SplitStr(m_editBox->GetEditText(), ' ', coord);

@@ -42,18 +42,18 @@ CDexWidgetButton::~CDexWidgetButton()
 
 void CDexWidgetButton::ShutDown()
 {
-	CDexWidget::ShutDown();
+	DexWidget::ShutDown();
 }
 void CDexWidgetButton::OnMouseMoveIn(stEvent event)
 {
 	DEX_ENSURE(m_state != btn_useless);
-	CDexWidget::OnMouseMoveIn(event);
+	DexWidget::OnMouseMoveIn(event);
 	m_state = btn_mouse_on;
 }
 void CDexWidgetButton::OnMouseMoveOut(stEvent event)
 {
 	DEX_ENSURE(m_state != btn_useless);
-	CDexWidget::OnMouseMoveOut(event);
+	DexWidget::OnMouseMoveOut(event);
 	m_state = btn_normal;
 }
 bool CDexWidgetButton::OnMouseLUp(stEvent event)
@@ -87,7 +87,7 @@ bool CDexWidgetButton::OnMouseLUp(stEvent event)
 void CDexWidgetButton::OnMouseLDown(stEvent event)
 {
 	DEX_ENSURE(m_state != btn_useless);
-	CDexWidget::OnMouseLDown(event);
+	DexWidget::OnMouseLDown(event);
 	if(m_state != btn_mouse_down)
 	{
 		if(m_mouseDownSoundFilename != "")
@@ -109,19 +109,19 @@ bool CDexWidgetButton::MouseLUpValid(stEvent event)
 }
 bool CDexWidgetButton::Update(int delta)
 {
-	DEX_ENSURE_B(CDexWidget::Update(delta));
+	DEX_ENSURE_B(DexWidget::Update(delta));
 	return true;
 }
 
 void CDexWidgetButton::Enable(bool child)
 {
-	CDexWidget::Enable(child);
+	DexWidget::Enable(child);
 	m_state = btn_normal;
 }
 
 void CDexWidgetButton::Disable(bool child)
 {
-	CDexWidget::Disable(child);
+	DexWidget::Disable(child);
 	m_state = btn_useless;
 }
 void CDexWidgetButton::RenderThis()
