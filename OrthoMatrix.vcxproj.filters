@@ -951,4 +951,7 @@
       <Filter>widget</Filter>
     </CustomBuildStep>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
 </Project>

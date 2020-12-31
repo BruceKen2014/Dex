@@ -4,8 +4,8 @@
 #include <list>
 #include <map>
 #include "CListener.h"
+#include "CEventHandler.h"
 //using namespace std;
-class CEventHandler;
 class DexObject;
 class CDelegate
 {
