@@ -167,3 +167,32 @@ DString& DexCommonFunction::getFilePath(DString filename, DString& path)
 	path = filename.substr(0, last_pos + 1);
 	return path;
 }
+
+DString& DexCommonFunction::GetFilePureName(DString filename, DString& name)
+{
+	int index = filename.find_last_of('\\');
+	name = filename.substr(index + 1);
+	return name;
+}
+
+bool DexCommonFunction::IsTypeFile(const char* filename, const char* Type)
+{//思想：从后往前对比Type的字符
+	int TypeLenth = dexstrlen(Type);
+	const char* TypePoint = &Type[TypeLenth - 1];
+	const char* FileNamePoint = &filename[dexstrlen(filename) - 1];
+
+	int CompareCount = 0;
+	while (CompareCount < TypeLenth)
+	{
+		if (*TypePoint == *FileNamePoint)
+		{
+			--TypePoint;
+			--FileNamePoint;
+			CompareCount++;
+			continue;
+		}
+		else
+			return false;
+	}
+	return true;
+}

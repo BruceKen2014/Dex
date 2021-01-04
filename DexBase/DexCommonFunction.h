@@ -31,8 +31,18 @@ public:
 	static void DeleteStrSpace(char* str); //移除字符串中的空格
 	static DString D3DVector3toStr(const D3DXVECTOR3& vec, char split_char = ';');
 	static bool   StrToD3DVector3(DString str, D3DXVECTOR3& vec, char split_char = ';');
+
 	//函数功能：取得文件名中的路径，如传入filename如model/x.obj,传出path如model/
 	static DString&   getFilePath(DString filename, DString& path);
+
+	//函数功能：取得文件名中的纯文件名，如传入filename如model/x.obj,传出name如x.obj
+	static DString&   GetFilePureName(DString filename, DString& name);
+
+	//判断filename的后缀名是否是Type
+	//如filename = 123.mp3
+	//Type = mp3
+	bool IsTypeFile(const char* filename, const char* Type);
+
 	template<typename T>
 	static inline T& clip(T& _value, const T& _small, const T& _big);
 };
