@@ -1,0 +1,19 @@
+3 2
+40.0 40.0 0.0 --maxsize
+50.0 50.0 0.0 --minsize
+0.0 0.0 0.0 --maxpos
+0.0 0.0 0.0 --minpos
+0.0 0.0 0.0 --velmax
+0.0 0.0 0.0 --velmin
+0.0 0.0 0.0 --acc
+1.0 1.0 0.0 0.0 --startcolor argb
+1.0 0.0 1.0 0.0 --middlecolor argb
+1.0 0.0 0.0 1.0 --endcolor argb
+tt1.png --texture
+4 16 --texframe x total
+1000 --livetime
+1000 --createinterval
+0.5 --middlerate
+1.0 --scalestart
+1.0 --scalemiddle
+1.0 --scaleend

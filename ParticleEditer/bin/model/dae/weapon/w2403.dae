@@ -1,0 +1,2988 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset>
+    <contributor>
+      <author>xff12</author>
+      <authoring_tool>Maya2015 | ColladaMaya v3.04C PhyreEngine(TM) 3.12.0.0</authoring_tool>
+      <comments>Collada Maya Export Options: bakeTransforms=0;exportPolygonMeshes=1;relativePaths=0;bakeLighting=0;isSampling=1;
+curveConstrainSampling=0;removeStaticCurves=1;exportCameraAsLookat=0;
+exportLights=1;exportCameras=1;exportJointsAndSkin=1;
+exportAnimations=1;exportTriangles=0;exportInvisibleNodes=0;
+exportNormals=1;exportTexCoords=1;
+exportVertexColors=1;exportVertexColorsAnimation=0;exportTangents=0;
+exportTexTangents=1;exportConstraints=1;exportPhysics=1;exportXRefs=1;instanceDuplicateCurves=0;
+dereferenceXRefs=0;cameraXFov=0;cameraYFov=1</comments>
+      <source_data>file:///J:/ArtData/chr/weapon/mws/w2403.mb</source_data>
+    </contributor>
+    <created>2016-07-15T20:33:18Z</created>
+    <modified>2016-07-15T20:33:18Z</modified>
+    <unit meter="0.0099999997764825" name="centimeter"/>
+    <up_axis>Y_UP</up_axis>
+  </asset>
+  <library_physics_scenes>
+    <physics_scene id="MayaNativePhysicsScene">
+      <technique_common>
+        <gravity>0 -980 0</gravity>
+        <time_step>0.0829999968409538</time_step>
+      </technique_common>
+    </physics_scene>
+  </library_physics_scenes>
+  <library_images>
+    <image id="tex_0_clut_0_w2403" name="tex_0_clut_0_w2403">
+      <init_from>model/dae/weapon/tex/tex_0_clut_0_w2403_clut_1.dds</init_from>
+      <extra>
+        <technique profile="MAYA">
+          <dgnode_type>kFile</dgnode_type>
+          <image_sequence>0</image_sequence>
+        </technique>
+      </extra>
+    </image>
+  </library_images>
+  <library_materials>
+    <material id="_collada_lod_0_shape_0_gather_0_material" name="_collada_lod_0_shape_0_gather_0_material">
+      <instance_effect url="#_collada_lod_0_shape_0_gather_0_material-fx">
+        <technique_hint platform="PC-DX" ref="MayaRenderPass"/>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialWorld">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialWorldView">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialWorldInverse">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialWorldViewProjection">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialWorldViewInverse">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialMaterialColour">
+          <float4>1 1 1 1</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialMaterialDiffuse">
+          <float>1</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialMaterialEmissiveness">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialPS2ZBiasOriginal">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialPS2ZBiasInstance">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialPS2WHMatrix">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialPS2HSMatrix">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialInvPS2WHSMatrix">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialNormalMapEnabled">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmSpecialShadowColor">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmDecayDistance">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmShadowValueLerpMin">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmShadowColor">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmlightView">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection0">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection1">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection2">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection3">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection4">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection5">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection6">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection7">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialm_fCascadeFrustumsEyeSpaceDepthsFloat4_1">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialm_fCascadeFrustumsEyeSpaceDepthsFloat4_2">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialm_fMinBorderPadding">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialm_fMaxBorderPadding">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialm_fCascadeBlendArea">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialm_fShadowBiasFromGUI">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialm_fShadowPartitionSize">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialm_fTexelSize">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialm_fNativeTexelSizeInX">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialsssWdth">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialsssFarPlane">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialssssb">
+          <float3>0 0 0</float3>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialsssBlur">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialdir">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialSingleStepOffset">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialblendAmount">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularIntensity">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularPower">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularClampValue">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularSkinIntensity">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialhCmrLghtXMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialhCmrLghtYMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialhCmrLghtZMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialhSpculrPwrMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialhSpculrPwryCmrDistncFctr">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialhSpIntnBfClpMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialhSpIntnBfClpyCmrDistncFctr">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialhSpIntnAftClpMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialhSpIntnAftClpyCmrDistncFctr">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialeCubeMapIntensityModifier">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialeSpculrBlndMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialxCmrLghtXMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialxCmrLghtYMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialxCmrLghtZMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialxSpculrPwrMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialxSpculrPwryCmrDistncFctr">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialxSpIntnBfClpMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialxSpIntnBfClpyCmrDistncFctr">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialxSpIntnAftClpMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialxSpIntnAftClpyCmrDistncFctr">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialyCmrLghtXMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialyCmrLghtYMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialyCmrLghtZMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialySpculrPwrMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialySpculrPwryCmrDistncFctr">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialySpIntnBfClpMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialySpIntnBfClpyCmrDistncFctr">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialySpIntnAftClpMdifir">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialySpIntnAftClpyCmrDistncFctr">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialeTp">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialdiffuseParaA">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialdiffuseParaB">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialAlphaThreshold">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialdiffuseIntensity">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialspecularIntensity">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcubemapIntensity">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtDir1">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtDir2">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtDir3">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtDir4">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtDir5">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtDir6">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtColor1">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtColor2">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtColor3">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtColor4">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtColor5">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtColor6">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materiallichtAmbient">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialPS2FogVec">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcubeMapEnabled">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcubeMapFactor">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight0">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight1">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight2">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight3">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMapFactor">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMapLimit">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMapIntensity">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialtexAnimEnabled">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialtexAnimNormalEnabled">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialtexAnimSpecularEnabled">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialorigTexBBox1">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialorigTexBBox2">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialorigTexBBox3">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialorigTexBBox4">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimTexBBox1">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimTexBBox2">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimTexBBox3">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimTexBBox4">
+          <float4>0 0 0 0</float4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimUvMin1">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimUvMin2">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimUvMin3">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimUvMin4">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimUvMax1">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimUvMax2">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimUvMax3">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialanimUvMax4">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialrefractionEnabled">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialrefractionPower">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialrefractionAlpha">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialPTAlphaThreshold">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialViewProjection">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialView">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialProjection">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialViewInverse">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialProjInverse">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialEyePosition">
+          <float3>0 0 0</float3>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcameraNearTimesFar">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialGlobalAmbientColor">
+          <float3>0 0 0</float3>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcameraFarMinusNear">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialcameraNearFar">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialViewportWidthHeight">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialscreenWidthHeightInv">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialscreenWidthHeight">
+          <float2>0 0</float2>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialtime">
+          <float>0</float>
+        </setparam>
+        <setparam ref="_collada_lod_0_shape_0_gather_0_materialTextureSampler">
+          <sampler2D>
+            <source>tex_0_clut_0_w2403Surface</source>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <minfilter>NONE</minfilter>
+            <magfilter>NONE</magfilter>
+            <mipfilter>NONE</mipfilter>
+            <max_anisotropy>0</max_anisotropy>
+          </sampler2D>
+        </setparam>
+        <setparam ref="tex_0_clut_0_w2403Surface">
+          <surface type="2D">
+            <init_from mip="0" slice="0">tex_0_clut_0_w2403</init_from>
+            <format>A8R8G8B8</format>
+          </surface>
+        </setparam>
+      </instance_effect>
+      <extra>
+        <technique profile="PHYRE">
+          <material_switches>
+            <TEXTURE_ENABLED/>
+            <RECEIVE_SHADOWS/>
+          </material_switches>
+          <material_switch_list>
+            <material_switch name="VERTEX_COLOR_ENABLED" material_switch_value="0"/>
+            <material_switch name="LIGHTING_ENABLED" material_switch_value="0"/>
+            <material_switch name="TEXTURE_ENABLED" material_switch_value="1"/>
+            <material_switch name="ALPHA_ENABLED" material_switch_value="0"/>
+            <material_switch name="NORMAL_MAPPING_ENABLED" material_switch_value="0"/>
+            <material_switch name="SPECULAR_ENABLED" material_switch_value="0"/>
+            <material_switch name="CASTS_SHADOWS" material_switch_value="0"/>
+            <material_switch name="RECEIVE_SHADOWS" material_switch_value="1"/>
+            <material_switch name="ENABLE_ALPHA_TO_COVERAGE" material_switch_value="0"/>
+            <material_switch name="DISABLE_ALPHA_BLEND" material_switch_value="0"/>
+            <material_switch name="FORCE_CULLING" material_switch_value="0"/>
+            <material_switch name="DISABLE_ALPHA_THRESHOLD" material_switch_value="0"/>
+          </material_switch_list>
+        </technique>
+      </extra>
+    </material>
+  </library_materials>
+  <library_effects>
+    <effect id="_collada_lod_0_shape_0_gather_0_material-fx">
+      <profile_HLSL platform="PC-DX">
+        <include sid="include" url="file:///J:/ArtData/shaders/PhyreChrShader.fx"/>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialWorld">
+          <semantic>World</semantic>
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialWorldView">
+          <semantic>WorldView</semantic>
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialWorldInverse">
+          <semantic>WorldInverse</semantic>
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialWorldViewProjection">
+          <semantic>WorldViewProjection</semantic>
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialWorldViewInverse">
+          <semantic>WorldViewInverse</semantic>
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialMaterialColour">
+          <annotate name="UIName">
+            <string>MaterialColour</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <semantic>MaterialColour</semantic>
+          <float4>1 1 1 1</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialMaterialDiffuse">
+          <annotate name="UIName">
+            <string>MaterialDiffuse</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <semantic>MaterialDiffuse</semantic>
+          <float>1</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialMaterialEmissiveness">
+          <annotate name="UIName">
+            <string>MaterialEmissiveness</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <semantic>MaterialEmissiveness</semantic>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialPS2ZBiasOriginal">
+          <annotate name="UIName">
+            <string>PS2ZBiasOriginal</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialPS2ZBiasInstance">
+          <annotate name="UIName">
+            <string>PS2ZBiasInstance</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialPS2WHMatrix">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialPS2HSMatrix">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialInvPS2WHSMatrix">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialNormalMapEnabled">
+          <annotate name="UIName">
+            <string>NormalMapEnabled</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmSpecialShadowColor">
+          <annotate name="UIName">
+            <string>mSpecialShadowColor</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmDecayDistance">
+          <annotate name="UIName">
+            <string>mDecayDistance</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmShadowValueLerpMin">
+          <annotate name="UIName">
+            <string>mShadowValueLerpMin</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmShadowColor">
+          <annotate name="UIName">
+            <string>mShadowColor</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmlightView">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection0">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection1">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection2">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection3">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection4">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection5">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection6">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection7">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialm_fCascadeFrustumsEyeSpaceDepthsFloat4_1">
+          <annotate name="UIName">
+            <string>m_fCascadeFrustumsEyeSpaceDepthsFloat4_1</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialm_fCascadeFrustumsEyeSpaceDepthsFloat4_2">
+          <annotate name="UIName">
+            <string>m_fCascadeFrustumsEyeSpaceDepthsFloat4_2</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialm_fMinBorderPadding">
+          <annotate name="UIName">
+            <string>m_fMinBorderPadding</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialm_fMaxBorderPadding">
+          <annotate name="UIName">
+            <string>m_fMaxBorderPadding</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialm_fCascadeBlendArea">
+          <annotate name="UIName">
+            <string>m_fCascadeBlendArea</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialm_fShadowBiasFromGUI">
+          <annotate name="UIName">
+            <string>m_fShadowBiasFromGUI</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialm_fShadowPartitionSize">
+          <annotate name="UIName">
+            <string>m_fShadowPartitionSize</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialm_fTexelSize">
+          <annotate name="UIName">
+            <string>m_fTexelSize</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialm_fNativeTexelSizeInX">
+          <annotate name="UIName">
+            <string>m_fNativeTexelSizeInX</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialsssWdth">
+          <annotate name="UIName">
+            <string>sssWdth</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialsssFarPlane">
+          <annotate name="UIName">
+            <string>sssFarPlane</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialssssb">
+          <annotate name="UIName">
+            <string>ssssb</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float3>0 0 0</float3>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialsssBlur">
+          <annotate name="UIName">
+            <string>sssBlur</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialdir">
+          <annotate name="UIName">
+            <string>dir</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialSingleStepOffset">
+          <annotate name="UIName">
+            <string>SingleStepOffset</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialblendAmount">
+          <annotate name="UIName">
+            <string>blendAmount</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularIntensity">
+          <annotate name="UIName">
+            <string>fresnelSpecularIntensity</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularPower">
+          <annotate name="UIName">
+            <string>fresnelSpecularPower</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularClampValue">
+          <annotate name="UIName">
+            <string>fresnelSpecularClampValue</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularSkinIntensity">
+          <annotate name="UIName">
+            <string>fresnelSpecularSkinIntensity</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialhCmrLghtXMdifir">
+          <annotate name="UIName">
+            <string>hCmrLghtXMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialhCmrLghtYMdifir">
+          <annotate name="UIName">
+            <string>hCmrLghtYMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialhCmrLghtZMdifir">
+          <annotate name="UIName">
+            <string>hCmrLghtZMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialhSpculrPwrMdifir">
+          <annotate name="UIName">
+            <string>hSpculrPwrMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialhSpculrPwryCmrDistncFctr">
+          <annotate name="UIName">
+            <string>hSpculrPwryCmrDistncFctr</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialhSpIntnBfClpMdifir">
+          <annotate name="UIName">
+            <string>hSpIntnBfClpMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialhSpIntnBfClpyCmrDistncFctr">
+          <annotate name="UIName">
+            <string>hSpIntnBfClpyCmrDistncFctr</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialhSpIntnAftClpMdifir">
+          <annotate name="UIName">
+            <string>hSpIntnAftClpMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialhSpIntnAftClpyCmrDistncFctr">
+          <annotate name="UIName">
+            <string>hSpIntnAftClpyCmrDistncFctr</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialeCubeMapIntensityModifier">
+          <annotate name="UIName">
+            <string>eCubeMapIntensityModifier</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialeSpculrBlndMdifir">
+          <annotate name="UIName">
+            <string>eSpculrBlndMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialxCmrLghtXMdifir">
+          <annotate name="UIName">
+            <string>xCmrLghtXMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialxCmrLghtYMdifir">
+          <annotate name="UIName">
+            <string>xCmrLghtYMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialxCmrLghtZMdifir">
+          <annotate name="UIName">
+            <string>xCmrLghtZMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialxSpculrPwrMdifir">
+          <annotate name="UIName">
+            <string>xSpculrPwrMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialxSpculrPwryCmrDistncFctr">
+          <annotate name="UIName">
+            <string>xSpculrPwryCmrDistncFctr</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialxSpIntnBfClpMdifir">
+          <annotate name="UIName">
+            <string>xSpIntnBfClpMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialxSpIntnBfClpyCmrDistncFctr">
+          <annotate name="UIName">
+            <string>xSpIntnBfClpyCmrDistncFctr</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialxSpIntnAftClpMdifir">
+          <annotate name="UIName">
+            <string>xSpIntnAftClpMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialxSpIntnAftClpyCmrDistncFctr">
+          <annotate name="UIName">
+            <string>xSpIntnAftClpyCmrDistncFctr</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialyCmrLghtXMdifir">
+          <annotate name="UIName">
+            <string>yCmrLghtXMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialyCmrLghtYMdifir">
+          <annotate name="UIName">
+            <string>yCmrLghtYMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialyCmrLghtZMdifir">
+          <annotate name="UIName">
+            <string>yCmrLghtZMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialySpculrPwrMdifir">
+          <annotate name="UIName">
+            <string>ySpculrPwrMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialySpculrPwryCmrDistncFctr">
+          <annotate name="UIName">
+            <string>ySpculrPwryCmrDistncFctr</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialySpIntnBfClpMdifir">
+          <annotate name="UIName">
+            <string>ySpIntnBfClpMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialySpIntnBfClpyCmrDistncFctr">
+          <annotate name="UIName">
+            <string>ySpIntnBfClpyCmrDistncFctr</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialySpIntnAftClpMdifir">
+          <annotate name="UIName">
+            <string>ySpIntnAftClpMdifir</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialySpIntnAftClpyCmrDistncFctr">
+          <annotate name="UIName">
+            <string>ySpIntnAftClpyCmrDistncFctr</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialeTp">
+          <annotate name="UIName">
+            <string>eTp</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialdiffuseParaA">
+          <annotate name="UIName">
+            <string>diffuseParaA</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialdiffuseParaB">
+          <annotate name="UIName">
+            <string>diffuseParaB</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialAlphaThreshold">
+          <annotate name="UIName">
+            <string>AlphaThreshold</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialdiffuseIntensity">
+          <annotate name="UIName">
+            <string>diffuseIntensity</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialspecularIntensity">
+          <annotate name="UIName">
+            <string>specularIntensity</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcubemapIntensity">
+          <annotate name="UIName">
+            <string>cubemapIntensity</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtDir1">
+          <annotate name="UIName">
+            <string>lichtDir1</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtDir2">
+          <annotate name="UIName">
+            <string>lichtDir2</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtDir3">
+          <annotate name="UIName">
+            <string>lichtDir3</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtDir4">
+          <annotate name="UIName">
+            <string>lichtDir4</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtDir5">
+          <annotate name="UIName">
+            <string>lichtDir5</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtDir6">
+          <annotate name="UIName">
+            <string>lichtDir6</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtColor1">
+          <annotate name="UIName">
+            <string>lichtColor1</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtColor2">
+          <annotate name="UIName">
+            <string>lichtColor2</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtColor3">
+          <annotate name="UIName">
+            <string>lichtColor3</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtColor4">
+          <annotate name="UIName">
+            <string>lichtColor4</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtColor5">
+          <annotate name="UIName">
+            <string>lichtColor5</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtColor6">
+          <annotate name="UIName">
+            <string>lichtColor6</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materiallichtAmbient">
+          <annotate name="UIName">
+            <string>lichtAmbient</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialPS2FogVec">
+          <annotate name="UIName">
+            <string>PS2FogVec</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcubeMapEnabled">
+          <annotate name="UIName">
+            <string>cubeMapEnabled</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcubeMapFactor">
+          <annotate name="UIName">
+            <string>cubeMapFactor</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight0">
+          <annotate name="UIName">
+            <string>cubeMapWeight0</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight1">
+          <annotate name="UIName">
+            <string>cubeMapWeight1</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight2">
+          <annotate name="UIName">
+            <string>cubeMapWeight2</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight3">
+          <annotate name="UIName">
+            <string>cubeMapWeight3</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialirrCubeMapFactor">
+          <annotate name="UIName">
+            <string>irrCubeMapFactor</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialirrCubeMapLimit">
+          <annotate name="UIName">
+            <string>irrCubeMapLimit</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialirrCubeMapIntensity">
+          <annotate name="UIName">
+            <string>irrCubeMapIntensity</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialtexAnimEnabled">
+          <annotate name="UIName">
+            <string>texAnimEnabled</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialtexAnimNormalEnabled">
+          <annotate name="UIName">
+            <string>texAnimNormalEnabled</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialtexAnimSpecularEnabled">
+          <annotate name="UIName">
+            <string>texAnimSpecularEnabled</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialorigTexBBox1">
+          <annotate name="UIName">
+            <string>origTexBBox1</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialorigTexBBox2">
+          <annotate name="UIName">
+            <string>origTexBBox2</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialorigTexBBox3">
+          <annotate name="UIName">
+            <string>origTexBBox3</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialorigTexBBox4">
+          <annotate name="UIName">
+            <string>origTexBBox4</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimTexBBox1">
+          <annotate name="UIName">
+            <string>animTexBBox1</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimTexBBox2">
+          <annotate name="UIName">
+            <string>animTexBBox2</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimTexBBox3">
+          <annotate name="UIName">
+            <string>animTexBBox3</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimTexBBox4">
+          <annotate name="UIName">
+            <string>animTexBBox4</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float4>0 0 0 0</float4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimUvMin1">
+          <annotate name="UIName">
+            <string>animUvMin1</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimUvMin2">
+          <annotate name="UIName">
+            <string>animUvMin2</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimUvMin3">
+          <annotate name="UIName">
+            <string>animUvMin3</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimUvMin4">
+          <annotate name="UIName">
+            <string>animUvMin4</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimUvMax1">
+          <annotate name="UIName">
+            <string>animUvMax1</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimUvMax2">
+          <annotate name="UIName">
+            <string>animUvMax2</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimUvMax3">
+          <annotate name="UIName">
+            <string>animUvMax3</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialanimUvMax4">
+          <annotate name="UIName">
+            <string>animUvMax4</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialrefractionEnabled">
+          <annotate name="UIName">
+            <string>refractionEnabled</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialrefractionPower">
+          <annotate name="UIName">
+            <string>refractionPower</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialrefractionAlpha">
+          <annotate name="UIName">
+            <string>refractionAlpha</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialPTAlphaThreshold">
+          <annotate name="UIName">
+            <string>PTAlphaThreshold</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialViewProjection">
+          <semantic>ViewProjection</semantic>
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialView">
+          <semantic>View</semantic>
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialProjection">
+          <semantic>Projection</semantic>
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialViewInverse">
+          <semantic>ViewInverse</semantic>
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialProjInverse">
+          <float4x4>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float4x4>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialEyePosition">
+          <annotate name="UIName">
+            <string>EyePosition</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float3>0 0 0</float3>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcameraNearTimesFar">
+          <annotate name="UIName">
+            <string>cameraNearTimesFar</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialGlobalAmbientColor">
+          <annotate name="UIName">
+            <string>GlobalAmbientColor</string>
+          </annotate>
+          <annotate name="UIType">
+            <string>Color</string>
+          </annotate>
+          <float3>0 0 0</float3>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcameraFarMinusNear">
+          <annotate name="UIName">
+            <string>cameraFarMinusNear</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialcameraNearFar">
+          <annotate name="UIName">
+            <string>cameraNearFar</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialViewportWidthHeight">
+          <annotate name="UIName">
+            <string>ViewportWidthHeight</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialscreenWidthHeightInv">
+          <annotate name="UIName">
+            <string>screenWidthHeightInv</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialscreenWidthHeight">
+          <annotate name="UIName">
+            <string>screenWidthHeight</string>
+          </annotate>
+          <float2>0 0</float2>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialtime">
+          <annotate name="UIName">
+            <string>time</string>
+          </annotate>
+          <annotate name="UIMin">
+            <float>0</float>
+          </annotate>
+          <annotate name="UIMax">
+            <float>1</float>
+          </annotate>
+          <float>0</float>
+        </newparam>
+        <newparam sid="ShadowMapSampler">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>COMPARISON_MIN_MAG_LINEAR_MIP_POINT</dxfilter>
+            <func>LESS</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="_collada_lod_0_shape_0_gather_0_materialTextureSampler">
+          <annotate name="UIName">
+            <string>TextureSampler</string>
+          </annotate>
+          <sampler2D>
+            <source>tex_0_clut_0_w2403Surface</source>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <minfilter>NONE</minfilter>
+            <magfilter>NONE</magfilter>
+            <mipfilter>NONE</mipfilter>
+            <max_anisotropy>0</max_anisotropy>
+          </sampler2D>
+        </newparam>
+        <newparam sid="tex_0_clut_0_w2403Surface">
+          <annotate name="UIName">
+            <string>tex_0_clut_0_w2403</string>
+          </annotate>
+          <surface type="2D">
+            <init_from mip="0" slice="0">tex_0_clut_0_w2403</init_from>
+            <format>A8R8G8B8</format>
+          </surface>
+        </newparam>
+        <newparam sid="TextureSamplerSampler">
+          <samplerDX>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_LINEAR</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="NormalMapSamplerSampler">
+          <samplerDX>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_LINEAR</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="LinearWrapSampler">
+          <samplerDX>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_LINEAR</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="DitherSampler">
+          <samplerDX>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_POINT_MIP_LINEAR</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="g_samShadow">
+          <samplerDX>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>COMPARISON_MIN_MAG_LINEAR_MIP_POINT</dxfilter>
+            <func>LESS</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="g_ChrAlphaSampler">
+          <samplerDX>
+            <wrap_s>WRAP</wrap_s>
+            <wrap_t>WRAP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_LINEAR_MIP_POINT</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="LinearSamplerShadow">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_LINEAR_MIP_POINT</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="PointSamplerShadow">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_POINT</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="LinearSampler">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_LINEAR_MIP_POINT</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="PointSampler">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_POINT</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="SpecularSamplerSampler">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_LINEAR</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="RefSamplerSampler">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_LINEAR</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="cubeMapSamplerSampler">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_LINEAR</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="AnimSamplerSampler">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_LINEAR</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <newparam sid="RefractionSamplerSampler">
+          <samplerDX>
+            <wrap_s>CLAMP</wrap_s>
+            <wrap_t>CLAMP</wrap_t>
+            <wrap_p>CLAMP</wrap_p>
+            <dxfilter>MIN_MAG_MIP_LINEAR</dxfilter>
+            <func>NEVER</func>
+            <max_anisotropy>0</max_anisotropy>
+            <lod_min_distance>-3402823466385289</lod_min_distance>
+            <lod_max_distance>3402823466385289</lod_max_distance>
+            <border_color>0 0 0 0</border_color>
+          </samplerDX>
+        </newparam>
+        <technique sid="MayaRenderPass">
+          <pass>
+            <shader stage="VERTEX">
+              <bind symbol="World">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialWorld"/>
+              </bind>
+              <bind symbol="WorldView">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialWorldView"/>
+              </bind>
+              <bind symbol="WorldInverse">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialWorldInverse"/>
+              </bind>
+              <bind symbol="WorldViewProjection">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialWorldViewProjection"/>
+              </bind>
+              <bind symbol="WorldViewInverse">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialWorldViewInverse"/>
+              </bind>
+              <bind symbol="MaterialColour">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialMaterialColour"/>
+              </bind>
+              <bind symbol="MaterialDiffuse">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialMaterialDiffuse"/>
+              </bind>
+              <bind symbol="MaterialEmissiveness">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialMaterialEmissiveness"/>
+              </bind>
+              <bind symbol="PS2ZBiasEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPS2ZBiasEnabled"/>
+              </bind>
+              <bind symbol="PS2ZBiasNoGS">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPS2ZBiasNoGS"/>
+              </bind>
+              <bind symbol="PS2ZBiasOriginal">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPS2ZBiasOriginal"/>
+              </bind>
+              <bind symbol="PS2ZBiasInstance">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPS2ZBiasInstance"/>
+              </bind>
+              <bind symbol="PS2WHMatrix">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPS2WHMatrix"/>
+              </bind>
+              <bind symbol="PS2HSMatrix">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPS2HSMatrix"/>
+              </bind>
+              <bind symbol="InvPS2WHSMatrix">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialInvPS2WHSMatrix"/>
+              </bind>
+              <bind symbol="NormalMapEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialNormalMapEnabled"/>
+              </bind>
+              <bind symbol="iDebugMode">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialiDebugMode"/>
+              </bind>
+              <bind symbol="iDebugInt1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialiDebugInt1"/>
+              </bind>
+              <bind symbol="iDebugInt2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialiDebugInt2"/>
+              </bind>
+              <bind symbol="m_iVisualizeCascades">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_iVisualizeCascades"/>
+              </bind>
+              <bind symbol="mSpecialShadowFlag">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmSpecialShadowFlag"/>
+              </bind>
+              <bind symbol="mSpecialShadowColor">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmSpecialShadowColor"/>
+              </bind>
+              <bind symbol="mEnableDecay">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmEnableDecay"/>
+              </bind>
+              <bind symbol="mDecayDistance">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmDecayDistance"/>
+              </bind>
+              <bind symbol="iCascadesUseCount">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialiCascadesUseCount"/>
+              </bind>
+              <bind symbol="mShadowValueLerpMin">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmShadowValueLerpMin"/>
+              </bind>
+              <bind symbol="mShadowColor">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmShadowColor"/>
+              </bind>
+              <bind symbol="shadowLevel">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialshadowLevel"/>
+              </bind>
+              <bind symbol="mlightView">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmlightView"/>
+              </bind>
+              <bind symbol="mCascadeProjection0">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection0"/>
+              </bind>
+              <bind symbol="mCascadeProjection1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection1"/>
+              </bind>
+              <bind symbol="mCascadeProjection2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection2"/>
+              </bind>
+              <bind symbol="mCascadeProjection3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection3"/>
+              </bind>
+              <bind symbol="mCascadeProjection4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection4"/>
+              </bind>
+              <bind symbol="mCascadeProjection5">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection5"/>
+              </bind>
+              <bind symbol="mCascadeProjection6">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection6"/>
+              </bind>
+              <bind symbol="mCascadeProjection7">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialmCascadeProjection7"/>
+              </bind>
+              <bind symbol="m_fCascadeFrustumsEyeSpaceDepthsFloat4_1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_fCascadeFrustumsEyeSpaceDepthsFloat4_1"/>
+              </bind>
+              <bind symbol="m_fCascadeFrustumsEyeSpaceDepthsFloat4_2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_fCascadeFrustumsEyeSpaceDepthsFloat4_2"/>
+              </bind>
+              <bind symbol="iCascade_selection">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialiCascade_selection"/>
+              </bind>
+              <bind symbol="m_fMinBorderPadding">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_fMinBorderPadding"/>
+              </bind>
+              <bind symbol="m_fMaxBorderPadding">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_fMaxBorderPadding"/>
+              </bind>
+              <bind symbol="iBlend_between_cascade">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialiBlend_between_cascade"/>
+              </bind>
+              <bind symbol="m_fCascadeBlendArea">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_fCascadeBlendArea"/>
+              </bind>
+              <bind symbol="m_iPCFBlurForLoopStart">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_iPCFBlurForLoopStart"/>
+              </bind>
+              <bind symbol="m_iPCFBlurForLoopEnd">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_iPCFBlurForLoopEnd"/>
+              </bind>
+              <bind symbol="m_fShadowBiasFromGUI">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_fShadowBiasFromGUI"/>
+              </bind>
+              <bind symbol="m_fShadowPartitionSize">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_fShadowPartitionSize"/>
+              </bind>
+              <bind symbol="m_fTexelSize">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_fTexelSize"/>
+              </bind>
+              <bind symbol="m_fNativeTexelSizeInX">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialm_fNativeTexelSizeInX"/>
+              </bind>
+              <bind symbol="sssWdth">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialsssWdth"/>
+              </bind>
+              <bind symbol="sssFarPlane">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialsssFarPlane"/>
+              </bind>
+              <bind symbol="ssssb">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialssssb"/>
+              </bind>
+              <bind symbol="sssEnable">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialsssEnable"/>
+              </bind>
+              <bind symbol="sssBlur">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialsssBlur"/>
+              </bind>
+              <bind symbol="dir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialdir"/>
+              </bind>
+              <bind symbol="SingleStepOffset">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialSingleStepOffset"/>
+              </bind>
+              <bind symbol="blendAmount">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialblendAmount"/>
+              </bind>
+              <bind symbol="useBigKernel">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialuseBigKernel"/>
+              </bind>
+              <bind symbol="fresnelRefEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialfresnelRefEnabled"/>
+              </bind>
+              <bind symbol="fresnelSpecularIntensity">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularIntensity"/>
+              </bind>
+              <bind symbol="fresnelSpecularPower">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularPower"/>
+              </bind>
+              <bind symbol="fresnelSpecularClampValue">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularClampValue"/>
+              </bind>
+              <bind symbol="fresnelSpecularSkinIntensity">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialfresnelSpecularSkinIntensity"/>
+              </bind>
+              <bind symbol="hCmrLghtXMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialhCmrLghtXMdifir"/>
+              </bind>
+              <bind symbol="hCmrLghtYMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialhCmrLghtYMdifir"/>
+              </bind>
+              <bind symbol="hCmrLghtZMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialhCmrLghtZMdifir"/>
+              </bind>
+              <bind symbol="hSpculrPwrMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialhSpculrPwrMdifir"/>
+              </bind>
+              <bind symbol="hSpculrPwryCmrDistncFctr">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialhSpculrPwryCmrDistncFctr"/>
+              </bind>
+              <bind symbol="hSpIntnBfClpMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialhSpIntnBfClpMdifir"/>
+              </bind>
+              <bind symbol="hSpIntnBfClpyCmrDistncFctr">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialhSpIntnBfClpyCmrDistncFctr"/>
+              </bind>
+              <bind symbol="hSpIntnAftClpMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialhSpIntnAftClpMdifir"/>
+              </bind>
+              <bind symbol="hSpIntnAftClpyCmrDistncFctr">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialhSpIntnAftClpyCmrDistncFctr"/>
+              </bind>
+              <bind symbol="eCameraLightEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialeCameraLightEnabled"/>
+              </bind>
+              <bind symbol="eCubeMapIntensityModifier">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialeCubeMapIntensityModifier"/>
+              </bind>
+              <bind symbol="eSpculrBlndMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialeSpculrBlndMdifir"/>
+              </bind>
+              <bind symbol="xCmrLghtXMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialxCmrLghtXMdifir"/>
+              </bind>
+              <bind symbol="xCmrLghtYMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialxCmrLghtYMdifir"/>
+              </bind>
+              <bind symbol="xCmrLghtZMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialxCmrLghtZMdifir"/>
+              </bind>
+              <bind symbol="xSpculrPwrMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialxSpculrPwrMdifir"/>
+              </bind>
+              <bind symbol="xSpculrPwryCmrDistncFctr">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialxSpculrPwryCmrDistncFctr"/>
+              </bind>
+              <bind symbol="xSpIntnBfClpMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialxSpIntnBfClpMdifir"/>
+              </bind>
+              <bind symbol="xSpIntnBfClpyCmrDistncFctr">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialxSpIntnBfClpyCmrDistncFctr"/>
+              </bind>
+              <bind symbol="xSpIntnAftClpMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialxSpIntnAftClpMdifir"/>
+              </bind>
+              <bind symbol="xSpIntnAftClpyCmrDistncFctr">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialxSpIntnAftClpyCmrDistncFctr"/>
+              </bind>
+              <bind symbol="yCmrLghtXMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialyCmrLghtXMdifir"/>
+              </bind>
+              <bind symbol="yCmrLghtYMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialyCmrLghtYMdifir"/>
+              </bind>
+              <bind symbol="yCmrLghtZMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialyCmrLghtZMdifir"/>
+              </bind>
+              <bind symbol="ySpculrPwrMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialySpculrPwrMdifir"/>
+              </bind>
+              <bind symbol="ySpculrPwryCmrDistncFctr">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialySpculrPwryCmrDistncFctr"/>
+              </bind>
+              <bind symbol="ySpIntnBfClpMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialySpIntnBfClpMdifir"/>
+              </bind>
+              <bind symbol="ySpIntnBfClpyCmrDistncFctr">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialySpIntnBfClpyCmrDistncFctr"/>
+              </bind>
+              <bind symbol="ySpIntnAftClpMdifir">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialySpIntnAftClpMdifir"/>
+              </bind>
+              <bind symbol="ySpIntnAftClpyCmrDistncFctr">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialySpIntnAftClpyCmrDistncFctr"/>
+              </bind>
+              <bind symbol="eTp">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialeTp"/>
+              </bind>
+              <bind symbol="diffuseParaA">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialdiffuseParaA"/>
+              </bind>
+              <bind symbol="diffuseParaB">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialdiffuseParaB"/>
+              </bind>
+              <bind symbol="AlphaThreshold">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAlphaThreshold"/>
+              </bind>
+              <bind symbol="diffuseIntensity">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialdiffuseIntensity"/>
+              </bind>
+              <bind symbol="specularIntensity">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialspecularIntensity"/>
+              </bind>
+              <bind symbol="cubemapIntensity">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubemapIntensity"/>
+              </bind>
+              <bind symbol="sunIndex">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialsunIndex"/>
+              </bind>
+              <bind symbol="debugCubemap">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialdebugCubemap"/>
+              </bind>
+              <bind symbol="lichtDir1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtDir1"/>
+              </bind>
+              <bind symbol="lichtDir2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtDir2"/>
+              </bind>
+              <bind symbol="lichtDir3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtDir3"/>
+              </bind>
+              <bind symbol="lichtDir4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtDir4"/>
+              </bind>
+              <bind symbol="lichtDir5">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtDir5"/>
+              </bind>
+              <bind symbol="lichtDir6">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtDir6"/>
+              </bind>
+              <bind symbol="lichtColor1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtColor1"/>
+              </bind>
+              <bind symbol="lichtColor2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtColor2"/>
+              </bind>
+              <bind symbol="lichtColor3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtColor3"/>
+              </bind>
+              <bind symbol="lichtColor4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtColor4"/>
+              </bind>
+              <bind symbol="lichtColor5">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtColor5"/>
+              </bind>
+              <bind symbol="lichtColor6">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtColor6"/>
+              </bind>
+              <bind symbol="lichtAmbient">
+                <param ref="_collada_lod_0_shape_0_gather_0_materiallichtAmbient"/>
+              </bind>
+              <bind symbol="PS2FogVec">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPS2FogVec"/>
+              </bind>
+              <bind symbol="specularEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialspecularEnabled"/>
+              </bind>
+              <bind symbol="cubeMapEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapEnabled"/>
+              </bind>
+              <bind symbol="cubeMapFactor">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapFactor"/>
+              </bind>
+              <bind symbol="cubeMapWeight0">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight0"/>
+              </bind>
+              <bind symbol="cubeMapWeight1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight1"/>
+              </bind>
+              <bind symbol="cubeMapWeight2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight2"/>
+              </bind>
+              <bind symbol="cubeMapWeight3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapWeight3"/>
+              </bind>
+              <bind symbol="irrCubeMapEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMapEnabled"/>
+              </bind>
+              <bind symbol="irrCubeMapFactor">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMapFactor"/>
+              </bind>
+              <bind symbol="irrCubeMapLimit">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMapLimit"/>
+              </bind>
+              <bind symbol="irrCubeMapIntensity">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMapIntensity"/>
+              </bind>
+              <bind symbol="texAnimEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialtexAnimEnabled"/>
+              </bind>
+              <bind symbol="texAnimNormalEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialtexAnimNormalEnabled"/>
+              </bind>
+              <bind symbol="texAnimSpecularEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialtexAnimSpecularEnabled"/>
+              </bind>
+              <bind symbol="origTexBBox1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialorigTexBBox1"/>
+              </bind>
+              <bind symbol="origTexBBox2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialorigTexBBox2"/>
+              </bind>
+              <bind symbol="origTexBBox3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialorigTexBBox3"/>
+              </bind>
+              <bind symbol="origTexBBox4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialorigTexBBox4"/>
+              </bind>
+              <bind symbol="animTexBBox1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimTexBBox1"/>
+              </bind>
+              <bind symbol="animTexBBox2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimTexBBox2"/>
+              </bind>
+              <bind symbol="animTexBBox3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimTexBBox3"/>
+              </bind>
+              <bind symbol="animTexBBox4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimTexBBox4"/>
+              </bind>
+              <bind symbol="animUvMin1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimUvMin1"/>
+              </bind>
+              <bind symbol="animUvMin2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimUvMin2"/>
+              </bind>
+              <bind symbol="animUvMin3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimUvMin3"/>
+              </bind>
+              <bind symbol="animUvMin4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimUvMin4"/>
+              </bind>
+              <bind symbol="animUvMax1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimUvMax1"/>
+              </bind>
+              <bind symbol="animUvMax2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimUvMax2"/>
+              </bind>
+              <bind symbol="animUvMax3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimUvMax3"/>
+              </bind>
+              <bind symbol="animUvMax4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialanimUvMax4"/>
+              </bind>
+              <bind symbol="clutBank">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialclutBank"/>
+              </bind>
+              <bind symbol="drawNormal">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialdrawNormal"/>
+              </bind>
+              <bind symbol="debugTextureDensity">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialdebugTextureDensity"/>
+              </bind>
+              <bind symbol="refractionEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialrefractionEnabled"/>
+              </bind>
+              <bind symbol="refractionPower">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialrefractionPower"/>
+              </bind>
+              <bind symbol="refractionAlpha">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialrefractionAlpha"/>
+              </bind>
+              <bind symbol="paletteEnabled">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialpaletteEnabled"/>
+              </bind>
+              <bind symbol="PTAlphaThreshold">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPTAlphaThreshold"/>
+              </bind>
+              <bind symbol="useVertexColor">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialuseVertexColor"/>
+              </bind>
+              <bind symbol="ViewProjection">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialViewProjection"/>
+              </bind>
+              <bind symbol="View">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialView"/>
+              </bind>
+              <bind symbol="Projection">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialProjection"/>
+              </bind>
+              <bind symbol="ViewInverse">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialViewInverse"/>
+              </bind>
+              <bind symbol="ProjInverse">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialProjInverse"/>
+              </bind>
+              <bind symbol="EyePosition">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialEyePosition"/>
+              </bind>
+              <bind symbol="cameraNearTimesFar">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcameraNearTimesFar"/>
+              </bind>
+              <bind symbol="GlobalAmbientColor">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialGlobalAmbientColor"/>
+              </bind>
+              <bind symbol="cameraFarMinusNear">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcameraFarMinusNear"/>
+              </bind>
+              <bind symbol="cameraNearFar">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcameraNearFar"/>
+              </bind>
+              <bind symbol="ViewportWidthHeight">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialViewportWidthHeight"/>
+              </bind>
+              <bind symbol="screenWidthHeightInv">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialscreenWidthHeightInv"/>
+              </bind>
+              <bind symbol="screenWidthHeight">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialscreenWidthHeight"/>
+              </bind>
+              <bind symbol="time">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialtime"/>
+              </bind>
+              <bind symbol="ShadowMapSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialShadowMapSampler"/>
+              </bind>
+              <bind symbol="DitherNoiseTexture">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialDitherNoiseTexture"/>
+              </bind>
+              <bind symbol="LowResDepthTexture">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialLowResDepthTexture"/>
+              </bind>
+              <bind symbol="TextureSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialTextureSampler"/>
+              </bind>
+              <bind symbol="TextureSamplerSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialTextureSamplerSampler"/>
+              </bind>
+              <bind symbol="NormalMapSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialNormalMapSampler"/>
+              </bind>
+              <bind symbol="NormalMapSamplerSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialNormalMapSamplerSampler"/>
+              </bind>
+              <bind symbol="LinearWrapSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialLinearWrapSampler"/>
+              </bind>
+              <bind symbol="DitherSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialDitherSampler"/>
+              </bind>
+              <bind symbol="g_txShadow">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialg_txShadow"/>
+              </bind>
+              <bind symbol="g_txChrAlpha">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialg_txChrAlpha"/>
+              </bind>
+              <bind symbol="g_samShadow">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialg_samShadow"/>
+              </bind>
+              <bind symbol="g_ChrAlphaSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialg_ChrAlphaSampler"/>
+              </bind>
+              <bind symbol="LinearSamplerShadow">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialLinearSamplerShadow"/>
+              </bind>
+              <bind symbol="PointSamplerShadow">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPointSamplerShadow"/>
+              </bind>
+              <bind symbol="colorTex">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcolorTex"/>
+              </bind>
+              <bind symbol="normalTex">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialnormalTex"/>
+              </bind>
+              <bind symbol="depthTex">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialdepthTex"/>
+              </bind>
+              <bind symbol="LinearSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialLinearSampler"/>
+              </bind>
+              <bind symbol="PointSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialPointSampler"/>
+              </bind>
+              <bind symbol="SpecularSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialSpecularSampler"/>
+              </bind>
+              <bind symbol="SpecularSamplerSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialSpecularSamplerSampler"/>
+              </bind>
+              <bind symbol="RefSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialRefSampler"/>
+              </bind>
+              <bind symbol="RefSamplerSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialRefSamplerSampler"/>
+              </bind>
+              <bind symbol="cubeMapSampler0">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapSampler0"/>
+              </bind>
+              <bind symbol="cubeMapSampler1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapSampler1"/>
+              </bind>
+              <bind symbol="cubeMapSampler2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapSampler2"/>
+              </bind>
+              <bind symbol="cubeMapSampler3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapSampler3"/>
+              </bind>
+              <bind symbol="cubeMapSamplerSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialcubeMapSamplerSampler"/>
+              </bind>
+              <bind symbol="irrCubeMap0">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMap0"/>
+              </bind>
+              <bind symbol="irrCubeMap1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMap1"/>
+              </bind>
+              <bind symbol="irrCubeMap2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMap2"/>
+              </bind>
+              <bind symbol="irrCubeMap3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialirrCubeMap3"/>
+              </bind>
+              <bind symbol="AnimSampler1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimSampler1"/>
+              </bind>
+              <bind symbol="AnimSampler2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimSampler2"/>
+              </bind>
+              <bind symbol="AnimSampler3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimSampler3"/>
+              </bind>
+              <bind symbol="AnimSampler4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimSampler4"/>
+              </bind>
+              <bind symbol="AnimNormalSampler1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimNormalSampler1"/>
+              </bind>
+              <bind symbol="AnimNormalSampler2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimNormalSampler2"/>
+              </bind>
+              <bind symbol="AnimNormalSampler3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimNormalSampler3"/>
+              </bind>
+              <bind symbol="AnimNormalSampler4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimNormalSampler4"/>
+              </bind>
+              <bind symbol="AnimSpecularSampler1">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimSpecularSampler1"/>
+              </bind>
+              <bind symbol="AnimSpecularSampler2">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimSpecularSampler2"/>
+              </bind>
+              <bind symbol="AnimSpecularSampler3">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimSpecularSampler3"/>
+              </bind>
+              <bind symbol="AnimSpecularSampler4">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimSpecularSampler4"/>
+              </bind>
+              <bind symbol="AnimSamplerSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialAnimSamplerSampler"/>
+              </bind>
+              <bind symbol="RefractionSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialRefractionSampler"/>
+              </bind>
+              <bind symbol="RefractionSamplerSampler">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialRefractionSamplerSampler"/>
+              </bind>
+              <bind symbol="indexTex">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialindexTex"/>
+              </bind>
+              <bind symbol="palette">
+                <param ref="_collada_lod_0_shape_0_gather_0_materialpalette"/>
+              </bind>
+            </shader>
+          </pass>
+        </technique>
+      </profile_HLSL>
+      <extra>
+        <technique profile="PHYRE">
+          <context_switches>
+            <supported_lights max_light_count="0"/>
+            <supported_shadows/>
+          </context_switches>
+        </technique>
+      </extra>
+    </effect>
+  </library_effects>
+  <library_geometries>
+    <geometry id="LODNODE_0Shape" name="LODNODE_0Shape">
+      <mesh>
+        <source id="LODNODE_0Shape-positions" name="position">
+          <float_array id="LODNODE_0Shape-positions-array" count="135">0.0110279880464077 0.0153860757127404 0.019635871052742 0.0110280541703105 -0.0778959318995475 0.0207144506275653 0.0110279861837625 0.0153860757127404 -0.0207144282758235 0.0110280532389879 -0.0778959318995475 -0.0207144282758235 -0.0110280299559235 0.0153860719874501 0.019635871052742 -0.0110279647633433 -0.0778959318995475 0.0207144506275653 -0.0110280318185687 0.0153860719874501 -0.0207144282758235 -0.0110279656946659 -0.0778959318995475 -0.0207144282758235 0.0097226770594716 0.1013117209076881 -0.0259153377264738 0.0076365633867681 0.1849725544452667 -0.0006504064658656 -0.0076367724686861 0.1849725544452667 -0.0006504059419967 0 0.1886372417211533 -0.0275714453309774 0.0076365638524293 0.1793248206377029 -0.0316755883395671 -0.0097228037193417 0.1013117209076881 -0.0259153377264738 -0.0097228037193417 0.1048731505870819 0.0134571334347128 -0.0076367720030248 0.1793248206377029 -0.0316755883395671 0.0097226770594716 0.1048731505870819 0.0134571334347128 0 0.1914526373147965 -0.0111055523157119 0.0600074045360088 -0.0761111676692962 0.0011298430617898 0.0600074045360088 -0.082240991294384 0.0011298430617898 -0.000266864313744 -0.076111190021038 -0.059144414961338 -0.0002668602974154 -0.0822410136461257 -0.059144414961338 -0.0002668590459506 -0.076111190021038 0.0614041052758693 -0.0002668550878297 -0.0822410136461257 0.0614041052758693 -0.0605411157011985 -0.0761112198233604 0.001129847834818 -0.0605411157011985 -0.0822410359978675 0.001129847834818 0.0023343889042735 -0.6412839293479919 -0.0227261409163475 0 -0.6734563112258911 -0.0227261409163475 0.0044011985883116 -0.0799692496657371 -0.0261820014566183 0.004401215352118 -0.1113561913371086 -0.0261820014566183 0 -0.1109573319554329 0.019844776019454 0 -0.6379221677780151 0.0129249840974807 -0.0044011096470057 -0.0799692496657371 -0.0261820051819086 -0.0044010928831994 -0.1113561987876892 -0.0261820014566183 0 -0.1024178415536881 0.024746561422944 0 -0.0799525305628776 0.024746561422944 -0.0023339600302279 -0.117743156850338 -0.0227261409163475 0.0023340911138802 -0.117743156850338 -0.0227261409163475 -0.0023339625913649 -0.1107912510633469 -0.003195917699486 0.0023340885527431 -0.1107912436127663 -0.003195917699486 0 -0.6077803373336792 0.0198447797447443 0.0023343788925558 -0.6151040196418762 -0.0031959151383489 -0.0023336722515523 -0.6151039600372315 -0.0031959151383489 -0.002333662007004 -0.6412839293479919 -0.0227261409163475 0 -0.6594843864440918 -0.0046694818884134</float_array>
+          <technique_common>
+            <accessor source="#LODNODE_0Shape-positions-array" count="45" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="LODNODE_0Shape-normals" name="normal">
+          <float_array id="LODNODE_0Shape-normals-array" count="675">0.7071068286895752 0.008175934664905 0.7070595026016235 0.4472136199474335 0.00000031129332 -0.8944272994995117 0.7071698904037476 -0.0249238424003124 -0.7066043019294739 -0.6748577952384949 0.6510780453681946 0.3473677337169647 -0.5998695492744446 0.1104704514145851 0.7924348711967468 0.586667537689209 0.607188880443573 0.5358572006225586 -0.8944272994995117 0.0051699634641408 0.4471837878227234 -0.7071191668510437 0.0287029910832643 0.7065116167068481 -0.7071338891983032 -0.0106764324009418 -0.7069990634918213 -0.5998695492744446 0.1104704514145851 0.7924348711967468 -0.7071191668510437 0.0287029910832643 0.7065116167068481 0.7070521712303162 0.0422161296010017 0.7059001326560974 -0.7071191668510437 0.0287029910832643 0.7065116167068481 -0.8944272994995117 0.0051699634641408 0.4471837878227234 0.7071068286895752 0.008175934664905 0.7070595026016235 0.4472136199474335 0.00000031129332 -0.8944272994995117 -0.7071068286895752 -0.0000005066659696 -0.7071067094802856 -0.7071338891983032 -0.0106764324009418 -0.7069990634918213 -0.0000003369166847 0.9115449190139771 -0.4112007915973663 -0.0000001947501004 0.9910337328910828 0.1336119771003723 0.586667537689209 0.607188880443573 0.5358572006225586 0.7071698904037476 -0.0249238424003124 -0.7066043019294739 -0.7071338891983032 -0.0106764324009418 -0.7069990634918213 -0.706974983215332 -0.0325841009616851 -0.7064875364303589 0.7070521712303162 0.0422161296010017 0.7059001326560974 0.8318684101104736 0.0857888534665107 0.548302173614502 -0.5998695492744446 0.1104704514145851 0.7924348711967468 -0.7071191668510437 0.0287029910832643 0.7065116167068481 -0.5998695492744446 0.1104704514145851 0.7924348711967468 -0.706974983215332 -0.0325841009616851 -0.7064875364303589 0.7070521712303162 0.0422161296010017 0.7059001326560974 0.7071698904037476 -0.0249238424003124 -0.7066043019294739 0.7070043087005615 -0.0357006900012493 -0.706307590007782 0.8318684101104736 0.0857888534665107 0.548302173614502 0.7070043087005615 -0.0357006900012493 -0.706307590007782 0.7740066647529602 0.2918908596038818 -0.561883807182312 -0.5998695492744446 0.1104704514145851 0.7924348711967468 0.8318684101104736 0.0857888534665107 0.548302173614502 0.586667537689209 0.607188880443573 0.5358572006225586 -0.6619287133216858 0.2320974767208099 -0.7127280235290527 0.7740066647529602 0.2918908596038818 -0.561883807182312 0.7070043087005615 -0.0357006900012493 -0.706307590007782 -0.5998695492744446 0.1104704514145851 0.7924348711967468 -0.6748577952384949 0.6510780453681946 0.3473677337169647 -0.6619287133216858 0.2320974767208099 -0.7127280235290527 -0.7071338891983032 -0.0106764324009418 -0.7069990634918213 0.7071698904037476 -0.0249238424003124 -0.7066043019294739 0.4472136199474335 0.00000031129332 -0.8944272994995117 -0.706974983215332 -0.0325841009616851 -0.7064875364303589 0.7070043087005615 -0.0357006900012493 -0.706307590007782 0.7071698904037476 -0.0249238424003124 -0.7066043019294739 0.7070043087005615 -0.0357006900012493 -0.706307590007782 -0.706974983215332 -0.0325841009616851 -0.7064875364303589 -0.6619287133216858 0.2320974767208099 -0.7127280235290527 -0.6619287133216858 0.2320974767208099 -0.7127280235290527 -0.0000003369166847 0.9115449190139771 -0.4112007915973663 0.7740066647529602 0.2918908596038818 -0.561883807182312 0.7071068286895752 0.008175934664905 0.7070595026016235 0.7070521712303162 0.0422161296010017 0.7059001326560974 -0.7071191668510437 0.0287029910832643 0.7065116167068481 -0.7071338891983032 -0.0106764324009418 -0.7069990634918213 -0.7071068286895752 -0.0000005066659696 -0.7071067094802856 -0.8944272994995117 0.0051699634641408 0.4471837878227234 -0.706974983215332 -0.0325841009616851 -0.7064875364303589 -0.7071338891983032 -0.0106764324009418 -0.7069990634918213 -0.7071191668510437 0.0287029910832643 0.7065116167068481 -0.6619287133216858 0.2320974767208099 -0.7127280235290527 -0.706974983215332 -0.0325841009616851 -0.7064875364303589 -0.5998695492744446 0.1104704514145851 0.7924348711967468 0.7071698904037476 -0.0249238424003124 -0.7066043019294739 0.7070521712303162 0.0422161296010017 0.7059001326560974 0.7071068286895752 0.008175934664905 0.7070595026016235 0.7070043087005615 -0.0357006900012493 -0.706307590007782 0.8318684101104736 0.0857888534665107 0.548302173614502 0.7070521712303162 0.0422161296010017 0.7059001326560974 0.7740066647529602 0.2918908596038818 -0.561883807182312 0.586667537689209 0.607188880443573 0.5358572006225586 0.8318684101104736 0.0857888534665107 0.548302173614502 -0.0000003369166847 0.9115449190139771 -0.4112007915973663 -0.6619287133216858 0.2320974767208099 -0.7127280235290527 -0.6748577952384949 0.6510780453681946 0.3473677337169647 -0.0000001947501004 0.9910337328910828 0.1336119771003723 -0.6748577952384949 0.6510780453681946 0.3473677337169647 0.586667537689209 0.607188880443573 0.5358572006225586 0.586667537689209 0.607188880443573 0.5358572006225586 0.7740066647529602 0.2918908596038818 -0.561883807182312 -0.0000003369166847 0.9115449190139771 -0.4112007915973663 -0.6748577952384949 0.6510780453681946 0.3473677337169647 -0.0000001947501004 0.9910337328910828 0.1336119771003723 -0.0000003369166847 0.9115449190139771 -0.4112007915973663 0.7071067094802856 0.0000003006186943 -0.7071068286895752 0.7071067094802856 0.0000004635585924 -0.7071068286895752 0.7071067094802856 0.0000003006186943 -0.7071068286895752 0.0000004584113639 -1 0 0.0000004584113639 -1 0 0.0000004584113639 -1 0 -0.7071067690849304 -0.0000002970375874 0.7071068286895752 -0.7071067690849304 -0.0000001376787679 0.7071068286895752 -0.7071067690849304 -0.0000002970375874 0.7071068286895752 -0.0000004584113639 1 0 -0.0000004584113639 1 0 -0.0000004584113639 1 0 0.7071068286895752 0.0000002970375874 0.7071067690849304 0.7071068286895752 0.0000001376787821 0.7071067690849304 0.7071068286895752 0.0000002970375874 0.7071067690849304 -0.70710688829422 -0.0000003006186943 -0.7071067094802856 -0.70710688829422 -0.0000001376787963 -0.7071067094802856 -0.70710688829422 -0.0000003006186943 -0.7071067094802856 0.0000004584113639 -1 0 0.0000004584113639 -1 0 0.0000004584113639 -1 0 -0.0000004584113639 1 0 -0.0000004584113639 1 0 -0.0000004584113639 1 0 -0.70710688829422 -0.0000003006186943 -0.7071067094802856 -0.70710688829422 -0.0000004635585924 -0.7071067094802856 -0.70710688829422 -0.0000003006186943 -0.7071067094802856 -0.7071067690849304 -0.0000002970375874 0.7071068286895752 -0.7071067094802856 -0.0000004563964068 0.7071068286895752 -0.7071067690849304 -0.0000002970375874 0.7071068286895752 0.7071068286895752 0.0000002970375874 0.7071067690849304 0.7071068286895752 0.0000004563963784 0.7071067690849304 0.7071068286895752 0.0000002970375874 0.7071067690849304 0.7071067094802856 0.0000003006186943 -0.7071068286895752 0.7071067094802856 0.0000001376787679 -0.7071068286895752 0.7071067094802856 0.0000003006186943 -0.7071068286895752 0.9933928847312927 -0.0723729506134986 0.0890669673681259 0.9963356256484985 0.0000005251056336 0.085530862212181 0.9963356256484985 0.0000005186136036 0.0855308696627616 -0.9946492314338684 -0.068071462213993 0.0777121931314468 -0.9953541159629822 -0.0258810557425022 0.0927391052246093 -0.9934807419776917 -0.0704809799790382 0.0896026194095611 -0.9962376356124878 -0.0000005209594746 0.0866636484861373 -0.9962376356124878 -0.0000005298478527 0.0866636484861373 -0.9934807419776917 -0.0704809799790382 0.0896026194095611 0.9946399927139282 -0.0692978054285049 0.076740488409996 0.9901834726333618 -0.1316801905632019 0.0468725152313709 0.9933928847312927 -0.0723729506134986 0.0890669673681259 0.0000002666480725 -0.2454508692026138 -0.9694090485572815 0.0000001502287005 -0.2454508394002914 -0.9694090485572815 0.0000001502287005 -0.2454508394002914 -0.9694090485572815 0.9946399927139282 -0.0692978054285049 0.076740488409996 0.9933928847312927 -0.0723729506134986 0.0890669673681259 0.9954051971435547 -0.0279241222888231 0.0915909558534622 -0.9943106770515442 -0.012102672830224 0.1058292388916016 -0.997325599193573 -0.0191569067537784 0.0705311819911003 -0.9955041408538818 -0.0447360500693321 0.0834878385066986 0.9977476000785828 -0.0455885231494903 0.0492099523544311 0.9973982572555542 -0.0195195972919464 0.0693951919674873 0.995539128780365 -0.0452193766832351 0.0828070789575576 0.9946399927139282 -0.0692978054285049 0.076740488409996 0.9954051971435547 -0.0279241222888231 0.0915909558534622 0.994652271270752 -0.028416397050023 0.099294438958168 -0.9946492314338684 -0.068071462213993 0.0777121931314468 -0.997325599193573 -0.0191569067537784 0.0705311819911003 -0.9943106770515442 -0.012102672830224 0.1058292388916016 -0.9946492314338684 -0.068071462213993 0.0777121931314468 -0.9901832938194275 -0.1316814720630646 0.0468727611005306 -0.997747540473938 -0.0455895513296127 0.0492102280259132 0.9901834726333618 -0.1316801905632019 0.0468725152313709 0.9946399927139282 -0.0692978054285049 0.076740488409996 0.9973982572555542 -0.0195195972919464 0.0693951919674873 0 0 -1 0 0 -1 0 0 -1 0.995539128780365 -0.0452193766832351 0.0828070789575576 0.9973982572555542 -0.0195195972919464 0.0693951919674873 0.9945397973060608 -0.0128298420459032 0.1035662367939949 -0.9955041408538818 -0.0447360500693321 0.0834878385066986 -0.997325599193573 -0.0191569067537784 0.0705311819911003 -0.997747540473938 -0.0455895513296127 0.0492102280259132 0 0 -1 0.0000001502287005 -0.2454508394002914 -0.9694090485572815 0.0000001502287005 -0.2454508394002914 -0.9694090485572815 -0.997747540473938 -0.0455895513296127 0.0492102280259132 -0.9958192110061646 -0.0722448453307151 0.0559013597667217 -0.995881199836731 -0.0649429410696029 0.0632694140076637 0.9958813786506653 -0.0649419054388999 0.0632691830396652 0.9958192110061646 -0.0722437351942062 0.0559011772274971 0.9977476000785828 -0.0455885231494903 0.0492099523544311 0.0000002666480725 -0.2454508692026138 -0.9694090485572815 0.0000001820046406 0 -1 0.0000001820046406 0 -1 -0.9943804740905762 -0.0291274897754192 0.1017796993255615 -0.9953541159629822 -0.0258810557425022 0.0927391052246093 -0.9946492314338684 -0.068071462213993 0.0777121931314468 0.994652271270752 -0.028416397050023 0.099294438958168 0.9945397973060608 -0.0128298420459032 0.1035662367939949 0.9973982572555542 -0.0195195972919464 0.0693951919674873 -0.9934807419776917 -0.0704809799790382 0.0896026194095611 -0.9953541159629822 -0.0258810557425022 0.0927391052246093 -0.9962376356124878 -0.0000005209594746 0.0866636484861373 -0.9934807419776917 -0.0704809799790382 0.0896026194095611 -0.9901832938194275 -0.1316814720630646 0.0468727611005306 -0.9946492314338684 -0.068071462213993 0.0777121931314468 0.9963356256484985 0.0000005186136036 0.0855308696627616 0.9954051971435547 -0.0279241222888231 0.0915909558534622 0.9933928847312927 -0.0723729506134986 0.0890669673681259 0.9977476000785828 -0.0455885231494903 0.0492099523544311 0.995539128780365 -0.0452193766832351 0.0828070789575576 0.9958813786506653 -0.0649419054388999 0.0632691830396652 -0.995881199836731 -0.0649429410696029 0.0632694140076637 -0.9955041408538818 -0.0447360500693321 0.0834878385066986 -0.997747540473938 -0.0455895513296127 0.0492102280259132 0.994652271270752 -0.028416397050023 0.099294438958168 0.9973982572555542 -0.0195195972919464 0.0693951919674873 0.9946399927139282 -0.0692978054285049 0.076740488409996 0.0000002666480725 -0.2454508692026138 -0.9694090485572815 0.0000001820046406 0 -1 0.0000002666480725 -0.2454508692026138 -0.9694090485572815 0 0 -1 0.0000001502287005 -0.2454508394002914 -0.9694090485572815 0 0 -1 0.9901834726333618 -0.1316801905632019 0.0468725152313709 0.9973982572555542 -0.0195195972919464 0.0693951919674873 0.9977476000785828 -0.0455885231494903 0.0492099523544311 -0.9946492314338684 -0.068071462213993 0.0777121931314468 -0.997747540473938 -0.0455895513296127 0.0492102280259132 -0.997325599193573 -0.0191569067537784 0.0705311819911003 -0.9946492314338684 -0.068071462213993 0.0777121931314468 -0.9943106770515442 -0.012102672830224 0.1058292388916016 -0.9943804740905762 -0.0291274897754192 0.1017796993255615 0.0000002666480725 -0.2454508692026138 -0.9694090485572815 0.0000001502287005 -0.2454508394002914 -0.9694090485572815 0.0000002666480725 -0.2454508692026138 -0.9694090485572815</float_array>
+          <technique_common>
+            <accessor source="#LODNODE_0Shape-normals-array" count="225" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="LODNODE_0Shape-DiffuseUV" name="DiffuseUV">
+          <float_array id="LODNODE_0Shape-DiffuseUV-array" count="450">0.329179048538208 0.2125164270401001 0.329179048538208 0.4758663177490234 0.5499105453491211 0.4758663177490234 0.941822350025177 0.2125166654586792 0.7706429362297058 0.2125166654586792 0.941822350025177 0.0323299169540405 0.329179048538208 0.2125164270401001 0.5499105453491211 0.2125164270401001 0.5499105453491211 0.4758663177490234 0.7706429362297058 0.2125166654586792 0.5499118566513062 0.2125166654586792 0.5499116182327271 0.0323299765586853 0.5499118566513062 0.2125166654586792 0.3291803896427155 0.2125166654586792 0.3291804492473602 0.0323299169540405 0.329179048538208 0.4758666157722473 0.329179048538208 0.6560533046722412 0.5499105453491211 0.6560533046722412 0.9868686199188232 0.4758666157722473 0.9868685603141785 0.2125167846679688 0.9418213963508606 0.2125167846679688 0.5499105453491211 0.4758666157722473 0.5499105453491211 0.6560533046722412 0.7706419825553894 0.6560533046722412 0.5499116182327271 0.0323299765586853 0.770642876625061 0.0323299169540405 0.7706429362297058 0.2125166654586792 0.5499105453491211 0.2125164270401001 0.7706419825553894 0.2125167846679688 0.7706419229507446 0.4758666157722473 0.5499105453491211 0.2125164270401001 0.5499105453491211 0.4758663177490234 0.7706419229507446 0.4758666157722473 0.7706419825553894 0.2125167846679688 0.7706419229507446 0.4758666157722473 0.9418214559555054 0.4758666157722473 0.7706429362297058 0.2125166654586792 0.770642876625061 0.0323299169540405 0.941822350025177 0.0323299169540405 0.9418214559555054 0.6560533046722412 0.9418214559555054 0.4758666157722473 0.7706419825553894 0.4758666157722473 0.7706419825553894 0.2125167846679688 0.9418213963508606 0.2125167846679688 0.9418214559555054 0.4758666157722473 0.5499105453491211 0.6560533046722412 0.5499105453491211 0.4758666157722473 0.329179048538208 0.4758666157722473 0.7706419825553894 0.6560533046722412 0.7706419825553894 0.4758666157722473 0.5499105453491211 0.4758666157722473 0.7706419825553894 0.4758666157722473 0.7706419825553894 0.6560533046722412 0.9418214559555054 0.6560533046722412 0.9418214559555054 0.6560533046722412 0.9868687391281128 0.4758666753768921 0.9418214559555054 0.4758666157722473 0.3291804492473602 0.0323299169540405 0.5499116182327271 0.0323299765586853 0.5499118566513062 0.2125166654586792 0.5499105453491211 0.4758663177490234 0.329179048538208 0.4758663177490234 0.329179048538208 0.2125164270401001 0.7706419229507446 0.4758666157722473 0.5499105453491211 0.4758663177490234 0.5499105453491211 0.2125164270401001 0.9418214559555054 0.4758666157722473 0.7706419229507446 0.4758666157722473 0.7706419825553894 0.2125167846679688 0.5499105453491211 0.4758663177490234 0.5499105453491211 0.2125164270401001 0.329179048538208 0.2125164270401001 0.7706419229507446 0.4758666157722473 0.7706419825553894 0.2125167846679688 0.5499105453491211 0.2125164270401001 0.9418214559555054 0.4758666157722473 0.9418213963508606 0.2125167846679688 0.7706419825553894 0.2125167846679688 0.9868686199188232 0.4758666157722473 0.9418214559555054 0.4758666157722473 0.9418213963508606 0.2125167846679688 0.9868696331977844 0.2125166654586792 0.941822350025177 0.2125166654586792 0.941822350025177 0.0323299169540405 0.9418213963508606 0.2125167846679688 0.9418214559555054 0.4758666157722473 0.9868686199188232 0.4758666157722473 0.9418213963508606 0.2125167846679688 0.9868685603141785 0.2125167846679688 0.9868686199188232 0.4758666157722473 0.163654088973999 0.65625 0.0165244340896606 0.65625 0.0164965987205505 0.578125 0.2938635945320129 0.0193792581558227 0.2938635945320129 0.5497685074806213 0.0119887590408325 0.5497685074806213 0.310752272605896 0.578125 0.1636232137680054 0.578125 0.163654088973999 0.65625 0.2938635945320129 0.0193792581558227 0.0119887590408325 0.0193792581558227 0.0119887590408325 0.5497685074806213 0.3107810616493225 0.65625 0.163654088973999 0.65625 0.1636233329772949 0.578125 0.0165244340896606 0.65625 0.163654088973999 0.65625 0.1636232137680054 0.578125 0.0119887590408325 0.5497685074806213 0.0119887590408325 0.0193792581558227 0.2938635945320129 0.0193792581558227 0.0119887590408325 0.5497685074806213 0.2938635945320129 0.5497685074806213 0.2938635945320129 0.0193792581558227 0.1636232137680054 0.578125 0.0164965987205505 0.578125 0.0165244340896606 0.65625 0.163654088973999 0.65625 0.3107810616493225 0.65625 0.310752272605896 0.578125 0.1636233329772949 0.578125 0.310752272605896 0.578125 0.3107810616493225 0.65625 0.0164965987205505 0.578125 0.1636233329772949 0.578125 0.163654088973999 0.65625 0.94140625 0.90625 0.9845286011695862 0.90625 0.9845559597015381 0.6875 0.921875 0.8132933378219605 0.94140625 0.6875 0.94140625 0.90625 0.9845559597015381 0.6875 0.9845286011695862 0.90625 0.94140625 0.90625 0.921875 0.8132933378219605 0.921875 0.90625 0.94140625 0.90625 0.94140625 0.90625 0.921875 0.90625 0.921875 0.96875 0.921875 0.8132933378219605 0.94140625 0.90625 0.94140625 0.6875 0.1196693032979965 0.6875 0.1076690331101418 0.8132933378219605 0.0702795833349227 0.7321456670761108 0.0647710561752319 0.90625 0.1076689213514328 0.8132933378219605 0.0702795833349227 0.7321456670761108 0.921875 0.8132933378219605 0.94140625 0.6875 0.921875 0.6875 0.921875 0.8132933378219605 0.1076690331101418 0.8132933378219605 0.1196693032979965 0.6875 0.921875 0.8132933378219605 0.921875 0.90625 0.0647710561752319 0.90625 0.921875 0.90625 0.921875 0.8132933378219605 0.1076689213514328 0.8132933378219605 0.0647726133465766 0.90625 0.0120542738586664 0.90625 0.0647726133465766 0.96875 0.0702795833349227 0.7321456670761108 0.1076689213514328 0.8132933378219605 0.1196693032979965 0.6875 0.0702795833349227 0.7321456670761108 0.1076690331101418 0.8132933378219605 0.0647710561752319 0.90625 0.0647726133465766 0.96875 0.921875 0.96875 0.921875 0.90625 0.0647710561752319 0.90625 0.0120542738586664 0.90625 0.0349481999874115 0.8207108974456787 0.0349481999874115 0.8207108974456787 0.0120542738586664 0.90625 0.0647710561752319 0.90625 0.94140625 0.96875 0.9845559597015381 0.96875 0.9845559597015381 0.90625 0.921875 0.6875 0.94140625 0.6875 0.921875 0.8132933378219605 0.921875 0.6875 0.1196693032979965 0.6875 0.1076689213514328 0.8132933378219605 0.94140625 0.90625 0.94140625 0.6875 0.9845559597015381 0.6875 0.94140625 0.90625 0.921875 0.90625 0.921875 0.8132933378219605 0.9845559597015381 0.6875 0.94140625 0.6875 0.94140625 0.90625 0.0647710561752319 0.90625 0.0702795833349227 0.7321456670761108 0.0349481999874115 0.8207108974456787 0.0349481999874115 0.8207108974456787 0.0702795833349227 0.7321456670761108 0.0647710561752319 0.90625 0.921875 0.6875 0.1076689213514328 0.8132933378219605 0.921875 0.8132933378219605 0.94140625 0.96875 0.9845559597015381 0.90625 0.94140625 0.90625 0.0647726133465766 0.96875 0.921875 0.90625 0.0647726133465766 0.90625 0.921875 0.90625 0.1076689213514328 0.8132933378219605 0.0647710561752319 0.90625 0.921875 0.8132933378219605 0.0647710561752319 0.90625 0.1076690331101418 0.8132933378219605 0.921875 0.8132933378219605 0.1196693032979965 0.6875 0.921875 0.6875 0.94140625 0.90625 0.921875 0.96875 0.94140625 0.96875</float_array>
+          <technique_common>
+            <accessor source="#LODNODE_0Shape-DiffuseUV-array" count="225" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="LODNODE_0Shape-DiffuseUV-tangents">
+          <float_array id="LODNODE_0Shape-DiffuseUV-tangents-array" count="675">-0.001445987727493 0.9999478459358215 -0.0101166041567921 -0.0000007116275355 1 0 0.0002901706029661 0.999388575553894 -0.0349607318639755 0.5128509402275085 0.7522621154785156 -0.4136247336864471 0.0175210386514663 0.9919984936714172 -0.1250275373458862 -0.3304311335086823 0.7835836410522461 -0.5261291861534119 0.0015409084735438 0.9999628663063049 -0.0084787085652351 0.0045735142193734 0.9993405342102051 -0.0360221154987812 0.0060161291621625 0.9997589588165283 -0.0211146939545869 0.0175210386514663 0.9919984936714172 -0.1250275373458862 0.0045735142193734 0.9993405342102051 -0.0360221154987812 -0.0081477351486682 0.9986366033554077 -0.0515621118247509 0.0045735142193734 0.9993405342102051 -0.0360221154987812 0.0015409084735438 0.9999628663063049 -0.0084787085652351 -0.001445987727493 0.9999478459358215 -0.0101166041567921 -0.0000007116275355 1 0 -0.0000007126970444 1 0 0.0060161291621625 0.9997589588165283 -0.0211146939545869 -0.7271302938461304 -0.2822893261909485 -0.6257748603820801 0.2211247533559799 0.1303045153617859 -0.9665011763572693 -0.3304311335086823 0.7835836410522461 -0.5261291861534119 0.0002901706029661 0.999388575553894 -0.0349607318639755 0.0060161291621625 0.9997589588165283 -0.0211146939545869 0.0170174147933721 0.9978651404380798 -0.0630519688129425 -0.0081477351486682 0.9986366033554077 -0.0515621118247509 -0.0265205036848783 0.9929962158203125 -0.115130752325058 0.0175210386514663 0.9919984936714172 -0.1250275373458862 0.0045735142193734 0.9993405342102051 -0.0360221154987812 0.0175210386514663 0.9919984936714172 -0.1250275373458862 0.0170174147933721 0.9978651404380798 -0.0630519688129425 -0.0081477351486682 0.9986366033554077 -0.0515621118247509 0.0002901706029661 0.999388575553894 -0.0349607318639755 -0.0149557646363973 0.9977468848228455 -0.0654021650552749 -0.0265205036848783 0.9929962158203125 -0.115130752325058 -0.0149557646363973 0.9977468848228455 -0.0654021650552749 -0.2969943284988403 0.9510918259620667 0.0849631950259208 0.0175210386514663 0.9919984936714172 -0.1250275373458862 -0.0265205036848783 0.9929962158203125 -0.115130752325058 -0.3304311335086823 0.7835836410522461 -0.5261291861534119 0.1409764289855957 0.9724329710006714 0.1857410967350006 -0.2969943284988403 0.9510918259620667 0.0849631950259208 -0.0149557646363973 0.9977468848228455 -0.0654021650552749 0.0175210386514663 0.9919984936714172 -0.1250275373458862 0.5128509402275085 0.7522621154785156 -0.4136247336864471 0.1409764289855957 0.9724329710006714 0.1857410967350006 0.0060161291621625 0.9997589588165283 -0.0211146939545869 0.0002901706029661 0.999388575553894 -0.0349607318639755 -0.0000007116275355 1 0 0.0170174147933721 0.9978651404380798 -0.0630519688129425 -0.0149557646363973 0.9977468848228455 -0.0654021650552749 0.0002901706029661 0.999388575553894 -0.0349607318639755 -0.0149557646363973 0.9977468848228455 -0.0654021650552749 0.0170174147933721 0.9978651404380798 -0.0630519688129425 0.1409764289855957 0.9724329710006714 0.1857410967350006 0.1409764289855957 0.9724329710006714 0.1857410967350006 -0.7215257883071899 0.2847099900245667 0.6311423778533936 -0.2969943284988403 0.9510918259620667 0.0849631950259208 -0.001445987727493 0.9999478459358215 -0.0101166041567921 -0.0081477351486682 0.9986366033554077 -0.0515621118247509 0.0045735142193734 0.9993405342102051 -0.0360221154987812 0.0060161291621625 0.9997589588165283 -0.0211146939545869 -0.0000007126970444 1 0 0.0015409084735438 0.9999628663063049 -0.0084787085652351 0.0170174147933721 0.9978651404380798 -0.0630519688129425 0.0060161291621625 0.9997589588165283 -0.0211146939545869 0.0045735142193734 0.9993405342102051 -0.0360221154987812 0.1409764289855957 0.9724329710006714 0.1857410967350006 0.0170174147933721 0.9978651404380798 -0.0630519688129425 0.0175210386514663 0.9919984936714172 -0.1250275373458862 0.0002901706029661 0.999388575553894 -0.0349607318639755 -0.0081477351486682 0.9986366033554077 -0.0515621118247509 -0.001445987727493 0.9999478459358215 -0.0101166041567921 -0.0149557646363973 0.9977468848228455 -0.0654021650552749 -0.0265205036848783 0.9929962158203125 -0.115130752325058 -0.0081477351486682 0.9986366033554077 -0.0515621118247509 -0.2969943284988403 0.9510918259620667 0.0849631950259208 -0.3304311335086823 0.7835836410522461 -0.5261291861534119 -0.0265205036848783 0.9929962158203125 -0.115130752325058 0.7271302938461304 0.2822893261909485 0.6257748603820801 0.1409764289855957 0.9724329710006714 0.1857410967350006 0.5128509402275085 0.7522621154785156 -0.4136247336864471 0.2211247533559799 0.1303045153617859 -0.9665011763572693 0.5128509402275085 0.7522621154785156 -0.4136247336864471 -0.3304311335086823 0.7835836410522461 -0.5261291861534119 -0.3304311335086823 0.7835836410522461 -0.5261291861534119 -0.2969943284988403 0.9510918259620667 0.0849631950259208 -0.7215257883071899 0.2847099900245667 0.6311423778533936 0.5128509402275085 0.7522621154785156 -0.4136247336864471 0.2211247533559799 0.1303045153617859 -0.9665011763572693 0.7215257883071899 -0.2847099900245667 -0.6311423778533936 0.7071068286895752 0.0000002622192027 0.7071067094802856 0.7071068286895752 0.0000002622192027 0.7071067094802856 0.7071068286895752 0.0000002622192027 0.7071067094802856 0.7071068286895752 0.0000003241457875 0.7071067690849304 0.7071068286895752 0.0000003241457875 0.7071067690849304 0.7071068286895752 0.0000003241457875 0.7071067690849304 0.7071068286895752 0.0000003059224127 0.7071067690849304 0.7071068286895752 0.0000003496256226 0.7071067690849304 0.7071068286895752 0.0000003059224127 0.7071067690849304 0.7071068286895752 0.0000003241457875 0.7071067094802856 0.7071068286895752 0.0000003241457875 0.7071067094802856 0.7071068286895752 0.0000003241457875 0.7071067094802856 -0.7071067690849304 -0.0000002622192027 0.7071068286895752 -0.7071067690849304 -0.0000002622192027 0.7071068286895752 -0.7071067690849304 -0.0000002622192027 0.7071068286895752 -0.7071067094802856 -0.0000003059223843 0.70710688829422 -0.7071067094802856 -0.0000002622192027 0.70710688829422 -0.7071067094802856 -0.0000003059223843 0.70710688829422 0.7071068286895752 0.0000003241457875 0.7071067690849304 0.7071068286895752 0.0000003241457875 0.7071067690849304 0.7071068286895752 0.0000003241457875 0.7071067690849304 0.7071068286895752 0.0000003241457875 0.7071067094802856 0.7071068286895752 0.0000003241458159 0.7071068286895752 0.7071068286895752 0.0000003241457875 0.7071067094802856 -0.7071067094802856 -0.0000003059223843 0.70710688829422 -0.7071067094802856 -0.0000003496255942 0.70710688829422 -0.7071067094802856 -0.0000003059223843 0.70710688829422 0.7071068286895752 0.0000003059224127 0.7071067690849304 0.7071068286895752 0.0000002622192312 0.7071067094802856 0.7071068286895752 0.0000003059224127 0.7071067690849304 -0.7071067690849304 -0.0000002622192027 0.7071068286895752 -0.7071067690849304 -0.0000002622191743 0.7071068286895752 -0.7071067690849304 -0.0000002622192027 0.7071068286895752 0.7071068286895752 0.0000002622192027 0.7071067094802856 0.7071068286895752 0.0000002622191743 0.7071067094802856 0.7071068286895752 0.0000002622192027 0.7071067094802856 0.0902961418032646 0.9719051122665405 -0.2173634469509125 -0.0000005270885594 1 0 -0.0000005186667522 1 0 -0.0721426084637641 0.9960978031158447 -0.0508383177220821 -0.0221297293901443 0.9989036917686462 0.0412529893219471 -0.0885791182518005 0.9720227122306824 -0.2175441682338715 -0.0000005261288151 1 0 -0.0000005421131277 1 0 -0.0885791182518005 0.9720227122306824 -0.2175441682338715 0.0750417336821556 0.9943798184394836 -0.0746825113892555 0.1374714523553848 0.9780966639518738 -0.1562962383031845 0.0902961418032646 0.9719051122665405 -0.2173634469509125 -0.0000006636390708 0.9694089293479919 -0.2454508095979691 0.0947693362832069 0.9650459289550781 -0.244346097111702 -0.0000006636390708 0.9694089293479919 -0.2454508095979691 0.0750417336821556 0.9943798184394836 -0.0746825113892555 0.0902961418032646 0.9719051122665405 -0.2173634469509125 0.0242083929479122 0.9988479614257813 0.0414319708943367 -0.0137452948838472 0.9997959136962891 -0.0148058459162712 -0.019654544070363 0.9997866153717041 -0.0063682519830763 -0.0463549979031086 0.9987707138061523 -0.017553873360157 0.0457287728786468 0.9989523887634277 -0.0017274401616305 0.0198293048888444 0.9997961521148682 -0.0037768417969346 0.0468221455812454 0.9987496733665466 -0.0175158958882093 0.0750417336821556 0.9943798184394836 -0.0746825113892555 0.0242083929479122 0.9988479614257813 0.0414319708943367 0.0109546780586242 0.9850084185600281 0.1721576303243637 -0.0721426084637641 0.9960978031158447 -0.0508383177220821 -0.019654544070363 0.9997866153717041 -0.0063682519830763 -0.0137452948838472 0.9997959136962891 -0.0148058459162712 -0.0721426084637641 0.9960978031158447 -0.0508383177220821 -0.1391072273254395 0.9611318111419678 -0.2384841442108154 -0.0456907078623771 0.9989551901817322 -0.0009321352699771 0.1374714523553848 0.9780966639518738 -0.1562962383031845 0.0750417336821556 0.9943798184394836 -0.0746825113892555 0.0198293048888444 0.9997961521148682 -0.0037768417969346 0.036207728087902 0.9993443489074707 0 0.0723685398697853 0.9973780512809753 0 0.0241365358233451 0.9997086524963379 0 0.0468221455812454 0.9987496733665466 -0.0175158958882093 0.0198293048888444 0.9997961521148682 -0.0037768417969346 0.0152676049619913 0.9996238946914673 -0.0227798502892255 -0.0463549979031086 0.9987707138061523 -0.017553873360157 -0.019654544070363 0.9997866153717041 -0.0063682519830763 -0.0456907078623771 0.9989551901817322 -0.0009321352699771 0.0241365358233451 0.9997086524963379 0 -0.0000006636390708 0.9694089293479919 -0.2454508095979691 0.0947693362832069 0.9650459289550781 -0.244346097111702 -0.0456907078623771 0.9989551901817322 -0.0009321352699771 -0.072357952594757 0.9973788261413574 0.0000006642504217 -0.0659277439117431 0.9977318048477173 -0.0136015973985195 0.0659267753362655 0.9977317452430725 -0.0136029403656721 0.0723569169640541 0.9973788261413574 -0.0000006520914439 0.0457287728786468 0.9989523887634277 -0.0017274401616305 -0.0947705060243606 0.9650458693504334 -0.2443461418151856 -0.0000005341011615 1 0 -0.0000005341012183 1 0 -0.0019157064380124 0.9661985039710999 0.2577920258045197 -0.0221297293901443 0.9989036917686462 0.0412529893219471 -0.0721426084637641 0.9960978031158447 -0.0508383177220821 0.0109546780586242 0.9850084185600281 0.1721576303243637 0.0152676049619913 0.9996238946914673 -0.0227798502892255 0.0198293048888444 0.9997961521148682 -0.0037768417969346 -0.0885791182518005 0.9720227122306824 -0.2175441682338715 -0.0221297293901443 0.9989036917686462 0.0412529893219471 -0.0000005261288151 1 0 -0.0885791182518005 0.9720227122306824 -0.2175441682338715 -0.1391072273254395 0.9611318111419678 -0.2384841442108154 -0.0721426084637641 0.9960978031158447 -0.0508383177220821 -0.0000005186667522 1 0 0.0242083929479122 0.9988479614257813 0.0414319708943367 0.0902961418032646 0.9719051122665405 -0.2173634469509125 0.0457287728786468 0.9989523887634277 -0.0017274401616305 0.0468221455812454 0.9987496733665466 -0.0175158958882093 0.0659267753362655 0.9977317452430725 -0.0136029403656721 -0.0659277439117431 0.9977318048477173 -0.0136015973985195 -0.0463549979031086 0.9987707138061523 -0.017553873360157 -0.0456907078623771 0.9989551901817322 -0.0009321352699771 0.0109546780586242 0.9850084185600281 0.1721576303243637 0.0198293048888444 0.9997961521148682 -0.0037768417969346 0.0750417336821556 0.9943798184394836 -0.0746825113892555 -0.0947705060243606 0.9650458693504334 -0.2443461418151856 -0.0000005341012183 1 0 -0.0000006636390708 0.9694089293479919 -0.2454508095979691 0.0241365358233451 0.9997086524963379 0 0.0947693362832069 0.9650459289550781 -0.244346097111702 0.036207728087902 0.9993443489074707 0 0.1374714523553848 0.9780966639518738 -0.1562962383031845 0.0198293048888444 0.9997961521148682 -0.0037768417969346 0.0457287728786468 0.9989523887634277 -0.0017274401616305 -0.0721426084637641 0.9960978031158447 -0.0508383177220821 -0.0456907078623771 0.9989551901817322 -0.0009321352699771 -0.019654544070363 0.9997866153717041 -0.0063682519830763 -0.0721426084637641 0.9960978031158447 -0.0508383177220821 -0.0137452948838472 0.9997959136962891 -0.0148058459162712 -0.0019157064380124 0.9661985039710999 0.2577920258045197 -0.0000006636390708 0.9694089293479919 -0.2454508095979691 -0.0000006636390708 0.9694089293479919 -0.2454508095979691 -0.0947705060243606 0.9650458693504334 -0.2443461418151856</float_array>
+          <technique_common>
+            <accessor source="#LODNODE_0Shape-DiffuseUV-tangents-array" count="225" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="LODNODE_0Shape-DiffuseUV-binormals">
+          <float_array id="LODNODE_0Shape-DiffuseUV-binormals-array" count="675">0.707105278968811 -0.0061311195604503 -0.70708167552948 -0.8944271802902222 -0.0000006399770882 -0.4472135603427887 -0.7070437073707581 -0.0245181452482938 -0.7067447900772095 -0.5306136012077332 -0.1009900271892548 -0.8415760397911072 -0.7999060153961182 -0.0611159279942512 -0.5970052480697632 -0.7393487691879273 0.131599023938179 0.6603372097015381 -0.447210967540741 -0.0068945181556046 -0.8944019675254822 -0.7070796489715576 -0.022240687161684 -0.7067840695381165 0.7070541381835938 -0.0191843155771493 -0.7068992257118225 -0.7999060153961182 -0.0611159279942512 -0.5970052480697632 -0.7070796489715576 -0.022240687161684 -0.7067840695381165 -0.7071144580841065 0.0307056158781051 0.7064321637153626 -0.7070796489715576 -0.022240687161684 -0.7067840695381165 -0.447210967540741 -0.0068945181556046 -0.8944019675254822 -0.707105278968811 0.0061311195604503 0.70708167552948 -0.8944271802902222 -0.0000006399770882 -0.4472135603427887 -0.7071067094802856 -0.0000005012398673 0.7071068286895752 -0.7070541381835938 0.0191843155771493 0.7068992257118225 0.6864994764328003 -0.2989963293075562 -0.6628120541572571 0.9752455949783325 -0.0295447316020727 0.2191421538591385 0.7393487691879273 -0.131599023938179 -0.6603372097015381 -0.7070437073707581 -0.0245181452482938 -0.7067447900772095 -0.7070541381835938 0.0191843155771493 0.7068992257118225 -0.7070338129997253 0.0565987564623355 0.7049111723899841 -0.7071144580841065 0.0307056158781051 0.7064321637153626 -0.5543389320373535 0.0812323912978172 0.8283174633979797 -0.7999060153961182 -0.0611159279942512 -0.5970052480697632 -0.7070796489715576 -0.022240687161684 -0.7067840695381165 -0.7999060153961182 -0.0611159279942512 -0.5970052480697632 0.7070338129997253 -0.0565987564623355 -0.7049111723899841 0.7071144580841065 -0.0307056158781051 -0.7064321637153626 -0.7070437073707581 -0.0245181452482938 -0.7067447900772095 -0.7070510983467102 -0.0568029806017875 -0.7048774361610413 0.5543389320373535 -0.0812323912978172 -0.8283174633979797 -0.7070510983467102 -0.0568029806017875 -0.7048774361610413 -0.5592030882835388 -0.1011142209172249 -0.8228413462638855 -0.7999060153961182 -0.0611159279942512 -0.5970052480697632 -0.5543389320373535 0.0812323912978172 0.8283174633979797 -0.7393487691879273 0.131599023938179 0.6603372097015381 -0.7361902594566345 -0.022469513118267 0.6764015555381775 -0.5592030882835388 -0.1011142209172249 -0.8228413462638855 -0.7070510983467102 -0.0568029806017875 -0.7048774361610413 -0.7999060153961182 -0.0611159279942512 -0.5970052480697632 -0.5306136012077332 -0.1009900271892548 -0.8415760397911072 0.7361902594566345 0.022469513118267 -0.6764015555381775 -0.7070541381835938 0.0191843155771493 0.7068992257118225 -0.7070437073707581 -0.0245181452482938 -0.7067447900772095 -0.8944271802902222 -0.0000006399770882 -0.4472135603427887 -0.7070338129997253 0.0565987564623355 0.7049111723899841 -0.7070510983467102 -0.0568029806017875 -0.7048774361610413 -0.7070437073707581 -0.0245181452482938 -0.7067447900772095 -0.7070510983467102 -0.0568029806017875 -0.7048774361610413 -0.7070338129997253 0.0565987564623355 0.7049111723899841 -0.7361902594566345 -0.022469513118267 0.6764015555381775 -0.7361902594566345 -0.022469513118267 0.6764015555381775 -0.692387580871582 -0.2966921925544739 -0.6577030420303345 -0.5592030882835388 -0.1011142209172249 -0.8228413462638855 -0.707105278968811 0.0061311195604503 0.70708167552948 -0.7071144580841065 0.0307056158781051 0.7064321637153626 -0.7070796489715576 -0.022240687161684 -0.7067840695381165 0.7070541381835938 -0.0191843155771493 -0.7068992257118225 0.7071067094802856 0.0000005012398673 -0.7071068286895752 -0.447210967540741 -0.0068945181556046 -0.8944019675254822 0.7070338129997253 -0.0565987564623355 -0.7049111723899841 0.7070541381835938 -0.0191843155771493 -0.7068992257118225 -0.7070796489715576 -0.022240687161684 -0.7067840695381165 0.7361902594566345 0.022469513118267 -0.6764015555381775 0.7070338129997253 -0.0565987564623355 -0.7049111723899841 -0.7999060153961182 -0.0611159279942512 -0.5970052480697632 -0.7070437073707581 -0.0245181452482938 -0.7067447900772095 0.7071144580841065 -0.0307056158781051 -0.7064321637153626 0.707105278968811 -0.0061311195604503 -0.70708167552948 -0.7070510983467102 -0.0568029806017875 -0.7048774361610413 0.5543389320373535 -0.0812323912978172 -0.8283174633979797 0.7071144580841065 -0.0307056158781051 -0.7064321637153626 -0.5592030882835388 -0.1011142209172249 -0.8228413462638855 0.7393487691879273 -0.131599023938179 -0.6603372097015381 0.5543389320373535 -0.0812323912978172 -0.8283174633979797 0.6864994764328003 -0.2989963293075562 -0.6628120541572571 0.7361902594566345 0.022469513118267 -0.6764015555381775 -0.5306136012077332 -0.1009900271892548 -0.8415760397911072 -0.9752455949783325 0.0295447316020727 -0.2191421538591385 -0.5306136012077332 -0.1009900271892548 -0.8415760397911072 -0.7393487691879273 0.131599023938179 0.6603372097015381 0.7393487691879273 -0.131599023938179 -0.6603372097015381 -0.5592030882835388 -0.1011142209172249 -0.8228413462638855 -0.692387580871582 -0.2966921925544739 -0.6577030420303345 -0.5306136012077332 -0.1009900271892548 -0.8415760397911072 -0.9752455949783325 0.0295447316020727 -0.2191421538591385 -0.692387580871582 -0.2966921925544739 -0.6577030420303345 0.0000003979864686 -1 0 0.0000005132023943 -1 -0.0000001423684921 0.0000003979864686 -1 0 -0.7071067690849304 -0.0000003241457875 0.7071068286895752 -0.7071067690849304 -0.0000003241457875 0.7071068286895752 -0.7071067690849304 -0.0000003241457875 0.7071068286895752 0.0000004263571327 -1 0 0.0000003445762501 -1 0.0000001498690664 0.0000004263571327 -1 0 -0.7071067094802856 -0.0000003241457591 0.7071068286895752 -0.7071067094802856 -0.0000003241457875 0.7071068286895752 -0.7071067094802856 -0.0000003241457591 0.7071068286895752 0.0000003954542648 -1 0 0.0000002827705998 -1 0 0.0000003954542648 -1 0 0.0000004288892796 -1 0 0.0000002827705429 -1 0 0.0000004288892796 -1 0 -0.7071067690849304 -0.0000003241457875 0.7071068286895752 -0.7071067690849304 -0.0000003241457875 0.7071068286895752 -0.7071067690849304 -0.0000003241457875 0.7071068286895752 -0.7071067094802856 -0.0000003241457591 0.7071068286895752 -0.7071068286895752 -0.0000003241458159 0.7071068286895752 -0.7071067094802856 -0.0000003241457591 0.7071068286895752 0.0000004288892796 -1 0 0.0000005750080163 -1 0 0.0000004288892796 -1 0 0.0000004263571327 -1 0 0.0000005081379867 -1 -0.0000001373040277 0.0000004263571327 -1 0 0.0000003954542648 -1 0 0.0000005081379867 -1 0.0000001373040134 0.0000003954542648 -1 0 0.0000003979864686 -1 0 0.0000002827705429 -1 0 0.0000003979864686 -1 0 0.0708334073424339 -0.2239697426557541 -0.9720187187194824 0.0855308547616004 0 -0.996335506439209 0.085530862212181 0 -0.996335506439209 -0.0739483162760734 -0.0561726614832878 -0.9956788420677185 -0.0937050953507423 0.0390090383589267 -0.9948354959487915 -0.0717630535364151 -0.2240628600120544 -0.9719290137290955 -0.0866636484861373 0 -0.9962376356124878 -0.0866636484861373 -0.0000001645297516 -0.9962376356124878 -0.0717630535364151 -0.2240628600120544 -0.9719290137290955 0.071133866906166 -0.0800409615039825 -0.9942502379417419 0.0252647325396537 -0.1612055897712708 -0.9865974187850952 0.0708334073424339 -0.2239697426557541 -0.9720187187194824 -1 -0.0000007087867857 0 -0.9954992532730103 0.0918702185153961 -0.0232613589614629 -1 -0.0000006802115422 0 0.071133866906166 -0.0800409615039825 -0.9942502379417419 0.0708334073424339 -0.2239697426557541 -0.9720187187194824 0.0926423892378807 0.0390243269503116 -0.9949344396591187 -0.1056284457445145 -0.0161762647330761 -0.9942740797996521 -0.0703941285610199 -0.0077374782413244 -0.9974892139434815 -0.0825999155640602 -0.0213450323790311 -0.9963541626930237 0.0490796379745006 -0.0039738598279654 -0.998786985874176 0.0693073272705078 -0.0051430743187665 -0.9975821375846863 0.081911489367485 -0.0213149655610323 -0.9964116811752319 0.071133866906166 -0.0800409615039825 -0.9942502379417419 0.0926423892378807 0.0390243269503116 -0.9949344396591187 0.1026979684829712 0.1701492518186569 -0.9800522923469544 -0.0739483162760734 -0.0561726614832878 -0.9956788420677185 -0.0703941285610199 -0.0077374782413244 -0.9974892139434815 -0.1056284457445145 -0.0161762647330761 -0.9942740797996521 -0.0739483162760734 -0.0561726614832878 -0.9956788420677185 -0.0136469583958387 -0.2426633983850479 -0.9700145721435547 -0.0491163171827793 -0.0031784859020262 -0.998788058757782 0.0252647325396537 -0.1612055897712708 -0.9865974187850952 0.071133866906166 -0.0800409615039825 -0.9942502379417419 0.0693073272705078 -0.0051430743187665 -0.9975821375846863 -0.9993443489074707 0.036207728087902 0 -0.9973780512809753 0.0723685398697853 0 -0.9997087717056274 0.0241365395486354 0 0.081911489367485 -0.0213149655610323 -0.9964116811752319 0.0693073272705078 -0.0051430743187665 -0.9975821375846863 0.1032350361347199 -0.0242366809397935 -0.9943616986274719 -0.0825999155640602 -0.0213450323790311 -0.9963541626930237 -0.0703941285610199 -0.0077374782413244 -0.9974892139434815 -0.0491163171827793 -0.0031784859020262 -0.998788058757782 -0.9997087717056274 0.0241365395486354 0 -1 -0.0000006802115422 0 -0.9954992532730103 0.0918702185153961 -0.0232613589614629 -0.0491163171827793 -0.0031784859020262 -0.998788058757782 -0.055754866451025 -0.0040442454628646 -0.9984362721443176 -0.0622425749897956 -0.017716784030199 -0.9979037642478943 0.0622422620654106 -0.017718045040965 -0.9979037642478943 0.0557546019554138 -0.0040454864501953 -0.9984363317489624 0.0490796379745006 -0.0039738598279654 -0.998786985874176 -0.9954991936683655 -0.0918714553117752 0.0232612453401088 -1 -0.0000005341011615 -0.0000001820046122 -1 -0.0000005341012183 -0.0000001820046122 -0.1058482304215431 0.2561483979225159 -0.960824728012085 -0.0937050953507423 0.0390090383589267 -0.9948354959487915 -0.0739483162760734 -0.0561726614832878 -0.9956788420677185 0.1026979684829712 0.1701492518186569 -0.9800522923469544 0.1032350361347199 -0.0242366809397935 -0.9943616986274719 0.0693073272705078 -0.0051430743187665 -0.9975821375846863 -0.0717630535364151 -0.2240628600120544 -0.9719290137290955 -0.0937050953507423 0.0390090383589267 -0.9948354959487915 -0.0866636484861373 0 -0.9962376356124878 -0.0717630535364151 -0.2240628600120544 -0.9719290137290955 -0.0136469583958387 -0.2426633983850479 -0.9700145721435547 -0.0739483162760734 -0.0561726614832878 -0.9956788420677185 0.085530862212181 0 -0.996335506439209 0.0926423892378807 0.0390243269503116 -0.9949344396591187 0.0708334073424339 -0.2239697426557541 -0.9720187187194824 0.0490796379745006 -0.0039738598279654 -0.998786985874176 0.081911489367485 -0.0213149655610323 -0.9964116811752319 0.0622422620654106 -0.017718045040965 -0.9979037642478943 -0.0622425749897956 -0.017716784030199 -0.9979037642478943 -0.0825999155640602 -0.0213450323790311 -0.9963541626930237 -0.0491163171827793 -0.0031784859020262 -0.998788058757782 0.1026979684829712 0.1701492518186569 -0.9800522923469544 0.0693073272705078 -0.0051430743187665 -0.9975821375846863 0.071133866906166 -0.0800409615039825 -0.9942502379417419 -0.9954991936683655 -0.0918714553117752 0.0232612453401088 -1 -0.0000005341012183 -0.0000001820046122 -1 -0.0000007087867857 0 -0.9997087717056274 0.0241365395486354 0 -0.9954992532730103 0.0918702185153961 -0.0232613589614629 -0.9993443489074707 0.036207728087902 0 0.0252647325396537 -0.1612055897712708 -0.9865974187850952 0.0693073272705078 -0.0051430743187665 -0.9975821375846863 0.0490796379745006 -0.0039738598279654 -0.998786985874176 -0.0739483162760734 -0.0561726614832878 -0.9956788420677185 -0.0491163171827793 -0.0031784859020262 -0.998788058757782 -0.0703941285610199 -0.0077374782413244 -0.9974892139434815 -0.0739483162760734 -0.0561726614832878 -0.9956788420677185 -0.1056284457445145 -0.0161762647330761 -0.9942740797996521 -0.1058482304215431 0.2561483979225159 -0.960824728012085 -1 -0.0000007087867857 0 -1 -0.0000006802115422 0 -0.9954991936683655 -0.0918714553117752 0.0232612453401088</float_array>
+          <technique_common>
+            <accessor source="#LODNODE_0Shape-DiffuseUV-binormals-array" count="225" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="LODNODE_0ShapecolorSet0" name="colorSet0">
+          <float_array id="LODNODE_0ShapecolorSet0-array" count="904">0.388235330581665 0.388235330581665 0.388235330581665 1 0.388235330581665 0.388235330581665 0.388235330581665 1 0.388235330581665 0.388235330581665 0.388235330581665 1 0.388235330581665 0.388235330581665 0.388235330581665 1 0.388235330581665 0.388235330581665 0.388235330581665 1 0.388235330581665 0.388235330581665 0.388235330581665 1 0.1882353127002716 0.1882353127002716 0.1882353127002716 1 0.1882353127002716 0.1882353127002716 0.1882353127002716 1 0.1882353127002716 0.1882353127002716 0.1882353127002716 1 0.1882353127002716 0.1882353127002716 0.1882353127002716 1 0.658823549747467 0.658823549747467 0.658823549747467 1 0.658823549747467 0.658823549747467 0.658823549747467 1 0.658823549747467 0.658823549747467 0.658823549747467 1 0.658823549747467 0.658823549747467 0.658823549747467 1 0.658823549747467 0.658823549747467 0.658823549747467 1 0.658823549747467 0.658823549747467 0.658823549747467 1 0.3490196168422699 0.3490196168422699 0.3490196168422699 1 0.3490196168422699 0.3490196168422699 0.3490196168422699 1 0.3490196168422699 0.3490196168422699 0.3490196168422699 1 0.3921568989753723 0.3921568989753723 0.3921568989753723 1 0.3921568989753723 0.3921568989753723 0.3921568989753723 1 0.3921568989753723 0.3921568989753723 0.3921568989753723 1 0.3921568989753723 0.3921568989753723 0.3921568989753723 1 0.3921568989753723 0.3921568989753723 0.3921568989753723 1 0.3921568989753723 0.3921568989753723 0.3921568989753723 1 0.1921568810939789 0.1921568810939789 0.1921568810939789 1 0.1921568810939789 0.1921568810939789 0.1921568810939789 1 0.1921568810939789 0.1921568810939789 0.1921568810939789 1 0.6352941393852234 0.6352941393852234 0.6352941393852234 1 0.6352941393852234 0.6352941393852234 0.6352941393852234 1 0.6352941393852234 0.6352941393852234 0.6352941393852234 1 0.6352941393852234 0.6352941393852234 0.6352941393852234 1 0.6352941393852234 0.6352941393852234 0.6352941393852234 1 0.6352941393852234 0.6352941393852234 0.6352941393852234 1 0.2901960909366608 0.2901960909366608 0.2901960909366608 1 0.2901960909366608 0.2901960909366608 0.2901960909366608 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.4117647409439087 0.4117647409439087 0.4117647409439087 1 0.4117647409439087 0.4117647409439087 0.4117647409439087 1 0.4117647409439087 0.4117647409439087 0.4117647409439087 1 0.4117647409439087 0.4117647409439087 0.4117647409439087 1 0.4117647409439087 0.4117647409439087 0.4117647409439087 1 0.4117647409439087 0.4117647409439087 0.4117647409439087 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.5803921818733215 0.5803921818733215 0.5803921818733215 1 0.5803921818733215 0.5803921818733215 0.5803921818733215 1 0.5803921818733215 0.5803921818733215 0.5803921818733215 1 0.5803921818733215 0.5803921818733215 0.5803921818733215 1 0.5803921818733215 0.5803921818733215 0.5803921818733215 1 0.6235294342041016 0.6235294342041016 0.6235294342041016 1 0.6235294342041016 0.6235294342041016 0.6235294342041016 1 0.6235294342041016 0.6235294342041016 0.6235294342041016 1 0.6235294342041016 0.6235294342041016 0.6235294342041016 1 0.6235294342041016 0.6235294342041016 0.6235294342041016 1 0.6431372761726379 0.6431372761726379 0.6431372761726379 1 0.6431372761726379 0.6431372761726379 0.6431372761726379 1 0.6431372761726379 0.6431372761726379 0.6431372761726379 1 0.6431372761726379 0.6431372761726379 0.6431372761726379 1 0.6431372761726379 0.6431372761726379 0.6431372761726379 1 0.6431372761726379 0.6431372761726379 0.6431372761726379 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.6509804129600525 0.6509804129600525 0.6509804129600525 1 0.6509804129600525 0.6509804129600525 0.6509804129600525 1 0.6509804129600525 0.6509804129600525 0.6509804129600525 1 0.6509804129600525 0.6509804129600525 0.6509804129600525 1 0.6509804129600525 0.6509804129600525 0.6509804129600525 1 0.6509804129600525 0.6509804129600525 0.6509804129600525 1 0.4039216041564941 0.4039216041564941 0.4039216041564941 1 0.4039216041564941 0.4039216041564941 0.4039216041564941 1 0.4039216041564941 0.4039216041564941 0.4039216041564941 1 0.4039216041564941 0.4039216041564941 0.4039216041564941 1 0.4039216041564941 0.4039216041564941 0.4039216041564941 1 0.4705882668495178 0.4705882668495178 0.4705882668495178 1 0.4705882668495178 0.4705882668495178 0.4705882668495178 1 0.4705882668495178 0.4705882668495178 0.4705882668495178 1 0.4274510145187378 0.4274510145187378 0.4274510145187378 1 0.3725490272045136 0.3725490272045136 0.3725490272045136 1 0.4274510145187378 0.4274510145187378 0.4274510145187378 1 0.3725490272045136 0.3725490272045136 0.3725490272045136 1 0.6117647290229797 0.6117647290229797 0.6117647290229797 1 0.6235294342041016 0.6235294342041016 0.6235294342041016 1 0.4235294461250305 0.4235294461250305 0.4235294461250305 1 0.3686274588108063 0.3686274588108063 0.3686274588108063 1 0.4235294461250305 0.4235294461250305 0.4235294461250305 1 0.6235294342041016 0.6235294342041016 0.6235294342041016 1 0.6274510025978088 0.6274510025978088 0.6274510025978088 1 0.458823561668396 0.458823561668396 0.458823561668396 1 0.6313725709915161 0.6313725709915161 0.6313725709915161 1 0.6274510025978088 0.6274510025978088 0.6274510025978088 1 0.6392157077789307 0.6392157077789307 0.6392157077789307 1 0.6392157077789307 0.6392157077789307 0.6392157077789307 1 0.4666666984558106 0.4666666984558106 0.4666666984558106 1 0.6392157077789307 0.6392157077789307 0.6392157077789307 1 0.3725490272045136 0.3725490272045136 0.3725490272045136 1 0.4235294461250305 0.4235294461250305 0.4235294461250305 1 0.3725490272045136 0.3725490272045136 0.3725490272045136 1 0.3686274588108063 0.3686274588108063 0.3686274588108063 1 0.4196078777313232 0.4196078777313232 0.4196078777313232 1 0.3686274588108063 0.3686274588108063 0.3686274588108063 1 0.364705890417099 0.364705890417099 0.364705890417099 1 0.3686274588108063 0.3686274588108063 0.3686274588108063 1 0.3607843220233917 0.3607843220233917 0.3607843220233917 1 0.4235294461250305 0.4235294461250305 0.4235294461250305 1 0.6235294342041016 0.6235294342041016 0.6235294342041016 1 0.4235294461250305 0.4235294461250305 0.4235294461250305 1 0.6235294342041016 0.6235294342041016 0.6235294342041016 1 0.4274510145187378 0.4274510145187378 0.4274510145187378 1 0.3725490272045136 0.3725490272045136 0.3725490272045136 1 0.615686297416687 0.615686297416687 0.615686297416687 1 0.4274510145187378 0.4274510145187378 0.4274510145187378 1 0.3725490272045136 0.3725490272045136 0.3725490272045136 1 0.4666666984558106 0.4666666984558106 0.4666666984558106 1 0.6509804129600525 0.6509804129600525 0.6509804129600525 1 0.4666666984558106 0.4666666984558106 0.4666666984558106 1 0.4666666984558106 0.4666666984558106 0.4666666984558106 1 0.6509804129600525 0.6509804129600525 0.6509804129600525 1 0.4666666984558106 0.4666666984558106 0.4666666984558106 1 0.7098039388656616 0.7098039388656616 0.7098039388656616 1 0.4509804248809815 0.4509804248809815 0.4509804248809815 1 0.4627451300621033 0.4627451300621033 0.4627451300621033 1 0.2352941334247589 0.2352941334247589 0.2352941334247589 1 0.3372549116611481 0.3372549116611481 0.3372549116611481 1 0.3372549116611481 0.3372549116611481 0.3372549116611481 1 0.4078431725502014 0.4078431725502014 0.4078431725502014 1 0.4078431725502014 0.4078431725502014 0.4078431725502014 1 0.6705882549285889 0.6705882549285889 0.6705882549285889 1 0.4078431725502014 0.4078431725502014 0.4078431725502014 1 0.4078431725502014 0.4078431725502014 0.4078431725502014 1 0.6705882549285889 0.6705882549285889 0.6705882549285889 1 0.6705882549285889 0.6705882549285889 0.6705882549285889 1 0.3254902064800263 0.3254902064800263 0.3254902064800263 1 0.3333333432674408 0.3333333432674408 0.3333333432674408 1 0.3254902064800263 0.3254902064800263 0.3254902064800263 1 0.3254902064800263 0.3254902064800263 0.3254902064800263 1 0.3333333432674408 0.3333333432674408 0.3333333432674408 1 0.388235330581665 0.388235330581665 0.388235330581665 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.388235330581665 0.388235330581665 0.388235330581665 1 0.3803921937942505 0.3803921937942505 0.3803921937942505 1 0.388235330581665 0.388235330581665 0.388235330581665 1 0.2156862914562225 0.2156862914562225 0.2156862914562225 1 0.3490196168422699 0.3490196168422699 0.3490196168422699 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.6745098233222961 0.6745098233222961 0.6745098233222961 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.6745098233222961 0.6745098233222961 0.6745098233222961 1 0.6745098233222961 0.6745098233222961 0.6745098233222961 1 0.321568638086319 0.321568638086319 0.321568638086319 1 0.3450980484485626 0.3450980484485626 0.3450980484485626 1 0.3450980484485626 0.3450980484485626 0.3450980484485626 1 0.321568638086319 0.321568638086319 0.321568638086319 1 0.321568638086319 0.321568638086319 0.321568638086319 1 0.3450980484485626 0.3450980484485626 0.3450980484485626 1 0.207843154668808 0.207843154668808 0.207843154668808 1 0.2117647230625153 0.2117647230625153 0.2117647230625153 1 0.2117647230625153 0.2117647230625153 0.2117647230625153 1 0.207843154668808 0.207843154668808 0.207843154668808 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.4392157196998596 0.4392157196998596 0.4392157196998596 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.4392157196998596 0.4392157196998596 0.4392157196998596 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.6274510025978088 0.6274510025978088 0.6274510025978088 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.6274510025978088 0.6274510025978088 0.6274510025978088 1 0.6274510025978088 0.6274510025978088 0.6274510025978088 1 0.4313725829124451 0.4313725829124451 0.4313725829124451 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.4431372880935669 0.4431372880935669 0.4431372880935669 1 0.3960784673690796 0.3960784673690796 0.3960784673690796 1 0.3960784673690796 0.3960784673690796 0.3960784673690796 1 0.3843137621879578 0.3843137621879578 0.3843137621879578 1 0.3843137621879578 0.3843137621879578 0.3843137621879578 1 0.3960784673690796 0.3960784673690796 0.3960784673690796 1 0.4784314036369324 0.4784314036369324 0.4784314036369324 1 0.4784314036369324 0.4784314036369324 0.4784314036369324 1 0.4784314036369324 0.4784314036369324 0.4784314036369324 1 0.4784314036369324 0.4784314036369324 0.4784314036369324 1 0.4784314036369324 0.4784314036369324 0.4784314036369324 1 0.4784314036369324 0.4784314036369324 0.4784314036369324 1 0.4823529720306397 0.4823529720306397 0.4823529720306397 1 0.4823529720306397 0.4823529720306397 0.4823529720306397 1 0.4823529720306397 0.4823529720306397 0.4823529720306397 1 0.4823529720306397 0.4823529720306397 0.4823529720306397 1 0.4627451300621033 0.4627451300621033 0.4627451300621033 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.4627451300621033 0.4627451300621033 0.4627451300621033 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.4627451300621033 0.4627451300621033 0.4627451300621033 1 0.4627451300621033 0.4627451300621033 0.4627451300621033 1 0.6470588445663452 0.6470588445663452 0.6470588445663452 1 0.4627451300621033 0.4627451300621033 0.4627451300621033 1 0.4117647409439087 0.4117647409439087 0.4117647409439087 1 0.3764706254005432 0.3764706254005432 0.3764706254005432 1 0.3764706254005432 0.3764706254005432 0.3764706254005432 1 0.4117647409439087 0.4117647409439087 0.4117647409439087 1 0 0 0 0</float_array>
+          <technique_common>
+            <accessor source="#LODNODE_0ShapecolorSet0-array" count="226" stride="4">
+              <param name="R" type="float"/>
+              <param name="G" type="float"/>
+              <param name="B" type="float"/>
+              <param name="A" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="LODNODE_0Shape-vertices">
+          <input semantic="POSITION" source="#LODNODE_0Shape-positions"/>
+        </vertices>
+        <triangles material="LODNODE_0SG" count="75">
+          <input semantic="VERTEX" source="#LODNODE_0Shape-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#LODNODE_0Shape-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#LODNODE_0Shape-DiffuseUV" offset="2" set="0"/>
+          <input semantic="TEXTANGENT" source="#LODNODE_0Shape-DiffuseUV-tangents" offset="3" set="0"/>
+          <input semantic="TEXBINORMAL" source="#LODNODE_0Shape-DiffuseUV-binormals" offset="4" set="0"/>
+          <input semantic="COLOR" source="#LODNODE_0ShapecolorSet0" offset="5" set="0"/>
+          <p>1 0 0 0 0 6 3 1 1 1 1 16 2 2 2 2 2 10 10 3 3 3 3 48 14 4 4 4 4 69 9 5 5 5 5 42 5 6 6 6 6 25 4 7 7 7 7 19 6 8 8 8 8 28 14 9 9 9 9 70 4 10 10 10 10 20 0 11 11 11 11 0 4 12 12 12 12 21 5 13 13 13 13 26 1 14 14 14 14 7 3 15 15 15 15 17 7 16 16 16 16 34 6 17 17 17 17 29 11 18 18 18 18 53 17 19 19 19 19 87 9 20 20 20 20 43 2 21 21 21 21 11 6 22 22 22 22 30 13 23 23 23 23 63 0 24 24 24 24 1 16 25 25 25 25 82 14 26 26 26 26 71 4 27 27 27 27 22 14 28 28 28 28 72 13 29 29 29 29 64 0 30 30 30 30 2 2 31 31 31 31 12 8 32 32 32 32 36 16 33 33 33 33 83 8 34 34 34 34 37 12 35 35 35 35 58 14 36 36 36 36 73 16 37 37 37 37 84 9 38 38 38 38 44 15 39 39 39 39 76 12 40 40 40 40 59 8 41 41 41 41 38 14 42 42 42 42 74 10 43 43 43 43 49 15 44 44 44 44 77 6 45 45 45 45 31 2 46 46 46 46 13 3 47 47 47 47 18 13 48 48 48 48 65 8 49 49 49 49 39 2 50 50 50 50 14 8 51 51 51 51 40 13 52 52 52 52 66 15 53 53 53 53 78 15 54 54 54 54 79 11 55 55 55 55 54 12 56 56 56 56 60 1 57 57 57 57 8 0 58 58 58 58 3 4 59 59 59 59 23 6 60 60 60 60 32 7 61 61 61 61 35 5 62 62 62 62 27 13 63 63 63 63 67 6 64 64 64 64 33 4 65 65 65 65 24 15 66 66 66 66 80 13 67 67 67 67 68 14 68 68 68 68 75 2 69 69 69 69 15 0 70 70 70 70 4 1 71 71 71 71 9 8 72 72 72 72 41 16 73 73 73 73 85 0 74 74 74 74 5 12 75 75 75 75 61 9 76 76 76 76 45 16 77 77 77 77 86 11 78 78 78 78 55 15 79 79 79 79 81 10 80 80 80 80 50 17 81 81 81 81 88 10 82 82 82 82 51 9 83 83 83 83 46 9 84 84 84 84 47 12 85 85 85 85 62 11 86 86 86 86 56 10 87 87 87 87 52 17 88 88 88 88 89 11 89 89 89 89 57 19 90 90 90 90 95 21 91 91 91 91 104 20 92 92 92 92 100 19 93 93 93 93 96 23 94 94 94 94 112 25 95 95 95 95 121 22 96 96 96 96 108 24 97 97 97 97 116 25 98 98 98 98 122 18 99 99 99 99 90 20 100 100 100 100 101 24 101 101 101 101 117 23 102 102 102 102 113 19 103 103 103 103 97 18 104 104 104 104 91 21 105 105 105 105 105 25 106 106 106 106 123 24 107 107 107 107 118 25 108 108 108 108 124 21 109 109 109 109 106 19 110 110 110 110 98 24 111 111 111 111 119 22 112 112 112 112 109 18 113 113 113 113 92 24 114 114 114 114 120 20 115 115 115 115 102 21 116 116 116 116 107 25 117 117 117 117 125 23 118 118 118 118 114 22 119 119 119 119 110 18 120 120 120 120 93 22 121 121 121 121 111 23 122 122 122 122 115 20 123 123 123 123 103 18 124 124 124 124 94 19 125 125 125 125 99 29 126 126 126 126 138 28 127 127 127 127 135 35 128 128 128 128 171 38 129 129 129 129 186 34 130 130 130 130 165 33 131 131 131 131 158 35 132 132 132 132 172 32 133 133 133 133 156 33 134 134 134 134 159 39 135 135 135 135 193 37 136 136 136 136 180 29 137 137 137 137 139 29 138 138 138 138 140 37 139 139 139 139 181 36 140 140 140 140 175 39 141 141 141 141 194 29 142 142 142 142 141 34 143 143 143 143 166 40 144 144 144 144 198 42 145 145 145 145 209 31 146 146 146 146 150 26 147 147 147 147 126 41 148 148 148 148 203 31 149 149 149 149 151 39 150 150 150 150 195 34 151 151 151 151 167 30 152 152 152 152 145 38 153 153 153 153 187 42 154 154 154 154 210 40 155 155 155 155 199 38 156 156 156 156 188 36 157 157 157 157 176 43 158 158 158 158 213 37 159 159 159 159 182 39 160 160 160 160 196 41 161 161 161 161 204 26 162 162 162 162 127 27 163 163 163 163 132 43 164 164 164 164 214 31 165 165 165 165 152 41 166 166 166 166 205 40 167 167 167 167 200 31 168 168 168 168 153 42 169 169 169 169 211 43 170 170 170 170 215 43 171 171 171 171 216 36 172 172 172 172 177 37 173 173 173 173 183 43 174 174 174 174 217 27 175 175 175 175 133 44 176 176 176 176 221 44 177 177 177 177 222 27 178 178 178 178 134 26 179 179 179 179 128 33 180 180 180 180 160 32 181 181 181 181 157 28 182 182 182 182 136 30 183 183 183 183 146 34 184 184 184 184 168 38 185 185 185 185 189 30 186 186 186 186 147 40 187 187 187 187 201 41 188 188 188 188 206 33 189 189 189 189 161 34 190 190 190 190 169 35 191 191 191 191 173 33 192 192 192 192 162 36 193 193 193 193 178 38 194 194 194 194 190 35 195 195 195 195 174 34 196 196 196 196 170 29 197 197 197 197 142 26 198 198 198 198 129 31 199 199 199 199 154 44 200 200 200 200 223 44 201 201 201 201 224 31 202 202 202 202 155 43 203 203 203 203 218 30 204 204 204 204 148 41 205 205 205 205 207 39 206 206 206 206 197 33 207 207 207 207 163 28 208 208 208 208 137 29 209 209 209 209 143 43 210 210 210 210 219 37 211 211 211 211 184 26 212 212 212 212 130 37 213 213 213 213 185 41 214 214 214 214 208 26 215 215 215 215 131 38 216 216 216 216 191 43 217 217 217 217 220 42 218 218 218 218 212 38 219 219 219 219 192 40 220 220 220 220 202 30 221 221 221 221 149 29 222 222 222 222 144 36 223 223 223 223 179 33 224 224 224 224 164</p>
+        </triangles>
+      </mesh>
+      <extra>
+        <technique profile="MAYA">
+          <double_sided>1</double_sided>
+        </technique>
+      </extra>
+    </geometry>
+  </library_geometries>
+  <library_controllers>
+    <controller id="LODNODE_0Shape-skin" name="skinCluster1">
+      <skin source="#LODNODE_0Shape">
+        <bind_shape_matrix>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</bind_shape_matrix>
+        <source id="LODNODE_0Shape-skin-joints">
+          <Name_array id="LODNODE_0Shape-skin-joints-array" count="1">bone0</Name_array>
+          <technique_common>
+            <accessor source="#LODNODE_0Shape-skin-joints-array" count="1" stride="1">
+              <param name="JOINT" type="Name"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="LODNODE_0Shape-skin-bind_poses">
+          <float_array id="LODNODE_0Shape-skin-bind_poses-array" count="16">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#LODNODE_0Shape-skin-bind_poses-array" count="1" stride="16">
+              <param name="TRANSFORM" type="float4x4"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="LODNODE_0Shape-skin-weights">
+          <float_array id="LODNODE_0Shape-skin-weights-array" count="1">1</float_array>
+          <technique_common>
+            <accessor source="#LODNODE_0Shape-skin-weights-array" count="1" stride="1">
+              <param name="WEIGHT" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <joints>
+          <input semantic="JOINT" source="#LODNODE_0Shape-skin-joints"/>
+          <input semantic="INV_BIND_MATRIX" source="#LODNODE_0Shape-skin-bind_poses"/>
+        </joints>
+        <vertex_weights count="45">
+          <input semantic="JOINT" source="#LODNODE_0Shape-skin-joints" offset="0"/>
+          <input semantic="WEIGHT" source="#LODNODE_0Shape-skin-weights" offset="1"/>
+          <vcount>1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 </vcount>
+          <v>0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0</v>
+        </vertex_weights>
+      </skin>
+    </controller>
+  </library_controllers>
+  <library_visual_scenes>
+    <visual_scene id="VisualSceneNode" name="w2403">
+      <node id="s0_model" name="s0_model" type="JOINT">
+        <rotate sid="jointOrientZ">0 0 1 0</rotate>
+        <rotate sid="jointOrientY">0 1 0 0</rotate>
+        <rotate sid="jointOrientX">1 0 0 0</rotate>
+        <node id="s1_n_grip" name="s1_n_grip" sid="bone0" type="JOINT">
+          <rotate sid="jointOrientZ">0 0 1 0</rotate>
+          <rotate sid="jointOrientY">0 1 0 0</rotate>
+          <rotate sid="jointOrientX">1 0 0 0</rotate>
+          <node id="s2_j_blade_a" name="s2_j_blade_a" type="JOINT">
+            <translate sid="translate">0 -0.1106666624546051 0</translate>
+            <rotate sid="jointOrientZ">0 0 1 0</rotate>
+            <rotate sid="jointOrientY">0 1 0 0</rotate>
+            <rotate sid="jointOrientX">1 0 0 0</rotate>
+            <rotate sid="rotateZ">0 0 1 -90</rotate>
+            <rotate sid="rotateX">1 0 0 90.00000762939453</rotate>
+            <node id="s3_j_blade_b" name="s3_j_blade_b" type="JOINT">
+              <translate sid="translate">0.5038876533508301 0 0</translate>
+              <rotate sid="jointOrientZ">0 0 1 0</rotate>
+              <rotate sid="jointOrientY">0 1 0 0</rotate>
+              <rotate sid="jointOrientX">1 0 0 0</rotate>
+              <rotate sid="rotateZ">0 0 1 -21.11097717285156</rotate>
+              <extra>
+                <technique profile="MAYA">
+                  <dynamic_attributes>
+                    <filmboxTypeID short_name="fbxID" type="int">5</filmboxTypeID>
+                  </dynamic_attributes>
+                  <segment_scale_compensate>0</segment_scale_compensate>
+                </technique>
+              </extra>
+            </node>
+            <extra>
+              <technique profile="MAYA">
+                <dynamic_attributes>
+                  <filmboxTypeID short_name="fbxID" type="int">5</filmboxTypeID>
+                </dynamic_attributes>
+                <segment_scale_compensate>0</segment_scale_compensate>
+              </technique>
+            </extra>
+          </node>
+          <extra>
+            <technique profile="MAYA">
+              <dynamic_attributes>
+                <filmboxTypeID short_name="fbxID" type="int">5</filmboxTypeID>
+              </dynamic_attributes>
+              <segment_scale_compensate>0</segment_scale_compensate>
+            </technique>
+          </extra>
+        </node>
+        <extra>
+          <technique profile="MAYA">
+            <dynamic_attributes>
+              <filmboxTypeID short_name="fbxID" type="int">2</filmboxTypeID>
+            </dynamic_attributes>
+            <segment_scale_compensate>0</segment_scale_compensate>
+          </technique>
+        </extra>
+      </node>
+      <node id="LODNODE_0" name="LODNODE_0" type="NODE">
+        <rotate sid="rotateZ">0 0 1 0</rotate>
+        <rotate sid="rotateY">0 1 0 0</rotate>
+        <rotate sid="rotateX">1 0 0 0</rotate>
+        <instance_controller url="#LODNODE_0Shape-skin">
+          <skeleton>#s1_n_grip</skeleton>
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="LODNODE_0SG" target="#_collada_lod_0_shape_0_gather_0_material"/>
+            </technique_common>
+          </bind_material>
+          <extra>
+            <technique profile="PHYRE">
+              <object_render_properties castsShadows="1" receiveShadows="1" visibleInReflections="1" visibleInRefractions="1" motionBlurEnabled="1"/>
+            </technique>
+          </extra>
+        </instance_controller>
+      </node>
+      <extra>
+        <technique profile="FCOLLADA">
+          <start_time>0.0416666679084301</start_time>
+          <end_time>8.333333015441895</end_time>
+        </technique>
+      </extra>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_physics_scene url="#MayaNativePhysicsScene"/>
+    <instance_visual_scene url="#VisualSceneNode"/>
+  </scene>
+</COLLADA>

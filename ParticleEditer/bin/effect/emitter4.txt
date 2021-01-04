@@ -1,0 +1,19 @@
+3 2
+10.0 10.0 0.0 --maxsize  有速度的星星
+10.0 10.0 0.0 --minsize
+0.0 0.0 0.0 --maxpos
+0.0 0.0 0.0 --minpos
+0.0 0.0 -55.0 --velmax
+0.0 0.0 -55.0 --velmin
+0.0 0.0 0.0 --acc
+1.0 1.0 0.0 0.0 --startcolor argb
+0.5 0.0 1.0 0.0 --middlecolor argb
+0.0 0.0 0.0 1.0 --endcolor argb
+123.png --texture
+1 1 --texframe x total
+2000 --livetime
+10 --createinterval
+0.5 --middlerate
+1.0 --scalestart
+3.0 --scalemiddle
+1.0 --scaleend

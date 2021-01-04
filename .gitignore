@@ -2,7 +2,7 @@
 ## ignore some files or path that you dont want to submit to github
 #################
 
-bin/
+.vs/
 ipch/
 _UpgradeReport_Files/
 UpgradeLog.XML
@@ -23,3 +23,5 @@ UpgradeLog.XML
 *.opensdf
 *.cache
 *.aps
+*.vc.db
+/*.cd

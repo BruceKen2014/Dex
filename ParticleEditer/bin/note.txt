@@ -1,0 +1,5 @@
+
+1、TODO：准备参照UE的object架构，把所有object的管理都放到object factory中做，包括widget,这样widget factory就只负责xml的读取，
+   具体Object的生成放到object factory里面，这样理论上在任何地方都可以通过object factory获取到widget的指针了。
+  
+2、TODO：如果模型的纹理加载失败，则提供一个默认的醒目纹理，提醒纹理出错了。

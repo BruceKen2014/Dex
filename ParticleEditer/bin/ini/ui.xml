@@ -1,0 +1,57 @@
+<?xml version ="1.0" encoding ="gb2312" ?>
+<Image name="TalkBackground" image="b23.png,0,0,1024,1024" size="760,150" pos="10,400" mirro="0" alpha="200" mask="0" maskcolor="0,255,0,100" flag="mouse_r_drag" visible="0">
+	<Image name="jingtian" image="jingtian.png,0,0,230,279" size="231,280" offset="0,0" flag="mouse_r_drag"/>
+	<Image name="jingjing" image="jingjing.png,0,0,189,199" size="190,200" offset="0,0" flag="mouse_r_drag"/>
+	<Image name="zhulong" image="zhulong.png,0,0,214,314" size="231,280" offset="0,0" flag="mouse_r_drag"/>
+	<Label name="label" size="500,120" offset="0,0" string="label string" TextSize="20" TextColor="1.0f,1.0f,0.0f,1.0f" flag="mouse_r_drag"/>
+	<ImageSequence name="continue" size="32,32" offset="0,0" interval="300" flag="mouse_l_drag" image="communicate_continue.png,0,0,0,0$communicate_continue2.png,0,0,0,0" />
+</Image> 
+<Image name="order_back" image="image1.png,830,260,1020,440" size="190,185" pos="75,330" mirro="0" alpha="200" mask="0" maskcolor="0,255,0,100" flag="mouse_r_drag,mouse_move" visible="1">
+	<Button name="attack" size="60, 63" offset="67,68" normal_image="image1.png,958,5,1020,66" mouseon_image="image1.png,958,66,1020,130"
+							mousedown_image="image1.png,958,130,1020,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<Button name="item" size="60, 60" offset="0,45" normal_image="image1.png,605,5,670,66" mouseon_image="image1.png,605,66,670,130"
+							mousedown_image="image1.png,605,130,670,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<Button name="skill" size="60, 67" offset="65,0" normal_image="image1.png,750,5,810,66" mouseon_image="image1.png,750,66,810,130"
+							mousedown_image="image1.png,750,130,810,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<Button name="specialskill" size="64, 67" offset="127,48" normal_image="image1.png,680,5,740,66" mouseon_image="image1.png,680,66,740,130"
+							mousedown_image="image1.png,680,130,740,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<!--<Button name="attack" size="75, 60" offset="60,68" normal_image="image1.png,955,5,1024,66" mouseon_image="image1.png,955,66,1024,130"
+							mousedown_image="image1.png,955,130,1024,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<Button name="attack" size="75, 60" offset="60,68" normal_image="image1.png,955,5,1024,66" mouseon_image="image1.png,955,66,1024,130"
+							mousedown_image="image1.png,955,130,1024,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>-->
+</Image> 
+<Image name="skill_back" image="image1.png,315,43,597,286" size="282,243" pos="36,285" mirro="0" alpha="200" mask="0" maskcolor="0,255,0,100" flag="mouse_r_drag,mouse_move" visible="1">
+	<Label name="top_name" size="180,25" offset="50,50" string="Ãû×ÖÃû×ÖÃû×ÖÃû×Ö" TextSize="25" TextColor="1.0f,1.0f,0.0f,1.0f" flag="mouse_r_drag"/>
+	<Label name="skill_container" size="180,180" offset="50,100" string="____" TextSize="25" TextColor="1.0f,1.0f,0.0f,1.0f" flag="mouse_r_drag"/>
+	<!--
+	<Label name="label_value0" size="180,25" offset="50,80"  string="±ùÖä±ùÖä±ùÖä±ùÖä" TextSize="25" TextColor="1.0f,0.0f,0.0f,1.0f" flag="mouse_r_drag"/>
+	<Label name="label_value1" size="180,25" offset="50,110" string="ÓêÈóÓêÈóÓêÈóÓêÈó" TextSize="25" TextColor="1.0f,0.0f,0.0f,1.0f" flag="mouse_r_drag"/>
+	<Label name="label_value2" size="180,25" offset="50,140" string="ÑÌË®»¹»êÑÌË®»¹»ê" TextSize="25" TextColor="1.0f,0.0f,0.0f,1.0f" flag="mouse_r_drag"/>
+	<Label name="label_value3" size="180,25" offset="50,230" string="·çÑ©±ùÌì·çÑ©±ùÌì" TextSize="25" TextColor="0.0f,0.0f,0.0f,1.0f" flag="mouse_r_drag"/>
+	-->
+	<CheckButton name="skill_water" size="43, 36" offset="62,8" ucheck_image="image1.png,601,256,644,291" check_image="image1.png,600,292,645,328" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<CheckButton name="skill_fire" size="43, 36" offset="105,8" ucheck_image="image1.png,646,256,687,290" check_image="image1.png,648,293,690,327" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<CheckButton name="skill_thunder" size="43, 36" offset="148,8" ucheck_image="image1.png,693,256,734,290" check_image="image1.png,693,293,734,327" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<CheckButton name="skill_wind" size="43, 36" offset="191,8" ucheck_image="image1.png,738,256,780,290" check_image="image1.png,736,293,781,327" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<CheckButton name="skill_soil" size="43, 36" offset="264,8" ucheck_image="image1.png,785,256,827,291" check_image="image1.png,782,292,826,327" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<!--<Button name="item" size="60, 60" offset="0,45" normal_image="image1.png,605,5,670,66" mouseon_image="image1.png,605,66,670,130"
+							mousedown_image="image1.png,605,130,670,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<Button name="skill" size="60, 67" offset="65,0" normal_image="image1.png,750,5,810,66" mouseon_image="image1.png,750,66,810,130"
+							mousedown_image="image1.png,750,130,810,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<Button name="specialskill" size="64, 67" offset="127,48" normal_image="image1.png,680,5,740,66" mouseon_image="image1.png,680,66,740,130"
+							mousedown_image="image1.png,680,130,740,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<Button name="attack" size="75, 60" offset="60,68" normal_image="image1.png,955,5,1024,66" mouseon_image="image1.png,955,66,1024,130"
+							mousedown_image="image1.png,955,130,1024,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<Button name="attack" size="75, 60" offset="60,68" normal_image="image1.png,955,5,1024,66" mouseon_image="image1.png,955,66,1024,130"
+							mousedown_image="image1.png,955,130,1024,190" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>-->
+</Image> 
+<!--<Image name="background" image="b23.png,0,0,1024,1024" size="800,600" pos="0,0" mirro="0" alpha="200" mask="0" maskcolor="0,255,0,100" flag="mouse_r_drag" visible="0">
+	<Image name="image1" image="YuanLeft.png,0,0,340,450" size="100,100" offset="100,0" flag="mouse_r_drag"/>
+	<Image name="image2" image="YuanLeft.png,0,0,340,450" size="100,100" offset="200,0" mask="0" flag="mouse_r_drag"/>
+	<Button name="newGame" size="150, 60" offset="20,20" normal_image="about.png,0,0,115,240" mouseon_image="about.png,0,240,115,480"
+							mousedown_image="about.png,0,480,115,720" mouse_on_sound="button_on.wav" mouse_down_sound="button_down.wav" flag="mouse_r_drag"/>
+	<CheckButton name="check" check_image="ui11.png,490,275,527,319" ucheck_image="ui11.png,533,275,570,319" size="30,30" offset="200,0" mask="0" visible="1" flag="mouse_r_drag"/>
+	<ImageSequence name="lovelygirl" size="71,103" offset="-200,0" mask="0" interval="100" flag="mouse_l_drag" image="Å®º¢0.png,0,0,0,0$Å®º¢1.png,0,0,0,0$Å®º¢2.png,0,0,0,0$Å®º¢3.png,0,0,0,0$Å®º¢4.png,0,0,0,0$Å®º¢5.png,0,0,0,0" />
+	<Label name="label" size="100,20" offset="300,0" string="label string" TextSize="20" TextColor="1.0f,1.0f,0.0f,1.0f" flag="mouse_r_drag"/>
+</Image> 
+-->

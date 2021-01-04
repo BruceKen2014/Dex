@@ -1,0 +1,11 @@
+
+mesh转换命令行
+F:\desktop\游戏编程\Github_Dex\Dex\MeshConvert\bin\MeshConvert F:\desktop\游戏编程\Github_Dex\Dex\ParticleEditer\bin\model\obj\RYU.obj 0
+大文件打包命令行
+F:\desktop\游戏编程\Github_Dex\Dex\DexBigFilePacker\bin\DexBigFilePacker F:\desktop\游戏编程\Github_Dex\Dex\ParticleEditer\bin\build.xml
+
+1 头发 右前额
+2 头发 做前额
+3 头发 较里面的一层 在12之前画 在6之后画
+4 头发 外面的一层 在12之后画
+6 头发 竖直的透明 在5之后画

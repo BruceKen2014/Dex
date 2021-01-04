@@ -1,0 +1,41 @@
+
+
+//name diffuse ambient emissive specular power
+[materialInfo]
+1
+"material0", 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,0.0f, 0.0f, 0.0f, 0.0f, 1.0f
+[textureInfo]
+1
+res/grass.jpg
+
+//jointName fatherId Id offset scale axis radian
+[jointInfo]
+2
+joint1,-1,0,10.0f,0.0f,0.0f,1.0f,1.0f,1.0f,1.0f,0.0f,1.0f,90
+joint2,0,1,10.0f,0.0f,0.0f,1.0f,1.0f,1.0f,1.0f,0.0f,1.0f,90
+
+//pos normal color(rgba) uv jointCount jointId jointWeigth
+[vertexInfo]
+8
+-200.0f, 0.0f, -200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1, 0, 1
+200.0f, 0.0f, -200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1, 0, 1
+-200.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1, 0, 1
+200.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1, 0, 1
+-200.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1, 0, 1
+200.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1, 0, 1
+-200.0f, 0.0f, 200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1, 0, 1
+200.0f, 0.0f, 200.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1, 0, 1
+
+//meshName Id MaterialIndex TextureIndex triangleCount triangleInfo(vertexIndex)
+[meshInfo]
+1
+meshName1, 1, 0, 0, 4, 0, 1, 2, 1, 3, 2, 4, 5, 6, 5, 7, 6
+
+[renderFlag]
+MESH,JOINT,JOINT2JOINT,VERTEX2JOINT,VERTEXNORMAL
+
+[lightFlag]
+AMBIENT,POINT,DIRECTION
+
+
+

@@ -59,10 +59,10 @@ LRESULT WINAPI MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
-
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE prevhInst, LPSTR cmdLine, int show)
 {
 	//DexCheckMemLeak::getDexMemoryLeakCheck()->SetBreakAlloc(8843);
+
 	DexGameEngine::getEngine()->SetHInstance(hInst);
 	DexGameEngine::getEngine()->SetIcon(IDI_ICON1);
 	DexGameEngine::getEngine()->SetMsgPro(MsgProc);

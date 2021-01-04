@@ -143,6 +143,6 @@ void CDexWidgetScrollBarV::SetBackImage(string dexname, const DexRect& src_rect)
 {
 	m_backImage.m_tex = getUiSrcMgrSingleton()->getUiTexFactory()->FindTex(dexname.c_str());
 	m_backImage.m_srcArea = src_rect;
-	m_backImage.m_texname = dexname;
+	//m_backImage.m_texname = dexname;
 	UI_ADD_REF(m_backImage.m_tex);
 }

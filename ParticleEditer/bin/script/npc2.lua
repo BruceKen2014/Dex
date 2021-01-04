@@ -1,0 +1,14 @@
+SetFogColor(0.8,0.8,0.8,1.0);
+SetFog(1);
+Say(0,1,"精精：路人脚本");
+SetFog(0);
+Wait(1000);
+SetFog(1);
+SetFogColor(0.8,0.0,0.0,1.0);
+Wait(1000);
+Say(1,2,"骨龙：路人");
+SetFogColor(0.0,0.0,0.8,1.0);
+Wait(1000);
+SetFogColor(0.0,0.8,0.8,1.0);
+Wait(1000);
+SetFog(0);
