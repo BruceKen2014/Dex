@@ -25,3 +25,6 @@ UpgradeLog.XML
 *.aps
 *.vc.db
 /*.cd
+/ParticleEditer/bin/ParticleEditer.exe
+/DexBigFilePacker/bin/DexBigFilePacker.exe
+/MeshConvert/bin/MeshConvert.exe
