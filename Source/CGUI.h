@@ -47,7 +47,7 @@ const MouseFlag      MF_MouseLUp     = 0x03;    //传入鼠标左键单击弹起信息
 const MouseFlag      MF_MouseRUp     = 0x04;    //传入鼠标右键单击弹起信息
 
 typedef   TSHORT    GuiReturnValue;  	         //交互性GUI返回值,根据返回不同的值进行不同的处理
-const GuiReturnValue  GRV_Flag       = 0xFFFF;   //返回值,保留
+const GuiReturnValue  GRV_Flag       = 0x0FFF;   //返回值,保留
 const GuiReturnValue  GRV_ButtonOn   = 0x0000;   //返回值,鼠标第一次移动到按钮上
 const GuiReturnValue  GRV_ButtonDown = 0x0001;   //返回值,鼠标在按钮上按下
 const GuiReturnValue  GRV_ButtonUp   = 0x0002;   //返回值,鼠标在按钮上弹起

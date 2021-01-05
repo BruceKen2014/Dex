@@ -372,6 +372,7 @@ bool CMouse::MouseMove(Mouse_Move_Dir &mmd, int flag )
 		else 
 			return false;
 	}
+	return false;
 }
 BOOL CMouse::LeftButtonDown()
 {

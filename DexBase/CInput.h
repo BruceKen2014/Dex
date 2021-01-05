@@ -40,7 +40,7 @@ public:
 };
 
 //----------------------------------------------------------
-typedef enum Mouse_Move_Dir
+enum Mouse_Move_Dir
 {
 	MMD_LEFT,	       //×ó
 	MMD_RIGHT,	       //ÓÒ

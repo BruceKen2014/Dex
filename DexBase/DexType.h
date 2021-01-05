@@ -3,6 +3,13 @@
 #define _DEX_TYPE_H
 #include "DexCompiler.h"
 
+#pragma warning(disable:4244)  //从size_t 到 int 可能丢失数据
+#pragma warning(disable:4267)  //从size_t 到 int 可能丢失数据
+#pragma warning(disable:4305)  //从double 到 float 可能丢失数据	
+#pragma warning(disable:4996)  //strcpy': This function or variable may be unsafe. Consider using strcpy_s instead
+#pragma warning(disable:4800)  //“int”: 将值强制为布尔值“true”或“false”(性能警告)
+#pragma warning(disable:4018)  //'>': signed/unsigned mismatch
+
 using DChar	   =    char;
 using DUChar   =	unsigned char;
 using DBool    =    bool;

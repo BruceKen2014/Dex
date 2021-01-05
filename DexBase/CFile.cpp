@@ -103,7 +103,7 @@ void CFile::InNumber(float f, int precise)
 		return;
 	CHAR cData[32];
 	char format[32];
-	sprintf(format, "%%.%df", precise, f);
+	sprintf(format, "%%.%df", precise);
 	sprintf(cData, format, f);
 	DWORD dwBytesWritten;
 	WriteFile(m_file, &cData, strlen(cData), &dwBytesWritten, NULL);

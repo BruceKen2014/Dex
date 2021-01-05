@@ -53,7 +53,7 @@ DexLog::~DexLog()
 #endif
 }
 
-void DexLog::SetConsoleScreenSize(int w, int h)
+void DexLog::SetConsoleScreenSize(DInt16 w, DInt16 h)
 {
 	m_wSize = w;
 	COORD sz = { w, h};

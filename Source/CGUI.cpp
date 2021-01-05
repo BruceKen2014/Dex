@@ -896,8 +896,6 @@ void CGuiSystem::LoadGui(LPDIRECT3DDEVICE9 pD3DDevice, char *filename)
 		_SafeDelete(pScript);
 		return;
 	}
-
-	char pic[MAX_PARAM_SIZE];
 	char ** Script = pScript->GetScript();
 	int  CurrChar = 0;
 	int  CurrLine = 0;

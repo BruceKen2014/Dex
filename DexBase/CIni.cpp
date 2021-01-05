@@ -24,7 +24,7 @@ void CIni::SetFloat(char *filename, char *field, char *key, float _value, int pr
 {
 	CHAR cData[32];
 	char format[32];
-	sprintf(format, "%%.%df", precise, _value);
+	sprintf(format, "%%.%df", precise);
 	sprintf(cData, format, _value);
 	SetString(filename, field, key, cData);
 }

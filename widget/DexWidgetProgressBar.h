@@ -10,7 +10,7 @@ class DexWidgetProgressBar :public DexWidget
 {
 	Dex_DeclareClass(DexWidgetProgressBar, DexWidget, 0)
 public:
-	typedef enum EProgressBarType
+	enum EProgressBarType
 	{
 		EPBT_L2R,//从左到右
 		EPBT_B2T,//从下到上   

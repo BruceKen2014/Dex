@@ -52,7 +52,7 @@ class DexLog final
 	SINGLETON_DECLARE(DexLog)
 public:
 	//w可理解为控制台一行可以容纳的字符数 h可理解为控制台可记录的行数 超过h行的打印将覆盖之前的记录
-	void SetConsoleScreenSize(int w, int h);  //设置控制台缓存
+	void SetConsoleScreenSize(DInt16 w, DInt16 h);  //设置控制台缓存
 	void SetConsoleTitle(const char* title);  //设置标题
 
 	void SetFrontColor(DexLogType type, int color);
