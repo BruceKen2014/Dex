@@ -28,3 +28,5 @@ UpgradeLog.XML
 /ParticleEditer/bin/ParticleEditer.exe
 /DexBigFilePacker/bin/DexBigFilePacker.exe
 /MeshConvert/bin/MeshConvert.exe
+/bin/Dex.lib
+/sdk/lua/lib/debug/lua.lib
