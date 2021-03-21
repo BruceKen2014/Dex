@@ -29,16 +29,15 @@ bool DexBigFileHandle::InitBigFile(const char* filename)
 	DUInt64 fileLength = m_pFile->Length();
 	DUInt64 offset = 0;
 	m_pFile->Read(&m_header, offset, sizeof(m_header)); 
-	DUInt32 iContentSize = sizeof(stDexBigFileContent);
 	DUInt32 iBlockCount = m_header.blockCount;
-	offset = fileLength - iContentSize * m_header.count - sizeof(stDexBigFileBlock) * iBlockCount;
+	offset = fileLength - sizeof(stDexBigFileContent) * m_header.count - sizeof(stDexBigFileBlock) * iBlockCount;
 	//read content data
 	for (DUInt32 i = 0; i < m_header.count; ++i)
 	{
 		stDexBigFileContent* pContentPtr = new stDexBigFileContent;
-		m_pFile->Read(pContentPtr, offset, iContentSize);
+		m_pFile->Read(pContentPtr, offset, sizeof(stDexBigFileContent));
 		m_mapContents[pContentPtr->md5Key] = pContentPtr;
-		offset += iContentSize;
+		offset += sizeof(stDexBigFileContent);
 	}
 	//read compress size
 	m_vecBlocks.resize(iBlockCount);
