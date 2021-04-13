@@ -117,6 +117,21 @@ DWORD WINAPI CheckThread(LPVOID lpParam)
 }
 bool SaveBigFile(const char* filename)
 {
+/*
+大文件的格式为
+1、文件头信息
+2、具体的文件内容file data，全部经过了压缩
+3、具体的文件信息区域 content area
+4、文件块区域        content block area
+
+为什么要进行这样设计，主要是为了压缩考虑，一小块一小块的压缩有助于提高效率
+理论上来说，content area也就是文件信息区域应该尾随在header之后，这样更通顺一点，但是在写入content info的时候必须打开文件读写，这样就是一次操作
+后面实际写入文件信息时又会打开文件进行读写，这就是两次读写了。所以为了减少文件读写的时间，先进行了文件内容写入，这个时候保存文件信息，写完文件内容后
+再进行文件信息块的写入。
+文件块的处理也是如此，写入block的时候需要知道压缩后的大小，如果我们先写入block信息，这个时候还不知道文件内容被压缩的大小，必须进行压缩一次才知道，而后面
+写入文件内容的时候还要进行一次压缩，这就是两次压缩操作，所以为了节省时间，先进行文件内容的写入，写入期间会知道文件大小和block压缩的信息，之后写入文件信息和
+block信息的时候就不用再操作文件和进行压缩操作了。
+*/
 	DexFile bigFile;
 	DexFile readerForContent;
 	bool ret = bigFile.NewFile(filename);
@@ -133,10 +148,11 @@ bool SaveBigFile(const char* filename)
 	char* readCache = new char[iBlockSize];
 	char* writeCache = new char[iBlockSize];
 
+	//先向大文件输入文件数量信息
+	//注意，这里的header暂时只有count信息是合法的，没有blockcount信息，因为这个时候我们只知道多少个文件，不知道多少个内存块
 	header.count = g_vecFileName.size();
 	bigFile.Write(&header, sizeof(header));
 	
-	DUInt32 iContentByte = sizeof(DexBigFileHandle::stDexBigFileContent);
 	uint64 time = GetTickCount64();
 	//write content file data
 	DUInt32 destSize = 0;
@@ -218,7 +234,7 @@ bool SaveBigFile(const char* filename)
 	for (mapContent::iterator ite = contents.begin(); ite != contents.end(); ++ite)
 	{
 		DexBigFileHandle::stDexBigFileContent* pContent = ite->second;
-		bigFile.Write(pContent, iContentByte);
+		bigFile.Write(pContent, sizeof(DexBigFileHandle::stDexBigFileContent));
 	}
 	//write block info
 	DUInt32 blockCount = vecBlocks.size();
@@ -334,7 +350,7 @@ bool MultiThreadSaveBigFile(const char* filename)
 	for (mapContent::iterator ite = contents.begin(); ite != contents.end(); ++ite)
 	{
 		DexBigFileHandle::stDexBigFileContent* pContent = ite->second;
-		bigFile.Write(pContent, iContentByte);
+		bigFile.Write(pContent, sizeof(DexBigFileHandle::stDexBigFileContent));
 	}
 	//write block info
 	DUInt32 blockCount = g_taskManager.vecBlocks.size();
