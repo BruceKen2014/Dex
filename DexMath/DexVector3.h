@@ -25,49 +25,47 @@ public:
 
 public:
 	DexVector3T();
-	DexVector3T(const DexVector3T<T>& vector3);
+	DexVector3T(const DexVector3T& vector3);
 	DexVector3T(T _x, T _y, T _z);
 	DexVector3T(T* value); //一个3元素数组
-	~DexVector3T<T>();
+	~DexVector3T();
 public:
-	DexVector3T<T>	Invert();
-	DexVector3T<T>  GetInvert()const;
-	DexVector3T<T>  Set(T* value);//一个3元素数组
-	DexVector3T<T>  Set(const DexVector3T<T>& vector3);
-	DexVector3T<T>  Set(const T& _x, const T& _y, const T& _z);
+	DexVector3T	 Invert();
+	DexVector3T  GetInvert()const;
+	DexVector3T  Set(T* value);//一个3元素数组
+	DexVector3T  Set(const DexVector3T<T>& vector3);
+	DexVector3T  Set(const T& _x, const T& _y, const T& _z);
 public:
 	//for vector
 	T Length() const;
 	T LengthSq() const; //length square
-	DexVector3T<T>  Cross(const DexVector3T<T>& vector3) const;
-	static DexVector3T<T>  S_Cross(const DexVector3T<T>& v1, const DexVector3T<T>& v2);
-	T				Dot(const DexVector3T<T>& vector3) const;
-	static T  S_Dot(const DexVector3T<T>& v1, const DexVector3T<T>& v2);
-	T		  GetRadian(const DexVector3T<T> vector) const; //取得与vector之间的夹角，单位弧度
-	DexVector3T<T>  Normalize();
+	DexVector3T  Cross(const DexVector3T& vector3) const;
+	static DexVector3T  S_Cross(const DexVector3T& v1, const DexVector3T& v2);
+	T				Dot(const DexVector3T& vector3) const;
+	static T  S_Dot(const DexVector3T& v1, const DexVector3T& v2);
+	T		  GetRadian(const DexVector3T& vector) const; //取得与vector之间的夹角，单位弧度
+	DexVector3T  Normalize();
 	//for point
-	T Distance(const DexVector3T<T>& Point)const;
-	static T S_Distance(const DexVector3T<T>& Point1, const DexVector3T<T>& Point2) ;
+	T Distance(const DexVector3T& Point)const;
+	static T S_Distance(const DexVector3T& Point1, const DexVector3T& Point2) ;
 public:
-	DexVector3T<T>& operator = (const DexVector3T<T>& vector3);
-	bool operator == (const DexVector3T<T>& vector3)const;
-	bool operator != (const DexVector3T<T>& vector3)const;
-	DexVector3T<T> operator + (const DexVector3T<T>& vector3)const;
-	DexVector3T<T> operator - (const DexVector3T<T>& vector3)const;
-	DexVector3T<T> operator * (float _value)const;
-	DexVector3T<T> operator / (float _value)const;
+	DexVector3T& operator = (const DexVector3T& vector3);
+	bool operator == (const DexVector3T& vector3)const;
+	bool operator != (const DexVector3T& vector3)const;
+	DexVector3T operator + (const DexVector3T& vector3)const;
+	DexVector3T operator - (const DexVector3T& vector3)const;
+	DexVector3T operator * (float _value)const;
+	DexVector3T operator / (float _value)const;
 
-	DexVector3T<T>& operator += (const DexVector3T<T>& vector3);
-	DexVector3T<T>& operator -= (const DexVector3T<T>& vector3);
-	DexVector3T<T>& operator *= (float _value);
-	DexVector3T<T>& operator /= (float _value);
+	DexVector3T& operator += (const DexVector3T& vector3);
+	DexVector3T& operator -= (const DexVector3T& vector3);
+	DexVector3T& operator *= (float _value);
+	DexVector3T& operator /= (float _value);
 
-	bool operator > (const DexVector3T<T>& vector3) const;
-	bool operator >=(const DexVector3T<T>& vector3) const;
-	bool operator < (const DexVector3T<T>& vector3) const;
-	bool operator <=(const DexVector3T<T>& vector3) const;
-	
-
+	bool operator > (const DexVector3T& vector3) const;
+	bool operator >=(const DexVector3T& vector3) const;
+	bool operator < (const DexVector3T& vector3) const;
+	bool operator <=(const DexVector3T& vector3) const;
 };
 
 template<typename T1, typename T>

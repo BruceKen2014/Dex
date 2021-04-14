@@ -13,7 +13,7 @@ inline DexVector3T<T>::DexVector3T()
 }
 
 template<typename T>
-inline DexVector3T<T>::DexVector3T(const DexVector3T<T>& vector3) :DexVector3T(vector3.x, vector3.y, vector3.z)
+inline DexVector3T<T>::DexVector3T(const DexVector3T& vector3) :DexVector3T(vector3.x, vector3.y, vector3.z)
 {}
 
 template<typename T>
@@ -51,14 +51,14 @@ inline DexVector3T<T> DexVector3T<T>::Normalize()
 }
 
 template<typename T>
-inline T DexVector3T<T>::Distance(const DexVector3T<T>& Point) const
+inline T DexVector3T<T>::Distance(const DexVector3T& Point) const
 {
 	DexVector3T<T> temp = Point - *this;
 	return temp.Length();
 }
 
 template<typename T>
-T DexVector3T<T>::S_Distance(const DexVector3T<T>& Point1, const DexVector3T<T>& Point2)
+T DexVector3T<T>::S_Distance(const DexVector3T& Point1, const DexVector3T& Point2)
 {
 	return Point1.Distance(Point2);
 }
@@ -70,7 +70,7 @@ inline DexVector3T<T> DexVector3T<T>::Set(T* value)
 }
 
 template<typename T>
-inline DexVector3T<T> DexVector3T<T>::Set(const DexVector3T<T>& vector3)
+inline DexVector3T<T> DexVector3T<T>::Set(const DexVector3T& vector3)
 {
 	memcpy(m, vector3.m, sizeof(vector3));
 	return *this;
@@ -86,7 +86,7 @@ inline DexVector3T<T> DexVector3T<T>::Set(const T& _x, const T& _y, const T& _z)
 }
 
 template<typename T>
-inline DexVector3T<T>& DexVector3T<T>::operator = (const DexVector3T<T>& vector3)
+inline DexVector3T<T>& DexVector3T<T>::operator = (const DexVector3T& vector3)
 {
 	x = vector3.x;
 	y = vector3.y;
@@ -94,30 +94,30 @@ inline DexVector3T<T>& DexVector3T<T>::operator = (const DexVector3T<T>& vector3
 	return *this;
 }
 template<typename T>
-inline bool DexVector3T<T>::operator == (const DexVector3T<T>& vector3)const
+inline bool DexVector3T<T>::operator == (const DexVector3T& vector3)const
 {
 	return DexMath::Equal(x, vector3.x)
 		&& DexMath::Equal(y, vector3.y)
 		&& DexMath::Equal(z, vector3.z);
 }
 template<typename T>
-inline bool DexVector3T<T>::operator != (const DexVector3T<T>& vector3)const
+inline bool DexVector3T<T>::operator != (const DexVector3T& vector3)const
 {
 	return !DexMath::Equal(x, vector3.x)
 		|| !DexMath::Equal(y, vector3.y)
 		|| !DexMath::Equal(z, vector3.z);
 }
 template<typename T>
-inline DexVector3T<T> DexVector3T<T>::operator + (const DexVector3T<T>& vector3)const
+inline DexVector3T<T> DexVector3T<T>::operator + (const DexVector3T& vector3)const
 {
-	DexVector3T<T> ret;
+	DexVector3T ret;
 	ret.x = x + vector3.x;
 	ret.y = y + vector3.y;
 	ret.z = z + vector3.z;
 	return ret;
 }
 template<typename T>
-inline DexVector3T<T> DexVector3T<T>::operator - (const DexVector3T<T>& vector3)const
+inline DexVector3T<T> DexVector3T<T>::operator - (const DexVector3T& vector3)const
 {
 	DexVector3T<T> ret;
 	ret.x = x - vector3.x;
@@ -146,7 +146,7 @@ inline DexVector3T<T> DexVector3T<T>::operator / (float _value)const
 }
 
 template<typename T>
-inline DexVector3T<T>& DexVector3T<T>::operator += (const DexVector3T<T>& vector3)
+inline DexVector3T<T>& DexVector3T<T>::operator += (const DexVector3T& vector3)
 {
 	x = x + vector3.x;
 	y = y + vector3.y;
@@ -154,7 +154,7 @@ inline DexVector3T<T>& DexVector3T<T>::operator += (const DexVector3T<T>& vector
 	return *this;
 }
 template<typename T>
-inline DexVector3T<T>& DexVector3T<T>::operator -= (const DexVector3T<T>& vector3)
+inline DexVector3T<T>& DexVector3T<T>::operator -= (const DexVector3T& vector3)
 {
 	x = x - vector3.x;
 	y = y - vector3.y;
@@ -191,7 +191,7 @@ inline T DexVector3T<T>::LengthSq() const
 }
 
 template<typename T>
-inline DexVector3T<T> DexVector3T<T>::Cross(const DexVector3T<T>& vector3) const
+inline DexVector3T<T> DexVector3T<T>::Cross(const DexVector3T& vector3) const
 {
 	/*
 		0	1	2
@@ -209,26 +209,26 @@ inline DexVector3T<T> DexVector3T<T>::Cross(const DexVector3T<T>& vector3) const
 }
 
 template<typename T>
-DexVector3T<T> DexVector3T<T>::S_Cross(const DexVector3T<T>& v1, const DexVector3T<T>& v2)
+DexVector3T<T> DexVector3T<T>::S_Cross(const DexVector3T& v1, const DexVector3T& v2)
 {
 	return v1.Cross(v2);
 }
 
 template<typename T>
-inline T DexVector3T<T>::Dot(const DexVector3T<T>& vector3) const
+inline T DexVector3T<T>::Dot(const DexVector3T& vector3) const
 {
 	T ret = x * vector3.x + y * vector3.y + z * vector3.z;
 	return ret;
 }
 
 template<typename T>
-T DexVector3T<T>::S_Dot(const DexVector3T<T>& v1, const DexVector3T<T>& v2)
+T DexVector3T<T>::S_Dot(const DexVector3T& v1, const DexVector3T& v2)
 {
 	return v1.Dot(v2);
 }
 
 template<typename T>
-T DexVector3T<T>::GetRadian(const DexVector3T<T> vector) const
+T DexVector3T<T>::GetRadian(const DexVector3T& vector) const
 {
 	T dot = x * vector.x + y * vector.y + z * vector.z;
 	T length1 = Length();
@@ -262,14 +262,14 @@ inline DexVector3T<T> DexVector3T<T>::GetInvert()	const
 
 
 template<typename T>
-inline bool DexVector3T<T>::operator>(const DexVector3T<T>& vector3) const
+inline bool DexVector3T<T>::operator>(const DexVector3T& vector3) const
 {
 	return x > vector3.x &&
 		y > vector3.y &&
 		z > vector3.z;
 }
 template<typename T>
-inline bool DexVector3T<T>::operator>=(const DexVector3T<T>& vector3) const
+inline bool DexVector3T<T>::operator>=(const DexVector3T& vector3) const
 {
 	return x >= vector3.x &&
 		y >= vector3.y &&
@@ -277,7 +277,7 @@ inline bool DexVector3T<T>::operator>=(const DexVector3T<T>& vector3) const
 }
 
 template<typename T>
-inline bool DexVector3T<T>::operator<(const DexVector3T<T>& vector3) const
+inline bool DexVector3T<T>::operator<(const DexVector3T& vector3) const
 {
 	return x < vector3.x &&
 		y < vector3.y &&
@@ -285,10 +285,9 @@ inline bool DexVector3T<T>::operator<(const DexVector3T<T>& vector3) const
 }
 
 template<typename T>
-inline bool DexVector3T<T>::operator<=(const DexVector3T<T>& vector3) const
+inline bool DexVector3T<T>::operator<=(const DexVector3T& vector3) const
 {
 	return x <= vector3.x &&
 		y <= vector3.y &&
 		z <= vector3.z;
 }
-
